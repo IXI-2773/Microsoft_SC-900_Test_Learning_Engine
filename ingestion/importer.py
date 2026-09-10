@@ -6,10 +6,13 @@ import json
 import re
 from collections import Counter
 from collections.abc import Mapping, Sequence
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 from ingestion.models import ValidationError, canonicalize_record, normalize_text
+
+VALID_REVIEW_DECISIONS = {"approved", "withheld", "pending"}
 
 
 def _read_rows(path: Path) -> list[dict[str, Any]]:
@@ -109,6 +112,8 @@ def import_jsonl(input_path: Path, store_dir: Path, taxonomy: Mapping[str, Any])
                 continue
             if classification == "related":
                 record["related_to"] = related_to
+            if record["record_kind"] == "question":
+                record["promotion_status"] = "pending"
             accepted.append(record)
             known_ids.add(record["id"])
             counts["accepted"] += 1
@@ -118,6 +123,8 @@ def import_jsonl(input_path: Path, store_dir: Path, taxonomy: Mapping[str, Any])
     _write_rows(materials_path, existing_materials + new_materials)
     _write_rows(store_dir / "quarantine.json", _read_rows(store_dir / "quarantine.json") + quarantined)
     _write_rows(store_dir / "review.json", _read_rows(store_dir / "review.json") + review)
+    all_questions = existing_questions + new_questions
+    _record_import_pending_decisions(store_dir, new_questions)
     fingerprint = hashlib.sha256(input_path.read_bytes()).hexdigest()
     report = {
         "batch_fingerprint": fingerprint,
@@ -127,22 +134,95 @@ def import_jsonl(input_path: Path, store_dir: Path, taxonomy: Mapping[str, Any])
         "review": counts["review"],
         "reason_codes": dict(sorted(reasons.items())),
         "source_statistics": dict(sorted(source_counts.items())),
+        **promotion_counts(all_questions),
+        "compiled": 0,
     }
     _write_rows(store_dir / "reports" / f"{fingerprint}.json", [report])
     return report
 
 
-def compile_question_bank(store_dir: Path, output_path: Path) -> Path:
+def _record_import_pending_decisions(store_dir: Path, new_questions: Sequence[Mapping[str, Any]]) -> None:
+    if not new_questions:
+        return
+    decided_at = datetime.now(UTC).replace(microsecond=0).isoformat()
+    decisions = _read_rows(store_dir / "review_decisions.json")
+    known_ids = {str(row.get("id")) for row in decisions}
+    for record in new_questions:
+        record_id = str(record["id"])
+        if record_id in known_ids:
+            continue
+        decisions.append(
+            {
+                "id": record_id,
+                "decision": "pending",
+                "actor": "import",
+                "decided_at": decided_at,
+            }
+        )
+        known_ids.add(record_id)
+    _write_rows(store_dir / "review_decisions.json", decisions)
+
+
+def apply_review_decision(
+    store_dir: Path,
+    question_id: str,
+    decision: str,
+    *,
+    actor: str = "operator",
+) -> dict[str, Any]:
+    normalized = normalize_text(decision).lower()
+    if normalized not in VALID_REVIEW_DECISIONS:
+        raise ValidationError([{"code": "INVALID_REVIEW_DECISION", "message": "decision must be approved, withheld, or pending"}])
     questions = _read_rows(store_dir / "questions.json")
+    matched = None
+    for record in questions:
+        if record.get("id") == question_id and record.get("record_kind") == "question":
+            record["promotion_status"] = normalized
+            matched = record
+            break
+    if matched is None:
+        raise ValidationError([{"code": "UNKNOWN_QUESTION", "message": f"no imported question with id {question_id}"}])
+    entry = {
+        "id": question_id,
+        "decision": normalized,
+        "actor": normalize_text(actor) or "operator",
+        "decided_at": datetime.now(UTC).replace(microsecond=0).isoformat(),
+    }
+    decisions = _read_rows(store_dir / "review_decisions.json")
+    decisions.append(entry)
+    _write_rows(store_dir / "questions.json", questions)
+    _write_rows(store_dir / "review_decisions.json", decisions)
+    return entry
+
+
+def promotion_counts(questions: Sequence[Mapping[str, Any]]) -> dict[str, int]:
+    counts: Counter[str] = Counter()
+    for record in questions:
+        status = str(record.get("promotion_status") or "pending")
+        if status not in {"approved", "pending", "withheld"}:
+            status = "pending"
+        counts[status] += 1
+    return {
+        "approved": counts["approved"],
+        "pending": counts["pending"],
+        "withheld": counts["withheld"],
+    }
+
+
+def compile_question_bank(store_dir: Path, output_path: Path) -> dict[str, Any]:
+    questions = _read_rows(store_dir / "questions.json")
+    counts = promotion_counts(questions)
     compiled = []
-    for number, record in enumerate(questions, start=1):
+    for record in questions:
+        if record.get("promotion_status") != "approved":
+            continue
         letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         choice_map = {letters[index]: item["text"] for index, item in enumerate(record["choices"])}
         id_to_letter = {item["id"]: letters[index] for index, item in enumerate(record["choices"])}
         compiled.append(
             {
                 "id": record["id"],
-                "question_number": number,
+                "question_number": len(compiled) + 1,
                 "prompt": record["stem"],
                 "choices": choice_map,
                 "correct": [id_to_letter[value] for value in record["correct_answer"]],
@@ -168,4 +248,10 @@ def compile_question_bank(store_dir: Path, output_path: Path) -> Path:
         + "\n",
         encoding="utf-8",
     )
-    return output_path
+    return {
+        "approved": counts["approved"],
+        "pending": counts["pending"],
+        "withheld": counts["withheld"],
+        "compiled": len(compiled),
+        "output": str(output_path),
+    }
