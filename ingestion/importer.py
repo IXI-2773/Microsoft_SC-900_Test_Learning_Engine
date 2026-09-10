@@ -5,7 +5,7 @@ import hashlib
 import json
 import re
 from collections import Counter
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
@@ -38,7 +38,7 @@ def _comparison_bucket(record: Mapping[str, Any]) -> tuple[str, ...]:
     return tuple(terms[:5])
 
 
-def classify_duplicate(candidate: Mapping[str, Any], accepted: list[Mapping[str, Any]]) -> tuple[str, str | None]:
+def classify_duplicate(candidate: Mapping[str, Any], accepted: Sequence[Mapping[str, Any]]) -> tuple[str, str | None]:
     if candidate.get("record_kind") != "question":
         return "unique", None
     stem = _stem_key(candidate)
@@ -68,10 +68,10 @@ def import_jsonl(input_path: Path, store_dir: Path, taxonomy: Mapping[str, Any])
     accepted: list[dict[str, Any]] = []
     quarantined: list[dict[str, Any]] = []
     review: list[dict[str, Any]] = []
-    counts = Counter()
-    reasons = Counter()
+    counts: Counter[str] = Counter()
+    reasons: Counter[str] = Counter()
     known_ids = {row["id"] for row in existing_questions + existing_materials}
-    source_counts = Counter()
+    source_counts: Counter[str] = Counter()
     with input_path.open(encoding="utf-8") as handle:
         for line_number, line in enumerate(handle, start=1):
             if not line.strip():

@@ -59,8 +59,10 @@ def _fingerprint(payload: Mapping[str, Any]) -> str:
 
 def canonicalize_record(raw: Mapping[str, Any], taxonomy: Mapping[str, Any]) -> dict[str, Any]:
     kind = normalize_text(raw.get("record_kind") or "question").lower()
-    source_raw = raw.get("source") if isinstance(raw.get("source"), Mapping) else {}
-    metadata = raw.get("metadata") if isinstance(raw.get("metadata"), Mapping) else {}
+    raw_source = raw.get("source")
+    raw_metadata = raw.get("metadata")
+    source_raw: Mapping[str, Any] = raw_source if isinstance(raw_source, Mapping) else {}
+    metadata: Mapping[str, Any] = raw_metadata if isinstance(raw_metadata, Mapping) else {}
     provenance = {
         "origin": normalize_text(metadata.get("origin") or raw.get("origin") or "extracted").lower(),
         "source": {key: value for key, value in source_raw.items() if value not in (None, "")},
