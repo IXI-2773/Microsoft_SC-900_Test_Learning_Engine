@@ -32,6 +32,7 @@ def main() -> None:
             "app.py",
         ]
     )
+    run([sys.executable, "tools/verify_packaged_resources.py"])
     run([sys.executable, "tools/build_release.py"])
     run([sys.executable, "tools/smoke_test.py"])
 
