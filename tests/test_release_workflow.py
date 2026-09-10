@@ -12,6 +12,8 @@ class ReleaseWorkflowTests(unittest.TestCase):
         workflow = (ROOT / ".github" / "workflows" / "bootstrap-sc900-baseline.yml").read_text(encoding="utf-8")
         self.assertIn("git diff --exit-code", workflow)
         self.assertIn("python -m tools.build_windows_release", workflow)
+        self.assertIn("ref: ${{ github.event.pull_request.head.sha }}", workflow)
+        self.assertIn('test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"', workflow)
         self.assertNotIn("bootstrap_sc900", workflow)
         self.assertNotIn("migration/bootstrap", workflow.lower())
 

@@ -17,6 +17,7 @@ jobs:
       - name: Checkout pull request head
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
       - name: Set up Python 3.11
@@ -28,8 +29,9 @@ jobs:
         shell: bash
         run: |
           echo "GITHUB_SHA=$GITHUB_SHA"
+          echo "PR_HEAD_SHA=${{ github.event.pull_request.head.sha }}"
           echo "CHECKED_OUT_SHA=$(git rev-parse HEAD)"
-          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
           git status --short
           git diff --exit-code
 
