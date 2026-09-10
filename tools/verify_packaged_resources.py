@@ -11,16 +11,29 @@ if str(ROOT) not in sys.path:
 from release_resources import REQUIRED_RUNTIME_RESOURCES  # noqa: E402
 
 
+def canonical_archive_member(name: str) -> str:
+    return name.replace("\\", "/")
+
+
 def archive_listing_members(listing: str) -> set[str]:
     _prefix, marker, member_listing = listing.partition("Contents of ")
     if not marker:
         return set()
     _header, _separator, paths = member_listing.partition(":\n")
-    return {line.strip() for line in paths.splitlines() if line.startswith(" ")}
+    return {
+        canonical_archive_member(line.strip())
+        for line in paths.splitlines()
+        if line.startswith(" ")
+    }
 
 
 def missing_runtime_resources(members: set[str]) -> list[str]:
-    return [resource.as_posix() for resource in REQUIRED_RUNTIME_RESOURCES if resource.as_posix() not in members]
+    canonical_members = {canonical_archive_member(member) for member in members}
+    return [
+        resource.as_posix()
+        for resource in REQUIRED_RUNTIME_RESOURCES
+        if resource.as_posix() not in canonical_members
+    ]
 
 
 def verify_packaged_resources(executable: Path) -> list[str]:

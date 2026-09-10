@@ -1,5 +1,6 @@
 import io
 import os
+import subprocess
 import sys
 import unittest
 from pathlib import Path
@@ -54,6 +55,35 @@ class ReleaseWorkflowTests(unittest.TestCase):
             missing_runtime_resources(members),
         )
 
+    def test_packaged_resource_verifier_accepts_posix_and_windows_taxonomy_spelling(self):
+        posix_members = {
+            "cert_profile_sc900.json",
+            "sc900_bank_v8_baseline.json",
+            "config/certifications/sc900-2026.json",
+        }
+        windows_members = {
+            "cert_profile_sc900.json",
+            "sc900_bank_v8_baseline.json",
+            "config\\certifications\\sc900-2026.json",
+        }
+
+        self.assertEqual([], missing_runtime_resources(posix_members))
+        self.assertEqual([], missing_runtime_resources(windows_members))
+
+    def test_packaged_resource_verifier_rejects_unrelated_similarly_named_taxonomy(self):
+        members = {
+            "cert_profile_sc900.json",
+            "sc900_bank_v8_baseline.json",
+            "sc900-2026.json",
+            "config/certifications/sc900-2026.json.bak",
+            "config\\certifications\\other-sc900-2026.json",
+        }
+
+        self.assertEqual(
+            ["config/certifications/sc900-2026.json"],
+            missing_runtime_resources(members),
+        )
+
     def test_packaged_resource_verifier_reads_data_paths_from_brief_pyinstaller_listing(self):
         listing = """\
 Contents of 'SC900TestLearningEngine' (PKG/CArchive):
@@ -68,6 +98,24 @@ Contents of 'SC900TestLearningEngine' (PKG/CArchive):
             },
             archive_listing_members(listing),
         )
+
+    def test_packaged_resource_verifier_reads_windows_separator_brief_listing(self):
+        listing = (
+            "Contents of 'SC900TestLearningEngine.exe' (PKG/CArchive):\n"
+            " cert_profile_sc900.json\n"
+            " sc900_bank_v8_baseline.json\n"
+            " config\\certifications\\sc900-2026.json\n"
+        )
+
+        self.assertEqual(
+            {
+                "cert_profile_sc900.json",
+                "sc900_bank_v8_baseline.json",
+                "config/certifications/sc900-2026.json",
+            },
+            archive_listing_members(listing),
+        )
+        self.assertEqual([], missing_runtime_resources(archive_listing_members(listing)))
 
     @mock.patch("tools.verify_packaged_resources.subprocess.run")
     def test_packaged_resource_verifier_accepts_archive_with_all_resources(self, run):
@@ -94,6 +142,17 @@ Contents of 'SC900TestLearningEngine' (PKG/CArchive):
         )
 
     @mock.patch("tools.verify_packaged_resources.subprocess.run")
+    def test_packaged_resource_verifier_accepts_windows_archive_listing(self, run):
+        run.return_value = subprocess_result(
+            "Contents of 'SC900TestLearningEngine.exe' (PKG/CArchive):\n"
+            " cert_profile_sc900.json\n"
+            " sc900_bank_v8_baseline.json\n"
+            " config\\certifications\\sc900-2026.json\n"
+        )
+
+        self.assertEqual([], verify_packaged_resources(ROOT / "dist" / "SC900TestLearningEngine.exe"))
+
+    @mock.patch("tools.verify_packaged_resources.subprocess.run")
     def test_packaged_resource_verifier_reports_archive_reader_error(self, run):
         run.return_value = subprocess_result("", returncode=2, stderr="not a PyInstaller archive")
 
@@ -117,6 +176,22 @@ Contents of 'SC900TestLearningEngine' (PKG/CArchive):
 
         self.assertEqual([sys.executable, "tools/verify_packaged_resources.py"], run.call_args_list[1].args[0])
         self.assertEqual([sys.executable, "tools/build_release.py"], run.call_args_list[2].args[0])
+
+    def test_build_release_script_imports_app_info_when_invoked_as_a_file(self):
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-c",
+                "import runpy; runpy.run_path('tools/build_release.py', run_name='not_main')",
+            ],
+            cwd=ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertNotIn("No module named 'app_info'", result.stderr)
 
 
 def subprocess_result(stdout: str, returncode: int = 0, stderr: str = ""):

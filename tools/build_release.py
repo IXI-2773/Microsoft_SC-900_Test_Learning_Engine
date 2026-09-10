@@ -4,14 +4,18 @@ from __future__ import annotations
 import hashlib
 import json
 import shutil
+import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
-from app_info import APP_NAME, APP_VERSION
-from cert_config import QUESTION_BANK_FILENAME
-from pe_validation import pe_file_metadata, validate_pe_file
-
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from app_info import APP_NAME, APP_VERSION  # noqa: E402
+from cert_config import QUESTION_BANK_FILENAME  # noqa: E402
+from pe_validation import pe_file_metadata, validate_pe_file  # noqa: E402
+
 DIST_EXE = ROOT / "dist" / "SC900TestLearningEngine.exe"
 RELEASE_DIR = ROOT / "release" / "SC900TestLearningEngine"
 RELEASE_EXE = RELEASE_DIR / "SC900TestLearningEngine.exe"
