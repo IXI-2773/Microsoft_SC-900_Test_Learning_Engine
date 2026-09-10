@@ -1,9 +1,20 @@
+import io
 import os
+import sys
 import unittest
 from pathlib import Path
+from unittest import mock
 
 from release_resources import REQUIRED_RUNTIME_RESOURCES, pyinstaller_resource_args
-from tools.verify_packaged_resources import archive_listing_members, missing_runtime_resources
+from tools import build_windows_release
+from tools.verify_packaged_resources import (
+    archive_listing_members,
+    missing_runtime_resources,
+    verify_packaged_resources,
+)
+from tools.verify_packaged_resources import (
+    main as verify_packaged_resources_main,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -42,11 +53,11 @@ class ReleaseWorkflowTests(unittest.TestCase):
             missing_runtime_resources(members),
         )
 
-    def test_packaged_resource_verifier_reads_data_paths_from_pyinstaller_listing(self):
+    def test_packaged_resource_verifier_reads_data_paths_from_brief_pyinstaller_listing(self):
         listing = """\
 Contents of 'SC900TestLearningEngine' (PKG/CArchive):
- 11480132, 552, 1339, 1, 'x', 'cert_profile_sc900.json'
- 11480684, 268, 725, 1, 'x', 'config/certifications/sc900-2026.json'
+ cert_profile_sc900.json
+ config/certifications/sc900-2026.json
 """
 
         self.assertEqual(
@@ -56,6 +67,59 @@ Contents of 'SC900TestLearningEngine' (PKG/CArchive):
             },
             archive_listing_members(listing),
         )
+
+    @mock.patch("tools.verify_packaged_resources.subprocess.run")
+    def test_packaged_resource_verifier_accepts_archive_with_all_resources(self, run):
+        run.return_value = subprocess_result(
+            """\
+Contents of 'SC900TestLearningEngine' (PKG/CArchive):
+ cert_profile_sc900.json
+ sc900_bank_v8_baseline.json
+ config/certifications/sc900-2026.json
+"""
+        )
+
+        self.assertEqual([], verify_packaged_resources(ROOT / "dist" / "SC900TestLearningEngine.exe"))
+        self.assertEqual(
+            [
+                sys.executable,
+                "-m",
+                "PyInstaller.utils.cliutils.archive_viewer",
+                str(ROOT / "dist" / "SC900TestLearningEngine.exe"),
+                "--list",
+                "--brief",
+            ],
+            run.call_args.args[0],
+        )
+
+    @mock.patch("tools.verify_packaged_resources.subprocess.run")
+    def test_packaged_resource_verifier_reports_archive_reader_error(self, run):
+        run.return_value = subprocess_result("", returncode=2, stderr="not a PyInstaller archive")
+
+        with self.assertRaisesRegex(RuntimeError, "not a PyInstaller archive"):
+            verify_packaged_resources(ROOT / "dist" / "SC900TestLearningEngine.exe")
+
+    @mock.patch(
+        "tools.verify_packaged_resources.verify_packaged_resources",
+        side_effect=RuntimeError("not a PyInstaller archive"),
+    )
+    def test_packaged_resource_verifier_main_reports_archive_reader_error(self, _verify):
+        stderr = io.StringIO()
+        with mock.patch("sys.stderr", stderr):
+            self.assertEqual(1, verify_packaged_resources_main())
+
+        self.assertIn("Packaged resource verification failed: not a PyInstaller archive", stderr.getvalue())
+
+    @mock.patch("tools.build_windows_release.run")
+    def test_windows_release_build_verifies_archive_before_creating_release(self, run):
+        build_windows_release.main()
+
+        self.assertEqual([sys.executable, "tools/verify_packaged_resources.py"], run.call_args_list[1].args[0])
+        self.assertEqual([sys.executable, "tools/build_release.py"], run.call_args_list[2].args[0])
+
+
+def subprocess_result(stdout: str, returncode: int = 0, stderr: str = ""):
+    return mock.Mock(returncode=returncode, stdout=stdout, stderr=stderr)
 
 
 if __name__ == "__main__":
