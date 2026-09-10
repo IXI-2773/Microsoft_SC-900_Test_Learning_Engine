@@ -42,7 +42,7 @@ jobs:
         shell: bash
         env:
           CI: 'true'
-        run: python .github/scripts/bootstrap_sc900_baseline.py
+        run: python .github/scripts/bootstrap_sc900_v8_current.py
 
       - name: Upload verified Windows release
         if: success()
