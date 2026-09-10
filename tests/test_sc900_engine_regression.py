@@ -1,5 +1,6 @@
 import copy
 import json
+import logging
 import random
 import sys
 import tempfile
@@ -454,6 +455,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         app._show_feedback_popover = lambda q, selected, anchor_widget=None: app._record_answer(q, selected, feedback_override={'confidence': 'Sure', 'miss_reason': ''})
         if start_session:
             app.restore_full_bank()
+        self.addCleanup(logging.shutdown)
         return app
 
     def visible_qnums(self, app):

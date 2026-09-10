@@ -16,6 +16,6 @@ def pyinstaller_resource_args(separator: str) -> list[str]:
         source = ROOT / resource
         if not source.is_file():
             raise FileNotFoundError(f"Required runtime resource is missing: {source}")
-        destination = str(resource.parent) if resource.parent != Path(".") else "."
+        destination = resource.parent.as_posix() if resource.parent != Path(".") else "."
         args.extend(["--add-data", f"{source}{separator}{destination}"])
     return args

@@ -1,4 +1,5 @@
 import importlib.util
+import logging
 import sys
 import tempfile
 import unittest
@@ -6,6 +7,7 @@ from pathlib import Path
 from unittest import mock
 
 from application_bootstrap import BootstrapConfig, prepare_application_bootstrap
+from storage_utils import setup_logging
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -42,6 +44,14 @@ class BootstrapTests(unittest.TestCase):
             self.assertEqual([config.user_data_dir], migrated)
             self.assertEqual([config.log_base_dir], logged)
             self.assertEqual("migrated", result.runtime_migration_notice)
+
+    def test_setup_logging_creates_missing_parent_log_directory(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp) / "user_data"
+            log_path = setup_logging(base)
+            self.assertTrue((base / "logs").is_dir())
+            self.assertEqual(base / "logs" / "sc900_test_learning_engine.log", log_path)
+            logging.shutdown()
 
     def test_importing_app_module_does_not_bootstrap_runtime(self):
         app_path = ROOT / "app.py"

@@ -41,6 +41,7 @@ class ReleaseWorkflowTests(unittest.TestCase):
         args = pyinstaller_resource_args(os.pathsep)
         self.assertEqual(6, len(args))
         self.assertIn(f"{ROOT / 'config/certifications/sc900-2026.json'}{os.pathsep}config/certifications", args)
+        self.assertEqual("config/certifications", args[5].split(os.pathsep, 1)[1])
 
     def test_packaged_resource_verifier_rejects_a_missing_taxonomy(self):
         members = {

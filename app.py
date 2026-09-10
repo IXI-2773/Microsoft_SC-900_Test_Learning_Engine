@@ -238,7 +238,7 @@ def ensure_application_bootstrap() -> BootstrapResult:
             user_data_dir=USER_DATA_DIR,
             checkpoint_dir=CHECKPOINT_DIR,
             backup_dir=BACKUP_DIR,
-            log_base_dir=LOG_BASE_DIR,
+            log_base_dir=USER_DATA_DIR,
         ),
         migrate_runtime=auto_migrate_packaged_runtime_data,
         setup_logging_fn=setup_logging,

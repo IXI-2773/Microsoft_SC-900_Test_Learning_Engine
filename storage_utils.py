@@ -11,13 +11,14 @@ logger.propagate = False
 
 def setup_logging(base_dir: Path):
     log_dir = base_dir / 'logs'
-    log_dir.mkdir(exist_ok=True)
+    log_dir.mkdir(parents=True, exist_ok=True)
     log_path = log_dir / 'sc900_test_learning_engine.log'
     logging.basicConfig(
         filename=str(log_path),
         level=logging.INFO,
         format='%(asctime)s %(levelname)s %(message)s',
         encoding='utf-8',
+        force=True,
     )
     logger.propagate = True
     return log_path
