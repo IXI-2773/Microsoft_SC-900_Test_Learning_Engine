@@ -5,8 +5,9 @@ import hashlib
 import json
 import re
 from collections import Counter
+from collections.abc import Mapping
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any
 
 from ingestion.models import ValidationError, canonicalize_record, normalize_text
 
