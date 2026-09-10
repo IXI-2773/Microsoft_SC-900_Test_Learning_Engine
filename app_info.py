@@ -1,2 +1,1 @@
-APP_NAME = 'Security Testing Engine'
-APP_VERSION = '8.0.0'
+from cert_config import APP_NAME, APP_VERSION

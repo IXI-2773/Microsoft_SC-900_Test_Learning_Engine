@@ -30,6 +30,7 @@ from app_constants import (
 )
 from app_game_mixin import GameRewardsMixin
 from app_info import APP_NAME, APP_VERSION
+from cert_config import QUESTION_BANK_FILENAME, USER_DATA_DIRNAME
 from app_question_flow_mixin import QuestionFlowMixin
 from app_question_render_mixin import QuestionRenderMixin
 from app_session_builder_mixin import SessionBuilderMixin
@@ -121,7 +122,7 @@ def resolve_user_data_dir() -> Path:
     if getattr(sys, "frozen", False):
         local_app_data = os.environ.get("LOCALAPPDATA")
         base = Path(local_app_data) if local_app_data else Path.home() / "AppData" / "Local"
-        return base / "SecurityTestingEngine"
+        return base / USER_DATA_DIRNAME
     return APP_DIR / "user_data"
 
 
@@ -218,20 +219,11 @@ CHECKPOINT_DIR = USER_DATA_DIR / "checkpoints"
 BACKUP_DIR = USER_DATA_DIR / "backups"
 CONFIG_PATH = USER_DATA_DIR / "config.json"
 RUNTIME_MIGRATION_NOTICE = ""
-DEFAULT_BANK_CLEAN = first_existing_path(
-    APP_DIR / "public_sy0701_bank_v4_clean.json",
-    RESOURCE_DIR / "public_sy0701_bank_v4_clean.json",
+DEFAULT_BANK = first_existing_path(
+    APP_DIR / QUESTION_BANK_FILENAME,
+    RESOURCE_DIR / QUESTION_BANK_FILENAME,
 )
-DEFAULT_BANK_MERGED = first_existing_path(
-    APP_DIR / "public_sy0701_bank_v4_plus_studyguide_clean.json",
-    RESOURCE_DIR / "public_sy0701_bank_v4_plus_studyguide_clean.json",
-)
-DEFAULT_BANK_LEGACY = first_existing_path(
-    APP_DIR / "public_sy0701_bank_v4.json",
-    RESOURCE_DIR / "public_sy0701_bank_v4.json",
-)
-DEFAULT_BANK = first_existing_path(DEFAULT_BANK_MERGED, DEFAULT_BANK_CLEAN, DEFAULT_BANK_LEGACY)
-LOG_PATH = USER_DATA_DIR / "logs" / "security_testing_engine.log"
+LOG_PATH = USER_DATA_DIR / "logs" / "sc900_test_learning_engine.log"
 _BOOTSTRAP_RESULT: BootstrapResult | None = None
 _BOOTSTRAP_KEY: tuple[Path, Path, Path] | None = None
 
@@ -465,7 +457,7 @@ class TestingEngineApp(
         self.topbar.pack_propagate(False)
         self.topbar_title = tk.Label(
             self.topbar,
-            text="Security Testing Engine",
+            text="Microsoft SC-900 Test Learning Engine",
             bg=BLUE,
             fg="white",
             font=TOPBAR_TITLE_FONT,
@@ -665,12 +657,12 @@ class TestingEngineApp(
         if hasattr(self, "topbar_title"):
             self.topbar_title.configure(
                 text=(
-                    "Security Testing Engine"
+                    "Microsoft SC-900 Test Learning Engine"
                     if width < 820
                     else (
-                        f"Security Testing Engine - {self.active_session_mode}"
+                        f"Microsoft SC-900 Test Learning Engine - {self.active_session_mode}"
                         if self.questions
-                        else "Security Testing Engine"
+                        else "Microsoft SC-900 Test Learning Engine"
                     )
                 ),
                 padx=10 if width < 900 else 16,

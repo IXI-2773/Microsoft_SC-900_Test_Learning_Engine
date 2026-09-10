@@ -43,8 +43,8 @@ def infer_source_name(question: BankQuestion, default_title: str = "Practice Tes
     if "Pre-Assessment" in chapter or "Post-Assessment" in chapter or chapter.startswith("Chapter "):
         return "Free Study Guide A5"
     return (
-        "Public SY0-701 Questions"
-        if default_title.startswith("Public SY0-701")
+        "Microsoft SC-900 Baseline Questions"
+        if default_title.startswith("Public SC-900")
         else (sanitize_text(default_title) or "Unknown source")
     )
 

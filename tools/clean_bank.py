@@ -11,8 +11,8 @@ from storage_utils import safe_write_json
 from tools.validate_bank import validate_bank
 
 
-DEFAULT_SOURCE = ROOT / 'public_sy0701_bank_v4.json'
-DEFAULT_OUTPUT = ROOT / 'public_sy0701_bank_v4_clean.json'
+DEFAULT_SOURCE = ROOT / 'sc900_bank_v8_baseline.json'
+DEFAULT_OUTPUT = ROOT / 'sc900_bank_v8_baseline.json'
 REPORT_DIR = ROOT / 'reports'
 REPORT_PATH = REPORT_DIR / 'bank_cleanup_report.md'
 

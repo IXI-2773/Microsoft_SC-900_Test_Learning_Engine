@@ -11,7 +11,7 @@ from question_bank import load_bank, sanitize_text
 
 
 BASE_DIR = ROOT
-DEFAULT_BANK = BASE_DIR / 'public_sy0701_bank_v4.json'
+DEFAULT_BANK = BASE_DIR / 'sc900_bank_v8_baseline.json'
 REPORT_DIR = BASE_DIR / 'reports'
 REPORT_PATH = REPORT_DIR / 'bank_validation_report.md'
 

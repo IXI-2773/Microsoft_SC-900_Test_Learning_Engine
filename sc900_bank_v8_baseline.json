@@ -1,0 +1,262 @@
+{
+  "title": "Microsoft SC-900 Baseline Practice Questions",
+  "version": "8.0.0-baseline",
+  "questions": [
+    {
+      "id": "SC900-PH-001",
+      "question_number": 1,
+      "prompt": "In a cloud service relationship, which statement best describes the shared responsibility model?",
+      "choices": {
+        "A": "Security duties are divided between the provider and customer",
+        "B": "The provider owns every security task",
+        "C": "The customer owns every infrastructure task",
+        "D": "Responsibility disappears when services are managed"
+      },
+      "correct": [
+        "A"
+      ],
+      "general_explanation": "Cloud security responsibilities are divided between the service provider and the customer, with the exact split depending on the service model.",
+      "choice_explanations": {
+        "A": "Security duties are divided between the provider and customer is the best answer here. Cloud security responsibilities are divided between the service provider and the customer, with the exact split depending on the service model.",
+        "B": "The provider owns every security task does not best satisfy the scenario described in this question.",
+        "C": "The customer owns every infrastructure task does not best satisfy the scenario described in this question.",
+        "D": "Responsibility disappears when services are managed does not best satisfy the scenario described in this question."
+      },
+      "domain": "Security, compliance, and identity concepts",
+      "domain_code": "1",
+      "chapter": "Security, compliance, and identity concepts",
+      "topics": [
+        "Shared responsibility"
+      ],
+      "objective_code": "1",
+      "question_type": "single",
+      "source_name": "SC-900 baseline original placeholder bank",
+      "study_focus": "Shared responsibility",
+      "flagged_issues": []
+    },
+    {
+      "id": "SC900-PH-002",
+      "question_number": 2,
+      "prompt": "Which Zero Trust principle requires access decisions to evaluate identity, device, location, and other available signals?",
+      "choices": {
+        "A": "Trust every corporate-network request",
+        "B": "Verify explicitly",
+        "C": "Disable identity checks for managed devices",
+        "D": "Grant permanent administrator access"
+      },
+      "correct": [
+        "B"
+      ],
+      "general_explanation": "Verify explicitly means using available signals and context when making authentication and authorization decisions.",
+      "choice_explanations": {
+        "A": "Trust every corporate-network request does not best satisfy the scenario described in this question.",
+        "B": "Verify explicitly is the best answer here. Verify explicitly means using available signals and context when making authentication and authorization decisions.",
+        "C": "Disable identity checks for managed devices does not best satisfy the scenario described in this question.",
+        "D": "Grant permanent administrator access does not best satisfy the scenario described in this question."
+      },
+      "domain": "Security, compliance, and identity concepts",
+      "domain_code": "1",
+      "chapter": "Security, compliance, and identity concepts",
+      "topics": [
+        "Zero Trust"
+      ],
+      "objective_code": "1",
+      "question_type": "single",
+      "source_name": "SC-900 baseline original placeholder bank",
+      "study_focus": "Zero Trust",
+      "flagged_issues": []
+    },
+    {
+      "id": "SC900-PH-003",
+      "question_number": 3,
+      "prompt": "Which Microsoft service provides cloud-based identity and access management for users, applications, and resources?",
+      "choices": {
+        "A": "Microsoft Purview",
+        "B": "Microsoft Sentinel",
+        "C": "Microsoft Entra ID",
+        "D": "Azure Cost Management"
+      },
+      "correct": [
+        "C"
+      ],
+      "general_explanation": "Microsoft Entra ID is Microsoft's cloud identity and access management service.",
+      "choice_explanations": {
+        "A": "Microsoft Purview does not best satisfy the scenario described in this question.",
+        "B": "Microsoft Sentinel does not best satisfy the scenario described in this question.",
+        "C": "Microsoft Entra ID is the best answer here. Microsoft Entra ID is Microsoft's cloud identity and access management service.",
+        "D": "Azure Cost Management does not best satisfy the scenario described in this question."
+      },
+      "domain": "Microsoft Entra capabilities",
+      "domain_code": "2",
+      "chapter": "Microsoft Entra capabilities",
+      "topics": [
+        "Microsoft Entra ID"
+      ],
+      "objective_code": "2",
+      "question_type": "single",
+      "source_name": "SC-900 baseline original placeholder bank",
+      "study_focus": "Microsoft Entra ID",
+      "flagged_issues": []
+    },
+    {
+      "id": "SC900-PH-004",
+      "question_number": 4,
+      "prompt": "Which Microsoft Entra capability can require multifactor authentication when specified access conditions are met?",
+      "choices": {
+        "A": "Sensitivity labels",
+        "B": "Data lifecycle management",
+        "C": "Microsoft Defender for Cloud",
+        "D": "Conditional Access"
+      },
+      "correct": [
+        "D"
+      ],
+      "general_explanation": "Conditional Access evaluates signals and can enforce controls such as requiring multifactor authentication.",
+      "choice_explanations": {
+        "A": "Sensitivity labels does not best satisfy the scenario described in this question.",
+        "B": "Data lifecycle management does not best satisfy the scenario described in this question.",
+        "C": "Microsoft Defender for Cloud does not best satisfy the scenario described in this question.",
+        "D": "Conditional Access is the best answer here. Conditional Access evaluates signals and can enforce controls such as requiring multifactor authentication."
+      },
+      "domain": "Microsoft Entra capabilities",
+      "domain_code": "2",
+      "chapter": "Microsoft Entra capabilities",
+      "topics": [
+        "Conditional Access"
+      ],
+      "objective_code": "2",
+      "question_type": "single",
+      "source_name": "SC-900 baseline original placeholder bank",
+      "study_focus": "Conditional Access",
+      "flagged_issues": []
+    },
+    {
+      "id": "SC900-PH-005",
+      "question_number": 5,
+      "prompt": "Which Microsoft security solution is designed to collect and analyze security data for SIEM and security orchestration use cases?",
+      "choices": {
+        "A": "Microsoft Sentinel",
+        "B": "Microsoft Priva",
+        "C": "Microsoft Entra ID",
+        "D": "Microsoft Intune"
+      },
+      "correct": [
+        "A"
+      ],
+      "general_explanation": "Microsoft Sentinel provides cloud-native SIEM and security orchestration, automation, and response capabilities.",
+      "choice_explanations": {
+        "A": "Microsoft Sentinel is the best answer here. Microsoft Sentinel provides cloud-native SIEM and security orchestration, automation, and response capabilities.",
+        "B": "Microsoft Priva does not best satisfy the scenario described in this question.",
+        "C": "Microsoft Entra ID does not best satisfy the scenario described in this question.",
+        "D": "Microsoft Intune does not best satisfy the scenario described in this question."
+      },
+      "domain": "Microsoft security solutions",
+      "domain_code": "3",
+      "chapter": "Microsoft security solutions",
+      "topics": [
+        "Microsoft Sentinel"
+      ],
+      "objective_code": "3",
+      "question_type": "single",
+      "source_name": "SC-900 baseline original placeholder bank",
+      "study_focus": "Microsoft Sentinel",
+      "flagged_issues": []
+    },
+    {
+      "id": "SC900-PH-006",
+      "question_number": 6,
+      "prompt": "Which Microsoft solution correlates security signals across endpoints, identities, email, and applications for extended detection and response?",
+      "choices": {
+        "A": "Microsoft Purview Audit",
+        "B": "Microsoft Defender XDR",
+        "C": "Azure Policy",
+        "D": "Microsoft Entra Verified ID"
+      },
+      "correct": [
+        "B"
+      ],
+      "general_explanation": "Microsoft Defender XDR correlates signals across multiple security domains to support detection, investigation, and response.",
+      "choice_explanations": {
+        "A": "Microsoft Purview Audit does not best satisfy the scenario described in this question.",
+        "B": "Microsoft Defender XDR is the best answer here. Microsoft Defender XDR correlates signals across multiple security domains to support detection, investigation, and response.",
+        "C": "Azure Policy does not best satisfy the scenario described in this question.",
+        "D": "Microsoft Entra Verified ID does not best satisfy the scenario described in this question."
+      },
+      "domain": "Microsoft security solutions",
+      "domain_code": "3",
+      "chapter": "Microsoft security solutions",
+      "topics": [
+        "Microsoft Defender XDR"
+      ],
+      "objective_code": "3",
+      "question_type": "single",
+      "source_name": "SC-900 baseline original placeholder bank",
+      "study_focus": "Microsoft Defender XDR",
+      "flagged_issues": []
+    },
+    {
+      "id": "SC900-PH-007",
+      "question_number": 7,
+      "prompt": "Which Microsoft Purview capability can classify and protect organizational information by applying labels to files and emails?",
+      "choices": {
+        "A": "Conditional Access",
+        "B": "Microsoft Sentinel analytics rules",
+        "C": "Sensitivity labels",
+        "D": "Microsoft Defender for Cloud recommendations"
+      },
+      "correct": [
+        "C"
+      ],
+      "general_explanation": "Sensitivity labels classify and can apply protection settings to organizational content such as files and email.",
+      "choice_explanations": {
+        "A": "Conditional Access does not best satisfy the scenario described in this question.",
+        "B": "Microsoft Sentinel analytics rules does not best satisfy the scenario described in this question.",
+        "C": "Sensitivity labels is the best answer here. Sensitivity labels classify and can apply protection settings to organizational content such as files and email.",
+        "D": "Microsoft Defender for Cloud recommendations does not best satisfy the scenario described in this question."
+      },
+      "domain": "Microsoft compliance solutions",
+      "domain_code": "4",
+      "chapter": "Microsoft compliance solutions",
+      "topics": [
+        "Sensitivity labels"
+      ],
+      "objective_code": "4",
+      "question_type": "single",
+      "source_name": "SC-900 baseline original placeholder bank",
+      "study_focus": "Sensitivity labels",
+      "flagged_issues": []
+    },
+    {
+      "id": "SC900-PH-008",
+      "question_number": 8,
+      "prompt": "Which Microsoft Purview capability helps detect and restrict inappropriate sharing of sensitive information across supported locations?",
+      "choices": {
+        "A": "Privileged Identity Management",
+        "B": "Microsoft Defender for Endpoint",
+        "C": "Conditional Access",
+        "D": "Data loss prevention"
+      },
+      "correct": [
+        "D"
+      ],
+      "general_explanation": "Data loss prevention policies identify sensitive information and can restrict or warn about inappropriate sharing and use.",
+      "choice_explanations": {
+        "A": "Privileged Identity Management does not best satisfy the scenario described in this question.",
+        "B": "Microsoft Defender for Endpoint does not best satisfy the scenario described in this question.",
+        "C": "Conditional Access does not best satisfy the scenario described in this question.",
+        "D": "Data loss prevention is the best answer here. Data loss prevention policies identify sensitive information and can restrict or warn about inappropriate sharing and use."
+      },
+      "domain": "Microsoft compliance solutions",
+      "domain_code": "4",
+      "chapter": "Microsoft compliance solutions",
+      "topics": [
+        "Data loss prevention"
+      ],
+      "objective_code": "4",
+      "question_type": "single",
+      "source_name": "SC-900 baseline original placeholder bank",
+      "study_focus": "Data loss prevention",
+      "flagged_issues": []
+    }
+  ]
+}

@@ -29,7 +29,7 @@ class BootstrapTests(unittest.TestCase):
 
             def setup_logging_fn(path: Path) -> Path:
                 logged.append(path)
-                return path / "logs" / "security_testing_engine.log"
+                return path / "logs" / "sc900_test_learning_engine.log"
 
             self.assertFalse(config.user_data_dir.exists())
             result = prepare_application_bootstrap(

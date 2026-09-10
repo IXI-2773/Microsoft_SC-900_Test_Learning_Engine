@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 
-DEFAULT_BANK = ROOT / "public_sy0701_bank_v4_plus_studyguide_clean.json"
+DEFAULT_BANK = ROOT / "sc900_bank_v8_baseline.json"
 DEFAULT_REPORT = ROOT / "reports" / "performance_benchmark.json"
 
 

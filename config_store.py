@@ -8,7 +8,7 @@ DEFAULT_CONFIG = {
     'analytics_geometry': '1220x780',
     'analytics_domain_widths': {},
     'analytics_topic_widths': {},
-    'session_count': '25',
+    'session_count': '50',
     'session_source': 'All',
     'random_order': True,
     'auto_next_correct': False,

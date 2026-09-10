@@ -25,7 +25,7 @@ class QuestionRenderMixin:
         return meta_text
 
     def _render_empty_question_state(self):
-        self.topbar_title.configure(text='Security Testing Engine')
+        self.topbar_title.configure(text='Microsoft SC-900 Test Learning Engine')
         self.question_meta_label.configure(text='Ready to start a set')
         self.meta_strip_label.configure(text='')
         self.issue_label.pack_forget()
@@ -67,7 +67,7 @@ class QuestionRenderMixin:
         )
 
     def _render_question_header(self, q, trust_warning=None):
-        self.topbar_title.configure(text=f"Security Testing Engine - {self.active_session_mode}")
+        self.topbar_title.configure(text=f"Microsoft SC-900 Test Learning Engine - {self.active_session_mode}")
         self.question_meta_label.configure(text=self._question_header_text(q))
         meta_text = self._question_meta_text(q, trust_warning)
         if trust_warning:
