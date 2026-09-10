@@ -274,7 +274,14 @@ class SessionPersistenceMixin:
         if not skip_identity_check and not self._saved_session_matches_current(saved):
             return
         try:
-            migrated = migrate_session_snapshot(saved, self.active_session_mode, [q.get('question_number') for q in self.questions])
+            migrated = migrate_session_snapshot(
+                saved,
+                self.active_session_mode,
+                [q.get('question_number') for q in self.questions],
+                available_question_numbers=[
+                    q.get('question_number') for q in (self.master_questions or self.questions)
+                ],
+            )
         except (TypeError, ValueError, KeyError, IndexError) as exc:
             backup = self.persistence.quarantine_invalid_runtime_file(self.session_path, label='session')
             logging.warning('Session file quarantined after validation failure: %s', self.session_path)

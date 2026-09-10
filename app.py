@@ -576,6 +576,7 @@ class TestingEngineApp(
     def collect_config(self):
         analytics_geometry = self.config.get("analytics_geometry", DEFAULT_CONFIG["analytics_geometry"])
         if self.analytics_window and self.analytics_window.winfo_exists():
+            self.analytics_window.update_idletasks()
             analytics_geometry = self.analytics_window.geometry()
         return {
             "window_geometry": self.root.geometry(),

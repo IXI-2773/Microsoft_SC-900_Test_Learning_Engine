@@ -346,31 +346,47 @@ def build_smart_practice_score(
     else:
         primary_role = "blueprint_coverage"
     utility_scales = dict(context.get("utility_scales") or {})
+    utility_bounds = dict(context.get("utility_bounds") or {})
     breakdown = {
         "retention_risk": clamp_utility_component(
-            "retention_risk", retention_risk * float(utility_scales.get("retention_risk", 1.0))
+            "retention_risk",
+            retention_risk * float(utility_scales.get("retention_risk", 1.0)),
+            utility_bounds,
         ),
         "expected_learning_gain": clamp_utility_component(
-            "expected_learning_gain", learning_gain * float(utility_scales.get("expected_learning_gain", 1.0))
+            "expected_learning_gain",
+            learning_gain * float(utility_scales.get("expected_learning_gain", 1.0)),
+            utility_bounds,
         ),
         "blueprint_importance": clamp_utility_component(
-            "blueprint_importance", blueprint_importance * float(utility_scales.get("blueprint_importance", 1.0))
+            "blueprint_importance",
+            blueprint_importance * float(utility_scales.get("blueprint_importance", 1.0)),
+            utility_bounds,
         ),
         "misconception_repair_value": clamp_utility_component(
             "misconception_repair_value",
             misconception_repair * float(utility_scales.get("misconception_repair_value", 1.0)),
+            utility_bounds,
         ),
         "exploration_value": clamp_utility_component(
-            "exploration_value", exploration_value * float(utility_scales.get("exploration_value", 1.0))
+            "exploration_value",
+            exploration_value * float(utility_scales.get("exploration_value", 1.0)),
+            utility_bounds,
         ),
         "repetition_cost": clamp_utility_component(
-            "repetition_cost", repetition_cost * float(utility_scales.get("repetition_cost", 1.0))
+            "repetition_cost",
+            repetition_cost * float(utility_scales.get("repetition_cost", 1.0)),
+            utility_bounds,
         ),
         "source_quality_risk": clamp_utility_component(
-            "source_quality_risk", source_quality_risk * float(utility_scales.get("source_quality_risk", 1.0))
+            "source_quality_risk",
+            source_quality_risk * float(utility_scales.get("source_quality_risk", 1.0)),
+            utility_bounds,
         ),
         "fatigue_cost": clamp_utility_component(
-            "fatigue_cost", fatigue_cost * float(utility_scales.get("fatigue_cost", 1.0))
+            "fatigue_cost",
+            fatigue_cost * float(utility_scales.get("fatigue_cost", 1.0)),
+            utility_bounds,
         ),
     }
     breakdown["source_quality_risk"] = clamp_utility_component(
@@ -379,8 +395,9 @@ def build_smart_practice_score(
             float(breakdown.get("source_quality_risk", 0.0) or 0.0),
             explicit_source_penalty * float(utility_scales.get("source_quality_risk", 1.0)),
         ),
+        utility_bounds,
     )
-    total = smart_practice_utility_total(breakdown)
+    total = smart_practice_utility_total(breakdown, utility_bounds)
     positive_reasons = [
         ("retention", retention_risk),
         ("learning gain", learning_gain),

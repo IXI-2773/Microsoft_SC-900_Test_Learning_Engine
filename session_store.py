@@ -113,7 +113,11 @@ def _coerce_int_list(value: Any, *, field: str, minimum: int = 0) -> list[int]:
 
 
 def migrate_session_snapshot(
-    saved: Mapping[str, Any] | None, mode: str, question_numbers: list[Any]
+    saved: Mapping[str, Any] | None,
+    mode: str,
+    question_numbers: list[Any],
+    *,
+    available_question_numbers: list[Any] | None = None,
 ) -> SessionSnapshot:
     payload = dict(saved or {})
     current_qnums = [
@@ -140,8 +144,17 @@ def migrate_session_snapshot(
         or saved_qnums
         or current_qnums
     )
-    if current_qnums:
-        available_qnums = set(current_qnums)
+    known_source = (
+        current_qnums
+        if available_question_numbers is None
+        else [
+            _coerce_int(qnum, field="question_numbers", minimum=1)
+            for qnum in available_question_numbers
+            if str(qnum).strip()
+        ]
+    )
+    if known_source:
+        available_qnums = set(known_source)
         for qnum in saved_qnums + restore_qnums:
             if qnum not in available_qnums:
                 raise ValueError(f"Unknown question reference in session snapshot: {qnum}")

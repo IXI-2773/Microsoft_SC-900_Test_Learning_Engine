@@ -1,4 +1,6 @@
+from collections.abc import Mapping
 from dataclasses import dataclass
+from typing import Any
 
 SMART_PRACTICE_POLICY_VERSION = "smart-practice-9"
 SMART_PRACTICE_PRIMARY_ROLES = (
@@ -20,8 +22,17 @@ UTILITY_COMPONENT_BOUNDS = {
 }
 
 
-def clamp_utility_component(name: str, value: float) -> float:
+def clamp_utility_component(name: str, value: float, bounds: Mapping[str, Any] | None = None) -> float:
     low, high = UTILITY_COMPONENT_BOUNDS[name]
+    raw = None if bounds is None else bounds.get(name)
+    if raw is not None:
+        try:
+            candidate_low = float(raw[0])
+            candidate_high = float(raw[1])
+        except (TypeError, ValueError, IndexError, KeyError):
+            candidate_low, candidate_high = low, high
+        if candidate_high >= candidate_low:
+            low, high = candidate_low, candidate_high
     try:
         number = float(value)
     except (TypeError, ValueError):
@@ -31,8 +42,10 @@ def clamp_utility_component(name: str, value: float) -> float:
     return round(max(low, min(high, number)), 3)
 
 
-def smart_practice_utility_total(components: dict[str, float]) -> float:
-    clean = {name: clamp_utility_component(name, components.get(name, 0.0)) for name in UTILITY_COMPONENT_BOUNDS}
+def smart_practice_utility_total(components: dict[str, float], bounds: Mapping[str, Any] | None = None) -> float:
+    clean = {
+        name: clamp_utility_component(name, components.get(name, 0.0), bounds) for name in UTILITY_COMPONENT_BOUNDS
+    }
     total = (
         clean["retention_risk"]
         + clean["expected_learning_gain"]

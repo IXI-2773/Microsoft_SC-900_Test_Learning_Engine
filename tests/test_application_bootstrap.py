@@ -7,7 +7,7 @@ from pathlib import Path
 from unittest import mock
 
 from application_bootstrap import BootstrapConfig, prepare_application_bootstrap
-from storage_utils import setup_logging
+from storage_utils import safe_write_json, setup_logging
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -46,12 +46,33 @@ class BootstrapTests(unittest.TestCase):
             self.assertEqual("migrated", result.runtime_migration_notice)
 
     def test_setup_logging_creates_missing_parent_log_directory(self):
+        root = logging.getLogger()
+        previous_handlers = list(root.handlers)
+        previous_level = root.level
+        storage_logger = logging.getLogger("storage_utils")
+        previous_propagate = storage_logger.propagate
+
+        def restore_logging():
+            for handler in list(root.handlers):
+                root.removeHandler(handler)
+                handler.close()
+            for handler in previous_handlers:
+                root.addHandler(handler)
+            root.setLevel(previous_level)
+            storage_logger.propagate = previous_propagate
+
         with tempfile.TemporaryDirectory() as tmp:
-            base = Path(tmp) / "user_data"
-            log_path = setup_logging(base)
-            self.assertTrue((base / "logs").is_dir())
-            self.assertEqual(base / "logs" / "sc900_test_learning_engine.log", log_path)
-            logging.shutdown()
+            try:
+                base = Path(tmp) / "user_data"
+                log_path = setup_logging(base)
+                self.assertTrue((base / "logs").is_dir())
+                self.assertEqual(base / "logs" / "sc900_test_learning_engine.log", log_path)
+            finally:
+                restore_logging()
+        with tempfile.TemporaryDirectory() as tmp:
+            written = Path(tmp) / "ok.json"
+            safe_write_json(written, {"ok": True})
+            self.assertTrue(written.exists())
 
     def test_importing_app_module_does_not_bootstrap_runtime(self):
         app_path = ROOT / "app.py"

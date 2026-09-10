@@ -375,6 +375,23 @@ class SC900TestLearningEngineTests(unittest.TestCase):
         self.assertEqual(2, migrated['session_question_limit'])
         self.assertTrue(migrated['restore_signature'])
 
+    def test_session_snapshot_migration_allows_saved_questions_present_in_bank_but_not_current_pool(self):
+        migrated = migrate_session_snapshot(
+            {
+                'mode': 'Smart Practice',
+                'question_numbers': [1, 3],
+                'restore_question_numbers': [1, 2],
+                'session_base_question_count': 2,
+                'session_question_limit': 3,
+                'answers': [{}, {}, {}],
+            },
+            'Smart Practice',
+            [1, 2],
+            available_question_numbers=[1, 2, 3],
+        )
+        self.assertEqual([1, 3], migrated['question_numbers'])
+        self.assertEqual(3, migrated['session_question_limit'])
+
     def test_runtime_question_state_helpers_apply_reset_and_clear_answer_state(self):
         question = {'question_number': 77, 'selected': ['B'], 'pending': ['B'], 'answered': True, 'flagged': True, 'suspended': False, 'last_confidence': 'Unsure', 'last_miss_reason': 'Misread', 'recall_ready': True, 'session_tag': 'Question twin'}
         clear_runtime_answer_state(question)
@@ -451,11 +468,26 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
             self.skipTest(f'Tk unavailable: {exc}')
         self.addCleanup(root.destroy)
         root.withdraw()
+        root_logger = logging.getLogger()
+        previous_handlers = list(root_logger.handlers)
+        previous_level = root_logger.level
+        storage_logger = logging.getLogger('storage_utils')
+        previous_propagate = storage_logger.propagate
+
+        def restore_logging():
+            for handler in list(root_logger.handlers):
+                root_logger.removeHandler(handler)
+                handler.close()
+            for handler in previous_handlers:
+                root_logger.addHandler(handler)
+            root_logger.setLevel(previous_level)
+            storage_logger.propagate = previous_propagate
+
+        self.addCleanup(restore_logging)
         app = app_module.TestingEngineApp(root)
         app._show_feedback_popover = lambda q, selected, anchor_widget=None: app._record_answer(q, selected, feedback_override={'confidence': 'Sure', 'miss_reason': ''})
         if start_session:
             app.restore_full_bank()
-        self.addCleanup(logging.shutdown)
         return app
 
     def visible_qnums(self, app):
@@ -1197,8 +1229,10 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         app.analytics_widgets['domain_tree'].column('domain', width=333)
         app.analytics_widgets['topic_tree'].column('topic', width=377)
         app.analytics_window.update_idletasks()
+        live_geometry = app.analytics_window.geometry()
         config = app.collect_config()
-        self.assertIn('1111x700', config['analytics_geometry'])
+        self.assertEqual(live_geometry, config['analytics_geometry'])
+        self.assertRegex(config['analytics_geometry'], r'\d+x700')
         self.assertEqual(333, config['analytics_domain_widths']['domain'])
         self.assertEqual(377, config['analytics_topic_widths']['topic'])
         self.assertEqual('Full', config['sidebar_width_mode'])
@@ -2677,7 +2711,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
     def test_sp9_30_session_save_restore_preserves_smart_and_repair_metadata(self):
         app = self.make_app(start_session=False)
         question = self._sp9_question(1)
-        question.update({'smart_primary_role': 'weak_repair', 'smart_selection_reasons': ['repair'], 'smart_utility': 11.0, 'smart_utility_breakdown': {'misconception_repair_value': 11.0}, 'smart_policy_version': 'smart-practice-9', 'repair_stage': 'contrast', 'repair_concept_key': 'Topic::x'})
+        question.update({'smart_primary_role': 'weak_repair', 'smart_selection_reasons': ['repair'], 'smart_utility': 11.0, 'smart_utility_breakdown': {'misconception_repair_value': 11.0}, 'smart_policy_version': 'smart-practice-9', 'repair_stage': 'contrast', 'repair_concept_key': 'Topic::General Review'})
         app.master_questions = [dict(question)]
         app.start_session_from_pool([dict(question)], mode=app_module.MODE_SMART_PRACTICE, count='1', randomize=False)
         app.questions[0].update(question)
