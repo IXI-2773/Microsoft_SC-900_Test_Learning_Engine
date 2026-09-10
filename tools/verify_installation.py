@@ -16,8 +16,9 @@ from question_bank import load_bank
 REQUIRED = (
     "app.py",
     "cert_config.py",
-    "cert_profile_sc900.json",
-    "sc900_bank_v8_baseline.json",
+            "cert_profile_sc900.json",
+            "sc900_bank_v8_baseline.json",
+            "config/certifications/sc900-2026.json",
     "question_bank.py",
 )
 BANNED = ("sy0-701", "comptia", "security+", "public_sy0701")

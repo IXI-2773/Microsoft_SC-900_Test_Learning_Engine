@@ -1,4 +1,4 @@
-name: Bootstrap SC-900 v8 baseline
+name: Verify SC-900 v8 baseline
 
 on:
   pull_request:
@@ -6,31 +6,32 @@ on:
     types: [opened, synchronize, reopened]
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  migrate-and-verify:
+  verify-existing-source:
     if: github.head_ref == 'implementation/sc900-v8-baseline'
     runs-on: windows-latest
     timeout-minutes: 45
     steps:
-      - name: Checkout implementation branch
+      - name: Checkout pull request head
         uses: actions/checkout@v4
         with:
-          ref: implementation/sc900-v8-baseline
           fetch-depth: 0
-          persist-credentials: true
 
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Configure Git identity
+      - name: Record exact source revision
         shell: bash
         run: |
-          git config user.name "SC-900 Baseline Automation"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          echo "GITHUB_SHA=$GITHUB_SHA"
+          echo "CHECKED_OUT_SHA=$(git rev-parse HEAD)"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git status --short
+          git diff --exit-code
 
       - name: Install verification tools
         shell: bash
@@ -38,11 +39,20 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install black ruff mypy pyinstaller
 
-      - name: Execute staged TDD migration and release gate
+      - name: Verify source tree and quality gates
         shell: bash
-        env:
-          CI: 'true'
-        run: python .github/scripts/bootstrap_sc900_v8_current.py
+        run: |
+          python -m unittest discover -s tests -v
+          python tools/lint_bank.py
+          python tools/verify_installation.py
+          python tools/run_quality_checks.py
+          git diff --exit-code
+
+      - name: Build and smoke-test existing SC-900 source
+        shell: bash
+        run: |
+          python -m tools.build_windows_release
+          git diff --exit-code
 
       - name: Upload verified Windows release
         if: success()
