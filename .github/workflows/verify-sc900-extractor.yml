@@ -1,0 +1,48 @@
+name: Verify SC-900 extractor v1
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [integration/sc900-extractor-v1]
+
+permissions:
+  contents: read
+
+jobs:
+  verify-extractor:
+    if: github.head_ref == 'integration/sc900-extractor-v1' || github.ref == 'refs/heads/integration/sc900-extractor-v1'
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Prove frozen baseline is untouched
+        shell: bash
+        run: |
+          git fetch --tags origin
+          test "$(git rev-parse sc900-v8.0.0-baseline^{commit})" = "fed4d4a44591ca93fe8428bc3ca02ec66a12f715"
+
+      - name: Install verification tools
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install black ruff mypy -r requirements-extract.txt
+
+      - name: Verify tests and quality gates
+        shell: bash
+        run: |
+          python -m unittest discover -s tests -v
+          python tools/lint_bank.py
+          python tools/verify_installation.py
+          python tools/run_quality_checks.py
+          git diff --exit-code
