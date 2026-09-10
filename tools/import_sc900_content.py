@@ -16,7 +16,7 @@ def main() -> None:
     args = parser.parse_args()
     report = import_jsonl(args.input, args.store, load_taxonomy())
     if args.compile:
-        compile_question_bank(args.store, args.compile)
+        report.update(compile_question_bank(args.store, args.compile))
     print(json.dumps(report, indent=2, sort_keys=True))
 
 
