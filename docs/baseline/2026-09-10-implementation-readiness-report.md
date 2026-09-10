@@ -2,12 +2,22 @@
 
 ## Status
 
-**NOT READY to freeze or release.** The local engineering and ingestion baseline is verified, but the required Windows build and executable smoke test have not run. The implementation branch could not be pushed from this environment, so GitHub Actions CI has not run either.
+**AUTH_REQUIRED.** The local engineering, ingestion baseline, and release infrastructure are verified, but the required Windows build and executable smoke test have not run for this branch head. A supported GitHub connection is authenticated, but it cannot push the existing local Git history intact.
 
 ## Branch and commits
 
 - Branch: `implementation/sc900-v8-baseline`
-- Local commits beyond the remote: `0657135`, `b7d31d1`, `944a261`, `b4734cf`, `196788c`, `dd27cfb`, `7999d53`, `34b4a9b`
+- Starting head: `89e565719b7004117bcaea1d26ae6d27bb007acf`
+- Current head: `a0badb8f8cbbf8d2dd8888fe48248a06d380d34e`
+- Remote head: `bbc3bd900b73bde89151dc51706ad62fc69e8196`
+- Local commits beyond the remote: 10
+
+## Release infrastructure repair
+
+- The Windows workflow now verifies the exact pull-request checkout rather than running the one-time migration/bootstrap script.
+- It records and compares `GITHUB_SHA` with `git rev-parse HEAD`, runs test/quality gates, and asserts no tracked-source modification before and after build preparation.
+- `release_resources.py` is the single source of truth for the certification profile, placeholder bank, and versioned taxonomy. The PyInstaller build command includes all three, with the taxonomy bundled at `config/certifications/sc900-2026.json` for `_MEIPASS` lookup.
+- `tools/verify_installation.py` verifies the taxonomy source resource, and regression tests reject a workflow that invokes migration/bootstrap or omits a required resource.
 
 ## Ingestion baseline
 
@@ -21,7 +31,7 @@
 
 ## Verification
 
-- `python -m unittest discover -s tests`: 443 passed, 230 skipped because the Linux worker has no Tk display.
+- `python -m unittest discover -s tests`: 445 passed, 230 skipped because the Linux worker has no Tk display.
 - `python tools/lint_bank.py`: passed.
 - `python tools/verify_installation.py`: passed.
 - `python tools/run_quality_checks.py`: Ruff, Black, and mypy passed.
@@ -29,10 +39,10 @@
 
 ## Blocking gates
 
-1. Push `implementation/sc900-v8-baseline` with a GitHub-authenticated environment.
-2. Run the Windows GitHub Actions workflow.
-3. Verify the Windows PyInstaller build and release smoke test, including bundled SC-900 configuration/bank loading.
-4. Do not create `SC900_V8_BASELINE` until all three gates are green.
+1. Push `implementation/sc900-v8-baseline` using a Git-capable authenticated environment that preserves the existing commit history.
+2. Run the repaired Windows GitHub Actions workflow for `a0badb8f8cbbf8d2dd8888fe48248a06d380d34e`.
+3. Verify the Windows PyInstaller build and release smoke test, including bundled SC-900 configuration, taxonomy, and bank loading.
+4. Do not create a baseline tag until all three gates are green for the same SHA.
 
 ## Follow-up technical debt
 
