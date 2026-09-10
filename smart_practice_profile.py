@@ -190,13 +190,16 @@ def smart_practice_objective_cap(target: int, profile: SmartPracticeScoringProfi
 
 def smart_practice_role_allocation(target: int, role_shares: dict[str, float] | None = None) -> dict[str, int]:
     target = max(0, int(target or 0))
-    ratios = dict(role_shares or {
-        "due_retention": 0.25,
-        "weak_repair": 0.25,
-        "blueprint_coverage": 0.25,
-        "transfer": 0.15,
-        "controlled_stretch": 0.10,
-    })
+    ratios = dict(
+        role_shares
+        or {
+            "due_retention": 0.25,
+            "weak_repair": 0.25,
+            "blueprint_coverage": 0.25,
+            "transfer": 0.15,
+            "controlled_stretch": 0.10,
+        }
+    )
     total = sum(float(ratios.get(role, 0.0) or 0.0) for role in SMART_PRACTICE_PRIMARY_ROLES) or 1.0
     ratios = {role: max(0.0, float(ratios.get(role, 0.0) or 0.0) / total) for role in SMART_PRACTICE_PRIMARY_ROLES}
     if target == 0:
@@ -205,7 +208,10 @@ def smart_practice_role_allocation(target: int, role_shares: dict[str, float] | 
     remaining = target - sum(allocation.values())
     priority = ["weak_repair", "due_retention", "blueprint_coverage", "transfer", "controlled_stretch"]
     fractions = sorted(
-        ((target * ratios[role] - allocation[role], -priority.index(role), role) for role in SMART_PRACTICE_PRIMARY_ROLES),
+        (
+            (target * ratios[role] - allocation[role], -priority.index(role), role)
+            for role in SMART_PRACTICE_PRIMARY_ROLES
+        ),
         reverse=True,
     )
     for _fraction, _priority, role in fractions[:remaining]:
