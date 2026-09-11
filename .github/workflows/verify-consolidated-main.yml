@@ -1,0 +1,125 @@
+name: Verify consolidated SC-900 main
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify-consolidated-main:
+    if: github.event_name == 'push' || github.head_ref == 'verification/consolidated-main'
+    runs-on: windows-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Record revision and invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --tags origin
+          echo "GITHUB_SHA=$GITHUB_SHA"
+          echo "CHECKED_OUT_SHA=$(git rev-parse HEAD)"
+          echo "BASELINE_SHA=$(git rev-parse sc900-v8.0.0-baseline^{commit})"
+          test "$(git rev-parse sc900-v8.0.0-baseline^{commit})" = "fed4d4a44591ca93fe8428bc3ca02ec66a12f715"
+          test -z "$(git ls-files --stage .sc900-bootstrap/sc900-source-v8)"
+          git status --short
+          git diff --exit-code
+
+      - name: Install verification tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install black ruff mypy pyinstaller -r requirements-extract.txt
+
+      - name: Run full test and quality gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -v
+          python tools/lint_bank.py
+          python tools/verify_installation.py
+          python tools/run_quality_checks.py
+          git diff --exit-code
+
+      - name: Exercise extractor CLI on synthetic PDF
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from tests.pdf_fixtures import write_text_pdf
+
+          pages = [
+              "\n".join([
+                  "Question 1",
+                  "Which Microsoft service provides identity and access management?",
+                  "A. Microsoft Purview",
+                  "B. Microsoft Entra ID",
+                  "C. Microsoft Defender for Cloud",
+                  "D. Microsoft Intune",
+                  "Answer: B",
+                  "Explanation: Microsoft Entra ID provides identity and access management.",
+              ]),
+              "\n".join([
+                  "Question 2",
+                  "Which Microsoft service focuses on compliance and data governance?",
+                  "A. Microsoft Purview",
+                  "B. Microsoft Entra ID",
+                  "C. Microsoft Defender for Cloud",
+                  "D. Microsoft Intune",
+                  "Answer: A",
+                  "Explanation: Microsoft Purview provides compliance and data governance capabilities.",
+              ]),
+          ]
+          write_text_pdf(Path("_verify_cli.pdf"), pages)
+          PY
+          python -m tools.extract_sc900_pdf _verify_cli.pdf --output _verify_cli.jsonl --title "Consolidated main verification"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          rows = [json.loads(line) for line in Path("_verify_cli.jsonl").read_text(encoding="utf-8").splitlines() if line.strip()]
+          questions = [row for row in rows if row.get("record_type") == "extracted_question"]
+          assert len(questions) == 2, questions
+          assert [row["source_page"] for row in questions] == [1, 2], questions
+          assert all(row["contract_version"] == "sc900.extractor.exchange/v1" for row in questions)
+          print("Extractor CLI verified: 2 questions, pages 1 and 2, contract v1")
+          PY
+          python -m unittest tests.test_extraction_pilot.PilotTests.test_original_pdf_pilot_extract_import_approve_subset_and_idempotency -v
+          rm -f _verify_cli.pdf _verify_cli.jsonl
+          git diff --exit-code
+
+      - name: Build, verify packaged resources, and smoke-test Windows release
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m tools.build_windows_release
+          test -f release/SC900TestLearningEngine/SC900TestLearningEngine.exe
+          test -f release/SC900TestLearningEngine/release_manifest.json
+          sha256sum release/SC900TestLearningEngine/SC900TestLearningEngine.exe
+          cat release/SC900TestLearningEngine/release_manifest.json
+          git diff --exit-code
+
+      - name: Upload verified consolidated Windows release
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: SC900TestLearningEngine-consolidated-main
+          path: release/SC900TestLearningEngine/
+          if-no-files-found: error
