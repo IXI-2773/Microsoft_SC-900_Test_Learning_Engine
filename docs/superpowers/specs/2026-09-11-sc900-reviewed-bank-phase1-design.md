@@ -1,8 +1,10 @@
 # SC-900 Reviewed Bank Phase 1 Design
 
-Status: DESIGN ONLY — implementation begins only after explicit design approval.
+Status: DESIGN SPEC PENDING WRITTEN-SPEC REVIEW — no bank implementation is authorized until this document is explicitly approved.
 
 Base main: `b94d6851fecc125913784f3e29d29a6250abecac`
+
+Blueprint authority: Microsoft SC-900 **skills measured as of July 28, 2026**.
 
 ## 1. Purpose
 
@@ -313,7 +315,7 @@ Phase 1 does not:
 
 ## 13. Implementation-plan boundary
 
-After this design is approved, the implementation plan should separate work into at least:
+After this written spec is explicitly approved, the implementation plan should separate work into at least:
 
 1. taxonomy refinement and validation;
 2. metadata/semantic-family contract and tests;
