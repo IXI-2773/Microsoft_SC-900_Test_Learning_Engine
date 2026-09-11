@@ -342,7 +342,7 @@ def _copy_phase1_store(destination: Path) -> None:
 
 
 def _hash_map(paths: Sequence[Path]) -> dict[str, str]:
-    return {str(path.relative_to(ROOT)): sha256_file(path) for path in paths}
+    return {path.relative_to(ROOT).as_posix(): sha256_file(path) for path in paths}
 
 
 def build_phase2(work_dir: Path) -> dict[str, Any]:

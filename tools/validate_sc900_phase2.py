@@ -238,6 +238,34 @@ def validate_phase2_set(
 
 def validate_train_probe_manifest(manifest: Mapping[str, Any]) -> list[dict[str, Any]]:
     errors: list[dict[str, Any]] = []
+    manifest_fields = {"schema_version", "partition_epoch", "blueprint_version", "items"}
+    item_fields = {
+        "question_id",
+        "semantic_family_id",
+        "source_family_id",
+        "role",
+        "promotion_status",
+        "future_probe_suitability",
+        "family_state",
+        "assignment_rationale",
+        "assignment_receipt",
+        "blueprint_version",
+    }
+    receipt_fields = {"override_type", "prior_family_ids", "reviewed_at", "reviewer"}
+    promotion_statuses = {"approved", "pending", "withheld"}
+    probe_suitabilities = {"eligible", "train_only", "needs_review"}
+    family_states = {"resolved", "unknown", "disputed", "needs_review"}
+    override_types = {"none", "family_merge", "family_split", "role_change"}
+
+    for field in sorted(set(manifest) - manifest_fields):
+        errors.append(
+            _error(
+                "UNEXPECTED_MANIFEST_FIELD",
+                "manifest contains a field forbidden by the published schema",
+                field=field,
+            )
+        )
+
     schema_version = normalize_text(manifest.get("schema_version"))
     if not schema_version:
         errors.append(_error("MISSING_MANIFEST_SCHEMA_VERSION", "manifest schema_version is required"))
@@ -255,15 +283,41 @@ def validate_train_probe_manifest(manifest: Mapping[str, Any]) -> list[dict[str,
     if not normalize_text(manifest.get("blueprint_version")):
         errors.append(_error("MISSING_MANIFEST_BLUEPRINT_VERSION", "manifest blueprint_version is required"))
 
-    raw_items = manifest.get("items")
-    items = list(raw_items) if isinstance(raw_items, list) else []
+    if "items" not in manifest:
+        errors.append(_error("MISSING_MANIFEST_ITEMS", "manifest items is required"))
+        items: list[Any] = []
+    else:
+        raw_items = manifest.get("items")
+        if not isinstance(raw_items, list):
+            errors.append(
+                _error("INVALID_MANIFEST_ITEMS_TYPE", "manifest items must be an array")
+            )
+            items = []
+        else:
+            items = raw_items
     seen_ids: set[str] = set()
     roles_by_family: dict[str, set[str]] = defaultdict(set)
 
     for index, raw_item in enumerate(items):
         if not isinstance(raw_item, Mapping):
-            errors.append(_error("MALFORMED_MANIFEST_ITEM", "manifest item must be an object", index=index))
+            errors.append(
+                _error(
+                    "MALFORMED_MANIFEST_ITEM",
+                    "manifest item must be an object",
+                    index=index,
+                )
+            )
             continue
+
+        for field in sorted(set(raw_item) - item_fields):
+            errors.append(
+                _error(
+                    "UNEXPECTED_MANIFEST_ITEM_FIELD",
+                    "manifest item contains a field forbidden by the published schema",
+                    index=index,
+                    field=field,
+                )
+            )
 
         question_id = normalize_text(raw_item.get("question_id"))
         semantic_family_id = normalize_text(raw_item.get("semantic_family_id"))
@@ -275,6 +329,34 @@ def validate_train_probe_manifest(manifest: Mapping[str, Any]) -> list[dict[str,
         blueprint_version = normalize_text(raw_item.get("blueprint_version"))
         assignment_rationale = normalize_text(raw_item.get("assignment_rationale"))
         assignment_receipt = raw_item.get("assignment_receipt")
+
+        if promotion_status not in promotion_statuses:
+            errors.append(
+                _error(
+                    "INVALID_PROMOTION_STATUS",
+                    "promotion_status must be approved, pending, or withheld",
+                    question_id=question_id,
+                    promotion_status=promotion_status,
+                )
+            )
+        if probe_suitability not in probe_suitabilities:
+            errors.append(
+                _error(
+                    "INVALID_PROBE_SUITABILITY",
+                    "future_probe_suitability must match the published schema enum",
+                    question_id=question_id,
+                    future_probe_suitability=probe_suitability,
+                )
+            )
+        if family_state not in family_states:
+            errors.append(
+                _error(
+                    "INVALID_FAMILY_STATE",
+                    "family_state must match the published schema enum",
+                    question_id=question_id,
+                    family_state=family_state,
+                )
+            )
 
         if not question_id:
             errors.append(_error("MISSING_MANIFEST_QUESTION_ID", "question_id is required", index=index))
@@ -310,9 +392,62 @@ def validate_train_probe_manifest(manifest: Mapping[str, Any]) -> list[dict[str,
         if not assignment_rationale:
             errors.append(_error("MISSING_ASSIGNMENT_RATIONALE", "assignment_rationale is required", question_id=question_id))
         if not isinstance(assignment_receipt, Mapping):
-            errors.append(_error("MISSING_ASSIGNMENT_RECEIPT", "assignment_receipt must be an object", question_id=question_id))
-        elif not normalize_text(assignment_receipt.get("reviewer")) or not normalize_text(assignment_receipt.get("reviewed_at")):
-            errors.append(_error("INCOMPLETE_ASSIGNMENT_RECEIPT", "assignment_receipt requires reviewer and reviewed_at", question_id=question_id))
+            errors.append(
+                _error(
+                    "MISSING_ASSIGNMENT_RECEIPT",
+                    "assignment_receipt must be an object",
+                    question_id=question_id,
+                )
+            )
+        else:
+            for field in sorted(set(assignment_receipt) - receipt_fields):
+                errors.append(
+                    _error(
+                        "UNEXPECTED_ASSIGNMENT_RECEIPT_FIELD",
+                        "assignment_receipt contains a field forbidden by the published schema",
+                        question_id=question_id,
+                        field=field,
+                    )
+                )
+            if not normalize_text(assignment_receipt.get("reviewer")) or not normalize_text(
+                assignment_receipt.get("reviewed_at")
+            ):
+                errors.append(
+                    _error(
+                        "INCOMPLETE_ASSIGNMENT_RECEIPT",
+                        "assignment_receipt requires reviewer and reviewed_at",
+                        question_id=question_id,
+                    )
+                )
+            if "override_type" in assignment_receipt:
+                override_type = normalize_text(assignment_receipt.get("override_type")).lower()
+                if override_type not in override_types:
+                    errors.append(
+                        _error(
+                            "INVALID_ASSIGNMENT_OVERRIDE_TYPE",
+                            "assignment_receipt override_type must match the published schema enum",
+                            question_id=question_id,
+                            override_type=override_type,
+                        )
+                    )
+            if "prior_family_ids" in assignment_receipt:
+                prior_family_ids = assignment_receipt.get("prior_family_ids")
+                valid_prior_ids = (
+                    isinstance(prior_family_ids, list)
+                    and all(
+                        isinstance(value, str) and bool(value)
+                        for value in prior_family_ids
+                    )
+                    and len(prior_family_ids) == len(set(prior_family_ids))
+                )
+                if not valid_prior_ids:
+                    errors.append(
+                        _error(
+                            "INVALID_PRIOR_FAMILY_IDS",
+                            "assignment_receipt prior_family_ids must be an array of unique non-empty strings",
+                            question_id=question_id,
+                        )
+                    )
         if role not in MANIFEST_ROLES:
             errors.append(
                 _error(
