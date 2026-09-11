@@ -440,6 +440,10 @@ class TestingEngineApp(
         )
         research_menu.add_command(label="Set Measurement Day...", command=self.set_cand01r3_measurement_day)
         research_menu.add_command(
+            label="Begin Today's PROBE Measurement...",
+            command=self.begin_cand01r3_todays_probe_measurement,
+        )
+        research_menu.add_command(
             label="Show Today's Measurement Card...",
             command=self.show_cand01r3_measurement_card,
         )
@@ -1565,7 +1569,11 @@ class TestingEngineApp(
         day = simpledialog.askinteger("Measurement day", "Enter scheduled day (1-7):", minvalue=1, maxvalue=7)
         if not day:
             return
-        policy_id = set_measurement_day(day)
+        try:
+            policy_id = set_measurement_day(day)
+        except Exception as exc:
+            messagebox.showerror("Cannot set measurement day", str(exc))
+            return
         card = today_measurement_card(day)
         ids = ", ".join(row["question_id"] for row in card["questions"])
         remaining = int(card.get("train_exposures_remaining") or 0)
@@ -1590,6 +1598,26 @@ class TestingEngineApp(
             f"TRAIN EXPOSURES COMPLETED = {card.get('train_exposures_completed')}\n"
             f"TRAIN EXPOSURES REMAINING = {remaining}\n{status}\n{next_action}\n\n"
             f"Scheduled PROBE IDs:\n{ids}",
+        )
+
+    def begin_cand01r3_todays_probe_measurement(self):
+        from cand01r3_protocol import begin_todays_probe_measurement, is_measurement_active, today_measurement_card
+
+        if not is_measurement_active():
+            messagebox.showwarning("Measurement inactive", "Begin the CAND-01R3 measurement epoch first.")
+            return
+        try:
+            result = begin_todays_probe_measurement()
+        except Exception as exc:
+            messagebox.showerror("Cannot begin today's PROBE measurement", str(exc))
+            return
+        day = int(result["scheduled_day"])
+        card = today_measurement_card(day)
+        ids = ", ".join(row["question_id"] for row in card["questions"])
+        self.session_question_limit = len(card["questions"])
+        messagebox.showinfo(
+            f"Day {day} PROBE measurement",
+            "Intended use is now MEASUREMENT.\n" "Answer only today's scheduled PROBE items once.\n\n" f"{ids}",
         )
 
     def show_cand01r3_measurement_card(self):
@@ -1636,7 +1664,9 @@ class TestingEngineApp(
         note = simpledialog.askstring("Outside-study note", "Optional note:") or ""
         day = simpledialog.askinteger("Calendar day", "Scheduled day (1-7), or cancel:", minvalue=1, maxvalue=7)
         result = record_outside_study(code.strip().upper(), note=note, scheduled_day=day)
-        messagebox.showinfo("Outside-study recorded", f"{result.status}: {result.payload.get('outside_study', result.reason)}")
+        messagebox.showinfo(
+            "Outside-study recorded", f"{result.status}: {result.payload.get('outside_study', result.reason)}"
+        )
 
     def record_cand01r3_unobserved(self):
         from cand01r3_protocol import is_measurement_active, record_unobserved

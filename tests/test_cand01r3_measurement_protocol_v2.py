@@ -107,6 +107,14 @@ class Cand01R3MeasurementProtocolV2Tests(unittest.TestCase):
         payload.update(overrides)
         return begin_cand01r3_measurement(**payload)
 
+    def _ready_day1_measurement(self) -> None:
+        from cand01r3_protocol import begin_todays_probe_measurement, record_train_exposure, set_measurement_day
+
+        set_measurement_day(1)
+        for question_id in self._train_ids(20):
+            record_train_exposure(policy_id="SMART_PRACTICE", question_id=question_id, scheduled_day=1)
+        begin_todays_probe_measurement()
+
     def test_m2_001_protocol_version_is_v2(self):
         from cand01r3_protocol import PROTOCOL_VERSION, build_protocol, load_committed_protocol
 
@@ -258,10 +266,10 @@ class Cand01R3MeasurementProtocolV2Tests(unittest.TestCase):
         self.assertEqual("NEW_MEASUREMENT_EPOCH_REQUIRED", blocked["reason"])
 
     def test_m2_018_protocol_cannot_change_from_v2_after_first_real_event(self):
-        from cand01r3_protocol import record_measurement_event, replace_active_protocol, set_measurement_day
+        from cand01r3_protocol import record_measurement_event, replace_active_protocol
 
         self._begin()
-        set_measurement_day(1)
+        self._ready_day1_measurement()
         record_measurement_event(
             question("sc900_p1_q001", role_hint="PROBE", family="shared_responsibility_model"),
             selected=["A"],
@@ -303,7 +311,7 @@ class Cand01R3MeasurementProtocolV2Tests(unittest.TestCase):
         card = today_measurement_card(1)
         self.assertEqual(0, card["train_exposures_remaining"])
         self.assertEqual("TRAINING_BLOCK_COMPLETE", card["training_block_status"])
-        self.assertEqual("PROCEED TO TODAY'S SCHEDULED PROBE", card["next_action"])
+        self.assertEqual("BEGIN TODAY'S PROBE MEASUREMENT", card["next_action"])
 
 
 if __name__ == "__main__":

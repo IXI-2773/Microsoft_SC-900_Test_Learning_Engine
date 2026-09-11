@@ -59,6 +59,18 @@ class Cand01R3MeasurementProtocolTests(unittest.TestCase):
         reset_cand01r3_runtime()
         self.tmpdir.cleanup()
 
+    def _ready_day1_measurement(self) -> None:
+        from cand01r3_partition import ROLE_TRAIN, load_runtime_authority
+        from cand01r3_protocol import begin_todays_probe_measurement, record_train_exposure, set_measurement_day
+
+        set_measurement_day(1)
+        train_ids = sorted(
+            qid for qid, item in load_runtime_authority().items.items() if item.get("role") == ROLE_TRAIN
+        )[:20]
+        for question_id in train_ids:
+            record_train_exposure(policy_id="SMART_PRACTICE", question_id=question_id, scheduled_day=1)
+        begin_todays_probe_measurement()
+
     def _begin(self, **overrides):
         from cand01r3_protocol import begin_cand01r3_measurement
 
@@ -192,6 +204,7 @@ class Cand01R3MeasurementProtocolTests(unittest.TestCase):
         from cand01r3_protocol import record_measurement_event
 
         self._begin()
+        self._ready_day1_measurement()
         first = record_measurement_event(
             question("sc900_p1_q001", role_hint="PROBE", family="shared_responsibility_model"),
             selected=["A"],
@@ -212,6 +225,7 @@ class Cand01R3MeasurementProtocolTests(unittest.TestCase):
         from cand01r3_protocol import record_measurement_event
 
         self._begin()
+        self._ready_day1_measurement()
         record_measurement_event(
             question("sc900_p1_q001", role_hint="PROBE", family="shared_responsibility_model"),
             selected=["B"],
@@ -231,6 +245,7 @@ class Cand01R3MeasurementProtocolTests(unittest.TestCase):
         from cand01r3_protocol import record_measurement_event
 
         self._begin()
+        self._ready_day1_measurement()
         record_measurement_event(
             question("sc900_p1_q001", role_hint="PROBE", family="shared_responsibility_model"),
             selected=["B"],
@@ -250,6 +265,7 @@ class Cand01R3MeasurementProtocolTests(unittest.TestCase):
         from cand01r3_protocol import record_unobserved
 
         self._begin()
+        self._ready_day1_measurement()
         observation = record_unobserved("sc900_p1_q001", reason="MISSED_SCHEDULED_PROBE", ledger_path=self.ledger_path)
         self.assertEqual("UNOBSERVED", observation.status)
         self.assertIsNone(observation.correct)
@@ -259,6 +275,7 @@ class Cand01R3MeasurementProtocolTests(unittest.TestCase):
         from cand01r3_protocol import clean_primary_events, record_contamination, record_measurement_event
 
         self._begin()
+        self._ready_day1_measurement()
         record_measurement_event(
             question("sc900_p1_q001", role_hint="PROBE", family="shared_responsibility_model"),
             selected=["A"],
@@ -277,17 +294,10 @@ class Cand01R3MeasurementProtocolTests(unittest.TestCase):
             clear_contamination("sc900_p1_q001")
 
     def test_m018_train_exposure_snapshot_recorded(self):
-        from cand01r3_protocol import record_measurement_event, record_train_exposure
+        from cand01r3_protocol import record_measurement_event
 
         self._begin()
-        record_train_exposure(
-            policy_id="SMART_PRACTICE",
-            question_id="sc900_p1_q022",
-            semantic_family_id="authentication_methods",
-            domain="microsoft_entra",
-            objective="entra_authentication",
-            service_class="COVERAGE",
-        )
+        self._ready_day1_measurement()
         event = record_measurement_event(
             question("sc900_p1_q001", role_hint="PROBE", family="shared_responsibility_model"),
             selected=["A"],
@@ -299,18 +309,18 @@ class Cand01R3MeasurementProtocolTests(unittest.TestCase):
         self.assertGreaterEqual(snapshot["SMART_PRACTICE"]["unique_train_questions_seen"], 1)
 
     def test_m019_policy_exposure_recorded(self):
-        from cand01r3_protocol import record_measurement_event, record_train_exposure
+        from cand01r3_protocol import record_measurement_event
 
         self._begin()
-        record_train_exposure(policy_id="RRC_1", question_id="sc900_p1_q022", service_class="REPAIR")
+        self._ready_day1_measurement()
         event = record_measurement_event(
             question("sc900_p1_q001", role_hint="PROBE", family="shared_responsibility_model"),
             selected=["A"],
             correct=True,
             ledger_path=self.ledger_path,
         )
-        self.assertIn("RRC_1", event.payload["policy_exposure_snapshot"])
-        self.assertGreaterEqual(event.payload["policy_exposure_snapshot"]["RRC_1"]["train_questions_seen"], 1)
+        self.assertIn("SMART_PRACTICE", event.payload["policy_exposure_snapshot"])
+        self.assertGreaterEqual(event.payload["policy_exposure_snapshot"]["SMART_PRACTICE"]["train_questions_seen"], 1)
 
     def test_m020_synthetic_test_event_cannot_enter_production_ledger(self):
         from cand01r3_protocol import record_measurement_event
@@ -328,7 +338,11 @@ class Cand01R3MeasurementProtocolTests(unittest.TestCase):
         )
         self.assertEqual("NOT_ELIGIBLE", result.status)
         self.assertEqual("SYNTHETIC_FORBIDDEN_IN_PRODUCTION_LEDGER", result.reason)
-        self.assertEqual("", production.read_text(encoding="utf-8"))
+        rows = [json.loads(line) for line in production.read_text(encoding="utf-8").splitlines() if line.strip()]
+        self.assertTrue(rows)
+        self.assertTrue(all(row.get("event_type") == "EPOCH_BEGIN" for row in rows))
+        self.assertTrue(all(not row.get("synthetic") for row in rows))
+        self.assertTrue(all(row.get("marker") not in {"TEST_ONLY", "SYNTHETIC"} for row in rows))
 
     def test_m021_default_engine_remains_unchanged_outside_experiment(self):
         from cand01r3_protocol import is_measurement_active
@@ -356,6 +370,7 @@ class Cand01R3MeasurementProtocolTests(unittest.TestCase):
         from cand01r3_protocol import mutate_policy_sequence, record_measurement_event
 
         self._begin()
+        self._ready_day1_measurement()
         record_measurement_event(
             question("sc900_p1_q001", role_hint="PROBE", family="shared_responsibility_model"),
             selected=["A"],
@@ -369,6 +384,7 @@ class Cand01R3MeasurementProtocolTests(unittest.TestCase):
         from cand01r3_protocol import record_measurement_event, replace_active_protocol
 
         self._begin()
+        self._ready_day1_measurement()
         record_measurement_event(
             question("sc900_p1_q001", role_hint="PROBE", family="shared_responsibility_model"),
             selected=["A"],

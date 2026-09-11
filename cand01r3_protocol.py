@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import uuid
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
@@ -103,6 +103,21 @@ SYNTHETIC_MARKERS = {"TEST_ONLY", "SYNTHETIC"}
 HASH_EXCLUDED = {"protocol_sha256"}
 STATUS_DEVIATION = "PROTOCOL_DEVIATION"
 STATUS_OUTSIDE_STUDY = "OUTSIDE_STUDY"
+STATUS_TRAIN_EXPOSURE = "TRAIN_EXPOSURE"
+EVENT_EPOCH_BEGIN = "EPOCH_BEGIN"
+EVENT_DAY_STATE = "DAY_STATE"
+EVENT_MEASUREMENT_TRANSITION = "MEASUREMENT_TRANSITION"
+STATE_DAY_NOT_STARTED = "DAY_NOT_STARTED"
+STATE_TRAINING = "TRAINING"
+STATE_TRAINING_COMPLETE = "TRAINING_COMPLETE"
+STATE_MEASUREMENT = "MEASUREMENT"
+STATE_DAY_COMPLETE = "DAY_COMPLETE"
+STATE_SMART_PRACTICE_TRAINING = "SMART_PRACTICE_TRAINING"
+STATE_SMART_PRACTICE_COMPLETE = "SMART_PRACTICE_COMPLETE"
+STATE_RRC1_TRAINING = "RRC1_TRAINING"
+STATE_RRC1_COMPLETE = "RRC1_COMPLETE"
+TERMINAL_PROBE_STATUSES = {STATUS_PRIMARY, STATUS_UNOBSERVED, STATUS_CONTAMINATED}
+REAL_OBSERVATION_STATUSES = {STATUS_PRIMARY, STATUS_UNOBSERVED, STATUS_CONTAMINATED, STATUS_DUPLICATE}
 POLICY_DAY7 = "DAY7_BALANCED_MEASUREMENT"
 RUNTIME_POLICY_MAP = {
     "SMART_PRACTICE": POLICY_SMART_PRACTICE,
@@ -228,6 +243,7 @@ class MeasurementSession:
     ledger: MeasurementLedger | None = None
     train_log: list[dict[str, Any]] = field(default_factory=list)
     events: list[dict[str, Any]] = field(default_factory=list)
+    day_state: str = STATE_DAY_NOT_STARTED
 
 
 _SESSION = MeasurementSession()
@@ -433,13 +449,27 @@ def allow_v2_supersession(real_observations: int) -> dict[str, Any]:
 
 def require_train_capacity(*, expected_budget: int, actual_eligible: int, policy_id: str = "") -> dict[str, Any]:
     if int(actual_eligible) < int(expected_budget):
-        return {
+        result = {
             "status": "INSUFFICIENT_TRAIN_CAPACITY",
             "policy_id": policy_id,
             "expected_budget": int(expected_budget),
             "actual_exposures": int(actual_eligible),
             "filled_with_probe": False,
         }
+        if _SESSION.active:
+            payload = {
+                "event_id": str(uuid.uuid4()),
+                "event_type": STATUS_DEVIATION,
+                "status": STATUS_DEVIATION,
+                "reason": "INSUFFICIENT_TRAIN_CAPACITY",
+                "counted": False,
+                "policy_id": policy_id,
+                "scheduled_day": _SESSION.current_scheduled_day,
+                "calendar_timestamp": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                **_session_identity_fields(),
+            }
+            _persist_event(payload)
+        return result
     return {
         "status": "OK",
         "policy_id": policy_id,
@@ -450,9 +480,34 @@ def require_train_capacity(*, expected_budget: int, actual_eligible: int, policy
 
 
 def _ledger_real_observation_count(path: Path) -> int:
-    if not path.exists() or path.stat().st_size == 0:
-        return 0
     count = 0
+    for payload in _read_ledger_events(path):
+        if payload.get("synthetic") or str(payload.get("marker") or "") in SYNTHETIC_MARKERS:
+            continue
+        if payload.get("event_type") in {EVENT_EPOCH_BEGIN, EVENT_DAY_STATE, EVENT_MEASUREMENT_TRANSITION}:
+            continue
+        if payload.get("status") == STATUS_TRAIN_EXPOSURE or payload.get("event_type") == STATUS_TRAIN_EXPOSURE:
+            continue
+        if payload.get("status") in REAL_OBSERVATION_STATUSES and payload.get("question_role") in {
+            ROLE_PROBE,
+            None,
+            "",
+        }:
+            if payload.get("reason") in {
+                "PROBE_BEFORE_TRAIN_BLOCK_COMPLETE",
+                "WRONG_MEASUREMENT_DAY",
+                "MEASUREMENT_MODE_NOT_ACTIVE",
+                "UNSCHEDULED_PROBE",
+            }:
+                continue
+            count += 1
+    return count
+
+
+def _read_ledger_events(path: Path | None) -> list[dict[str, Any]]:
+    if path is None or not path.exists() or path.stat().st_size == 0:
+        return []
+    events: list[dict[str, Any]] = []
     for line in path.read_text(encoding="utf-8").splitlines():
         if not line.strip():
             continue
@@ -460,17 +515,100 @@ def _ledger_real_observation_count(path: Path) -> int:
             payload = json.loads(line)
         except json.JSONDecodeError:
             continue
-        if payload.get("synthetic") or str(payload.get("marker") or "") in SYNTHETIC_MARKERS:
-            continue
-        if payload.get("status") in {
-            STATUS_PRIMARY,
-            STATUS_UNOBSERVED,
-            STATUS_CONTAMINATED,
-            STATUS_DUPLICATE,
-            STATUS_DEVIATION,
-        }:
-            count += 1
-    return count
+        if isinstance(payload, dict):
+            events.append(payload)
+    return events
+
+
+def _authority_identity(authority: RuntimeAuthority, *, learner_id: str, protocol: Mapping[str, Any]) -> dict[str, str]:
+    return {
+        "measurement_epoch": MEASUREMENT_EPOCH,
+        "protocol_version": str(protocol.get("protocol_version") or PROTOCOL_VERSION),
+        "protocol_sha256": protocol_sha256(protocol),
+        "partition_epoch": authority.partition_epoch or PARTITION_EPOCH,
+        "manifest_sha256": authority.manifest_sha256,
+        "store_sha256": authority.store_sha256,
+        "semantic_audit_sha256": authority.semantic_audit_sha256,
+        "compiled_sha256": authority.compiled_sha256,
+        "candidate_bank_identity": authority.compiled_sha256,
+        "learner_id": learner_id,
+    }
+
+
+def _session_identity_fields() -> dict[str, str]:
+    authority = _SESSION.ledger.authority if _SESSION.ledger is not None else None
+    context = get_context()
+    return {
+        "measurement_epoch": _SESSION.measurement_epoch,
+        "protocol_version": _SESSION.protocol_version,
+        "protocol_sha256": _SESSION.protocol_sha256,
+        "partition_epoch": _SESSION.partition_epoch,
+        "manifest_sha256": (authority.manifest_sha256 if authority else context.manifest_sha256),
+        "store_sha256": (authority.store_sha256 if authority else context.store_sha256),
+        "semantic_audit_sha256": (authority.semantic_audit_sha256 if authority else context.semantic_audit_sha256),
+        "compiled_sha256": (authority.compiled_sha256 if authority else context.compiled_sha256),
+        "candidate_bank_identity": _SESSION.candidate_bank_identity,
+        "learner_id": _SESSION.learner_id,
+    }
+
+
+def _ledger_identity(events: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    identity: dict[str, Any] = {}
+    preferred = [event for event in events if event.get("event_type") == EVENT_EPOCH_BEGIN]
+    for event in preferred + list(events):
+        for key in (
+            "measurement_epoch",
+            "protocol_version",
+            "protocol_sha256",
+            "partition_epoch",
+            "manifest_sha256",
+            "store_sha256",
+            "semantic_audit_sha256",
+            "compiled_sha256",
+            "candidate_bank_identity",
+            "learner_id",
+        ):
+            value = event.get(key)
+            if value and key not in identity:
+                identity[key] = value
+        if len(identity) >= 10:
+            break
+    return identity
+
+
+def _verify_resume_identity(
+    events: Sequence[Mapping[str, Any]],
+    *,
+    learner_id: str,
+    measurement_epoch: str,
+    protocol: Mapping[str, Any],
+    authority: RuntimeAuthority,
+) -> None:
+    identity = _ledger_identity(events)
+    if not identity:
+        raise Cand01R3AuthorityError("LEDGER_IDENTITY_MISSING")
+    expected = _authority_identity(authority, learner_id=learner_id, protocol=protocol)
+    if identity.get("measurement_epoch") and identity.get("measurement_epoch") != measurement_epoch:
+        raise Cand01R3AuthorityError("WRONG_MEASUREMENT_EPOCH")
+    if identity.get("measurement_epoch") and identity.get("measurement_epoch") != MEASUREMENT_EPOCH:
+        raise Cand01R3AuthorityError("WRONG_MEASUREMENT_EPOCH")
+    if identity.get("protocol_version") and identity.get("protocol_version") != PROTOCOL_VERSION:
+        raise Cand01R3AuthorityError("PROTOCOL_VERSION_MISMATCH")
+    if identity.get("protocol_sha256") and identity.get("protocol_sha256") != expected["protocol_sha256"]:
+        raise Cand01R3AuthorityError("PROTOCOL_HASH_MISMATCH")
+    if identity.get("learner_id") and identity.get("learner_id") != learner_id:
+        raise Cand01R3AuthorityError("LEARNER_IDENTITY_MISMATCH")
+    if identity.get("partition_epoch") and identity.get("partition_epoch") != expected["partition_epoch"]:
+        raise Cand01R3AuthorityError("PARTITION_EPOCH_MISMATCH")
+    for hash_name in (
+        "manifest_sha256",
+        "store_sha256",
+        "semantic_audit_sha256",
+        "compiled_sha256",
+        "candidate_bank_identity",
+    ):
+        if identity.get(hash_name) and identity.get(hash_name) != expected[hash_name]:
+            raise Cand01R3AuthorityError("AUTHORITY_HASH_MISMATCH")
 
 
 def _policy_row(scheduled_day: int) -> dict[str, Any]:
@@ -524,6 +662,261 @@ def measurement_train_session_limit() -> int | None:
     budget = int(block.get("train_item_budget") or 0)
     completed = _counted_train_exposures(day, str(block.get("policy_id") or ""))
     return max(0, budget - completed)
+
+
+def scheduled_probe_ids_for_day(scheduled_day: int) -> set[str]:
+    protocol = _SESSION.protocol or build_protocol()
+    return {
+        str(row["question_id"])
+        for row in protocol.get("schedule") or []
+        if int(row.get("scheduled_day") or 0) == int(scheduled_day)
+    }
+
+
+def todays_scheduled_probe_ids() -> set[str]:
+    if _SESSION.current_scheduled_day is None:
+        return set()
+    return scheduled_probe_ids_for_day(int(_SESSION.current_scheduled_day))
+
+
+def _training_complete_for_day(scheduled_day: int) -> bool:
+    if int(scheduled_day) >= 7:
+        return (
+            _counted_train_exposures(7, "SMART_PRACTICE") >= DAY7_BLOCK_TRAIN_BUDGET
+            and _counted_train_exposures(7, "RRC_1") >= DAY7_BLOCK_TRAIN_BUDGET
+        )
+    return _counted_train_exposures(int(scheduled_day)) >= train_budget_for_day(int(scheduled_day))
+
+
+def _probe_terminal_ids(scheduled_day: int) -> set[str]:
+    terminal: set[str] = set()
+    for event in _SESSION.events:
+        if int(event.get("scheduled_day") or 0) != int(scheduled_day):
+            continue
+        if event.get("status") not in TERMINAL_PROBE_STATUSES:
+            continue
+        question_id = str(event.get("question_id") or "")
+        if question_id:
+            terminal.add(question_id)
+    if _SESSION.ledger is not None:
+        for question_id in scheduled_probe_ids_for_day(scheduled_day):
+            if _SESSION.ledger.is_contaminated(question_id):
+                terminal.add(question_id)
+            unobserved = getattr(_SESSION.ledger, "_unobserved", {})
+            if question_id in unobserved:
+                terminal.add(question_id)
+            primary = _SESSION.ledger.primary_observation(question_id)
+            if primary is not None:
+                terminal.add(question_id)
+    return terminal
+
+
+def _day_is_complete(scheduled_day: int) -> bool:
+    required = scheduled_probe_ids_for_day(scheduled_day)
+    if not required:
+        return False
+    return required <= _probe_terminal_ids(scheduled_day)
+
+
+def _day_has_progress(scheduled_day: int) -> bool:
+    if _counted_train_exposures(int(scheduled_day)) > 0:
+        return True
+    if _probe_terminal_ids(int(scheduled_day)):
+        return True
+    for event in _SESSION.events:
+        if int(event.get("scheduled_day") or 0) == int(scheduled_day):
+            return True
+    return False
+
+
+def _derive_day_state(scheduled_day: int | None) -> str:
+    if scheduled_day is None:
+        return STATE_DAY_NOT_STARTED
+    day = int(scheduled_day)
+    if _day_is_complete(day):
+        return STATE_DAY_COMPLETE
+    measurement_begun = any(
+        event.get("event_type") == EVENT_MEASUREMENT_TRANSITION and int(event.get("scheduled_day") or 0) == day
+        for event in _SESSION.events
+    ) or any(
+        event.get("status") in TERMINAL_PROBE_STATUSES | {STATUS_DUPLICATE}
+        and int(event.get("scheduled_day") or 0) == day
+        for event in _SESSION.events
+    )
+    if measurement_begun:
+        return STATE_MEASUREMENT
+    if int(day) >= 7:
+        sp_done = _counted_train_exposures(7, "SMART_PRACTICE")
+        rrc_done = _counted_train_exposures(7, "RRC_1")
+        if sp_done < DAY7_BLOCK_TRAIN_BUDGET:
+            return STATE_SMART_PRACTICE_TRAINING
+        if rrc_done < DAY7_BLOCK_TRAIN_BUDGET:
+            return STATE_RRC1_TRAINING
+        return STATE_RRC1_COMPLETE
+    if _training_complete_for_day(day):
+        return STATE_TRAINING_COMPLETE
+    if _day_has_progress(day) or _SESSION.current_scheduled_day == day:
+        return STATE_TRAINING
+    return STATE_DAY_NOT_STARTED
+
+
+def measurement_runtime_state() -> str:
+    if not _SESSION.active:
+        return STATE_DAY_NOT_STARTED
+    derived = _derive_day_state(_SESSION.current_scheduled_day)
+    _SESSION.day_state = derived
+    return derived
+
+
+def _runtime_policy_for_state(scheduled_day: int | None, day_state: str) -> tuple[str, str]:
+    if scheduled_day is None:
+        return POLICY_SMART_PRACTICE, INTENDED_USE_TRAINING
+    if day_state in {STATE_MEASUREMENT, STATE_DAY_COMPLETE}:
+        return POLICY_MEASUREMENT, INTENDED_USE_MEASUREMENT
+    if int(scheduled_day) >= 7:
+        if day_state in {STATE_RRC1_TRAINING, STATE_RRC1_COMPLETE}:
+            return POLICY_RRC1, INTENDED_USE_TRAINING
+        return POLICY_SMART_PRACTICE, INTENDED_USE_TRAINING
+    allocated = allocated_policy_for_day(int(scheduled_day))
+    return RUNTIME_POLICY_MAP.get(allocated, allocated), INTENDED_USE_TRAINING
+
+
+def _apply_runtime_for_current_state() -> None:
+    if not is_cand01r3_active() or not _SESSION.active:
+        return
+    day_state = measurement_runtime_state()
+    policy_id, intended_use = _runtime_policy_for_state(_SESSION.current_scheduled_day, day_state)
+    get_context().policy_id = policy_id
+    get_context().intended_use = intended_use
+
+
+def _apply_day7_handoff() -> None:
+    if not _SESSION.active or _SESSION.current_scheduled_day != 7:
+        return
+    if measurement_runtime_state() in {STATE_MEASUREMENT, STATE_DAY_COMPLETE}:
+        return
+    sp_done = _counted_train_exposures(7, "SMART_PRACTICE")
+    rrc_done = _counted_train_exposures(7, "RRC_1")
+    if sp_done >= DAY7_BLOCK_TRAIN_BUDGET and rrc_done < DAY7_BLOCK_TRAIN_BUDGET:
+        _SESSION.day_state = STATE_RRC1_TRAINING
+        if is_cand01r3_active():
+            get_context().policy_id = POLICY_RRC1
+            get_context().intended_use = INTENDED_USE_TRAINING
+    elif sp_done >= DAY7_BLOCK_TRAIN_BUDGET and rrc_done >= DAY7_BLOCK_TRAIN_BUDGET:
+        _SESSION.day_state = STATE_RRC1_COMPLETE
+        if is_cand01r3_active():
+            get_context().policy_id = POLICY_RRC1
+            get_context().intended_use = INTENDED_USE_TRAINING
+
+
+def _restore_ledger_from_events(ledger: MeasurementLedger, events: Sequence[Mapping[str, Any]]) -> None:
+    for event in events:
+        question_id = canonical_question_id(str(event.get("question_id") or ""))
+        if not question_id:
+            continue
+        status = str(event.get("status") or "")
+        if status == STATUS_PRIMARY:
+            identity_raw = event.get("evaluation_id") or []
+            identity = (
+                tuple(str(part) for part in identity_raw)
+                if isinstance(identity_raw, list) and len(identity_raw) == 4
+                else ledger._identity(question_id)
+            )
+            ledger._observations[question_id] = {
+                "status": STATUS_PRIMARY,
+                "reason": event.get("reason") or "OK",
+                "question_id": question_id,
+                "correct": event.get("correct"),
+                "selected_option_ids": list(event.get("selected_option_ids") or []),
+                "evaluation_identity": identity,
+            }
+        elif status == STATUS_UNOBSERVED:
+            ledger._unobserved[question_id] = {
+                "status": STATUS_UNOBSERVED,
+                "reason": event.get("reason") or "UNOBSERVED",
+                "question_id": question_id,
+                "correct": None,
+            }
+        elif status == STATUS_CONTAMINATED or event.get("contaminated"):
+            ledger.record_contamination(
+                question_id, str(event.get("contamination_reason") or event.get("reason") or "CONTAMINATED")
+            )
+
+
+def _restore_session_from_events(events: Sequence[Mapping[str, Any]]) -> None:
+    train_log: list[dict[str, Any]] = []
+    restored_events: list[dict[str, Any]] = []
+    current_day: int | None = None
+    for event in events:
+        restored_events.append(dict(event))
+        scheduled_day = event.get("scheduled_day")
+        event_type = str(event.get("event_type") or "")
+        status = str(event.get("status") or "")
+        if scheduled_day is not None and event_type in {EVENT_DAY_STATE, EVENT_MEASUREMENT_TRANSITION}:
+            current_day = int(scheduled_day)
+        if status == STATUS_TRAIN_EXPOSURE or event_type == STATUS_TRAIN_EXPOSURE:
+            row = {
+                "policy_id": event.get("policy_id") or event.get("policy_context") or "",
+                "question_id": canonical_question_id(str(event.get("question_id") or "")),
+                "semantic_family_id": event.get("semantic_family_id") or "",
+                "domain": event.get("domain") or "",
+                "objective": event.get("objective") or "",
+                "service_class": event.get("service_class") or "",
+                "scheduled_day": scheduled_day,
+                "counted": bool(event.get("counted", True)),
+                "status": "COUNTED" if event.get("counted", True) else "PROTOCOL_DEVIATION",
+                "reason": event.get("reason") or "OK",
+            }
+            train_log.append(row)
+            if scheduled_day is not None:
+                current_day = int(scheduled_day)
+        elif status == STATUS_DEVIATION and event.get("reason") in {
+            "WRONG_POLICY_USED",
+            "OVER_BUDGET_TRAIN_EXPOSURE",
+            "TRAINING_AFTER_BLOCK_COMPLETE",
+            "INSUFFICIENT_TRAIN_CAPACITY",
+        }:
+            train_log.append(
+                {
+                    "policy_id": event.get("policy_id") or event.get("policy_context") or "",
+                    "question_id": canonical_question_id(str(event.get("question_id") or "")),
+                    "semantic_family_id": event.get("semantic_family_id") or "",
+                    "domain": event.get("domain") or "",
+                    "objective": event.get("objective") or "",
+                    "service_class": event.get("service_class") or "",
+                    "scheduled_day": scheduled_day,
+                    "counted": False,
+                    "status": STATUS_DEVIATION,
+                    "reason": event.get("reason"),
+                }
+            )
+            if scheduled_day is not None:
+                current_day = int(scheduled_day)
+        elif status in REAL_OBSERVATION_STATUSES | TERMINAL_PROBE_STATUSES and scheduled_day is not None:
+            current_day = int(scheduled_day)
+    _SESSION.train_log = train_log
+    _SESSION.events = restored_events
+    if current_day is None:
+        for event in reversed(events):
+            if event.get("scheduled_day") is not None:
+                current_day = int(event["scheduled_day"])
+                break
+    _SESSION.current_scheduled_day = current_day
+    if _SESSION.ledger is not None:
+        _restore_ledger_from_events(_SESSION.ledger, events)
+    _SESSION.protocol_locked = any(
+        event.get("status") in REAL_OBSERVATION_STATUSES and not event.get("synthetic") for event in events
+    )
+    _SESSION.day_state = _derive_day_state(current_day)
+
+
+def _persist_event(payload: Mapping[str, Any], ledger_path: Path | None = None) -> dict[str, Any]:
+    event = dict(payload)
+    _SESSION.events.append(event)
+    path = ledger_path if ledger_path is not None else _SESSION.ledger_path
+    if path is not None:
+        _append_ledger(event, Path(path))
+    return event
 
 
 def load_committed_protocol() -> dict[str, Any]:
@@ -620,20 +1013,16 @@ def begin_cand01r3_measurement(
         raise Cand01R3AuthorityError("COMPILED_HASH_MISMATCH")
     path = Path(ledger_path) if ledger_path is not None else default_production_ledger_path(measurement_epoch)
     path.parent.mkdir(parents=True, exist_ok=True)
-    if not path.exists():
-        path.write_text("", encoding="utf-8")
-    real_count = _ledger_real_observation_count(path)
-    gate = allow_v2_supersession(real_count)
-    if not gate["allowed"]:
-        raise Cand01R3AuthorityError(str(gate.get("reason") or "NEW_MEASUREMENT_EPOCH_REQUIRED"))
-    activate_cand01r3_experiment(
-        policy_id=POLICY_SMART_PRACTICE,
-        experiment_id=MEASUREMENT_EPOCH,
-        evaluation_epoch=MEASUREMENT_EPOCH,
-        intended_use=INTENDED_USE_TRAINING,
-        authority=loaded,
-        learner_id=learner_id,
-    )
+    existing = _read_ledger_events(path)
+    resume = bool(existing)
+    if resume:
+        _verify_resume_identity(
+            existing,
+            learner_id=learner_id,
+            measurement_epoch=measurement_epoch,
+            protocol=protocol,
+            authority=loaded,
+        )
     session = MeasurementSession(
         active=True,
         learner_id=learner_id,
@@ -651,9 +1040,45 @@ def begin_cand01r3_measurement(
         train_ids={qid for qid, item in loaded.items.items() if item.get("role") == ROLE_TRAIN},
         probe_ids={qid for qid, item in loaded.items.items() if item.get("role") == ROLE_PROBE},
         ledger=MeasurementLedger(learner_id=learner_id, authority=loaded),
+        day_state=STATE_DAY_NOT_STARTED,
     )
     global _SESSION
     _SESSION = session
+    if resume:
+        _restore_session_from_events(existing)
+        day_state = measurement_runtime_state()
+        policy_id, intended_use = _runtime_policy_for_state(_SESSION.current_scheduled_day, day_state)
+        activate_cand01r3_experiment(
+            policy_id=policy_id,
+            experiment_id=MEASUREMENT_EPOCH,
+            evaluation_epoch=MEASUREMENT_EPOCH,
+            intended_use=intended_use,
+            authority=loaded,
+            learner_id=learner_id,
+        )
+        _apply_runtime_for_current_state()
+        return _SESSION
+    if not path.exists():
+        path.write_text("", encoding="utf-8")
+    activate_cand01r3_experiment(
+        policy_id=POLICY_SMART_PRACTICE,
+        experiment_id=MEASUREMENT_EPOCH,
+        evaluation_epoch=MEASUREMENT_EPOCH,
+        intended_use=INTENDED_USE_TRAINING,
+        authority=loaded,
+        learner_id=learner_id,
+    )
+    begin_payload = {
+        "event_id": str(uuid.uuid4()),
+        "event_type": EVENT_EPOCH_BEGIN,
+        "status": EVENT_EPOCH_BEGIN,
+        "reason": "BEGIN_NEW_FROZEN_EPOCH",
+        "calendar_timestamp": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "scheduled_day": None,
+        "counted": False,
+        **_authority_identity(loaded, learner_id=learner_id, protocol=protocol),
+    }
+    _persist_event(begin_payload, path)
     return _SESSION
 
 
@@ -759,35 +1184,188 @@ def record_train_exposure(
             row["reason"] = "WRONG_POLICY_USED"
             if _SESSION.active:
                 _SESSION.train_log.append(row)
+                _persist_train_deviation(row, "WRONG_POLICY_USED")
             return row
+        if int(day) >= 7:
+            expected_block = current_train_block(int(day))
+            expected_block_policy = str(expected_block.get("policy_id") or "")
+            if policy_id != expected_block_policy and not (
+                policy_id == "RRC_1" and _counted_train_exposures(int(day), "SMART_PRACTICE") >= DAY7_BLOCK_TRAIN_BUDGET
+            ):
+                if policy_id != expected_block_policy:
+                    row["status"] = "PROTOCOL_DEVIATION"
+                    row["reason"] = "WRONG_POLICY_USED"
+                    if _SESSION.active:
+                        _SESSION.train_log.append(row)
+                        _persist_train_deviation(row, "WRONG_POLICY_USED")
+                    return row
         budget = train_budget_for_day(int(day), policy_id if int(day) >= 7 else expected_policy)
         completed = _counted_train_exposures(int(day), policy_id if int(day) >= 7 else None)
         if completed >= budget:
+            day_state = measurement_runtime_state()
+            reason = (
+                "TRAINING_AFTER_BLOCK_COMPLETE"
+                if day_state in {STATE_TRAINING_COMPLETE, STATE_RRC1_COMPLETE, STATE_MEASUREMENT, STATE_DAY_COMPLETE}
+                else "OVER_BUDGET_TRAIN_EXPOSURE"
+            )
+            if day_state in {STATE_TRAINING_COMPLETE, STATE_RRC1_COMPLETE} and completed >= budget:
+                reason = "OVER_BUDGET_TRAIN_EXPOSURE"
             row["status"] = "PROTOCOL_DEVIATION"
-            row["reason"] = "OVER_BUDGET_TRAIN_EXPOSURE"
+            row["reason"] = reason
             if _SESSION.active:
                 _SESSION.train_log.append(row)
-                payload = {
-                    "event_id": str(uuid.uuid4()),
-                    "status": STATUS_DEVIATION,
-                    "reason": "OVER_BUDGET_TRAIN_EXPOSURE",
-                    "question_id": qid,
-                    "scheduled_day": day,
-                    "policy_context": policy_id,
-                    "intended_use": INTENDED_USE_TRAINING,
-                    "observed": False,
-                    "synthetic": False,
-                    "measurement_epoch": _SESSION.measurement_epoch,
-                    "protocol_version": _SESSION.protocol_version,
-                }
-                _SESSION.events.append(payload)
-                if _SESSION.ledger_path is not None:
-                    _append_ledger(payload, _SESSION.ledger_path)
+                _persist_train_deviation(row, reason)
             return row
     row["counted"] = True
     if _SESSION.active:
         _SESSION.train_log.append(row)
+        _persist_train_exposure(row)
+        if day is not None and int(day) < 7 and _training_complete_for_day(int(day)):
+            _SESSION.day_state = STATE_TRAINING_COMPLETE
+        _apply_day7_handoff()
     return row
+
+
+def _persist_train_exposure(row: Mapping[str, Any]) -> None:
+    payload = {
+        "event_id": str(uuid.uuid4()),
+        "event_type": STATUS_TRAIN_EXPOSURE,
+        "status": STATUS_TRAIN_EXPOSURE,
+        "reason": row.get("reason") or "OK",
+        "question_id": row.get("question_id") or "",
+        "policy_id": row.get("policy_id") or "",
+        "policy_context": row.get("policy_id") or "",
+        "semantic_family_id": row.get("semantic_family_id") or "",
+        "domain": row.get("domain") or "",
+        "objective": row.get("objective") or "",
+        "service_class": row.get("service_class") or "",
+        "scheduled_day": row.get("scheduled_day"),
+        "counted": True,
+        "calendar_timestamp": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "intended_use": INTENDED_USE_TRAINING,
+        "question_role": ROLE_TRAIN,
+        **_session_identity_fields(),
+    }
+    _persist_event(payload)
+
+
+def _persist_train_deviation(row: Mapping[str, Any], reason: str) -> None:
+    payload = {
+        "event_id": str(uuid.uuid4()),
+        "event_type": STATUS_DEVIATION,
+        "status": STATUS_DEVIATION,
+        "reason": reason,
+        "question_id": row.get("question_id") or "",
+        "policy_id": row.get("policy_id") or "",
+        "policy_context": row.get("policy_id") or "",
+        "semantic_family_id": row.get("semantic_family_id") or "",
+        "domain": row.get("domain") or "",
+        "objective": row.get("objective") or "",
+        "service_class": row.get("service_class") or "",
+        "scheduled_day": row.get("scheduled_day"),
+        "counted": False,
+        "observed": False,
+        "calendar_timestamp": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "intended_use": INTENDED_USE_TRAINING,
+        "question_role": ROLE_TRAIN,
+        **_session_identity_fields(),
+    }
+    _persist_event(payload)
+
+
+def _reject_probe(
+    question_id: str,
+    scheduled: Mapping[str, Any] | None,
+    reason: str,
+    *,
+    ledger_path: Path | None = None,
+    synthetic: bool = False,
+    marker: str = "",
+    calendar_timestamp: str | None = None,
+) -> MeasurementObservation:
+    payload = _event_payload(
+        question_id=question_id,
+        status=STATUS_DEVIATION,
+        reason=reason,
+        selected=None,
+        correct=None,
+        kind="REJECTED",
+        scheduled=scheduled,
+        synthetic=synthetic,
+        marker=marker,
+        calendar_timestamp=calendar_timestamp,
+        observed=False,
+        first_attempt=False,
+        clean=False,
+        contaminated=False,
+        contamination_reason=reason,
+    )
+    payload["intended_use"] = get_context().intended_use
+    payload["counts_toward_primary"] = False
+    if not synthetic:
+        _append_ledger(payload, ledger_path or _SESSION.ledger_path)
+        _SESSION.events.append(payload)
+    return _observation_from_payload(payload, STATUS_DEVIATION, reason)
+
+
+def _probe_gate_rejection(
+    question_id: str,
+    scheduled: Mapping[str, Any],
+    *,
+    ledger_path: Path | None = None,
+    synthetic: bool = False,
+    marker: str = "",
+    calendar_timestamp: str | None = None,
+) -> MeasurementObservation | None:
+    day = _SESSION.current_scheduled_day
+    state = measurement_runtime_state()
+    scheduled_day = int(scheduled["scheduled_day"])
+    if state not in {STATE_MEASUREMENT, STATE_DAY_COMPLETE}:
+        reason = (
+            "PROBE_BEFORE_TRAIN_BLOCK_COMPLETE"
+            if day is None or not _training_complete_for_day(int(day))
+            else "MEASUREMENT_MODE_NOT_ACTIVE"
+        )
+        return _reject_probe(
+            question_id,
+            scheduled,
+            reason,
+            ledger_path=ledger_path,
+            synthetic=synthetic,
+            marker=marker,
+            calendar_timestamp=calendar_timestamp,
+        )
+    if day is None:
+        return _reject_probe(
+            question_id,
+            scheduled,
+            "MEASUREMENT_MODE_NOT_ACTIVE",
+            ledger_path=ledger_path,
+            synthetic=synthetic,
+            marker=marker,
+            calendar_timestamp=calendar_timestamp,
+        )
+    if scheduled_day != int(day):
+        return _reject_probe(
+            question_id,
+            scheduled,
+            "WRONG_MEASUREMENT_DAY",
+            ledger_path=ledger_path,
+            synthetic=synthetic,
+            marker=marker,
+            calendar_timestamp=calendar_timestamp,
+        )
+    if question_id not in todays_scheduled_probe_ids():
+        return _reject_probe(
+            question_id,
+            scheduled,
+            "UNSCHEDULED_PROBE",
+            ledger_path=ledger_path,
+            synthetic=synthetic,
+            marker=marker,
+            calendar_timestamp=calendar_timestamp,
+        )
+    return None
 
 
 def _inactive_observation(reason: str, question_id: str = "") -> MeasurementObservation:
@@ -867,6 +1445,16 @@ def record_measurement_event(
             _SESSION.events.append(payload)
             _lock_if_real(payload)
         return _observation_from_payload(payload, STATUS_DEVIATION, "UNSCHEDULED_PROBE")
+    rejected = _probe_gate_rejection(
+        question_id,
+        scheduled,
+        ledger_path=target_path,
+        synthetic=synthetic_event,
+        marker=marker_value,
+        calendar_timestamp=calendar_timestamp,
+    )
+    if rejected is not None:
+        return rejected
     if _SESSION.ledger is None:
         return _inactive_observation("MEASUREMENT_EPOCH_INACTIVE", question_id)
     if contaminated or _SESSION.ledger.is_contaminated(question_id):
@@ -929,6 +1517,7 @@ def record_measurement_event(
         _lock_if_real(payload)
     result = _observation_from_payload(payload, status, observation.reason)
     result.evaluation_identity = observation.evaluation_identity
+    measurement_runtime_state()
     return result
 
 
@@ -954,6 +1543,7 @@ def _event_payload(
     train_snapshot, policy_snapshot = _exposure_snapshot()
     scheduled_day = int(scheduled["scheduled_day"]) if scheduled else None
     family_id = str(scheduled.get("semantic_family_id") if scheduled else "")
+    identity_fields = _session_identity_fields()
     identity = evaluation_identity or (
         _SESSION.learner_id,
         EXAM_ID,
@@ -993,6 +1583,12 @@ def _event_payload(
         "protocol_version": _SESSION.protocol_version,
         "protocol_sha256": _SESSION.protocol_sha256,
         "duplicate_kind": kind if kind in DUPLICATE_KINDS else "",
+        "partition_epoch": identity_fields["partition_epoch"],
+        "manifest_sha256": identity_fields["manifest_sha256"],
+        "store_sha256": identity_fields["store_sha256"],
+        "semantic_audit_sha256": identity_fields["semantic_audit_sha256"],
+        "compiled_sha256": identity_fields["compiled_sha256"],
+        "candidate_bank_identity": identity_fields["candidate_bank_identity"],
     }
 
 
@@ -1005,8 +1601,15 @@ def record_unobserved(
     if not _SESSION.active or _SESSION.ledger is None:
         return _inactive_observation("MEASUREMENT_EPOCH_INACTIVE", question_id)
     qid = canonical_question_id(question_id)
-    observation = _SESSION.ledger.record_unobserved(qid, reason=reason)
     scheduled = _SESSION.schedule_index.get(qid)
+    if scheduled is None:
+        return _inactive_observation("UNSCHEDULED_PROBE", qid)
+    rejected = _probe_gate_rejection(
+        qid, scheduled, ledger_path=Path(ledger_path) if ledger_path else _SESSION.ledger_path
+    )
+    if rejected is not None:
+        return rejected
+    observation = _SESSION.ledger.record_unobserved(qid, reason=reason)
     payload = _event_payload(
         question_id=qid,
         status=STATUS_UNOBSERVED,
@@ -1031,6 +1634,7 @@ def record_unobserved(
     result = _observation_from_payload(payload, STATUS_UNOBSERVED, reason)
     result.correct = None
     result.counts_toward_primary = False
+    measurement_runtime_state()
     return result
 
 
@@ -1068,6 +1672,7 @@ def record_contamination(question_id: str, reason: str, *, ledger_path: str | Pa
     _append_ledger(payload, Path(ledger_path) if ledger_path else _SESSION.ledger_path)
     _SESSION.events.append(payload)
     _lock_if_real(payload)
+    measurement_runtime_state()
 
 
 def clear_contamination(question_id: str) -> None:
@@ -1160,18 +1765,78 @@ def replace_active_protocol(new_protocol: Mapping[str, Any]) -> None:
 
 
 def set_measurement_day(scheduled_day: int) -> str:
-    policy_id = allocated_policy_for_day(scheduled_day)
-    _SESSION.current_scheduled_day = int(scheduled_day)
-    if is_cand01r3_active():
-        if int(scheduled_day) >= 7:
-            block = current_train_block(int(scheduled_day))
-            runtime_policy = str(block.get("policy_id") or policy_id)
-            get_context().policy_id = RUNTIME_POLICY_MAP.get(runtime_policy, runtime_policy)
-            get_context().intended_use = INTENDED_USE_TRAINING
-        else:
-            get_context().policy_id = RUNTIME_POLICY_MAP.get(policy_id, policy_id)
-            get_context().intended_use = INTENDED_USE_TRAINING
+    new_day = int(scheduled_day)
+    _policy_row(new_day)
+    current = _SESSION.current_scheduled_day
+    if _SESSION.active:
+        if current is not None and int(current) != new_day and not _day_is_complete(int(current)):
+            raise Cand01R3AuthorityError("PREVIOUS_DAY_INCOMPLETE")
+        for prior in range(1, new_day):
+            if not _day_is_complete(prior):
+                raise Cand01R3AuthorityError("PREVIOUS_DAY_INCOMPLETE")
+    policy_id = allocated_policy_for_day(new_day)
+    _SESSION.current_scheduled_day = new_day
+    if new_day >= 7:
+        _SESSION.day_state = _derive_day_state(new_day) if _day_has_progress(new_day) else STATE_SMART_PRACTICE_TRAINING
+    else:
+        _SESSION.day_state = _derive_day_state(new_day) if _day_has_progress(new_day) else STATE_TRAINING
+    if _SESSION.active:
+        payload = {
+            "event_id": str(uuid.uuid4()),
+            "event_type": EVENT_DAY_STATE,
+            "status": EVENT_DAY_STATE,
+            "reason": "SET_MEASUREMENT_DAY",
+            "scheduled_day": new_day,
+            "day_state": _SESSION.day_state,
+            "calendar_timestamp": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "counted": False,
+            **_session_identity_fields(),
+        }
+        _persist_event(payload)
+        if is_cand01r3_active():
+            _apply_runtime_for_current_state()
     return policy_id
+
+
+def begin_todays_probe_measurement() -> dict[str, Any]:
+    if not _SESSION.active:
+        raise Cand01R3AuthorityError("MEASUREMENT_EPOCH_INACTIVE")
+    day = _SESSION.current_scheduled_day
+    if day is None:
+        raise Cand01R3AuthorityError("MEASUREMENT_DAY_NOT_SET")
+    if not _training_complete_for_day(int(day)):
+        raise Cand01R3AuthorityError("PROBE_BEFORE_TRAIN_BLOCK_COMPLETE")
+    state = measurement_runtime_state()
+    if state in {STATE_MEASUREMENT, STATE_DAY_COMPLETE}:
+        _apply_runtime_for_current_state()
+        return {
+            "day_state": state,
+            "intended_use": INTENDED_USE_MEASUREMENT,
+            "scheduled_day": int(day),
+            "probe_ids": sorted(todays_scheduled_probe_ids()),
+        }
+    _SESSION.day_state = STATE_MEASUREMENT
+    payload = {
+        "event_id": str(uuid.uuid4()),
+        "event_type": EVENT_MEASUREMENT_TRANSITION,
+        "status": EVENT_MEASUREMENT_TRANSITION,
+        "reason": "BEGIN_TODAYS_PROBE_MEASUREMENT",
+        "scheduled_day": int(day),
+        "day_state": STATE_MEASUREMENT,
+        "calendar_timestamp": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "counted": False,
+        **_session_identity_fields(),
+    }
+    _persist_event(payload)
+    if is_cand01r3_active():
+        get_context().policy_id = POLICY_MEASUREMENT
+        get_context().intended_use = INTENDED_USE_MEASUREMENT
+    return {
+        "day_state": STATE_MEASUREMENT,
+        "intended_use": INTENDED_USE_MEASUREMENT,
+        "scheduled_day": int(day),
+        "probe_ids": sorted(todays_scheduled_probe_ids()),
+    }
 
 
 def notify_scored_attempt(
@@ -1240,8 +1905,14 @@ def today_measurement_card(scheduled_day: int) -> dict[str, Any]:
         "train_exposures_completed": completed,
         "train_exposures_remaining": remaining,
         "training_block_status": "TRAINING_BLOCK_COMPLETE" if complete else "IN_PROGRESS",
-        "next_action": "PROCEED TO TODAY'S SCHEDULED PROBE" if complete else "CONTINUE TRAIN BLOCK",
+        "next_action": (
+            "BEGIN TODAY'S PROBE MEASUREMENT"
+            if complete and measurement_runtime_state() not in {STATE_MEASUREMENT, STATE_DAY_COMPLETE}
+            else ("PROCEED TO TODAY'S SCHEDULED PROBE" if complete else "CONTINUE TRAIN BLOCK")
+        ),
         "day7_blocks": day7_blocks,
+        "day_state": measurement_runtime_state() if is_measurement_active() else STATE_DAY_NOT_STARTED,
+        "intended_use": get_context().intended_use if is_cand01r3_active() else "",
     }
 
 

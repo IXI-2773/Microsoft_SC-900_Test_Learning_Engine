@@ -149,11 +149,27 @@ def _active_intended_use(stage: str | None = None) -> str:
     return INTENDED_USE_TRAINING
 
 
+def _todays_measurement_probe_ids() -> set[str] | None:
+    try:
+        from cand01r3_protocol import is_measurement_active, todays_scheduled_probe_ids
+    except ImportError:
+        return None
+    if not is_measurement_active():
+        return None
+    if get_context().intended_use != INTENDED_USE_MEASUREMENT:
+        return None
+    return todays_scheduled_probe_ids()
+
+
 def filter_training_questions(questions: Iterable[Mapping[str, Any]] | None, stage: str | None = None) -> list[Any]:
     pool = list(questions or [])
     if not is_cand01r3_active():
         return pool
-    intended = INTENDED_USE_TRAINING if stage != "MEASUREMENT" else INTENDED_USE_MEASUREMENT
+    measurement_ids = _todays_measurement_probe_ids()
+    intended = _active_intended_use(stage)
+    if measurement_ids is not None and intended == INTENDED_USE_MEASUREMENT:
+        probes = filter_questions(pool, INTENDED_USE_MEASUREMENT, current_authority())
+        return [question for question in probes if canonical_question_id(question) in measurement_ids]
     if intended != INTENDED_USE_TRAINING:
         return filter_questions(pool, intended, current_authority())
     return filter_questions(pool, INTENDED_USE_TRAINING, current_authority())
@@ -164,16 +180,26 @@ def derived_training_questions(questions: Iterable[Mapping[str, Any]] | None, st
 
 
 def revalidate_training_question(question: Mapping[str, Any], action: str = "RENDER") -> Any:
-    if not is_cand01r3_active():
-        from cand01r3_partition import EligibilityDecision
+    from cand01r3_partition import EligibilityDecision
 
+    if not is_cand01r3_active():
         return EligibilityDecision(role="TRAIN", reason="INACTIVE", question_id=canonical_question_id(question))
     intended = (
         INTENDED_USE_MEASUREMENT
         if action == "MEASUREMENT" or get_context().intended_use == INTENDED_USE_MEASUREMENT
         else INTENDED_USE_TRAINING
     )
-    return partition_eligibility(question, intended, current_authority())
+    decision = partition_eligibility(question, intended, current_authority())
+    measurement_ids = _todays_measurement_probe_ids()
+    if intended == INTENDED_USE_MEASUREMENT and measurement_ids is not None:
+        question_id = canonical_question_id(question)
+        if question_id not in measurement_ids:
+            return EligibilityDecision(
+                role="NOT_ELIGIBLE",
+                reason="WRONG_MEASUREMENT_DAY",
+                question_id=question_id,
+            )
+    return decision
 
 
 def training_source_questions(questions: Iterable[Mapping[str, Any]] | None) -> list[Any]:

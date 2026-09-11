@@ -10,6 +10,13 @@ REAL_OBSERVATIONS = 0
 EMPIRICAL_RESULT = NOT_YET_AVAILABLE
 DEFAULT_BANK_UNCHANGED = YES
 DEPLOYMENT_AUTHORIZED = NO
+READY_FOR_DAY1 = YES
+RUNTIME_RESUME_VERIFIED = YES
+TRAIN_EXPOSURE_PERSISTENCE = VERIFIED
+TRAIN_TO_MEASUREMENT_TRANSITION = VERIFIED
+WRONG_DAY_PROBE_REJECTION = VERIFIED
+EARLY_PROBE_REJECTION = VERIFIED
+DAY7_POLICY_HANDOFF = VERIFIED
 ```
 
 ## Pre-run checks
@@ -25,22 +32,25 @@ Verify before the first real observation:
 - policy order frozen
 - measurement ledger empty for epoch `cand01r3-measurement-001`
 - no preexisting first-attempt PROBE outcome in that epoch
+- same frozen v2 epoch can resume after restart from the append-only ledger
+- counted TRAIN exposures persist; Day-7 Smart Practice → RRC-1 handoff is automatic
+- PROBE scoring requires completed TRAIN block plus an explicit MEASUREMENT transition
 
 ## What the human learner must do next
 
 1. Launch the application normally. The default 8-question launch bank must still load. Do not treat that bank as the experiment.
-2. Open **Research → Begin CAND-01R3 Measurement Epoch...** and confirm. This is the only activation path.
+2. Open **Research → Begin CAND-01R3 Measurement Epoch...** and confirm. This is the only activation path. If the same frozen v2 epoch already exists, this resumes it; it does not mint a new epoch.
 3. When asked, load the compiled candidate bank for this epoch only. Path: `content/sc900/phase3/compiled/sc900_phase3_reviewed_bank.json`. This does **not** make it the application default.
-4. Each calendar day, open **Research → Set Measurement Day...** and enter 1–7.
+4. Each calendar day, open **Research → Set Measurement Day...** and enter 1–7. Do not start Day N+1 while Day N still has unanswered scheduled PROBEs.
 5. Train only on TRAIN items under that day's policy until the frozen budget is complete:
    - Days 1, 3, 5: Smart Practice, **20 TRAIN exposures**
    - Days 2, 4, 6: RRC-1, **20 TRAIN exposures**
-   - Day 7: 10 Smart Practice TRAIN items, then 10 RRC-1 TRAIN items
-   The measurement card shows remaining count. Stop when it says TRAINING BLOCK COMPLETE. Do not add extra TRAIN items before that day's PROBE.
-6. After training, answer **only that day's scheduled PROBE items**, once, as clean first attempts. Use **Research → Show Today's Measurement Card...** for the IDs. Do not peek at explanations before scoring. Do not redo/retry for the primary endpoint.
+   - Day 7: 10 Smart Practice TRAIN items, then the runtime switches to RRC-1 automatically for 10 RRC-1 TRAIN items
+   The measurement card shows remaining count. Stop when it says TRAINING BLOCK COMPLETE. Do not add extra TRAIN items before that day's PROBE. If the app restarts mid-block, resume the same epoch and continue from the persisted count.
+6. After training, open **Research → Begin Today's PROBE Measurement...**. This is the required TRAINING → MEASUREMENT transition. Then answer **only that day's scheduled PROBE items**, once, as clean first attempts. Use **Research → Show Today's Measurement Card...** for the IDs. Do not peek at explanations before scoring. Do not redo/retry for the primary endpoint.
 7. If a scheduled PROBE is missed, use **Research → Record Unobserved PROBE...**. Do not guess an answer to fill the cell.
 8. If substantial outside SC-900 study happened, use **Research → Record Outside-Study Declaration...**.
 9. Stop after Day 7 or if a protocol-invalidating event occurs. Do not stop early because one policy looks ahead.
 10. Do not declare a winner. The later adjudication package analyzes the frozen ledger.
 
-If the epoch ledger already contains a real event, do not edit the protocol. Stop and open a new epoch.
+If the epoch ledger already contains a real event, do not edit the protocol. Resume the same frozen v2 epoch, or stop and open a new epoch only if identity/authority no longer match.
