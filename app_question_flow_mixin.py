@@ -1060,6 +1060,15 @@ class QuestionFlowMixin:
             "smart_graph_bottleneck": float(q.get("smart_graph_bottleneck", 0.0) or 0.0),
         }
         self.session_answer_history.append(event)
+        from cand01r3_protocol import notify_scored_attempt
+
+        prior_attempts = int((rec_before or {}).get("attempts") or 0)
+        notify_scored_attempt(
+            q,
+            selected=list(selected),
+            correct=bool(is_correct),
+            kind="RETRY" if prior_attempts > 0 else "SCORED",
+        )
         self.active_question_started_qnum = None
         self.active_question_started_at = None
         xp_gained = self._apply_xp_for_answer(q, is_correct, feedback, was_active_weak=was_active_weak, was_due=was_due)

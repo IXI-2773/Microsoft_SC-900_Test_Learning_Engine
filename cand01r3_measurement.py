@@ -39,6 +39,9 @@ class MeasurementObservation:
     question_id: str = ""
     correct: bool | None = None
     evaluation_identity: tuple[str, str, str, str] | None = None
+    clean: bool = False
+    counts_toward_primary: bool = False
+    payload: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
