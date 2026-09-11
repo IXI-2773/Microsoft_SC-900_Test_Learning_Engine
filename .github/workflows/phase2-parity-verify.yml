@@ -1,0 +1,61 @@
+name: Phase 2 manifest parity verification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/phase2-parity-verify.yml
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Phase 2 branch
+        uses: actions/checkout@v4
+        with:
+          ref: implementation/sc900-reviewed-bank-phase2
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Apply staged validator patch
+        run: python tools/_phase2_manifest_parity_patch.py
+
+      - name: Compile validator
+        run: python -m py_compile tools/validate_sc900_phase2.py
+
+      - name: Run Phase 2 parity regressions
+        run: python -m unittest tests.test_sc900_phase2_deep_review tests.test_sc900_phase2 -v
+
+      - name: Verify committed Phase 2 evidence
+        run: python -m tools.build_sc900_phase2 --verify-committed
+
+      - name: Publish verified validator correction
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm tools/_phase2_manifest_parity_patch.py
+          git add tools/validate_sc900_phase2.py
+          test "$(git diff --cached --name-only | sort)" = $'tools/_phase2_manifest_parity_patch.py\ntools/validate_sc900_phase2.py'
+          git commit -m 'fix: enforce TRAIN PROBE manifest schema parity'
+          git push origin HEAD:implementation/sc900-reviewed-bank-phase2
+
+      - name: Self-remove verification workflow
+        if: always()
+        shell: bash
+        run: |
+          git reset --hard
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+          git checkout -B main origin/main
+          git rm .github/workflows/phase2-parity-verify.yml
+          git commit -m 'chore: remove Phase 2 parity verification runner'
+          git push origin HEAD:main
