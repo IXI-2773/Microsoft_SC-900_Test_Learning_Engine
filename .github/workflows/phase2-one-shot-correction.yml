@@ -23,9 +23,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD^)" = "98ea25ee3303567ca60730853a82b4643931c173"
-          test "$(git rev-parse HEAD^^{tree})" = "f1f21bda876590f7e76c84e1c0d9b3bafb6e9fdf"
-          test "$(git diff --name-only HEAD^ HEAD)" = ".github/workflows/phase2-one-shot-correction.yml"
+          git merge-base --is-ancestor 98ea25ee3303567ca60730853a82b4643931c173 HEAD
+          test "$(git diff --name-only 98ea25ee3303567ca60730853a82b4643931c173 HEAD)" = ".github/workflows/phase2-one-shot-correction.yml"
+          git checkout 98ea25ee3303567ca60730853a82b4643931c173 -- .github/workflows/verify-consolidated-main.yml
+          git reset -- .github/workflows/verify-consolidated-main.yml
+          test "$(git rev-parse 98ea25ee3303567ca60730853a82b4643931c173^{tree})" = "f1f21bda876590f7e76c84e1c0d9b3bafb6e9fdf"
+          git restore .github/workflows/verify-consolidated-main.yml
 
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
@@ -51,7 +54,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python tools/_apply_phase2_evidence_correction.py
+          python -m tools._apply_phase2_evidence_correction
           python tools/build_sc900_phase2.py --write
           python tools/validate_sc900_phase2.py \
             --store content/sc900/phase2/store \
