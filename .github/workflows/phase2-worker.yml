@@ -23,5 +23,10 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Run Phase 2 focused tests
-        run: python -m unittest tests.test_sc900_phase2 -v
+      - name: Run Phase 2 and inherited bank-contract tests
+        run: |
+          python -m unittest \
+            tests.test_sc900_phase2 \
+            tests.test_sc900_bank_quality \
+            tests.test_sc900_taxonomy \
+            -v
