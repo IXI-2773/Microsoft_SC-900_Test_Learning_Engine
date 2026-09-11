@@ -1,0 +1,1644 @@
+{
+  "audit_version": "sc900-semantic-family-audit/v1",
+  "decisions": [
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "shared_responsibility_model",
+      "component_members": [
+        "sc900_p1_q001",
+        "sc900_p2_q003"
+      ],
+      "correct_answer_text": "Managing its users, data, and access settings",
+      "override_type": "none",
+      "prior_semantic_family_id": "shared_responsibility_model",
+      "question_id": "sc900_p1_q001",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "shared_responsibility_model"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "authentication",
+      "component_members": [
+        "sc900_p1_q002"
+      ],
+      "correct_answer_text": "Authentication",
+      "override_type": "none",
+      "prior_semantic_family_id": "authentication",
+      "question_id": "sc900_p1_q002",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "authentication"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "entra_id_overview",
+      "component_members": [
+        "sc900_p1_q003",
+        "sc900_p2_q007"
+      ],
+      "correct_answer_text": "Microsoft Entra ID",
+      "override_type": "none",
+      "prior_semantic_family_id": "entra_id_overview",
+      "question_id": "sc900_p1_q003",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "entra_id_overview"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "multifactor_authentication",
+      "component_members": [
+        "sc900_p1_q004",
+        "sc900_p1_q042",
+        "sc900_p2_q011"
+      ],
+      "correct_answer_text": "Multifactor authentication",
+      "override_type": "none",
+      "prior_semantic_family_id": "multifactor_authentication",
+      "question_id": "sc900_p1_q004",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "multifactor_authentication"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "access_reviews",
+      "component_members": [
+        "sc900_p1_q005",
+        "sc900_p2_q017"
+      ],
+      "correct_answer_text": "Access reviews",
+      "override_type": "none",
+      "prior_semantic_family_id": "access_reviews",
+      "question_id": "sc900_p1_q005",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "access_reviews"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "azure_key_vault",
+      "component_members": [
+        "sc900_p1_q006",
+        "sc900_p2_q026"
+      ],
+      "correct_answer_text": "Azure Key Vault",
+      "override_type": "none",
+      "prior_semantic_family_id": "azure_key_vault",
+      "question_id": "sc900_p1_q006",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "azure_key_vault"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "microsoft_defender_for_cloud",
+      "component_members": [
+        "sc900_p1_q007",
+        "sc900_p2_q027"
+      ],
+      "correct_answer_text": "Microsoft Defender for Cloud",
+      "override_type": "none",
+      "prior_semantic_family_id": "microsoft_defender_for_cloud",
+      "question_id": "sc900_p1_q007",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "microsoft_defender_for_cloud"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "defender_for_endpoint",
+      "component_members": [
+        "sc900_p1_q008",
+        "sc900_p2_q036"
+      ],
+      "correct_answer_text": "Microsoft Defender for Endpoint",
+      "override_type": "none",
+      "prior_semantic_family_id": "defender_for_endpoint",
+      "question_id": "sc900_p1_q008",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "defender_for_endpoint"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "service_trust_portal_offerings",
+      "component_members": [
+        "sc900_p1_q009",
+        "sc900_p2_q040"
+      ],
+      "correct_answer_text": "Service Trust Portal",
+      "override_type": "none",
+      "prior_semantic_family_id": "service_trust_portal_offerings",
+      "question_id": "sc900_p1_q009",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "service_trust_portal_offerings"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "data_loss_prevention",
+      "component_members": [
+        "sc900_p1_q010"
+      ],
+      "correct_answer_text": "Data Loss Prevention",
+      "override_type": "none",
+      "prior_semantic_family_id": "data_loss_prevention",
+      "question_id": "sc900_p1_q010",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "data_loss_prevention"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "zero_trust_model",
+      "component_members": [
+        "sc900_p1_q011"
+      ],
+      "correct_answer_text": "Verify explicitly and use least privilege regardless of network location",
+      "override_type": "none",
+      "prior_semantic_family_id": "zero_trust_model",
+      "question_id": "sc900_p1_q011",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "zero_trust_model"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "hybrid_identity",
+      "component_members": [
+        "sc900_p1_q012",
+        "sc900_p2_q009"
+      ],
+      "correct_answer_text": "Hybrid identity",
+      "override_type": "none",
+      "prior_semantic_family_id": "hybrid_identity",
+      "question_id": "sc900_p1_q012",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "hybrid_identity"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "password_protection_management",
+      "component_members": [
+        "sc900_p1_q013",
+        "sc900_p2_q012"
+      ],
+      "correct_answer_text": "Microsoft Entra Password Protection",
+      "override_type": "none",
+      "prior_semantic_family_id": "password_protection_management",
+      "question_id": "sc900_p1_q013",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "password_protection_management"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "conditional_access",
+      "component_members": [
+        "sc900_p1_q014",
+        "sc900_p1_q033",
+        "sc900_p2_q014",
+        "sc900_p2_q016"
+      ],
+      "correct_answer_text": "Conditional Access",
+      "override_type": "none",
+      "prior_semantic_family_id": "conditional_access",
+      "question_id": "sc900_p1_q014",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "conditional_access"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "network_security_groups",
+      "component_members": [
+        "sc900_p1_q015",
+        "sc900_p2_q022"
+      ],
+      "correct_answer_text": "Network Security Groups",
+      "override_type": "none",
+      "prior_semantic_family_id": "network_security_groups",
+      "question_id": "sc900_p1_q015",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "network_security_groups"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "cloud_security_posture_management",
+      "component_members": [
+        "sc900_p1_q016",
+        "sc900_p2_q028"
+      ],
+      "correct_answer_text": "Cloud security posture management",
+      "override_type": "none",
+      "prior_semantic_family_id": "cloud_security_posture_management",
+      "question_id": "sc900_p1_q016",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "cloud_security_posture_management"
+    },
+    {
+      "basis": [
+        "explicit_cross_leaf_transfer_review",
+        "shared_answer_or_leaf_edges"
+      ],
+      "blueprint_leaf_id": "siem_and_soar",
+      "component_members": [
+        "sc900_p1_q017",
+        "sc900_p1_q027",
+        "sc900_p1_q037",
+        "sc900_p2_q031",
+        "sc900_p2_q032",
+        "sc900_p2_q033"
+      ],
+      "correct_answer_text": "SIEM and SOAR",
+      "override_type": "family_merge",
+      "prior_semantic_family_id": "siem_and_soar",
+      "question_id": "sc900_p1_q017",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "sentinel_siem_soar_automation"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "defender_for_office_365",
+      "component_members": [
+        "sc900_p1_q018",
+        "sc900_p2_q037"
+      ],
+      "correct_answer_text": "Microsoft Defender for Office 365",
+      "override_type": "none",
+      "prior_semantic_family_id": "defender_for_office_365",
+      "question_id": "sc900_p1_q018",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "defender_for_office_365"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "compliance_manager",
+      "component_members": [
+        "sc900_p1_q019"
+      ],
+      "correct_answer_text": "Compliance Manager",
+      "override_type": "none",
+      "prior_semantic_family_id": "compliance_manager",
+      "question_id": "sc900_p1_q019",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "compliance_manager"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "sensitivity_labels_and_policies",
+      "component_members": [
+        "sc900_p1_q020"
+      ],
+      "correct_answer_text": "Sensitivity labels and policies",
+      "override_type": "none",
+      "prior_semantic_family_id": "sensitivity_labels_and_policies",
+      "question_id": "sc900_p1_q020",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "sensitivity_labels_and_policies"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "authorization",
+      "component_members": [
+        "sc900_p1_q021"
+      ],
+      "correct_answer_text": "Authorization",
+      "override_type": "none",
+      "prior_semantic_family_id": "authorization",
+      "question_id": "sc900_p1_q021",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "authorization"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "authentication_methods",
+      "component_members": [
+        "sc900_p1_q022",
+        "sc900_p2_q010",
+        "sc900_p2_q013"
+      ],
+      "correct_answer_text": "They are ways users prove their identity during sign-in",
+      "override_type": "none",
+      "prior_semantic_family_id": "authentication_methods",
+      "question_id": "sc900_p1_q022",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "authentication_methods"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "entra_roles_rbac",
+      "component_members": [
+        "sc900_p1_q023",
+        "sc900_p2_q015"
+      ],
+      "correct_answer_text": "Microsoft Entra roles and role-based access control",
+      "override_type": "none",
+      "prior_semantic_family_id": "entra_roles_rbac",
+      "question_id": "sc900_p1_q023",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "entra_roles_rbac"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "privileged_identity_management",
+      "component_members": [
+        "sc900_p1_q024",
+        "sc900_p2_q018"
+      ],
+      "correct_answer_text": "Privileged Identity Management",
+      "override_type": "none",
+      "prior_semantic_family_id": "privileged_identity_management",
+      "question_id": "sc900_p1_q024",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "privileged_identity_management"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "azure_bastion",
+      "component_members": [
+        "sc900_p1_q025",
+        "sc900_p2_q025"
+      ],
+      "correct_answer_text": "Azure Bastion",
+      "override_type": "none",
+      "prior_semantic_family_id": "azure_bastion",
+      "question_id": "sc900_p1_q025",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "azure_bastion"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "security_policies_standards_recommendations",
+      "component_members": [
+        "sc900_p1_q026",
+        "sc900_p2_q029"
+      ],
+      "correct_answer_text": "Identify actions that can improve the security posture of resources",
+      "override_type": "none",
+      "prior_semantic_family_id": "security_policies_standards_recommendations",
+      "question_id": "sc900_p1_q026",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "security_policies_standards_recommendations"
+    },
+    {
+      "basis": [
+        "explicit_cross_leaf_transfer_review",
+        "shared_answer_or_leaf_edges"
+      ],
+      "blueprint_leaf_id": "sentinel_threat_detection_mitigation",
+      "component_members": [
+        "sc900_p1_q017",
+        "sc900_p1_q027",
+        "sc900_p1_q037",
+        "sc900_p2_q031",
+        "sc900_p2_q032",
+        "sc900_p2_q033"
+      ],
+      "correct_answer_text": "Microsoft Sentinel",
+      "override_type": "family_merge",
+      "prior_semantic_family_id": "sentinel_threat_detection_mitigation",
+      "question_id": "sc900_p1_q027",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "sentinel_siem_soar_automation"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "defender_for_identity",
+      "component_members": [
+        "sc900_p1_q028",
+        "sc900_p2_q039"
+      ],
+      "correct_answer_text": "Microsoft Defender for Identity",
+      "override_type": "none",
+      "prior_semantic_family_id": "defender_for_identity",
+      "question_id": "sc900_p1_q028",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "defender_for_identity"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "data_classification",
+      "component_members": [
+        "sc900_p1_q029",
+        "sc900_p2_q047"
+      ],
+      "correct_answer_text": "Data classification",
+      "override_type": "none",
+      "prior_semantic_family_id": "data_classification",
+      "question_id": "sc900_p1_q029",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "data_classification"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "ediscovery",
+      "component_members": [
+        "sc900_p1_q030",
+        "sc900_p2_q049"
+      ],
+      "correct_answer_text": "eDiscovery",
+      "override_type": "none",
+      "prior_semantic_family_id": "ediscovery",
+      "question_id": "sc900_p1_q030",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "ediscovery"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "defense_in_depth",
+      "component_members": [
+        "sc900_p1_q031"
+      ],
+      "correct_answer_text": "So that failure or bypass of one layer does not leave the system entirely unprotected",
+      "override_type": "none",
+      "prior_semantic_family_id": "defense_in_depth",
+      "question_id": "sc900_p1_q031",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "defense_in_depth"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "identity_types_including_agent_id",
+      "component_members": [
+        "sc900_p1_q032",
+        "sc900_p2_q008"
+      ],
+      "correct_answer_text": "Microsoft Entra ID identity types",
+      "override_type": "none",
+      "prior_semantic_family_id": "identity_types_including_agent_id",
+      "question_id": "sc900_p1_q032",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "identity_types_including_agent_id"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "conditional_access",
+      "component_members": [
+        "sc900_p1_q014",
+        "sc900_p1_q033",
+        "sc900_p2_q014",
+        "sc900_p2_q016"
+      ],
+      "correct_answer_text": "Using sign-in conditions to determine which access control to enforce",
+      "override_type": "none",
+      "prior_semantic_family_id": "conditional_access",
+      "question_id": "sc900_p1_q033",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "conditional_access"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "entra_id_protection",
+      "component_members": [
+        "sc900_p1_q034",
+        "sc900_p2_q019"
+      ],
+      "correct_answer_text": "Microsoft Entra ID Protection",
+      "override_type": "none",
+      "prior_semantic_family_id": "entra_id_protection",
+      "question_id": "sc900_p1_q034",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "entra_id_protection"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "azure_ddos_protection",
+      "component_members": [
+        "sc900_p1_q035"
+      ],
+      "correct_answer_text": "Azure DDoS Protection",
+      "override_type": "none",
+      "prior_semantic_family_id": "azure_ddos_protection",
+      "question_id": "sc900_p1_q035",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "azure_ddos_protection"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "azure_firewall",
+      "component_members": [
+        "sc900_p1_q036",
+        "sc900_p2_q023"
+      ],
+      "correct_answer_text": "Azure Firewall",
+      "override_type": "none",
+      "prior_semantic_family_id": "azure_firewall",
+      "question_id": "sc900_p1_q036",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "azure_firewall"
+    },
+    {
+      "basis": [
+        "explicit_cross_leaf_transfer_review",
+        "shared_answer_or_leaf_edges"
+      ],
+      "blueprint_leaf_id": "siem_and_soar",
+      "component_members": [
+        "sc900_p1_q017",
+        "sc900_p1_q027",
+        "sc900_p1_q037",
+        "sc900_p2_q031",
+        "sc900_p2_q032",
+        "sc900_p2_q033"
+      ],
+      "correct_answer_text": "Automating response workflows across security tools",
+      "override_type": "family_merge",
+      "prior_semantic_family_id": "siem_and_soar",
+      "question_id": "sc900_p1_q037",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "sentinel_siem_soar_automation"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "defender_for_cloud_apps",
+      "component_members": [
+        "sc900_p1_q038",
+        "sc900_p2_q038"
+      ],
+      "correct_answer_text": "Microsoft Defender for Cloud Apps",
+      "override_type": "none",
+      "prior_semantic_family_id": "defender_for_cloud_apps",
+      "question_id": "sc900_p1_q038",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "defender_for_cloud_apps"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "microsoft_privacy_principles",
+      "component_members": [
+        "sc900_p1_q039",
+        "sc900_p2_q041"
+      ],
+      "correct_answer_text": "Microsoft privacy principles",
+      "override_type": "none",
+      "prior_semantic_family_id": "microsoft_privacy_principles",
+      "question_id": "sc900_p1_q039",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "microsoft_privacy_principles"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "audit",
+      "component_members": [
+        "sc900_p1_q040",
+        "sc900_p2_q050"
+      ],
+      "correct_answer_text": "Audit",
+      "override_type": "none",
+      "prior_semantic_family_id": "audit",
+      "question_id": "sc900_p1_q040",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "audit"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "federation",
+      "component_members": [
+        "sc900_p1_q041"
+      ],
+      "correct_answer_text": "Federation",
+      "override_type": "none",
+      "prior_semantic_family_id": "federation",
+      "question_id": "sc900_p1_q041",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "federation"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "multifactor_authentication",
+      "component_members": [
+        "sc900_p1_q004",
+        "sc900_p1_q042",
+        "sc900_p2_q011"
+      ],
+      "correct_answer_text": "Compromise of one factor is less likely to be sufficient for access",
+      "override_type": "family_merge",
+      "prior_semantic_family_id": "entra-mfa-benefit",
+      "question_id": "sc900_p1_q042",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "multifactor_authentication"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "entra_id_governance",
+      "component_members": [
+        "sc900_p1_q043",
+        "sc900_p2_q020"
+      ],
+      "correct_answer_text": "Microsoft Entra ID Governance",
+      "override_type": "none",
+      "prior_semantic_family_id": "entra_id_governance",
+      "question_id": "sc900_p1_q043",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "entra_id_governance"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "azure_web_application_firewall",
+      "component_members": [
+        "sc900_p1_q044",
+        "sc900_p2_q024"
+      ],
+      "correct_answer_text": "Azure Web Application Firewall",
+      "override_type": "none",
+      "prior_semantic_family_id": "azure_web_application_firewall",
+      "question_id": "sc900_p1_q044",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "azure_web_application_firewall"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "cloud_workload_protection",
+      "component_members": [
+        "sc900_p1_q045",
+        "sc900_p2_q030"
+      ],
+      "correct_answer_text": "Threat protection for running cloud workloads",
+      "override_type": "none",
+      "prior_semantic_family_id": "cloud_workload_protection",
+      "question_id": "sc900_p1_q045",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "cloud_workload_protection"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "defender_vulnerability_management",
+      "component_members": [
+        "sc900_p1_q046"
+      ],
+      "correct_answer_text": "Microsoft Defender Vulnerability Management",
+      "override_type": "none",
+      "prior_semantic_family_id": "defender_vulnerability_management",
+      "question_id": "sc900_p1_q046",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "defender_vulnerability_management"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "defender_portal",
+      "component_members": [
+        "sc900_p1_q047"
+      ],
+      "correct_answer_text": "It provides a unified experience for security investigation and response across Defender capabilities",
+      "override_type": "none",
+      "prior_semantic_family_id": "defender_portal",
+      "question_id": "sc900_p1_q047",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "defender_portal"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "compliance_score",
+      "component_members": [
+        "sc900_p1_q048",
+        "sc900_p2_q043"
+      ],
+      "correct_answer_text": "A measure that helps track progress in completing recommended compliance improvement actions",
+      "override_type": "none",
+      "prior_semantic_family_id": "compliance_score",
+      "question_id": "sc900_p1_q048",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "compliance_score"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "retention_policies_labels",
+      "component_members": [
+        "sc900_p1_q049",
+        "sc900_p2_q046"
+      ],
+      "correct_answer_text": "Retention policies and retention labels",
+      "override_type": "none",
+      "prior_semantic_family_id": "retention_policies_labels",
+      "question_id": "sc900_p1_q049",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "retention_policies_labels"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "insider_risk_management",
+      "component_members": [
+        "sc900_p1_q050",
+        "sc900_p2_q048"
+      ],
+      "correct_answer_text": "Insider Risk Management",
+      "override_type": "none",
+      "prior_semantic_family_id": "insider_risk_management",
+      "question_id": "sc900_p1_q050",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "insider_risk_management"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "encryption_and_hashing",
+      "component_members": [
+        "sc900_p2_q001"
+      ],
+      "correct_answer_text": "Encryption",
+      "override_type": "family_merge",
+      "prior_semantic_family_id": "encryption_vs_hashing",
+      "question_id": "sc900_p2_q001",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "encryption_and_hashing"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "grc_concepts",
+      "component_members": [
+        "sc900_p2_q002"
+      ],
+      "correct_answer_text": "Risk management",
+      "override_type": "family_merge",
+      "prior_semantic_family_id": "grc_risk_identification",
+      "question_id": "sc900_p2_q002",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "grc_concepts"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "shared_responsibility_model",
+      "component_members": [
+        "sc900_p1_q001",
+        "sc900_p2_q003"
+      ],
+      "correct_answer_text": "The customer",
+      "override_type": "none",
+      "prior_semantic_family_id": "shared_responsibility_model",
+      "question_id": "sc900_p2_q003",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "shared_responsibility_model"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "identity_primary_security_perimeter",
+      "component_members": [
+        "sc900_p2_q004"
+      ],
+      "correct_answer_text": "Users can access cloud resources from many networks and locations, so access decisions must strongly protect identities",
+      "override_type": "none",
+      "prior_semantic_family_id": "identity_primary_security_perimeter",
+      "question_id": "sc900_p2_q004",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "identity_primary_security_perimeter"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "identity_providers",
+      "component_members": [
+        "sc900_p2_q005"
+      ],
+      "correct_answer_text": "Verify identity and issue or supply identity information used by relying services",
+      "override_type": "none",
+      "prior_semantic_family_id": "identity_providers",
+      "question_id": "sc900_p2_q005",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "identity_providers"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "directory_services_active_directory",
+      "component_members": [
+        "sc900_p2_q006"
+      ],
+      "correct_answer_text": "Maintaining organized information about identities and resources so they can be located and managed",
+      "override_type": "none",
+      "prior_semantic_family_id": "directory_services_active_directory",
+      "question_id": "sc900_p2_q006",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "directory_services_active_directory"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "entra_id_overview",
+      "component_members": [
+        "sc900_p1_q003",
+        "sc900_p2_q007"
+      ],
+      "correct_answer_text": "Microsoft Entra ID",
+      "override_type": "none",
+      "prior_semantic_family_id": "entra_id_overview",
+      "question_id": "sc900_p2_q007",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "entra_id_overview"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "identity_types_including_agent_id",
+      "component_members": [
+        "sc900_p1_q032",
+        "sc900_p2_q008"
+      ],
+      "correct_answer_text": "Workload identity",
+      "override_type": "family_merge",
+      "prior_semantic_family_id": "entra_workload_identity",
+      "question_id": "sc900_p2_q008",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "identity_types_including_agent_id"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "hybrid_identity",
+      "component_members": [
+        "sc900_p1_q012",
+        "sc900_p2_q009"
+      ],
+      "correct_answer_text": "Use related identity information across on-premises and cloud environments",
+      "override_type": "none",
+      "prior_semantic_family_id": "hybrid_identity",
+      "question_id": "sc900_p2_q009",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "hybrid_identity"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "authentication_methods",
+      "component_members": [
+        "sc900_p1_q022",
+        "sc900_p2_q010",
+        "sc900_p2_q013"
+      ],
+      "correct_answer_text": "Windows Hello for Business",
+      "override_type": "none",
+      "prior_semantic_family_id": "authentication_methods",
+      "question_id": "sc900_p2_q010",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "authentication_methods"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "multifactor_authentication",
+      "component_members": [
+        "sc900_p1_q004",
+        "sc900_p1_q042",
+        "sc900_p2_q011"
+      ],
+      "correct_answer_text": "It uses more than one authentication factor so a stolen password alone is less likely to be sufficient",
+      "override_type": "none",
+      "prior_semantic_family_id": "multifactor_authentication",
+      "question_id": "sc900_p2_q011",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "multifactor_authentication"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "password_protection_management",
+      "component_members": [
+        "sc900_p1_q013",
+        "sc900_p2_q012"
+      ],
+      "correct_answer_text": "Custom banned password protection",
+      "override_type": "none",
+      "prior_semantic_family_id": "password_protection_management",
+      "question_id": "sc900_p2_q012",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "password_protection_management"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "authentication_methods",
+      "component_members": [
+        "sc900_p1_q022",
+        "sc900_p2_q010",
+        "sc900_p2_q013"
+      ],
+      "correct_answer_text": "It can verify the user without requiring the user to enter a password for that sign-in",
+      "override_type": "none",
+      "prior_semantic_family_id": "authentication_methods",
+      "question_id": "sc900_p2_q013",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "authentication_methods"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "conditional_access",
+      "component_members": [
+        "sc900_p1_q014",
+        "sc900_p1_q033",
+        "sc900_p2_q014",
+        "sc900_p2_q016"
+      ],
+      "correct_answer_text": "Conditional Access",
+      "override_type": "none",
+      "prior_semantic_family_id": "conditional_access",
+      "question_id": "sc900_p2_q014",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "conditional_access"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "entra_roles_rbac",
+      "component_members": [
+        "sc900_p1_q023",
+        "sc900_p2_q015"
+      ],
+      "correct_answer_text": "Which administrative permissions an assigned identity can exercise",
+      "override_type": "none",
+      "prior_semantic_family_id": "entra_roles_rbac",
+      "question_id": "sc900_p2_q015",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "entra_roles_rbac"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "conditional_access",
+      "component_members": [
+        "sc900_p1_q014",
+        "sc900_p1_q033",
+        "sc900_p2_q014",
+        "sc900_p2_q016"
+      ],
+      "correct_answer_text": "Conditional Access policy",
+      "override_type": "none",
+      "prior_semantic_family_id": "conditional_access",
+      "question_id": "sc900_p2_q016",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "conditional_access"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "access_reviews",
+      "component_members": [
+        "sc900_p1_q005",
+        "sc900_p2_q017"
+      ],
+      "correct_answer_text": "Access reviews",
+      "override_type": "none",
+      "prior_semantic_family_id": "access_reviews",
+      "question_id": "sc900_p2_q017",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "access_reviews"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "privileged_identity_management",
+      "component_members": [
+        "sc900_p1_q024",
+        "sc900_p2_q018"
+      ],
+      "correct_answer_text": "Privileged Identity Management",
+      "override_type": "none",
+      "prior_semantic_family_id": "privileged_identity_management",
+      "question_id": "sc900_p2_q018",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "privileged_identity_management"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "entra_id_protection",
+      "component_members": [
+        "sc900_p1_q034",
+        "sc900_p2_q019"
+      ],
+      "correct_answer_text": "Microsoft Entra ID Protection",
+      "override_type": "none",
+      "prior_semantic_family_id": "entra_id_protection",
+      "question_id": "sc900_p2_q019",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "entra_id_protection"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "entra_id_governance",
+      "component_members": [
+        "sc900_p1_q043",
+        "sc900_p2_q020"
+      ],
+      "correct_answer_text": "Manage identity and access lifecycles so appropriate access can be granted, reviewed, and removed over time",
+      "override_type": "none",
+      "prior_semantic_family_id": "entra_id_governance",
+      "question_id": "sc900_p2_q020",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "entra_id_governance"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "azure_virtual_network_segmentation",
+      "component_members": [
+        "sc900_p2_q021"
+      ],
+      "correct_answer_text": "Virtual networks and subnets",
+      "override_type": "none",
+      "prior_semantic_family_id": "azure_virtual_network_segmentation",
+      "question_id": "sc900_p2_q021",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "azure_virtual_network_segmentation"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "network_security_groups",
+      "component_members": [
+        "sc900_p1_q015",
+        "sc900_p2_q022"
+      ],
+      "correct_answer_text": "Network Security Group",
+      "override_type": "none",
+      "prior_semantic_family_id": "network_security_groups",
+      "question_id": "sc900_p2_q022",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "network_security_groups"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "azure_firewall",
+      "component_members": [
+        "sc900_p1_q036",
+        "sc900_p2_q023"
+      ],
+      "correct_answer_text": "Centralized managed network filtering with stateful firewall capabilities across Azure network traffic",
+      "override_type": "none",
+      "prior_semantic_family_id": "azure_firewall",
+      "question_id": "sc900_p2_q023",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "azure_firewall"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "azure_web_application_firewall",
+      "component_members": [
+        "sc900_p1_q044",
+        "sc900_p2_q024"
+      ],
+      "correct_answer_text": "Azure Web Application Firewall",
+      "override_type": "none",
+      "prior_semantic_family_id": "azure_web_application_firewall",
+      "question_id": "sc900_p2_q024",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "azure_web_application_firewall"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "azure_bastion",
+      "component_members": [
+        "sc900_p1_q025",
+        "sc900_p2_q025"
+      ],
+      "correct_answer_text": "It provides managed RDP/SSH connectivity without requiring each target VM to expose a public IP for that access",
+      "override_type": "none",
+      "prior_semantic_family_id": "azure_bastion",
+      "question_id": "sc900_p2_q025",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "azure_bastion"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "azure_key_vault",
+      "component_members": [
+        "sc900_p1_q006",
+        "sc900_p2_q026"
+      ],
+      "correct_answer_text": "Azure Key Vault",
+      "override_type": "none",
+      "prior_semantic_family_id": "azure_key_vault",
+      "question_id": "sc900_p2_q026",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "azure_key_vault"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "microsoft_defender_for_cloud",
+      "component_members": [
+        "sc900_p1_q007",
+        "sc900_p2_q027"
+      ],
+      "correct_answer_text": "Microsoft Defender for Cloud",
+      "override_type": "none",
+      "prior_semantic_family_id": "microsoft_defender_for_cloud",
+      "question_id": "sc900_p2_q027",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "microsoft_defender_for_cloud"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "cloud_security_posture_management",
+      "component_members": [
+        "sc900_p1_q016",
+        "sc900_p2_q028"
+      ],
+      "correct_answer_text": "Cloud security posture management",
+      "override_type": "none",
+      "prior_semantic_family_id": "cloud_security_posture_management",
+      "question_id": "sc900_p2_q028",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "cloud_security_posture_management"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "security_policies_standards_recommendations",
+      "component_members": [
+        "sc900_p1_q026",
+        "sc900_p2_q029"
+      ],
+      "correct_answer_text": "Evaluate resources against desired security controls and identify actions that can improve posture",
+      "override_type": "none",
+      "prior_semantic_family_id": "security_policies_standards_recommendations",
+      "question_id": "sc900_p2_q029",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "security_policies_standards_recommendations"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "cloud_workload_protection",
+      "component_members": [
+        "sc900_p1_q045",
+        "sc900_p2_q030"
+      ],
+      "correct_answer_text": "Detecting and responding to threats affecting running cloud workloads",
+      "override_type": "none",
+      "prior_semantic_family_id": "cloud_workload_protection",
+      "question_id": "sc900_p2_q030",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "cloud_workload_protection"
+    },
+    {
+      "basis": [
+        "explicit_cross_leaf_transfer_review",
+        "shared_answer_or_leaf_edges"
+      ],
+      "blueprint_leaf_id": "siem_and_soar",
+      "component_members": [
+        "sc900_p1_q017",
+        "sc900_p1_q027",
+        "sc900_p1_q037",
+        "sc900_p2_q031",
+        "sc900_p2_q032",
+        "sc900_p2_q033"
+      ],
+      "correct_answer_text": "Collecting and correlating security data to support detection and investigation",
+      "override_type": "family_merge",
+      "prior_semantic_family_id": "siem_and_soar",
+      "question_id": "sc900_p2_q031",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "sentinel_siem_soar_automation"
+    },
+    {
+      "basis": [
+        "explicit_cross_leaf_transfer_review",
+        "shared_answer_or_leaf_edges"
+      ],
+      "blueprint_leaf_id": "sentinel_threat_detection_mitigation",
+      "component_members": [
+        "sc900_p1_q017",
+        "sc900_p1_q027",
+        "sc900_p1_q037",
+        "sc900_p2_q031",
+        "sc900_p2_q032",
+        "sc900_p2_q033"
+      ],
+      "correct_answer_text": "Analytics rules",
+      "override_type": "family_merge",
+      "prior_semantic_family_id": "sentinel_analytics_detection",
+      "question_id": "sc900_p2_q032",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "sentinel_siem_soar_automation"
+    },
+    {
+      "basis": [
+        "explicit_cross_leaf_transfer_review",
+        "shared_answer_or_leaf_edges"
+      ],
+      "blueprint_leaf_id": "sentinel_threat_detection_mitigation",
+      "component_members": [
+        "sc900_p1_q017",
+        "sc900_p1_q027",
+        "sc900_p1_q037",
+        "sc900_p2_q031",
+        "sc900_p2_q032",
+        "sc900_p2_q033"
+      ],
+      "correct_answer_text": "Automation and playbooks",
+      "override_type": "family_merge",
+      "prior_semantic_family_id": "sentinel_automation_response",
+      "question_id": "sc900_p2_q033",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "sentinel_siem_soar_automation"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "defender_xdr_services",
+      "component_members": [
+        "sc900_p2_q034"
+      ],
+      "correct_answer_text": "Correlate signals across Defender services to support unified detection, incidents, investigation, and response",
+      "override_type": "none",
+      "prior_semantic_family_id": "defender_xdr_services",
+      "question_id": "sc900_p2_q034",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "defender_xdr_services"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "defender_threat_intelligence",
+      "component_members": [
+        "sc900_p2_q035"
+      ],
+      "correct_answer_text": "Microsoft Defender Threat Intelligence",
+      "override_type": "none",
+      "prior_semantic_family_id": "defender_threat_intelligence",
+      "question_id": "sc900_p2_q035",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "defender_threat_intelligence"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "defender_for_endpoint",
+      "component_members": [
+        "sc900_p1_q008",
+        "sc900_p2_q036"
+      ],
+      "correct_answer_text": "Microsoft Defender for Endpoint",
+      "override_type": "none",
+      "prior_semantic_family_id": "defender_for_endpoint",
+      "question_id": "sc900_p2_q036",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "defender_for_endpoint"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "defender_for_office_365",
+      "component_members": [
+        "sc900_p1_q018",
+        "sc900_p2_q037"
+      ],
+      "correct_answer_text": "Microsoft Defender for Office 365",
+      "override_type": "none",
+      "prior_semantic_family_id": "defender_for_office_365",
+      "question_id": "sc900_p2_q037",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "defender_for_office_365"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "defender_for_cloud_apps",
+      "component_members": [
+        "sc900_p1_q038",
+        "sc900_p2_q038"
+      ],
+      "correct_answer_text": "Gain visibility and control over cloud app usage and detect cloud-app-related threats",
+      "override_type": "none",
+      "prior_semantic_family_id": "defender_for_cloud_apps",
+      "question_id": "sc900_p2_q038",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "defender_for_cloud_apps"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "defender_for_identity",
+      "component_members": [
+        "sc900_p1_q028",
+        "sc900_p2_q039"
+      ],
+      "correct_answer_text": "Microsoft Defender for Identity",
+      "override_type": "none",
+      "prior_semantic_family_id": "defender_for_identity",
+      "question_id": "sc900_p2_q039",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "defender_for_identity"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "service_trust_portal_offerings",
+      "component_members": [
+        "sc900_p1_q009",
+        "sc900_p2_q040"
+      ],
+      "correct_answer_text": "Service Trust Portal",
+      "override_type": "none",
+      "prior_semantic_family_id": "service_trust_portal_offerings",
+      "question_id": "sc900_p2_q040",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "service_trust_portal_offerings"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "microsoft_privacy_principles",
+      "component_members": [
+        "sc900_p1_q039",
+        "sc900_p2_q041"
+      ],
+      "correct_answer_text": "They describe commitments for handling and protecting customer data and privacy",
+      "override_type": "none",
+      "prior_semantic_family_id": "microsoft_privacy_principles",
+      "question_id": "sc900_p2_q041",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "microsoft_privacy_principles"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "purview_portal",
+      "component_members": [
+        "sc900_p2_q042"
+      ],
+      "correct_answer_text": "Microsoft Purview portal",
+      "override_type": "none",
+      "prior_semantic_family_id": "purview_portal",
+      "question_id": "sc900_p2_q042",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "purview_portal"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "compliance_score",
+      "component_members": [
+        "sc900_p1_q048",
+        "sc900_p2_q043"
+      ],
+      "correct_answer_text": "Completing applicable recommended improvement actions",
+      "override_type": "none",
+      "prior_semantic_family_id": "compliance_score",
+      "question_id": "sc900_p2_q043",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "compliance_score"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "content_and_activity_explorer",
+      "component_members": [
+        "sc900_p2_q044"
+      ],
+      "correct_answer_text": "Activity explorer",
+      "override_type": "family_merge",
+      "prior_semantic_family_id": "activity_explorer_labeled_content",
+      "question_id": "sc900_p2_q044",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "content_and_activity_explorer"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "records_management",
+      "component_members": [
+        "sc900_p2_q045"
+      ],
+      "correct_answer_text": "Records Management",
+      "override_type": "none",
+      "prior_semantic_family_id": "records_management",
+      "question_id": "sc900_p2_q045",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "records_management"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "retention_policies_labels",
+      "component_members": [
+        "sc900_p1_q049",
+        "sc900_p2_q046"
+      ],
+      "correct_answer_text": "Retention labels",
+      "override_type": "family_merge",
+      "prior_semantic_family_id": "retention_item_level_labels",
+      "question_id": "sc900_p2_q046",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "retention_policies_labels"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "data_classification",
+      "component_members": [
+        "sc900_p1_q029",
+        "sc900_p2_q047"
+      ],
+      "correct_answer_text": "Identify and categorize information so sensitive or important data can be understood and protected appropriately",
+      "override_type": "none",
+      "prior_semantic_family_id": "data_classification",
+      "question_id": "sc900_p2_q047",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "data_classification"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "insider_risk_management",
+      "component_members": [
+        "sc900_p1_q050",
+        "sc900_p2_q048"
+      ],
+      "correct_answer_text": "Insider Risk Management",
+      "override_type": "none",
+      "prior_semantic_family_id": "insider_risk_management",
+      "question_id": "sc900_p2_q048",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "insider_risk_management"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "ediscovery",
+      "component_members": [
+        "sc900_p1_q030",
+        "sc900_p2_q049"
+      ],
+      "correct_answer_text": "eDiscovery",
+      "override_type": "none",
+      "prior_semantic_family_id": "ediscovery",
+      "question_id": "sc900_p2_q049",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "ediscovery"
+    },
+    {
+      "basis": [
+        "same_blueprint_leaf_floor"
+      ],
+      "blueprint_leaf_id": "audit",
+      "component_members": [
+        "sc900_p1_q040",
+        "sc900_p2_q050"
+      ],
+      "correct_answer_text": "Audit",
+      "override_type": "none",
+      "prior_semantic_family_id": "audit",
+      "question_id": "sc900_p2_q050",
+      "rationale": "Conservative Phase-2 transfer audit: same-leaf, shared-answer, and explicit cross-leaf transfer edges are not allowed to masquerade as independent held-out families.",
+      "semantic_family_id": "audit"
+    }
+  ],
+  "family_count": 57,
+  "override_count": 12,
+  "question_count": 100,
+  "reviewed_at": "2026-09-11T13:10:00Z",
+  "reviewer": "openai-gpt5.6-sol-deep-review-correction",
+  "rule": {
+    "explicit_cross_leaf_transfer_edges": [
+      [
+        "sc900_p1_q037",
+        "sc900_p2_q033"
+      ]
+    ],
+    "same_blueprint_leaf": "merge",
+    "same_normalized_correct_answer": "merge",
+    "unknown_or_disputed": "fail_closed"
+  },
+  "work_id": "SC900-BANK-PHASE2-001"
+}

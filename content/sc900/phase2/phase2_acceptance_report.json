@@ -1,0 +1,46 @@
+{
+  "approved_count": 100,
+  "bank_validation_issues": [],
+  "build_receipt_errors": [],
+  "cand01_gate2_status": "GATE_2_BLOCKED_INSUFFICIENT_BANK_STRUCTURE",
+  "compiled_count": 100,
+  "compiled_sha256": "f98dd302c6eed1d10a4d466aad5c83bfb70b6ad43d6341313cac2845ca6dfe23",
+  "default_launch_bank_sha256": "60842eb28810d328fe56a427b7d72baedd6b31179ca4f1c98744392aa318a426",
+  "distinct_leaf_count": 58,
+  "domain_counts": {
+    "microsoft_compliance_solutions": 22,
+    "microsoft_entra": 28,
+    "microsoft_security_solutions": 38,
+    "security_compliance_identity": 12
+  },
+  "implementation_authorized": false,
+  "objective_counts": {
+    "azure_infrastructure_security": 12,
+    "azure_security_management": 8,
+    "defender_xdr": 12,
+    "entra_access_management": 6,
+    "entra_authentication": 8,
+    "entra_identity_protection_governance": 8,
+    "entra_identity_types_and_function": 6,
+    "identity_concepts": 6,
+    "microsoft_sentinel": 6,
+    "purview_compliance_management": 4,
+    "purview_information_protection_lifecycle": 8,
+    "purview_insider_risk_ediscovery_audit": 6,
+    "security_compliance_concepts": 6,
+    "service_trust_privacy": 4
+  },
+  "pending_count": 0,
+  "phase2_new_approved_count": 50,
+  "probe_suitability_counts": {
+    "eligible": 98,
+    "train_only": 2
+  },
+  "quality_errors": [],
+  "review_custody_errors": [],
+  "semantic_audit_errors": [],
+  "semantic_family_count": 57,
+  "source_inventory_errors": [],
+  "status": "PHASE_2_STRUCTURALLY_ACCEPTED",
+  "withheld_count": 0
+}
