@@ -338,5 +338,213 @@ class SC900Phase3CustodyAndProvenanceTests(unittest.TestCase):
         self.assertIn("STALE_OR_MISSING_SOURCE_RETRIEVAL", codes)
 
 
+def _unique_correct_answers(questions):
+    for question in questions:
+        marker = question["id"]
+        question["choices"][0]["text"] = f"Correct choice {marker}"
+
+
+def _leaf_members(questions):
+    members = {}
+    for question in questions:
+        leaf = question["metadata"]["blueprint_leaf_id"]
+        members.setdefault(leaf, []).append(question["id"])
+    for leaf in members:
+        members[leaf].sort()
+    return members
+
+
+def _valid_phase3_semantic_audit(questions):
+    reviewer = "cursor-grok-4.6-cumulative-adversarial-semantic-audit"
+    reviewed_at = "2026-09-11T18:00:00Z"
+    review_method = "cumulative adversarial semantic-family audit of Phase 1+2+3"
+    by_leaf = _leaf_members(questions)
+    by_id = {question["id"]: question for question in questions}
+    families = []
+    decisions = []
+    for leaf, members in sorted(by_leaf.items()):
+        prior_ids = sorted({by_id[qid]["metadata"]["semantic_family_id"] for qid in members})
+        family_decision = "retained" if prior_ids == [leaf] else "merged"
+        families.append(
+            {
+                "semantic_family_id": leaf,
+                "family_state": "resolved",
+                "members": members,
+                "prior_family_ids": prior_ids,
+                "decision_type": family_decision,
+                "rationale": f"Same-leaf cluster for {leaf} remains one family without independent-proposition evidence.",
+                "evidence_class": ["same_leaf_transfer"],
+                "blueprint_leaf_ids": [leaf],
+            }
+        )
+        for qid in members:
+            question = by_id[qid]
+            prior = question["metadata"]["semantic_family_id"]
+            decisions.append(
+                {
+                    "question_id": qid,
+                    "semantic_family_id": leaf,
+                    "prior_semantic_family_id": prior,
+                    "family_state": "resolved",
+                    "decision_type": "retained" if prior == leaf else "merged",
+                    "rationale": f"Conservative same-leaf family assignment for {leaf}.",
+                    "evidence_class": ["same_leaf_transfer"],
+                    "relationship_evidence": [{"edge_class": "same_leaf", "members": members}],
+                    "component_members": members,
+                    "blueprint_leaf_ids": [leaf],
+                    "blueprint_leaf_id": leaf,
+                    "correct_answer_text": question["choices"][0]["text"],
+                    "reviewer": reviewer,
+                    "review_method": review_method,
+                    "reviewed_at": reviewed_at,
+                    "future_probe_suitability": question["metadata"]["future_probe_suitability"],
+                    "probe_suitability_consequence": "unchanged",
+                }
+            )
+    decisions.sort(key=lambda row: row["question_id"])
+    question_ids = sorted(question["id"] for question in questions)
+    return {
+        "work_id": "SC900-BANK-PHASE3-001",
+        "audit_version": "sc900-semantic-family-audit/v2",
+        "audit_epoch": "phase3-task4-cumulative-200",
+        "reviewer": reviewer,
+        "reviewed_at": reviewed_at,
+        "review_method": review_method,
+        "question_count": len(questions),
+        "question_ids": question_ids,
+        "family_count": len(families),
+        "merge_override_count": sum(row["decision_type"] == "merged" for row in decisions),
+        "split_override_count": 0,
+        "unresolved_family_count": 0,
+        "explicit_transfer_edge_count": 0,
+        "transfer_edges": [],
+        "independence_adjudications": [],
+        "families": families,
+        "decisions": decisions,
+    }
+
+
+def _load_phase3_builder(testcase):
+    testcase.assertIsNotNone(
+        importlib.util.find_spec("tools.build_sc900_phase3"),
+        "tools.build_sc900_phase3 must exist",
+    )
+    return importlib.import_module("tools.build_sc900_phase3")
+
+
+class SC900Phase3SemanticFamilyAuditTests(unittest.TestCase):
+    def setUp(self):
+        self.taxonomy = load_taxonomy()
+        questions, _reviews, _phase3_ids = _complete_phase3_set(self.taxonomy)
+        _unique_correct_answers(questions)
+        self.questions = questions
+        self.audit = _valid_phase3_semantic_audit(questions)
+        self.builder = _load_phase3_builder(self)
+
+    def _codes(self, audit=None, questions=None):
+        return {
+            row["code"]
+            for row in self.builder.validate_phase3_semantic_audit(
+                questions if questions is not None else self.questions,
+                audit if audit is not None else self.audit,
+            )
+        }
+
+    def test_valid_audit_has_no_errors(self):
+        self.assertEqual([], self.builder.validate_phase3_semantic_audit(self.questions, self.audit))
+
+    def test_missing_audit_record_fails_closed(self):
+        self.audit["decisions"].pop()
+        self.audit["question_count"] = len(self.audit["decisions"])
+        self.assertIn("MISSING_AUDIT_DECISION", self._codes())
+
+    def test_duplicate_audit_decision_fails_closed(self):
+        self.audit["decisions"].append(copy.deepcopy(self.audit["decisions"][0]))
+        self.assertIn("DUPLICATE_AUDIT_DECISION", self._codes())
+
+    def test_unknown_audit_id_fails_closed(self):
+        extra = copy.deepcopy(self.audit["decisions"][0])
+        extra["question_id"] = "sc900_unknown_q999"
+        self.audit["decisions"].append(extra)
+        self.assertIn("UNKNOWN_AUDIT_ID", self._codes())
+
+    def test_unresolved_family_state_treated_as_resolved_fails_closed(self):
+        target = self.audit["decisions"][0]
+        target["family_state"] = "unresolved"
+        target["decision_type"] = "retained"
+        self.assertIn("UNRESOLVED_FAMILY_TREATED_AS_RESOLVED", self._codes())
+
+    def test_missing_family_rationale_fails_closed(self):
+        self.audit["decisions"][0]["rationale"] = ""
+        self.assertIn("MISSING_FAMILY_RATIONALE", self._codes())
+
+    def test_missing_decision_provenance_fails_closed(self):
+        self.audit["decisions"][0]["reviewer"] = ""
+        self.audit["decisions"][0]["review_method"] = ""
+        self.audit["decisions"][0]["reviewed_at"] = ""
+        codes = self._codes()
+        self.assertIn("MISSING_DECISION_PROVENANCE", codes)
+
+    def test_conflicting_family_assignments_fail_closed(self):
+        duplicate = copy.deepcopy(self.audit["decisions"][0])
+        duplicate["semantic_family_id"] = "conflicting_identity"
+        self.audit["decisions"].append(duplicate)
+        codes = self._codes()
+        self.assertIn("DUPLICATE_AUDIT_DECISION", codes)
+        self.assertIn("CONFLICTING_FAMILY_ASSIGNMENT", codes)
+
+    def test_contradictory_family_identities_fail_closed(self):
+        left = self.audit["decisions"][0]
+        members = left["component_members"]
+        self.assertGreaterEqual(len(members), 2)
+        right = next(row for row in self.audit["decisions"] if row["question_id"] == members[1])
+        right["semantic_family_id"] = "contradictory_identity"
+        self.assertIn("CONTRADICTORY_FAMILY_IDENTITY", self._codes())
+
+    def test_known_transfer_edge_unaccounted_fails_closed(self):
+        left = self.questions[0]
+        right = next(
+            row
+            for row in self.questions
+            if row["metadata"]["blueprint_leaf_id"] != left["metadata"]["blueprint_leaf_id"]
+        )
+        left["id"] = "sc900_p1_q037"
+        right["id"] = "sc900_p2_q033"
+        audit = _valid_phase3_semantic_audit(self.questions)
+        self.assertIn("TRANSFER_EDGE_UNACCOUNTED", self._codes(audit=audit, questions=self.questions))
+
+    def test_same_leaf_high_risk_pair_without_adjudication_fails_closed(self):
+        left = self.audit["decisions"][0]
+        members = left["component_members"]
+        self.assertGreaterEqual(len(members), 2)
+        right = next(row for row in self.audit["decisions"] if row["question_id"] == members[1])
+        right["semantic_family_id"] = "independent_without_adjudication"
+        right["component_members"] = [right["question_id"]]
+        left["component_members"] = [left["question_id"]]
+        self.assertIn("HIGH_RISK_PAIR_UNADJUDICATED", self._codes())
+
+    def test_unresolved_family_remaining_probe_eligible_fails_closed(self):
+        target = self.audit["decisions"][0]
+        target["family_state"] = "unresolved"
+        target["decision_type"] = "unresolved"
+        target["future_probe_suitability"] = "eligible"
+        self.assertIn("UNRESOLVED_FAMILY_PROBE_ELIGIBLE", self._codes())
+
+    def test_audit_count_not_exactly_200_fails_closed(self):
+        self.audit["question_count"] = 199
+        self.assertIn("AUDIT_COUNT_MISMATCH", self._codes())
+
+    def test_committed_cumulative_audit_covers_exactly_200_questions(self):
+        questions = self.builder.load_cumulative_approved_questions()
+        audit = self.builder.load_phase3_semantic_family_audit()
+        self.assertEqual(200, len(questions))
+        self.assertEqual(200, len({row["id"] for row in questions}))
+        self.assertEqual(
+            [],
+            self.builder.validate_phase3_semantic_audit(questions, audit),
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
+
