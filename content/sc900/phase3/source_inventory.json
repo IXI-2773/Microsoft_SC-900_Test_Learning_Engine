@@ -188,7 +188,6 @@
       "leaf_ids": [
         "audit",
         "ediscovery",
-        "insider_risk_management",
         "purview_portal",
         "retention_policies_labels"
       ],

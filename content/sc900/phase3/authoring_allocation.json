@@ -112,9 +112,9 @@
       "domain": "microsoft_compliance_solutions",
       "objective": "purview_insider_risk_ediscovery_audit",
       "blueprint_leaf_id": "insider_risk_management",
-      "source_inventory_id": "question-source-54a1385da82f",
-      "source_url": "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance/",
-      "source_family_id": "learn-purview_insider_risk_ediscovery_audit",
+      "source_inventory_id": "question-source-2ed5cc704ae0",
+      "source_url": "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions/",
+      "source_family_id": "learn-purview-insider-risk",
       "display_correct_position_target": "B"
     },
     {
@@ -222,9 +222,9 @@
       "domain": "microsoft_compliance_solutions",
       "objective": "purview_insider_risk_ediscovery_audit",
       "blueprint_leaf_id": "insider_risk_management",
-      "source_inventory_id": "question-source-54a1385da82f",
-      "source_url": "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance/",
-      "source_family_id": "learn-purview_insider_risk_ediscovery_audit",
+      "source_inventory_id": "question-source-2ed5cc704ae0",
+      "source_url": "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions/",
+      "source_family_id": "learn-purview-insider-risk",
       "display_correct_position_target": "D"
     },
     {
