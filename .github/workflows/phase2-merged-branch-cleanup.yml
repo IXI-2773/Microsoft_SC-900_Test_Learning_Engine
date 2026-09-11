@@ -1,0 +1,48 @@
+name: Phase 2 merged branch cleanup
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/phase2-merged-branch-cleanup.yml
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Verify exact merged Phase 2 branch then delete it
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          expected='da35459d39160ff3582f11f7e6ebb7f2b8e5eb51'
+          actual="$(git ls-remote origin 'refs/heads/implementation/sc900-reviewed-bank-phase2' | cut -f1)"
+          test "$actual" = "$expected"
+          merged="$(gh api repos/${GITHUB_REPOSITORY}/pulls/9 --jq '.merged')"
+          test "$merged" = 'true'
+          git push origin --delete implementation/sc900-reviewed-bank-phase2
+          test -z "$(git ls-remote origin 'refs/heads/implementation/sc900-reviewed-bank-phase2')"
+
+      - name: Self-remove cleanup workflow
+        if: always()
+        shell: bash
+        run: |
+          git reset --hard
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+          git checkout -B main origin/main
+          git rm .github/workflows/phase2-merged-branch-cleanup.yml
+          git commit -m 'chore: remove Phase 2 merged-branch cleanup runner'
+          git push origin HEAD:main
