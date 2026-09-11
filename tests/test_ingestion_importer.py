@@ -26,6 +26,41 @@ def question(index: int, *, stem: str | None = None, page: int | None = None):
     }
 
 
+def phase1_question():
+    source_url = "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-mfa-howitworks"
+    return {
+        "exam": "SC-900",
+        "domain": "microsoft_entra",
+        "objective": "entra_authentication",
+        "subobjective": "multifactor authentication",
+        "difficulty": "beginner",
+        "type": "multiple_choice",
+        "stem": "Which control requires more than one category of credential before access is granted?",
+        "choices": [
+            {"id": "a", "text": "Multifactor authentication"},
+            {"id": "b", "text": "Single sign-on"},
+        ],
+        "correct_answer": "a",
+        "explanation": "Multifactor authentication requires two or more verification factors.",
+        "references": [source_url],
+        "source": {"title": "Microsoft Learn", "url": source_url},
+        "tags": ["entra", "authentication"],
+        "metadata": {
+            "origin": "manual",
+            "batch": "phase1-batch-test",
+            "blueprint_leaf_id": "multifactor_authentication",
+            "source_authority": "microsoft_learn",
+            "source_urls": [source_url],
+            "source_retrieved_at": "2026-09-11",
+            "source_family_id": "learn-entra-authentication",
+            "semantic_family_id": "entra-mfa-purpose",
+            "stem_style": "short_scenario",
+            "future_probe_suitability": "eligible",
+            "authoring_origin": "original_from_official_source",
+        },
+    }
+
+
 class ImporterTests(unittest.TestCase):
     def _write_jsonl(self, path: Path, records):
         path.write_text("".join(json.dumps(record) + "\n" for record in records), encoding="utf-8")
@@ -117,6 +152,27 @@ class ImporterTests(unittest.TestCase):
             stored = json.loads((root / "store" / "questions.json").read_text(encoding="utf-8"))
             self.assertTrue(all(row["promotion_status"] == "pending" for row in stored))
             self.assertEqual(stored[0]["id"], json.loads((root / "store" / "questions.json").read_text(encoding="utf-8"))[0]["id"])
+
+    def test_phase1_metadata_survives_approved_compilation(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            incoming = root / "phase1.jsonl"
+            self._write_jsonl(incoming, [phase1_question()])
+            import_jsonl(incoming, root / "store", load_taxonomy())
+            stored = json.loads((root / "store" / "questions.json").read_text(encoding="utf-8"))
+            question_id = stored[0]["id"]
+            apply_review_decision(root / "store", question_id, "approved", actor="reviewer")
+            compile_question_bank(root / "store", root / "runtime.json")
+            compiled = json.loads((root / "runtime.json").read_text(encoding="utf-8"))["questions"]
+            self.assertEqual(1, len(compiled))
+            self.assertEqual("multifactor_authentication", compiled[0]["blueprint_leaf_id"])
+            self.assertEqual("entra-mfa-purpose", compiled[0]["semantic_family_id"])
+            self.assertEqual("learn-entra-authentication", compiled[0]["source_family_id"])
+            self.assertEqual("short_scenario", compiled[0]["stem_style"])
+            self.assertEqual("eligible", compiled[0]["future_probe_suitability"])
+            self.assertEqual("original_from_official_source", compiled[0]["authoring_origin"])
+            self.assertTrue(compiled[0]["references"])
+            self.assertEqual("multifactor authentication", compiled[0]["subobjective"])
 
 
 if __name__ == "__main__":
