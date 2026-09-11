@@ -1,0 +1,48 @@
+name: Phase 2 receipt portability RED
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/phase2-receipt-portability-red.yml
+
+permissions:
+  contents: write
+
+jobs:
+  red:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Phase 2 branch
+        uses: actions/checkout@v4
+        with:
+          ref: implementation/sc900-reviewed-bank-phase2
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Require portability regression to fail before fix
+        shell: bash
+        run: |
+          set +e
+          python -m unittest tests.test_sc900_phase2_receipt_portability -v
+          rc=$?
+          set -e
+          if [ "$rc" -eq 0 ]; then
+            echo 'Expected RED before canonical receipt fix.'
+            exit 1
+          fi
+          echo 'RECEIPT_PORTABILITY_RED_CONFIRMED=1'
+      - name: Self-remove RED workflow
+        if: always()
+        shell: bash
+        run: |
+          git reset --hard
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+          git checkout -B main origin/main
+          git rm .github/workflows/phase2-receipt-portability-red.yml
+          git commit -m 'chore: remove Phase 2 receipt portability RED runner'
+          git push origin HEAD:main
