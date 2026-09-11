@@ -102,7 +102,6 @@ jobs:
               raise SystemExit('could not derive a bounded balanced answer-position assignment')
 
           position = {'A': 0, 'B': 1, 'C': 2, 'D': 3}
-          global_index = 0
           for path, rows in batches:
               rewritten = []
               for row in rows:
@@ -137,7 +136,6 @@ jobs:
                   if before_map != after_map:
                       raise SystemExit(f"{row.get('id')}: rebalance changed choice identity or text")
                   rewritten.append(row)
-                  global_index += 1
 
               path.write_text(
                   ''.join(json.dumps(row, ensure_ascii=False, separators=(',', ':')) + '\n' for row in rewritten),
@@ -160,6 +158,9 @@ jobs:
           print('Phase-2 answer-position counts:', dict(counts))
           print('Phase-2 maximum answer-position streak:', maximum_streak(resulting))
           PY
+
+      - name: Prove rebalance is idempotent on committed content
+        run: git diff --exit-code -- content/sc900/phase2/batches
 
       - name: Audit authored Phase 2 increment
         run: |
@@ -299,6 +300,9 @@ jobs:
           print('Compiled count:', report['compiled'])
           PY
 
+      - name: Verify committed Phase 2 acceptance artifacts
+        run: |
+          set -euo pipefail
           python tools/validate_sc900_phase2.py \
             --store content/sc900/phase2/store \
             --compiled content/sc900/phase2/compiled/sc900_phase2_reviewed_bank.json \
@@ -306,22 +310,27 @@ jobs:
             --phase2-reviews content/sc900/phase2/reviews \
             --phase2-batches content/sc900/phase2/batches \
             --source-inventory content/sc900/phase2/source_inventory.json \
-            --report content/sc900/phase2/phase2_acceptance_report.json
+            --report /tmp/phase2_acceptance_report.verify.json
 
           python - <<'PY'
           import hashlib
           from pathlib import Path
           from ingestion.importer import compile_question_bank
 
+          committed_report = Path('content/sc900/phase2/phase2_acceptance_report.json')
+          verified_report = Path('/tmp/phase2_acceptance_report.verify.json')
+          if committed_report.read_bytes() != verified_report.read_bytes():
+              raise SystemExit('committed Phase-2 acceptance report is not reproducible')
+
           store = Path('content/sc900/phase2/store')
           compiled = Path('content/sc900/phase2/compiled/sc900_phase2_reviewed_bank.json')
-          first = hashlib.sha256(compiled.read_bytes()).hexdigest()
           probe = Path('/tmp/sc900_phase2_reviewed_bank.recompiled.json')
+          first = hashlib.sha256(compiled.read_bytes()).hexdigest()
           compile_question_bank(store, probe)
           second = hashlib.sha256(probe.read_bytes()).hexdigest()
           if first != second or compiled.read_bytes() != probe.read_bytes():
-              raise SystemExit(f'non-deterministic compile: {first} != {second}')
-          print('Deterministic compiled SHA-256:', first)
+              raise SystemExit(f'non-deterministic committed compile: {first} != {second}')
+          print('Verified committed compiled SHA-256:', first)
           PY
 
       - name: Run Phase 2 and inherited bank-contract tests
