@@ -1,0 +1,110 @@
+name: One-shot merged branch cleanup
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/branch-self-cleanup.yml
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main with history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Verify ancestry and delete merged branches
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main --prune
+
+          branches=(
+            'agent/sc900-baseline'
+            'agent/sc900-v8-baseline'
+            'agent/sc900-v8-migration'
+            'baseline/sc900-v8'
+            'checkpoint/sc900-v8.0.0-integrated-20260911'
+            'design/sc900-reviewed-bank-phase1'
+            'dev/sc900-v8-baseline'
+            'docs/sc900-v8-plan'
+            'feat/sc900-v8-baseline'
+            'feature/sc900-v8-baseline'
+            'implementation/sc900-reviewed-bank-phase1'
+            'implementation/sc900-v8-baseline'
+            'integration/sc900-extractor-v1'
+            'maintenance/remove-stale-sc900-gitlink'
+            'migration/sc900-v8-baseline'
+            'migration/sc900-v8'
+            'plan/sc900-v8-baseline'
+            'plan/sc900-v8-implementation'
+            'research/sc900-cand01-gate2-001'
+            'research/sc900-cand01-gate2-adversarial-001'
+            'research/sc900-engine-rdaf-001'
+            'sc900-conversion'
+            'sc900-v8-baseline-implementation'
+            'verification/consolidated-main'
+            'work/sc900-v8-baseline'
+          )
+
+          protected=(
+            'main'
+            'recovery/publish-exact-history/sc900-v8-20260910'
+            'recovery/publish-sc900-v8-exact-history'
+          )
+
+          for branch in "${branches[@]}"; do
+            for keep in "${protected[@]}"; do
+              if [[ "$branch" == "$keep" ]]; then
+                echo "Refusing protected branch in deletion list: $branch" >&2
+                exit 1
+              fi
+            done
+
+            if git ls-remote --exit-code --heads origin "refs/heads/$branch" >/dev/null 2>&1; then
+              git fetch origin "+refs/heads/$branch:refs/remotes/origin/$branch"
+              if ! git merge-base --is-ancestor "refs/remotes/origin/$branch" "refs/remotes/origin/main"; then
+                echo "Refusing to delete unmerged branch: $branch" >&2
+                exit 1
+              fi
+              echo "Verified merged: $branch"
+            else
+              echo "Already absent: $branch"
+            fi
+          done
+
+          for branch in "${branches[@]}"; do
+            if git ls-remote --exit-code --heads origin "refs/heads/$branch" >/dev/null 2>&1; then
+              git push origin --delete "$branch"
+            fi
+          done
+
+          for branch in "${branches[@]}"; do
+            if git ls-remote --exit-code --heads origin "refs/heads/$branch" >/dev/null 2>&1; then
+              echo "Deletion verification failed: $branch" >&2
+              exit 1
+            fi
+          done
+
+          for keep in "${protected[@]}"; do
+            if ! git ls-remote --exit-code --heads origin "refs/heads/$keep" >/dev/null 2>&1; then
+              echo "Protected branch missing after cleanup: $keep" >&2
+              exit 1
+            fi
+          done
+
+      - name: Remove this one-shot worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/branch-self-cleanup.yml
+          git commit -m 'chore: remove one-shot branch cleanup worker'
+          git push origin HEAD:main
