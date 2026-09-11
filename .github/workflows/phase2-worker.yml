@@ -1,0 +1,27 @@
+name: SC-900 Phase 2 worker
+
+on:
+  push:
+    branches:
+      - implementation/sc900-reviewed-bank-phase2
+
+permissions:
+  contents: read
+
+jobs:
+  focused-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run Phase 2 focused tests
+        run: python -m unittest tests.test_sc900_phase2 -v
