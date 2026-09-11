@@ -1,7 +1,7 @@
 from pathlib import Path
 
-PATH = Path("tools/validate_sc900_phase2.py")
-text = PATH.read_text(encoding="utf-8")
+VALIDATOR_PATH = Path("tools/validate_sc900_phase2.py")
+text = VALIDATOR_PATH.read_text(encoding="utf-8")
 
 
 def replace_once(old: str, new: str) -> None:
@@ -189,4 +189,12 @@ replace_once(
 ''',
 )
 
-PATH.write_text(text, encoding="utf-8")
+VALIDATOR_PATH.write_text(text, encoding="utf-8")
+
+BUILDER_PATH = Path("tools/build_sc900_phase2.py")
+builder = BUILDER_PATH.read_text(encoding="utf-8")
+old = 'def _hash_map(paths: Sequence[Path]) -> dict[str, str]:\n    return {str(path.relative_to(ROOT)): sha256_file(path) for path in paths}\n'
+new = 'def _hash_map(paths: Sequence[Path]) -> dict[str, str]:\n    return {path.relative_to(ROOT).as_posix(): sha256_file(path) for path in paths}\n'
+if builder.count(old) != 1:
+    raise SystemExit(f"expected one _hash_map portability target, found {builder.count(old)}")
+BUILDER_PATH.write_text(builder.replace(old, new, 1), encoding="utf-8")
