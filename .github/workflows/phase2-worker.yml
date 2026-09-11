@@ -6,7 +6,7 @@ on:
       - implementation/sc900-reviewed-bank-phase2
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   focused-tests:
@@ -23,6 +23,95 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Materialize one-shot Phase 2 content payload
+        if: ${{ hashFiles('tools/_phase2_content_payload.py') != '' }}
+        run: python tools/_phase2_content_payload.py
+
+      - name: Audit authored Phase 2 increment
+        run: |
+          python - <<'PY'
+          import json
+          from collections import Counter
+          from pathlib import Path
+
+          from ingestion.bank_quality import validate_phase1_question
+          from ingestion.models import load_taxonomy
+          from tools.validate_sc900_phase1 import REVIEW_CHECK_FIELDS
+
+          taxonomy = load_taxonomy()
+          batch_dir = Path('content/sc900/phase2/batches')
+          review_dir = Path('content/sc900/phase2/reviews')
+          questions = []
+          for path in sorted(batch_dir.glob('batch-*.jsonl')):
+              rows = [json.loads(line) for line in path.read_text(encoding='utf-8').splitlines() if line.strip()]
+              if len(rows) != 10:
+                  raise SystemExit(f'{path}: expected 10 questions, found {len(rows)}')
+              questions.extend(rows)
+
+          if len(questions) != 50:
+              raise SystemExit(f'expected 50 Phase-2 questions, found {len(questions)}')
+          ids = [row['id'] for row in questions]
+          if len(set(ids)) != 50:
+              raise SystemExit('Phase-2 question IDs are not unique')
+
+          expected_domains = {
+              'security_compliance_identity': 6,
+              'microsoft_entra': 14,
+              'microsoft_security_solutions': 19,
+              'microsoft_compliance_solutions': 11,
+          }
+          expected_objectives = {
+              'security_compliance_concepts': 3,
+              'identity_concepts': 3,
+              'entra_identity_types_and_function': 3,
+              'entra_authentication': 4,
+              'entra_access_management': 3,
+              'entra_identity_protection_governance': 4,
+              'azure_infrastructure_security': 6,
+              'azure_security_management': 4,
+              'microsoft_sentinel': 3,
+              'defender_xdr': 6,
+              'service_trust_privacy': 2,
+              'purview_compliance_management': 2,
+              'purview_information_protection_lifecycle': 4,
+              'purview_insider_risk_ediscovery_audit': 3,
+          }
+          domains = dict(Counter(row['domain'] for row in questions))
+          objectives = dict(Counter(row['objective'] for row in questions))
+          if domains != expected_domains:
+              raise SystemExit(f'domain allocation mismatch: {domains}')
+          if objectives != expected_objectives:
+              raise SystemExit(f'objective allocation mismatch: {objectives}')
+
+          for row in questions:
+              validate_phase1_question(row, taxonomy)
+
+          reviews = []
+          for path in sorted(review_dir.glob('batch-*-review.json')):
+              payload = json.loads(path.read_text(encoding='utf-8'))
+              rows = payload.get('reviews', [])
+              if len(rows) != 10:
+                  raise SystemExit(f'{path}: expected 10 reviews, found {len(rows)}')
+              reviews.extend(rows)
+          if len(reviews) != 50:
+              raise SystemExit(f'expected 50 Phase-2 reviews, found {len(reviews)}')
+          review_ids = {row['question_id'] for row in reviews}
+          if review_ids != set(ids):
+              raise SystemExit('Phase-2 review IDs do not exactly match question IDs')
+          for receipt in reviews:
+              if receipt.get('disposition') != 'approved':
+                  raise SystemExit(f"{receipt.get('question_id')}: non-approved review receipt")
+              missing = [field for field in REVIEW_CHECK_FIELDS if receipt.get(field) is not True]
+              if missing:
+                  raise SystemExit(f"{receipt.get('question_id')}: incomplete review checks {missing}")
+              if not receipt.get('reviewer') or not receipt.get('reviewed_at'):
+                  raise SystemExit(f"{receipt.get('question_id')}: incomplete review custody")
+
+          print('Phase-2 authored increment audit: 50 questions / 50 approved review receipts')
+          print('Domain allocation:', domains)
+          print('Objective allocation:', objectives)
+          PY
+
       - name: Run Phase 2 and inherited bank-contract tests
         run: |
           python -m unittest \
@@ -30,3 +119,13 @@ jobs:
             tests.test_sc900_bank_quality \
             tests.test_sc900_taxonomy \
             -v
+
+      - name: Commit materialized Phase 2 content and remove payload
+        if: ${{ hashFiles('tools/_phase2_content_payload.py') != '' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/sc900/phase2/batches content/sc900/phase2/reviews
+          git rm tools/_phase2_content_payload.py
+          git commit -m "content: add SC-900 Phase 2 reviewed question increment"
+          git push origin HEAD:implementation/sc900-reviewed-bank-phase2
