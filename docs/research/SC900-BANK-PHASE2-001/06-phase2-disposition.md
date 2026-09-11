@@ -3,7 +3,7 @@
 WORK_ID = `SC900-BANK-PHASE2-001`
 BASE_MAIN_SHA = `98ea25ee3303567ca60730853a82b4643931c173`
 WORK_BRANCH = `implementation/sc900-reviewed-bank-phase2`
-CORRECTED_EVIDENCE_HEAD = `414b9be4d7cc8d7fd97f6beaa52e353c16bb16e2`
+FINAL_TESTED_EVIDENCE_HEAD = `b29f7d17830ce0c6763b2b59eda3595d8e7b70d1`
 BLUEPRINT = `SC-900 skills measured as of 2026-07-28`
 
 ## Terminal Result
@@ -65,26 +65,37 @@ Each Phase-2 review receipt is bound to canonical reviewed question content usin
 
 The cumulative semantic-family audit reduced the earlier nominal count from 63 to 57 after conservative cross-phase reclassification. This correction includes same-leaf transfer and explicit cross-leaf transfer cases that had previously been assigned separate family IDs.
 
+The final readiness review also closed two additional assurance gaps before merge:
+
+1. the Python TRAIN/PROBE manifest validator now enforces the published schema's required `items` array, enum values, forbidden extra fields, and assignment-receipt structure for all roles, including `UNASSIGNED`;
+2. deterministic build-receipt input paths are canonical POSIX paths, removing the previous Windows/Linux path-separator drift.
+
+The candidate bank, cumulative store, semantic-family audit, compiled candidate SHA-256, and launch-bank SHA-256 were unchanged by those final readiness corrections. Only validator/build tooling and the canonical build receipt changed.
+
 ## Verification Evidence
 
-Correction verification was executed by GitHub Actions run `34604050551` using the corrected worktree before publication of the final evidence commit.
+Final readiness verification was executed by GitHub Actions run `34607561070` on Windows against the final evidence worktree before publication of the tested evidence commit.
 
 Verified results:
 
-- focused Phase-2 / quality / taxonomy / importer suite: 39/39 passed;
-- full repository unittest discovery: 513/513 passed;
+- focused Phase-2 schema-parity / receipt-portability / structural suite: 20/20 passed;
+- full repository unittest discovery: 517/517 passed;
 - `tools/lint_bank.py`: PASS;
 - `tools/verify_installation.py`: PASS;
 - repository quality checks (`ruff`, `black --check`, `mypy`): PASS;
-- deterministic committed rebuild verification: `REPRODUCIBLE`.
+- deterministic committed rebuild verification: `REPRODUCIBLE`;
+- generated-artifact scope before publication was limited to `content/sc900/phase2/phase2_build_receipt.json`, `tools/build_sc900_phase2.py`, and `tools/validate_sc900_phase2.py`;
+- the temporary correction helper was removed before publication.
 
-The correction runner then removed transient correction helpers/workflows and committed the remaining verified Phase-2 evidence state as:
+The verified evidence state was published as:
 
-`414b9be4d7cc8d7fd97f6beaa52e353c16bb16e2`
+`b29f7d17830ce0c6763b2b59eda3595d8e7b70d1`
 
-The terminal disposition itself was added afterward as a documentation-only closure commit. That later documentation commit does not change the tested bank, validator, build receipt, semantic-family audit, source inventory, or runtime code.
+The subsequent history-reconciliation commit:
 
-No separate GitHub check-run is attached directly to `414b9be4d7cc8d7fd97f6beaa52e353c16bb16e2`; the verification authority for the evidence state is the successful one-shot run above plus the committed deterministic build receipt.
+`966d20439af48260314b2310829826b9e6724f3e`
+
+has the exact same Git tree (`1ff27f60d1f7ef4adb4275cf61e063c7df4ea2ba`) as the tested evidence head and only adds the current content-identical `main` history as a second parent. This terminal-disposition refresh is documentation-only and does not modify the tested bank, validator, build receipt, semantic-family audit, source inventory, or runtime code.
 
 ## Runtime Boundary
 
@@ -109,7 +120,7 @@ Phase 2 defines and hardens design-time contracts, schemas, validation, evidence
 
 Reaching 100 reviewed questions is a Phase-2 bank milestone, not evidence sufficient to pass or reopen Gate 2.
 
-The corrected Phase-2 evidence materially advances the earlier N07 ontology challenge by providing a cumulative 100-item semantic-family audit, conservative family reassignment, fail-closed manifest semantics, and auditable family overrides. N07 is therefore best characterized as:
+The corrected Phase-2 evidence materially advances the earlier N07 ontology challenge by providing a cumulative 100-item semantic-family audit, conservative family reassignment, fail-closed manifest semantics, auditable family overrides, and schema-equivalent design-time validation. N07 is therefore best characterized as:
 
 `N07 = DESIGN_ADVANCED_PENDING_RUNTIME_AND_LARGER_BANK_PROOF`
 
