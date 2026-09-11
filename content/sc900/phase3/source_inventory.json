@@ -240,6 +240,34 @@
     {
       "assessment_content_used": false,
       "leaf_ids": [
+        "authentication_methods"
+      ],
+      "objective_ids": [
+        "entra_authentication"
+      ],
+      "retrieved_at": "2026-09-11",
+      "source_id": "entra-temporary-access-pass",
+      "source_type": "product_documentation",
+      "title": "Configure Temporary Access Pass in Microsoft Entra ID",
+      "url": "https://learn.microsoft.com/en-us/entra/identity/authentication/howto-authentication-temporary-access-pass"
+    },
+    {
+      "assessment_content_used": false,
+      "leaf_ids": [
+        "entra_id_governance"
+      ],
+      "objective_ids": [
+        "entra_identity_protection_governance"
+      ],
+      "retrieved_at": "2026-09-11",
+      "source_id": "entra-lifecycle-workflows",
+      "source_type": "product_documentation",
+      "title": "What are Lifecycle Workflows?",
+      "url": "https://learn.microsoft.com/en-us/entra/id-governance/what-are-lifecycle-workflows"
+    },
+    {
+      "assessment_content_used": false,
+      "leaf_ids": [
         "authentication_methods",
         "multifactor_authentication",
         "password_protection_management"
