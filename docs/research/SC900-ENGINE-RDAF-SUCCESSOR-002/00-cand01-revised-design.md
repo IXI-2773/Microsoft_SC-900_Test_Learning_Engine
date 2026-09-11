@@ -30,7 +30,7 @@ No runtime code, question bank, tag, release, or production policy is changed by
 
 The original CAND-01 description overstated how much of the proposed scheduler was new.
 
-The current engine already contains tested mechanisms for:
+The current engine already contains **implemented and regression-tested** mechanisms for:
 
 - due-review detection and prioritization;
 - active-weak detection and prioritization;
@@ -40,6 +40,8 @@ The current engine already contains tested mechanisms for:
 - deterministic role allocation;
 - 24-hour and 7-day delayed-outcome measurement;
 - shadow-policy / challenger governance machinery.
+
+Regression coverage proves software behavior, **not** learning effectiveness or scientific validity. CAND-01R is specifically intended to test whether the additional Smart Practice machinery adds measurable learning value beyond these existing core mechanisms.
 
 Therefore **CAND-01 is not a request to rebuild due/weak/coverage scheduling**.
 
@@ -180,7 +182,7 @@ For each bucket turn, choose the highest-priority **currently unselected** item 
 Bucket-specific ordering:
 
 - `DUE`: oldest due timestamp first, then least-recently seen, then stable question ID.
-- `WEAK`: strongest existing weak status first using the engine’s current weak ordering where available; otherwise lowest recent correctness, then least-recently seen, then stable question ID.
+- `WEAK`: reuse the engine’s current active-weak ordering when that ordering is explicitly available; otherwise use lowest recent correctness, then least-recently seen, then stable question ID.
 - `COVERAGE`: largest blueprint deficit first, then unseen before seen, then least-recently seen, then stable question ID.
 
 No weighted sum combines the buckets.
@@ -281,14 +283,16 @@ Historical P1 remains preserved in the prior epoch. For this revision, define a 
 
 On a sufficiently large reviewed SC-900 bank with clean train/probe separation, **DWC-1 will perform within 0.05 absolute accuracy of current Smart Practice on 7-day first-attempt held-out probe correctness for this learner, unless the additional Smart Practice machinery contributes real incremental learning value.**
 
-Interpretation:
+Let `Δ = SmartPractice_accuracy - DWC1_accuracy` on the primary endpoint. The practical-equivalence margin remains `0.05`, inherited from historical P1.
 
-- If Smart Practice exceeds DWC-1 by more than `0.05` and the uncertainty interval excludes `0`, the claim that simplification is equivalent is weakened.
-- If DWC-1 is within `±0.05`, the engine has not demonstrated a practically important advantage from the extra selection complexity.
-- If DWC-1 exceeds Smart Practice by more than `0.05` with adequate evidence, later simplification becomes a serious candidate.
-- If sample size/coverage/contamination is inadequate, result = `INCONCLUSIVE`, not tie.
+Decision interpretation:
 
-The `0.05` margin is inherited from the original P1 as the precommitted practical-difference threshold; this revision does not tune it after seeing outcomes.
+- **Smart Practice practical superiority:** the uncertainty interval for `Δ` lies entirely above `+0.05`.
+- **DWC-1 practical superiority:** the uncertainty interval for `Δ` lies entirely below `-0.05`.
+- **Practical equivalence:** the uncertainty interval for `Δ` lies entirely inside `[-0.05, +0.05]`.
+- **Inconclusive:** every other case, including a point estimate inside the margin with an interval too wide to establish equivalence.
+
+This rule prevents a noisy “no significant difference” result from being mislabeled as proof that the policies are equivalent. The margin is not retuned after observing outcomes.
 
 ---
 
