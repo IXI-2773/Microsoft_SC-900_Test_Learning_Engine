@@ -28,6 +28,7 @@ from tools.validate_sc900_phase3 import (
     EXPECTED_PHASE3_DOMAIN_COUNTS,
     EXPECTED_PHASE3_OBJECTIVE_COUNTS,
     validate_phase3_source_inventory,
+    validate_phase3_train_probe_manifest,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -49,6 +50,7 @@ PHASE3_SOURCE_INVENTORY = PHASE3_ROOT / "source_inventory.json"
 SEMANTIC_AUDIT_PATH = PHASE3_ROOT / "semantic_family_audit.json"
 BUILD_RECEIPT_PATH = PHASE3_ROOT / "phase3_build_receipt.json"
 ACCEPTANCE_REPORT_PATH = PHASE3_ROOT / "phase3_acceptance_report.json"
+TRAIN_PROBE_MANIFEST_PATH = PHASE3_ROOT / "train_probe_manifest.json"
 
 WORK_ID = "SC900-BANK-PHASE3-001"
 BUILD_RECEIPT_VERSION = "sc900-phase3-build-receipt/v1"
@@ -57,6 +59,114 @@ BUILDER_IDENTITY = "tools.build_sc900_phase3"
 BUILDER_VERSION = "sc900-phase3-task5/v1"
 DETERMINISTIC_IMPORT_AT = "2026-09-11T18:00:00+00:00"
 EXPECTED_SEMANTIC_AUDIT_SHA256 = "e23fec15f148e50640d6851d192f4d17dca5d4f1b8c85b32f0e81eeb00059701"
+EXPECTED_PHASE3_STORE_SHA256 = "2cc71208fe16b057b88cd06f841b94cb10b57176668af9adf838917795fe7f3c"
+EXPECTED_PHASE3_COMPILED_SHA256 = "72051418687f76d67087ff8d3a37ee626b23c8d58ee98d33dfab132f19057f2b"
+PARTITION_MANIFEST_VERSION = "sc900.phase3.train-probe-manifest/v1"
+PARTITION_EPOCH = "phase3-task6-train-probe-partition"
+PARTITION_BLUEPRINT_VERSION = "2026-07-28"
+PARTITION_REVIEWER = "cursor-grok-4.6-phase3-task6-partition"
+PARTITION_REVIEWED_AT = "2026-09-11T18:00:00Z"
+FAMILY_ROLES = {
+    "authentication_methods": "TRAIN",
+    "authentication_vs_authorization": "TRAIN",
+    "azure_bastion": "TRAIN",
+    "azure_key_vault": "PROBE",
+    "azure_nsg_firewall_waf_ddos": "TRAIN",
+    "azure_virtual_network_segmentation": "TRAIN",
+    "conditional_access_and_identity_protection": "TRAIN",
+    "defender_for_cloud_cspm_cwp": "TRAIN",
+    "defender_xdr_workload_suite": "TRAIN",
+    "defense_in_depth": "TRAIN",
+    "encryption_and_hashing": "TRAIN",
+    "entra_hybrid_identity_and_ad": "TRAIN",
+    "entra_id_governance_and_access_reviews": "TRAIN",
+    "entra_roles_rbac": "PROBE",
+    "federation_and_identity_providers": "TRAIN",
+    "grc_concepts": "TRAIN",
+    "identity_types_including_agent_id": "TRAIN",
+    "multifactor_authentication": "PROBE",
+    "password_protection_management": "TRAIN",
+    "privileged_identity_management": "PROBE",
+    "purview_audit_ediscovery_insider_risk": "TRAIN",
+    "purview_information_protection_lifecycle": "TRAIN",
+    "purview_portal": "PROBE",
+    "sentinel_siem_soar_automation": "TRAIN",
+    "service_trust_privacy_compliance_manager": "TRAIN",
+    "shared_responsibility_model": "PROBE",
+    "zero_trust_and_identity_perimeter": "PROBE",
+}
+FAMILY_ROLE_REASONS = {
+    "authentication_methods": "Kept as TRAIN so authentication-method identification remains available for study while MFA is the held-out authentication probe family.",
+    "authentication_vs_authorization": "Kept as TRAIN; the verify-then-permit distinction is high training value and identity-concepts measurement is already provided by the Zero Trust/identity-perimeter probe family.",
+    "azure_bastion": "Kept as TRAIN. A 3-item jump-host family would add Azure-infrastructure probe questions without adding a new independent security-domain objective beyond Key Vault.",
+    "azure_key_vault": "Selected as PROBE because it is a small fully eligible independent family measuring secrets and key management without holding out the large NSG/Firewall/WAF/DDoS suite.",
+    "azure_nsg_firewall_waf_ddos": "Kept as TRAIN. This 15-item four-leaf family is one independent unit; probing it would remove most Azure network-control training and inflate probe N without adding 15 independent semantic units.",
+    "azure_virtual_network_segmentation": "Kept as TRAIN to preserve private-network boundary training beside the Key Vault probe.",
+    "conditional_access_and_identity_protection": "Kept as TRAIN. This 11-item two-leaf family is too large to hold out without starving Conditional Access/ID Protection training.",
+    "defender_for_cloud_cspm_cwp": "Kept as TRAIN. This 16-item family is the entire azure_security_management objective; probing it would yield one independent unit and zero TRAIN coverage for CSPM/CWP.",
+    "defender_xdr_workload_suite": "Kept as TRAIN. This 24-item family is the entire defender_xdr objective and eight leaves; probing it would dominate measurement with one semantic unit and remove all XDR training.",
+    "defense_in_depth": "Kept as TRAIN. A 2-item family is too thin for a 7-day first-attempt measurement day.",
+    "encryption_and_hashing": "Kept as TRAIN. A 2-item family is too thin for independent daily first-attempt measurement.",
+    "entra_hybrid_identity_and_ad": "Kept as TRAIN. This 10-item cross-domain family is a whole-directory identity-store block and is too large to hold out.",
+    "entra_id_governance_and_access_reviews": "Kept as TRAIN so access-review and Lifecycle Workflow training remains available while PIM is the held-out governance probe.",
+    "entra_roles_rbac": "Selected as PROBE because it is a fully eligible 5-item independent family measuring Entra RBAC without holding out Conditional Access.",
+    "federation_and_identity_providers": "Kept as TRAIN. Identity-federation training remains in-bank; probe identity coverage is provided by Zero Trust/identity-perimeter plus Entra families.",
+    "grc_concepts": "Kept as TRAIN. A 2-item family is too thin for independent probe measurement.",
+    "identity_types_including_agent_id": "Kept as TRAIN to avoid a fourth Entra probe family after MFA, RBAC, and PIM already represent Entra measurement.",
+    "multifactor_authentication": "Selected as PROBE because it is a fully eligible 6-item independent authentication family with operational first-attempt value while authentication_methods remain TRAIN.",
+    "password_protection_management": "Kept as TRAIN so password-protection study remains available beside the MFA probe.",
+    "privileged_identity_management": "Selected as PROBE because it is a fully eligible 4-item independent family measuring PIM without holding out the larger access-reviews/governance merge.",
+    "purview_audit_ediscovery_insider_risk": "Kept as TRAIN. This 12-item family is the entire insider-risk/eDiscovery/audit objective and would be one independent probe unit at the cost of all TRAIN coverage for that objective.",
+    "purview_information_protection_lifecycle": "Kept as TRAIN. This 16-item six-leaf family is the entire information-protection objective and cannot be split.",
+    "purview_portal": "Selected as PROBE because it is the only small fully eligible compliance family; larger Purview and Service Trust families stay TRAIN as whole-objective or train-only-containing blocks.",
+    "sentinel_siem_soar_automation": "Kept as TRAIN. This 12-item family is the entire microsoft_sentinel objective and includes the inherited SIEM/SOAR transfer edge.",
+    "service_trust_privacy_compliance_manager": "Kept as TRAIN. Two members are train_only, so the family cannot be a clean whole-family PROBE set without item-level exclusions.",
+    "shared_responsibility_model": "Selected as PROBE because it is a fully eligible 4-item independent family measuring the shared-responsibility proposition for foundational-concept first-attempt measurement.",
+    "zero_trust_and_identity_perimeter": "Selected as PROBE because it is a fully eligible 4-item two-leaf family measuring Zero Trust and identity-as-perimeter independently of Entra control-plane families.",
+}
+ALL_PATH_LEAKAGE_HANDOFF = {
+    "contract": (
+        "No runtime path may expose a PROBE item together with TRAIN material from the same "
+        "semantic family or from a transfer-edge-connected family. Task 6 freezes the design-time "
+        "partition only; later tasks must design guards. Runtime consumption remains unauthorized."
+    ),
+    "design_time_only": True,
+    "invariants": [
+        "ONE_FAMILY_ONE_ROLE",
+        "NO_TRAIN_PROBE_FAMILY_SPLIT",
+        "NO_TRAIN_PROBE_TRANSFER_EDGE_CROSSING",
+        "PROBE_REQUIRES_APPROVED_RESOLVED_ELIGIBLE",
+        "TRAIN_REQUIRES_APPROVED_RESOLVED",
+    ],
+    "paths_requiring_future_guards": [
+        "normal_practice",
+        "smart_practice",
+        "due_weak_paths",
+        "twin_repeat_paths",
+        "delayed_recall",
+        "memory_confusion_repair",
+        "wrong_answer_repair",
+        "streak_repair",
+        "boss_checkpoint_flows",
+        "measurement_probe_rendering",
+        "history",
+        "analytics",
+        "export_import",
+        "compiler_rebuild",
+        "restore",
+        "debug",
+        "fixtures_tests",
+        "any_newly_discovered_question_path",
+    ],
+    "protected_roles": ["PROBE", "TRAIN", "UNASSIGNED"],
+    "runtime_consumer_authorized": False,
+}
+LARGE_FAMILIES = {
+    "azure_nsg_firewall_waf_ddos": 15,
+    "defender_for_cloud_cspm_cwp": 16,
+    "defender_xdr_workload_suite": 24,
+    "purview_information_protection_lifecycle": 16,
+}
 EXPECTED_PHASE3_IDS = [f"sc900_p3_q{index:03d}" for index in range(1, 101)]
 EXPECTED_SEMANTIC_FAMILY_COUNT = 27
 EXPECTED_MERGE_OVERRIDE_COUNT = 158
@@ -1525,9 +1635,357 @@ def _run_semantic_audit_cli(write: bool) -> int:
     return 0
 
 
+def _question_probe_suitability(record: Mapping[str, Any]) -> str:
+    metadata = record.get("metadata") if isinstance(record.get("metadata"), Mapping) else {}
+    return normalize_text(metadata.get("future_probe_suitability")) or "needs_review"
+
+
+def _question_source_family(record: Mapping[str, Any]) -> str:
+    metadata = record.get("metadata") if isinstance(record.get("metadata"), Mapping) else {}
+    return normalize_text(metadata.get("source_family_id"))
+
+
+def _counts(values: Sequence[str]) -> dict[str, int]:
+    return dict(sorted(Counter(value for value in values if value).items()))
+
+
+def _family_size_distribution(sizes: Sequence[int]) -> list[dict[str, int]]:
+    counts = Counter(sizes)
+    return [{"families": counts[size], "member_count": size} for size in sorted(counts)]
+
+
+def train_probe_family_split_count(manifest: Mapping[str, Any]) -> int:
+    roles_by_family: dict[str, set[str]] = defaultdict(set)
+    for item in manifest.get("items") or []:
+        if not isinstance(item, Mapping):
+            continue
+        role = normalize_text(item.get("role")).upper()
+        family_id = normalize_text(item.get("semantic_family_id"))
+        if family_id and role in {"TRAIN", "PROBE"}:
+            roles_by_family[family_id].add(role)
+    return sum(1 for roles in roles_by_family.values() if roles == {"TRAIN", "PROBE"})
+
+
+def train_probe_transfer_edge_crossing_count(manifest: Mapping[str, Any], audit: Mapping[str, Any]) -> int:
+    roles = {
+        normalize_text(item.get("question_id")): normalize_text(item.get("role")).upper()
+        for item in manifest.get("items") or []
+        if isinstance(item, Mapping) and normalize_text(item.get("question_id"))
+    }
+    crossings = 0
+    for edge in audit.get("transfer_edges") or []:
+        if not isinstance(edge, Mapping):
+            continue
+        left_role = roles.get(normalize_text(edge.get("left")))
+        right_role = roles.get(normalize_text(edge.get("right")))
+        if {left_role, right_role} == {"TRAIN", "PROBE"}:
+            crossings += 1
+    return crossings
+
+
+def _role_allocation(
+    role: str,
+    items: Sequence[Mapping[str, Any]],
+    questions: Mapping[str, Mapping[str, Any]],
+    family_rows: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    role_items = [item for item in items if item["role"] == role]
+    role_families = [row for row in family_rows if row["role"] == role]
+    domains: list[str] = []
+    objectives: list[str] = []
+    leaves: list[str] = []
+    eligible = 0
+    for item in role_items:
+        record = questions[item["question_id"]]
+        domains.append(normalize_text(record.get("domain")))
+        objectives.append(normalize_text(record.get("objective")))
+        leaf = _blueprint_leaf(record)
+        if leaf:
+            leaves.append(leaf)
+        if item["future_probe_suitability"] == "eligible":
+            eligible += 1
+    sizes = [int(row["member_count"]) for row in role_families]
+    payload: dict[str, Any] = {
+        "domain_counts": _counts(domains),
+        "family_count": len(role_families),
+        "family_ids": [row["semantic_family_id"] for row in role_families],
+        "family_size_distribution": _family_size_distribution(sizes),
+        "leaf_coverage": sorted(set(leaves)),
+        "objective_counts": _counts(objectives),
+        "probe_eligible_count": eligible,
+        "question_count": len(role_items),
+    }
+    if role == "PROBE":
+        payload["effective_independent_family_count"] = len(role_families)
+        payload["largest_family_id"] = (
+            max(role_families, key=lambda row: (int(row["member_count"]), row["semantic_family_id"]))[
+                "semantic_family_id"
+            ]
+            if role_families
+            else ""
+        )
+        payload["largest_family_size"] = max(sizes) if sizes else 0
+        payload["smallest_family_id"] = (
+            min(role_families, key=lambda row: (int(row["member_count"]), row["semantic_family_id"]))[
+                "semantic_family_id"
+            ]
+            if role_families
+            else ""
+        )
+        payload["smallest_family_size"] = min(sizes) if sizes else 0
+    return payload
+
+
+def build_train_probe_manifest() -> dict[str, Any]:
+    questions = _load_json(PHASE3_STORE / "questions.json", [])
+    if not isinstance(questions, list):
+        raise ValueError("PHASE3_STORE_QUESTIONS_INVALID")
+    audit = _load_json(SEMANTIC_AUDIT_PATH, {})
+    if not isinstance(audit, Mapping):
+        raise ValueError("SEMANTIC_AUDIT_INVALID")
+    actual_audit_hash = sha256_canonical_file(SEMANTIC_AUDIT_PATH)
+    actual_store_hash = sha256_canonical_file(PHASE3_STORE / "questions.json")
+    actual_compiled_hash = sha256_canonical_file(PHASE3_COMPILED)
+    if actual_audit_hash != EXPECTED_SEMANTIC_AUDIT_SHA256:
+        raise ValueError("SEMANTIC_AUDIT_HASH_MISMATCH")
+    if actual_store_hash != EXPECTED_PHASE3_STORE_SHA256:
+        raise ValueError("STORE_HASH_MISMATCH")
+    if actual_compiled_hash != EXPECTED_PHASE3_COMPILED_SHA256:
+        raise ValueError("COMPILED_HASH_MISMATCH")
+
+    question_index = {normalize_text(row.get("id")): row for row in questions if isinstance(row, Mapping)}
+    families = [row for row in audit.get("families") or [] if isinstance(row, Mapping)]
+    family_ids = [normalize_text(row.get("semantic_family_id")) for row in families]
+    if sorted(family_ids) != sorted(FAMILY_ROLES):
+        raise ValueError("FAMILY_ROLE_TABLE_MISMATCH")
+    if len(family_ids) != EXPECTED_SEMANTIC_FAMILY_COUNT:
+        raise ValueError("SEMANTIC_FAMILY_COUNT_MISMATCH")
+
+    family_assignments: list[dict[str, Any]] = []
+    items: list[dict[str, Any]] = []
+    for family in sorted(families, key=lambda row: normalize_text(row.get("semantic_family_id"))):
+        family_id = normalize_text(family.get("semantic_family_id"))
+        role = FAMILY_ROLES[family_id]
+        members = sorted(normalize_text(member) for member in family.get("members") or [])
+        reason = FAMILY_ROLE_REASONS[family_id]
+        prior_family_ids = sorted(
+            {normalize_text(value) for value in family.get("prior_family_ids") or [] if normalize_text(value)}
+        )
+        family_state = normalize_text(family.get("family_state")).lower() or "unknown"
+        family_assignments.append(
+            {
+                "approved_state_checked": True,
+                "assignment_method": "whole_family_design_allocation",
+                "assignment_reason": reason,
+                "family_isolation_checked": True,
+                "family_resolved_checked": family_state == "resolved",
+                "family_state": family_state,
+                "member_count": len(members),
+                "member_ids": members,
+                "partition_epoch": PARTITION_EPOCH,
+                "probe_suitability_checked": True,
+                "role": role,
+                "semantic_family_id": family_id,
+                "source_task4_audit_hash": actual_audit_hash,
+                "source_task5_store_hash": actual_store_hash,
+                "transfer_edge_isolation_checked": True,
+            }
+        )
+        for question_id in members:
+            record = question_index[question_id]
+            suitability = _question_probe_suitability(record)
+            items.append(
+                {
+                    "assignment_evidence": {
+                        "approved_state_checked": True,
+                        "assigned_at": PARTITION_EPOCH,
+                        "assignment_method": "whole_family_inheritance",
+                        "assignment_reason": reason,
+                        "family_isolation_checked": True,
+                        "family_resolved_checked": family_state == "resolved",
+                        "partition_epoch": PARTITION_EPOCH,
+                        "probe_suitability_checked": True,
+                        "question_id": question_id,
+                        "role": role,
+                        "semantic_family_id": family_id,
+                        "source_task4_audit_hash": actual_audit_hash,
+                        "source_task5_store_hash": actual_store_hash,
+                    },
+                    "assignment_rationale": reason,
+                    "assignment_receipt": {
+                        "override_type": "none",
+                        "prior_family_ids": prior_family_ids,
+                        "reviewed_at": PARTITION_REVIEWED_AT,
+                        "reviewer": PARTITION_REVIEWER,
+                    },
+                    "blueprint_version": PARTITION_BLUEPRINT_VERSION,
+                    "family_state": family_state,
+                    "future_probe_suitability": suitability,
+                    "promotion_status": normalize_text(record.get("promotion_status")).lower(),
+                    "question_id": question_id,
+                    "role": role,
+                    "semantic_family_id": family_id,
+                    "source_family_id": _question_source_family(record),
+                }
+            )
+    items.sort(key=lambda row: row["question_id"])
+
+    train_report = _role_allocation("TRAIN", items, question_index, family_assignments)
+    probe_report = _role_allocation("PROBE", items, question_index, family_assignments)
+    unassigned_report = _role_allocation("UNASSIGNED", items, question_index, family_assignments)
+    all_objectives = {
+        normalize_text(row.get("objective"))
+        for row in questions
+        if isinstance(row, Mapping) and normalize_text(row.get("objective"))
+    }
+    all_domains = {
+        normalize_text(row.get("domain"))
+        for row in questions
+        if isinstance(row, Mapping) and normalize_text(row.get("domain"))
+    }
+    probe_objectives = set(probe_report["objective_counts"])
+    probe_domains = set(probe_report["domain_counts"])
+    transfer_edges = [edge for edge in audit.get("transfer_edges") or [] if isinstance(edge, Mapping)]
+    member_family = {
+        normalize_text(member): normalize_text(family.get("semantic_family_id"))
+        for family in families
+        for member in family.get("members") or []
+        if normalize_text(member)
+    }
+    cross_family_edges = 0
+    for edge in transfer_edges:
+        left_family = member_family.get(normalize_text(edge.get("left")))
+        right_family = member_family.get(normalize_text(edge.get("right")))
+        if left_family and right_family and left_family != right_family:
+            cross_family_edges += 1
+
+    large_family_consequences = []
+    for family_id, size in sorted(LARGE_FAMILIES.items()):
+        large_family_consequences.append(
+            {
+                "assigned_role": FAMILY_ROLES[family_id],
+                "consequence": FAMILY_ROLE_REASONS[family_id],
+                "member_count": size,
+                "semantic_family_id": family_id,
+            }
+        )
+
+    manifest = {
+        "all_path_leakage_handoff": ALL_PATH_LEAKAGE_HANDOFF,
+        "allocation_report": {
+            "domains_absent_from_probe": sorted(all_domains - probe_domains),
+            "large_family_consequences": large_family_consequences,
+            "objectives_absent_from_probe": sorted(all_objectives - probe_objectives),
+            "probe": probe_report,
+            "train": train_report,
+            "transfer_edge_isolation": {
+                "cross_family_edges": cross_family_edges,
+                "explicit_transfer_edge_count": len(transfer_edges),
+                "train_probe_crossings": train_probe_transfer_edge_crossing_count({"items": items}, audit),
+            },
+            "unassigned": unassigned_report,
+        },
+        "blueprint_version": PARTITION_BLUEPRINT_VERSION,
+        "cand01_gate2_status": GATE2_STATUS,
+        "compiled_sha256": actual_compiled_hash,
+        "design_time_only": True,
+        "family_assignments": family_assignments,
+        "implementation_authorized": False,
+        "inherited_item_schema": "sc900.train-probe-manifest/v1",
+        "items": items,
+        "manifest_version": PARTITION_MANIFEST_VERSION,
+        "partition_epoch": PARTITION_EPOCH,
+        "phase_3_structurally_accepted": False,
+        "question_count": len(items),
+        "runtime_consumer_authorized": False,
+        "schema_version": PARTITION_MANIFEST_VERSION,
+        "semantic_audit_sha256": actual_audit_hash,
+        "semantic_family_count": len(family_assignments),
+        "store_sha256": actual_store_hash,
+        "work_id": WORK_ID,
+    }
+    errors = validate_phase3_train_probe_manifest(
+        manifest,
+        questions=questions,
+        audit=audit,
+        expected_audit_sha256=EXPECTED_SEMANTIC_AUDIT_SHA256,
+        expected_store_sha256=EXPECTED_PHASE3_STORE_SHA256,
+        expected_compiled_sha256=EXPECTED_PHASE3_COMPILED_SHA256,
+        expected_family_count=EXPECTED_SEMANTIC_FAMILY_COUNT,
+    )
+    if errors:
+        raise ValueError(json.dumps({"code": "TRAIN_PROBE_MANIFEST_INVALID", "errors": errors}, sort_keys=True))
+    return manifest
+
+
+def write_train_probe_manifest(manifest: Mapping[str, Any] | None = None) -> dict[str, Any]:
+    payload = dict(manifest) if manifest is not None else build_train_probe_manifest()
+    _write_json(TRAIN_PROBE_MANIFEST_PATH, payload)
+    return payload
+
+
+def verify_train_probe_manifest() -> list[dict[str, Any]]:
+    generated = build_train_probe_manifest()
+    canonical = (json.dumps(generated, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
+    if not TRAIN_PROBE_MANIFEST_PATH.exists():
+        return [_error("MISSING_TRAIN_PROBE_MANIFEST", "committed Phase-3 TRAIN/PROBE manifest is missing")]
+    actual = TRAIN_PROBE_MANIFEST_PATH.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    errors: list[dict[str, Any]] = []
+    if actual != canonical:
+        errors.append(
+            _error(
+                "TRAIN_PROBE_MANIFEST_DRIFT",
+                "committed TRAIN/PROBE manifest does not match the deterministic rebuild",
+            )
+        )
+    committed = _load_json(TRAIN_PROBE_MANIFEST_PATH, {})
+    questions = _load_json(PHASE3_STORE / "questions.json", [])
+    audit = _load_json(SEMANTIC_AUDIT_PATH, {})
+    if isinstance(committed, Mapping):
+        errors.extend(
+            validate_phase3_train_probe_manifest(
+                committed,
+                questions=questions if isinstance(questions, list) else [],
+                audit=audit if isinstance(audit, Mapping) else {},
+                expected_audit_sha256=EXPECTED_SEMANTIC_AUDIT_SHA256,
+                expected_store_sha256=EXPECTED_PHASE3_STORE_SHA256,
+                expected_compiled_sha256=EXPECTED_PHASE3_COMPILED_SHA256,
+                expected_family_count=EXPECTED_SEMANTIC_FAMILY_COUNT,
+            )
+        )
+    return errors
+
+
+def _run_train_probe_cli(*, write: bool) -> int:
+    if write:
+        manifest = write_train_probe_manifest()
+        print(
+            json.dumps(
+                {
+                    "path": posix_repo_path(TRAIN_PROBE_MANIFEST_PATH),
+                    "probe_questions": manifest["allocation_report"]["probe"]["question_count"],
+                    "question_count": manifest["question_count"],
+                    "semantic_family_count": manifest["semantic_family_count"],
+                    "status": "WROTE",
+                    "train_questions": manifest["allocation_report"]["train"]["question_count"],
+                    "unassigned_questions": manifest["allocation_report"]["unassigned"]["question_count"],
+                },
+                indent=2,
+                sort_keys=True,
+            )
+        )
+        return 0
+    errors = verify_train_probe_manifest()
+    if errors:
+        print(json.dumps({"errors": errors, "status": "DRIFT"}, indent=2, sort_keys=True))
+        return 1
+    print(json.dumps({"status": "REPRODUCIBLE"}, indent=2, sort_keys=True))
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="SC-900 Phase 3 semantic-audit helper and deterministic Task-5 builder."
+        description="SC-900 Phase 3 semantic-audit helper, deterministic Task-5 builder, and Task-6 TRAIN/PROBE partition."
     )
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--write-semantic-audit", action="store_true")
@@ -1538,9 +1996,21 @@ def main() -> int:
         action="store_true",
         help="Rebuild independently and compare with committed Task-5 artifacts.",
     )
+    mode.add_argument(
+        "--write-train-probe-manifest",
+        action="store_true",
+        help="Write the design-time Phase-3 TRAIN/PROBE partition manifest.",
+    )
+    mode.add_argument(
+        "--verify-train-probe-manifest",
+        action="store_true",
+        help="Rebuild the TRAIN/PROBE manifest and compare with the committed artifact.",
+    )
     args = parser.parse_args()
     if args.write_semantic_audit or args.verify_semantic_audit:
         return _run_semantic_audit_cli(write=bool(args.write_semantic_audit))
+    if args.write_train_probe_manifest or args.verify_train_probe_manifest:
+        return _run_train_probe_cli(write=bool(args.write_train_probe_manifest))
     if args.write:
         with tempfile.TemporaryDirectory(prefix="sc900-phase3-build-") as temp_dir:
             build = build_phase3(Path(temp_dir))
