@@ -5,7 +5,6 @@ import unittest
 
 from ingestion.models import load_taxonomy
 
-
 PHASE1_OBJECTIVE_COUNTS = {
     "security_compliance_concepts": 3,
     "identity_concepts": 3,
@@ -23,9 +22,7 @@ PHASE1_OBJECTIVE_COUNTS = {
     "purview_insider_risk_ediscovery_audit": 3,
 }
 
-EXPECTED_PHASE3_OBJECTIVE_COUNTS = {
-    key: value * 4 for key, value in PHASE1_OBJECTIVE_COUNTS.items()
-}
+EXPECTED_PHASE3_OBJECTIVE_COUNTS = {key: value * 4 for key, value in PHASE1_OBJECTIVE_COUNTS.items()}
 EXPECTED_PHASE3_DOMAIN_COUNTS = {
     "security_compliance_identity": 24,
     "microsoft_entra": 56,
@@ -107,14 +104,9 @@ def _review(question, *, phase3=False):
 
 
 def _complete_phase3_set(taxonomy):
-    objective_owner = {
-        objective: domain["id"]
-        for domain in taxonomy["domains"]
-        for objective in domain["objectives"]
-    }
+    objective_owner = {objective: domain["id"] for domain in taxonomy["domains"] for objective in domain["objectives"]}
     leaves_by_objective = {
-        row["id"]: [leaf["id"] for leaf in row["leaf_skills"]]
-        for row in taxonomy["objective_details"]
+        row["id"]: [leaf["id"] for leaf in row["leaf_skills"]] for row in taxonomy["objective_details"]
     }
     questions = []
     reviews = []
@@ -152,16 +144,8 @@ def _complete_phase3_set(taxonomy):
 
 
 def _inventory_for(taxonomy):
-    objective_ids = [
-        objective
-        for domain in taxonomy["domains"]
-        for objective in domain["objectives"]
-    ]
-    leaf_ids = [
-        leaf["id"]
-        for row in taxonomy["objective_details"]
-        for leaf in row["leaf_skills"]
-    ]
+    objective_ids = [objective for domain in taxonomy["domains"] for objective in domain["objectives"]]
+    leaf_ids = [leaf["id"] for row in taxonomy["objective_details"] for leaf in row["leaf_skills"]]
     return {
         "authority": "Microsoft Learn / official Microsoft documentation",
         "exam": "SC-900",
@@ -547,4 +531,3 @@ class SC900Phase3SemanticFamilyAuditTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

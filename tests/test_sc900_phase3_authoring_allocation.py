@@ -62,9 +62,7 @@ class Phase3AuthoringAllocationTests(unittest.TestCase):
 
     def test_all_58_blueprint_leaves_are_represented(self):
         taxonomy_leaves = {
-            leaf["id"]
-            for detail in self.taxonomy["objective_details"]
-            for leaf in detail["leaf_skills"]
+            leaf["id"] for detail in self.taxonomy["objective_details"] for leaf in detail["leaf_skills"]
         }
         allocation_leaves = {row["blueprint_leaf_id"] for row in self.items}
         self.assertEqual(58, len(taxonomy_leaves))
@@ -101,7 +99,7 @@ class Phase3AuthoringAllocationTests(unittest.TestCase):
         self.assertEqual({"A": 25, "B": 25, "C": 25, "D": 25}, dict(Counter(positions)))
         longest = 1
         current = 1
-        for left, right in zip(positions, positions[1:]):
+        for left, right in zip(positions, positions[1:], strict=False):
             if left == right:
                 current += 1
                 longest = max(longest, current)

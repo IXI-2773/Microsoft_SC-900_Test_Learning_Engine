@@ -560,7 +560,7 @@ def compute_phase3_semantic_family_audit(
         for qid in members[1:]:
             uf.union(members[0], qid)
 
-    for family_id, leaves in CROSS_LEAF_FAMILY_GROUPS.items():
+    for _family_id, leaves in CROSS_LEAF_FAMILY_GROUPS.items():
         group_members: list[str] = []
         for leaf in sorted(leaves):
             group_members.extend(by_leaf.get(leaf, []))
@@ -750,7 +750,6 @@ def validate_phase3_semantic_audit(
         return [_error("INVALID_AUDIT_DECISIONS", "audit decisions must be an array")]
 
     seen: dict[str, dict[str, Any]] = {}
-    families_of: dict[str, str] = {}
     for raw in raw_decisions:
         if not isinstance(raw, Mapping):
             errors.append(_error("MALFORMED_AUDIT_DECISION", "audit decision must be an object"))
@@ -796,7 +795,6 @@ def validate_phase3_semantic_audit(
                 )
         else:
             seen[question_id] = dict(raw)
-            families_of[question_id] = family_id
 
         if not family_id:
             errors.append(
@@ -851,12 +849,6 @@ def validate_phase3_semantic_audit(
                 )
             )
 
-        members = raw.get("component_members")
-        if isinstance(members, list):
-            member_ids = [normalize_text(value) for value in members if normalize_text(value)]
-            member_families = {families_of.get(member_id) or family_id for member_id in member_ids}
-            # Defer full member-family comparison until all decisions are indexed.
-
     missing = sorted(question_id_set - set(seen))
     for question_id in missing:
         errors.append(
@@ -905,7 +897,6 @@ def validate_phase3_semantic_audit(
                 )
             )
 
-    by_id = {normalize_text(row.get("id")): row for row in questions}
     independence_pairs = _adjudicated_pairs(audit)
     by_leaf: dict[str, list[str]] = defaultdict(list)
     by_answer: dict[str, list[str]] = defaultdict(list)
