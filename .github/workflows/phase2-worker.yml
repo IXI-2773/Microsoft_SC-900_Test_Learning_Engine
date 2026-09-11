@@ -27,6 +27,140 @@ jobs:
         if: ${{ hashFiles('tools/_phase2_content_payload.py') != '' }}
         run: python tools/_phase2_content_payload.py
 
+      - name: Rebalance Phase 2 answer positions
+        run: |
+          python - <<'PY'
+          import copy
+          import hashlib
+          import json
+          from collections import Counter
+          from pathlib import Path
+
+          batch_paths = sorted(Path('content/sc900/phase2/batches').glob('batch-*.jsonl'))
+          batches = []
+          questions = []
+          for path in batch_paths:
+              rows = [json.loads(line) for line in path.read_text(encoding='utf-8').splitlines() if line.strip()]
+              if len(rows) != 10:
+                  raise SystemExit(f'{path}: expected 10 questions, found {len(rows)}')
+              batches.append((path, rows))
+              questions.extend(rows)
+
+          if len(questions) != 50:
+              raise SystemExit(f'expected 50 Phase-2 questions, found {len(questions)}')
+
+          ids = [row['id'] for row in questions]
+          if len(ids) != len(set(ids)):
+              raise SystemExit('Phase-2 question IDs are not unique')
+
+          quotas = {'A': 12, 'B': 13, 'C': 12, 'D': 13}
+          labels = tuple(quotas)
+
+          def maximum_streak(sequence):
+              best = current = 0
+              previous = None
+              for value in sequence:
+                  current = current + 1 if value == previous else 1
+                  previous = value
+                  best = max(best, current)
+              return best
+
+          def assignment_for_salt(salt):
+              ranked = sorted(
+                  ids,
+                  key=lambda question_id: hashlib.sha256(
+                      f'sc900-phase2-answer-order-v1:{salt}:{question_id}'.encode('utf-8')
+                  ).digest(),
+              )
+              result = {}
+              offset = 0
+              for label in labels:
+                  for question_id in ranked[offset:offset + quotas[label]]:
+                      result[question_id] = label
+                  offset += quotas[label]
+              return result
+
+          assignment = None
+          chosen_salt = None
+          for salt in range(10000):
+              candidate = assignment_for_salt(salt)
+              sequence = [candidate[question_id] for question_id in ids]
+              if maximum_streak(sequence) > 2:
+                  continue
+              batch_ok = True
+              for start in range(0, 50, 10):
+                  counts = Counter(sequence[start:start + 10])
+                  if set(counts) != set(labels) or max(counts.values()) > 4:
+                      batch_ok = False
+                      break
+              if batch_ok:
+                  assignment = candidate
+                  chosen_salt = salt
+                  break
+
+          if assignment is None:
+              raise SystemExit('could not derive a bounded balanced answer-position assignment')
+
+          position = {'A': 0, 'B': 1, 'C': 2, 'D': 3}
+          global_index = 0
+          for path, rows in batches:
+              rewritten = []
+              for row in rows:
+                  before = copy.deepcopy(row)
+                  raw_correct = row.get('correct_answer')
+                  correct_ids = raw_correct if isinstance(raw_correct, list) else [raw_correct]
+                  correct_ids = [str(value) for value in correct_ids if value not in (None, '')]
+                  if len(correct_ids) != 1:
+                      raise SystemExit(f"{row.get('id')}: answer-position rebalance requires one correct answer")
+                  correct_id = correct_ids[0]
+                  choices = list(row.get('choices') or [])
+                  if len(choices) != 4:
+                      raise SystemExit(f"{row.get('id')}: expected four choices")
+                  matches = [choice for choice in choices if str(choice.get('id')) == correct_id]
+                  if len(matches) != 1:
+                      raise SystemExit(f"{row.get('id')}: could not resolve exactly one correct choice")
+                  correct_choice = matches[0]
+                  distractors = [choice for choice in choices if str(choice.get('id')) != correct_id]
+                  target = assignment[row['id']]
+                  reordered = distractors[:]
+                  reordered.insert(position[target], correct_choice)
+                  row['choices'] = reordered
+
+                  before_without_choices = copy.deepcopy(before)
+                  after_without_choices = copy.deepcopy(row)
+                  before_without_choices.pop('choices', None)
+                  after_without_choices.pop('choices', None)
+                  if before_without_choices != after_without_choices:
+                      raise SystemExit(f"{row.get('id')}: rebalance changed non-choice content")
+                  before_map = {str(choice['id']): str(choice['text']) for choice in before['choices']}
+                  after_map = {str(choice['id']): str(choice['text']) for choice in row['choices']}
+                  if before_map != after_map:
+                      raise SystemExit(f"{row.get('id')}: rebalance changed choice identity or text")
+                  rewritten.append(row)
+                  global_index += 1
+
+              path.write_text(
+                  ''.join(json.dumps(row, ensure_ascii=False, separators=(',', ':')) + '\n' for row in rewritten),
+                  encoding='utf-8',
+              )
+
+          resulting = []
+          for _, rows in batches:
+              for row in rows:
+                  correct = row['correct_answer'][0] if isinstance(row['correct_answer'], list) else row['correct_answer']
+                  index = next(i for i, choice in enumerate(row['choices']) if str(choice['id']) == str(correct))
+                  resulting.append(labels[index])
+          counts = Counter(resulting)
+          if counts != Counter(quotas):
+              raise SystemExit(f'answer-position quota mismatch after rewrite: {dict(counts)}')
+          if maximum_streak(resulting) > 2:
+              raise SystemExit(f'answer-position streak exceeds 2: {maximum_streak(resulting)}')
+
+          print('Phase-2 answer-position salt:', chosen_salt)
+          print('Phase-2 answer-position counts:', dict(counts))
+          print('Phase-2 maximum answer-position streak:', maximum_streak(resulting))
+          PY
+
       - name: Audit authored Phase 2 increment
         run: |
           python - <<'PY'
@@ -199,14 +333,14 @@ jobs:
             tests.test_ingestion_importer \
             -v
 
-      - name: Commit generated Phase 2 artifacts
+      - name: Commit balanced Phase 2 bank and generated artifacts
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add content/sc900/phase2/store content/sc900/phase2/compiled content/sc900/phase2/phase2_acceptance_report.json
+          git add content/sc900/phase2/batches content/sc900/phase2/store content/sc900/phase2/compiled content/sc900/phase2/phase2_acceptance_report.json
           if ! git diff --cached --quiet; then
-            git commit -m "build: compile SC-900 Phase 2 reviewed bank"
+            git commit -m "fix: rebalance and compile SC-900 Phase 2 reviewed bank"
             git push origin HEAD:implementation/sc900-reviewed-bank-phase2
           fi
 
