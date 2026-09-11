@@ -1,0 +1,176 @@
+{
+  "approved_after_review_count": 100,
+  "custody": {
+    "import_pending_ledger_complete": true,
+    "review_hash_algorithm": "sha256(canonical reviewed question content excluding semantic_family_id)",
+    "reviewed_phase2_items": 50,
+    "semantic_family_audit_reviewed_at": "2026-09-11T13:10:00Z",
+    "semantic_family_audit_reviewed_by": "openai-gpt5.6-sol-deep-review-correction"
+  },
+  "import_reports": [
+    {
+      "accepted": 10,
+      "approved": 50,
+      "batch_fingerprint": "2ba0eccdbf55f0ab2b1cd1ca834497c66a912863b19f998c1fdb78b20ec2824a",
+      "compiled": 0,
+      "pending": 10,
+      "reason_codes": {},
+      "rejected": 0,
+      "review": 0,
+      "skipped": 0,
+      "source_statistics": {
+        "unknown": 10
+      },
+      "withheld": 0
+    },
+    {
+      "accepted": 10,
+      "approved": 50,
+      "batch_fingerprint": "a8e54474eebe716b1a14f665e1633792bc825f58a79c9ba43c1fe4b508bc1474",
+      "compiled": 0,
+      "pending": 20,
+      "reason_codes": {},
+      "rejected": 0,
+      "review": 0,
+      "skipped": 0,
+      "source_statistics": {
+        "unknown": 10
+      },
+      "withheld": 0
+    },
+    {
+      "accepted": 10,
+      "approved": 50,
+      "batch_fingerprint": "ef17411957f8fa637d2a7538a20853a22dba68e5e49a7a08a13411088431150b",
+      "compiled": 0,
+      "pending": 30,
+      "reason_codes": {},
+      "rejected": 0,
+      "review": 0,
+      "skipped": 0,
+      "source_statistics": {
+        "unknown": 10
+      },
+      "withheld": 0
+    },
+    {
+      "accepted": 10,
+      "approved": 50,
+      "batch_fingerprint": "1fd778644582a3cdb9e8db59b35e6cc52a05266c9a1706eb318cbf8cbde4bfd4",
+      "compiled": 0,
+      "pending": 40,
+      "reason_codes": {},
+      "rejected": 0,
+      "review": 0,
+      "skipped": 0,
+      "source_statistics": {
+        "unknown": 10
+      },
+      "withheld": 0
+    },
+    {
+      "accepted": 10,
+      "approved": 50,
+      "batch_fingerprint": "c12907d34a101c0e65e6c298959215c5415ffedca4fb84a508da0df3f9f48a0c",
+      "compiled": 0,
+      "pending": 50,
+      "reason_codes": {},
+      "rejected": 0,
+      "review": 0,
+      "skipped": 0,
+      "source_statistics": {
+        "unknown": 10
+      },
+      "withheld": 0
+    }
+  ],
+  "inputs": {
+    "batches": {
+      "content\\sc900\\phase2\\batches\\batch-01.jsonl": "2ba0eccdbf55f0ab2b1cd1ca834497c66a912863b19f998c1fdb78b20ec2824a",
+      "content\\sc900\\phase2\\batches\\batch-02.jsonl": "a8e54474eebe716b1a14f665e1633792bc825f58a79c9ba43c1fe4b508bc1474",
+      "content\\sc900\\phase2\\batches\\batch-03.jsonl": "ef17411957f8fa637d2a7538a20853a22dba68e5e49a7a08a13411088431150b",
+      "content\\sc900\\phase2\\batches\\batch-04.jsonl": "1fd778644582a3cdb9e8db59b35e6cc52a05266c9a1706eb318cbf8cbde4bfd4",
+      "content\\sc900\\phase2\\batches\\batch-05.jsonl": "c12907d34a101c0e65e6c298959215c5415ffedca4fb84a508da0df3f9f48a0c"
+    },
+    "phase1_questions_sha256": "b5570fd16d2b35b7f22d8b726a3dc4e62715646546a92ccb04f88eadcb2ec3e9",
+    "reviews": {
+      "content\\sc900\\phase2\\reviews\\batch-01-review.json": "c2debad6b835b225a8d3f7bee7772a95ff226f66cc8c7e648d33ad49653260aa",
+      "content\\sc900\\phase2\\reviews\\batch-02-review.json": "c19886518550cbf34b0c42e853d387a0367d6d0969a828e24a2db4c2afcdcad8",
+      "content\\sc900\\phase2\\reviews\\batch-03-review.json": "aedacf97411f8fc64a3d20cdbd18d9ade2e361386d2892c03285ff0ea9f35e38",
+      "content\\sc900\\phase2\\reviews\\batch-04-review.json": "da64c822461da7c63591f94b148f612714d7cbffb85fdfa0979efa0f06948081",
+      "content\\sc900\\phase2\\reviews\\batch-05-review.json": "a5d6a92f94078849405b56e629c6087dada31705bfec3d7e187fdcec770c90f7"
+    }
+  },
+  "outputs": {
+    "compiled_sha256": "f98dd302c6eed1d10a4d466aad5c83bfb70b6ad43d6341313cac2845ca6dfe23",
+    "default_launch_bank_sha256": "60842eb28810d328fe56a427b7d72baedd6b31179ca4f1c98744392aa318a426",
+    "semantic_family_audit_sha256": "02f75731edc2183d3cc0103509157ffee25efc783b9f1ec06c7456aa84c1048a",
+    "store": {
+      "quarantine.json": "a5338d955b09046ec0b16f3a9625b7955c763aae07dc722e474e6078745f932f",
+      "questions.json": "b0106af3e7dae4d19fc81c8905f1008c99f6761f218eaf130a188bfa83de3b21",
+      "review.json": "a5338d955b09046ec0b16f3a9625b7955c763aae07dc722e474e6078745f932f",
+      "review_decisions.json": "b0cfe46cb17a9f54522b082692b3d7ac59e317a0eee95eb74b013fc54677e0bc",
+      "source_material.json": "a5338d955b09046ec0b16f3a9625b7955c763aae07dc722e474e6078745f932f"
+    }
+  },
+  "pending_before_approval_count": 50,
+  "phase1_approved_base_count": 50,
+  "phase2_authored_count": 50,
+  "phase2_ids": [
+    "sc900_p2_q001",
+    "sc900_p2_q002",
+    "sc900_p2_q003",
+    "sc900_p2_q004",
+    "sc900_p2_q005",
+    "sc900_p2_q006",
+    "sc900_p2_q007",
+    "sc900_p2_q008",
+    "sc900_p2_q009",
+    "sc900_p2_q010",
+    "sc900_p2_q011",
+    "sc900_p2_q012",
+    "sc900_p2_q013",
+    "sc900_p2_q014",
+    "sc900_p2_q015",
+    "sc900_p2_q016",
+    "sc900_p2_q017",
+    "sc900_p2_q018",
+    "sc900_p2_q019",
+    "sc900_p2_q020",
+    "sc900_p2_q021",
+    "sc900_p2_q022",
+    "sc900_p2_q023",
+    "sc900_p2_q024",
+    "sc900_p2_q025",
+    "sc900_p2_q026",
+    "sc900_p2_q027",
+    "sc900_p2_q028",
+    "sc900_p2_q029",
+    "sc900_p2_q030",
+    "sc900_p2_q031",
+    "sc900_p2_q032",
+    "sc900_p2_q033",
+    "sc900_p2_q034",
+    "sc900_p2_q035",
+    "sc900_p2_q036",
+    "sc900_p2_q037",
+    "sc900_p2_q038",
+    "sc900_p2_q039",
+    "sc900_p2_q040",
+    "sc900_p2_q041",
+    "sc900_p2_q042",
+    "sc900_p2_q043",
+    "sc900_p2_q044",
+    "sc900_p2_q045",
+    "sc900_p2_q046",
+    "sc900_p2_q047",
+    "sc900_p2_q048",
+    "sc900_p2_q049",
+    "sc900_p2_q050"
+  ],
+  "semantic_family_count": 57,
+  "semantic_family_override_count": 12,
+  "status": "REPRODUCIBLE",
+  "withheld_after_review_count": 0,
+  "work_id": "SC900-BANK-PHASE2-001"
+}

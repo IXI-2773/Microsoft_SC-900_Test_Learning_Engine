@@ -34,14 +34,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-01",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-01",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "shared_responsibility_model",
       "semantic_family_id": "shared_responsibility_model",
@@ -86,14 +86,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-01",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-01",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "authentication",
       "semantic_family_id": "authentication",
@@ -137,14 +137,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-01",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-01",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "entra_id_overview",
       "semantic_family_id": "entra_id_overview",
@@ -188,14 +188,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-01",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-01",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "multifactor_authentication",
       "semantic_family_id": "multifactor_authentication",
@@ -240,14 +240,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-01",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-01",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "access_reviews",
       "semantic_family_id": "access_reviews",
@@ -292,14 +292,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-01",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-01",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "azure_key_vault",
       "semantic_family_id": "azure_key_vault",
@@ -344,14 +344,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-01",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-01",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "microsoft_defender_for_cloud",
       "semantic_family_id": "microsoft_defender_for_cloud",
@@ -395,14 +395,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-01",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-01",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "defender_for_endpoint",
       "semantic_family_id": "defender_for_endpoint",
@@ -446,14 +446,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-01",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-compliance-management-capabilities-microsoft/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-01",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "service_trust_portal_offerings",
       "semantic_family_id": "service_trust_portal_offerings",
@@ -498,14 +498,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-01",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-01",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "data_loss_prevention",
       "semantic_family_id": "data_loss_prevention",
@@ -549,14 +549,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-02",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-02",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "zero_trust_model",
       "semantic_family_id": "zero_trust_model",
@@ -600,14 +600,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-02",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-02",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "hybrid_identity",
       "semantic_family_id": "hybrid_identity",
@@ -651,14 +651,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-02",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-02",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "password_protection_management",
       "semantic_family_id": "password_protection_management",
@@ -702,14 +702,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-02",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-02",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "conditional_access",
       "semantic_family_id": "conditional_access",
@@ -754,14 +754,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-02",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-02",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "network_security_groups",
       "semantic_family_id": "network_security_groups",
@@ -805,14 +805,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-02",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-02",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "cloud_security_posture_management",
       "semantic_family_id": "cloud_security_posture_management",
@@ -858,17 +858,17 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-02",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-02",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "siem_and_soar",
-      "semantic_family_id": "siem_and_soar",
+      "semantic_family_id": "sentinel_siem_soar_automation",
       "source_family_id": "learn-microsoft_sentinel",
       "stem_style": "direct_concept",
       "future_probe_suitability": "eligible",
@@ -909,14 +909,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-02",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-02",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "defender_for_office_365",
       "semantic_family_id": "defender_for_office_365",
@@ -960,14 +960,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-02",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/explore-plan-compliance-microsoft-365/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-02",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "compliance_manager",
       "semantic_family_id": "compliance_manager",
@@ -1011,14 +1011,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-02",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-02",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "sensitivity_labels_and_policies",
       "semantic_family_id": "sensitivity_labels_and_policies",
@@ -1062,14 +1062,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-03",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-03",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "authorization",
       "semantic_family_id": "authorization",
@@ -1113,14 +1113,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-03",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-03",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "authentication_methods",
       "semantic_family_id": "authentication_methods",
@@ -1165,14 +1165,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-03",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-03",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "entra_roles_rbac",
       "semantic_family_id": "entra_roles_rbac",
@@ -1217,14 +1217,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-03",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-03",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "privileged_identity_management",
       "semantic_family_id": "privileged_identity_management",
@@ -1268,14 +1268,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-03",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-03",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "azure_bastion",
       "semantic_family_id": "azure_bastion",
@@ -1320,14 +1320,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-03",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-03",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "security_policies_standards_recommendations",
       "semantic_family_id": "security_policies_standards_recommendations",
@@ -1372,17 +1372,17 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-03",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-03",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "sentinel_threat_detection_mitigation",
-      "semantic_family_id": "sentinel_threat_detection_mitigation",
+      "semantic_family_id": "sentinel_siem_soar_automation",
       "source_family_id": "learn-microsoft_sentinel",
       "stem_style": "capability_selection",
       "future_probe_suitability": "eligible",
@@ -1423,14 +1423,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-03",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-03",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "defender_for_identity",
       "semantic_family_id": "defender_for_identity",
@@ -1474,14 +1474,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-03",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-03",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "data_classification",
       "semantic_family_id": "data_classification",
@@ -1525,14 +1525,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-03",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-03",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "ediscovery",
       "semantic_family_id": "ediscovery",
@@ -1576,14 +1576,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-04",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-04",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "defense_in_depth",
       "semantic_family_id": "defense_in_depth",
@@ -1628,14 +1628,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-04",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-04",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "identity_types_including_agent_id",
       "semantic_family_id": "identity_types_including_agent_id",
@@ -1680,14 +1680,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-04",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-04",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "conditional_access",
       "semantic_family_id": "conditional_access",
@@ -1731,14 +1731,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-04",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-04",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "entra_id_protection",
       "semantic_family_id": "entra_id_protection",
@@ -1782,14 +1782,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-04",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-04",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "azure_ddos_protection",
       "semantic_family_id": "azure_ddos_protection",
@@ -1833,14 +1833,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-04",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-04",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "azure_firewall",
       "semantic_family_id": "azure_firewall",
@@ -1885,17 +1885,17 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-04",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-04",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "siem_and_soar",
-      "semantic_family_id": "siem_and_soar",
+      "semantic_family_id": "sentinel_siem_soar_automation",
       "source_family_id": "learn-microsoft_sentinel",
       "stem_style": "distinction_comparison",
       "future_probe_suitability": "eligible",
@@ -1936,14 +1936,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-04",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-04",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "defender_for_cloud_apps",
       "semantic_family_id": "defender_for_cloud_apps",
@@ -1987,14 +1987,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-04",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-compliance-management-capabilities-microsoft/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-04",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "microsoft_privacy_principles",
       "semantic_family_id": "microsoft_privacy_principles",
@@ -2038,14 +2038,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-04",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-04",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "audit",
       "semantic_family_id": "audit",
@@ -2089,14 +2089,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-05",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-05",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "federation",
       "semantic_family_id": "federation",
@@ -2140,17 +2140,17 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-05",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-05",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "multifactor_authentication",
-      "semantic_family_id": "entra-mfa-benefit",
+      "semantic_family_id": "multifactor_authentication",
       "source_family_id": "learn-entra_authentication",
       "stem_style": "distinction_comparison",
       "future_probe_suitability": "eligible",
@@ -2191,14 +2191,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-05",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-05",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "entra_id_governance",
       "semantic_family_id": "entra_id_governance",
@@ -2242,14 +2242,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-05",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-05",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "azure_web_application_firewall",
       "semantic_family_id": "azure_web_application_firewall",
@@ -2293,14 +2293,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-05",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-05",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "cloud_workload_protection",
       "semantic_family_id": "cloud_workload_protection",
@@ -2344,14 +2344,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-05",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-05",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "defender_vulnerability_management",
       "semantic_family_id": "defender_vulnerability_management",
@@ -2395,14 +2395,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-05",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-05",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "defender_portal",
       "semantic_family_id": "defender_portal",
@@ -2446,14 +2446,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-05",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/explore-plan-compliance-microsoft-365/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-05",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "compliance_score",
       "semantic_family_id": "compliance_score",
@@ -2498,14 +2498,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-05",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-05",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "retention_policies_labels",
       "semantic_family_id": "retention_policies_labels",
@@ -2549,14 +2549,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase1-batch-05",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T11:13:04+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions/"
-        },
-        "extractor_version": "",
-        "batch": "phase1-batch-05",
-        "imported_at": "2026-09-11T11:13:04+00:00"
+        }
       },
       "blueprint_leaf_id": "insider_risk_management",
       "semantic_family_id": "insider_risk_management",
@@ -2600,17 +2600,17 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-01",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-01",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "encryption_and_hashing",
-      "semantic_family_id": "encryption_vs_hashing",
+      "semantic_family_id": "encryption_and_hashing",
       "source_family_id": "learn-security_compliance_concepts",
       "stem_style": "distinction_comparison",
       "future_probe_suitability": "eligible",
@@ -2651,17 +2651,17 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-01",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-01",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "grc_concepts",
-      "semantic_family_id": "grc_risk_identification",
+      "semantic_family_id": "grc_concepts",
       "source_family_id": "learn-security_compliance_concepts",
       "stem_style": "short_scenario",
       "future_probe_suitability": "eligible",
@@ -2702,14 +2702,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-01",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-01",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "shared_responsibility_model",
       "semantic_family_id": "shared_responsibility_model",
@@ -2753,14 +2753,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-01",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-01",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "identity_primary_security_perimeter",
       "semantic_family_id": "identity_primary_security_perimeter",
@@ -2804,14 +2804,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-01",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-01",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "identity_providers",
       "semantic_family_id": "identity_providers",
@@ -2855,14 +2855,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-01",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-01",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "directory_services_active_directory",
       "semantic_family_id": "directory_services_active_directory",
@@ -2906,14 +2906,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-01",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-01",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "entra_id_overview",
       "semantic_family_id": "entra_id_overview",
@@ -2957,17 +2957,17 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-01",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-01",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "identity_types_including_agent_id",
-      "semantic_family_id": "entra_workload_identity",
+      "semantic_family_id": "identity_types_including_agent_id",
       "source_family_id": "learn-entra_identity_types_and_function",
       "stem_style": "short_scenario",
       "future_probe_suitability": "eligible",
@@ -3008,14 +3008,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-01",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-01",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "hybrid_identity",
       "semantic_family_id": "hybrid_identity",
@@ -3059,14 +3059,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-01",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-01",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "authentication_methods",
       "semantic_family_id": "authentication_methods",
@@ -3110,14 +3110,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-02",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-02",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "multifactor_authentication",
       "semantic_family_id": "multifactor_authentication",
@@ -3161,14 +3161,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-02",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-02",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "password_protection_management",
       "semantic_family_id": "password_protection_management",
@@ -3212,14 +3212,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-02",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-02",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "authentication_methods",
       "semantic_family_id": "authentication_methods",
@@ -3263,14 +3263,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-02",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-02",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "conditional_access",
       "semantic_family_id": "conditional_access",
@@ -3314,14 +3314,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-02",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-02",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "entra_roles_rbac",
       "semantic_family_id": "entra_roles_rbac",
@@ -3365,14 +3365,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-02",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-02",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "conditional_access",
       "semantic_family_id": "conditional_access",
@@ -3416,14 +3416,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-02",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-02",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "access_reviews",
       "semantic_family_id": "access_reviews",
@@ -3467,14 +3467,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-02",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-02",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "privileged_identity_management",
       "semantic_family_id": "privileged_identity_management",
@@ -3518,14 +3518,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-02",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-02",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "entra_id_protection",
       "semantic_family_id": "entra_id_protection",
@@ -3569,14 +3569,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-02",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-02",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "entra_id_governance",
       "semantic_family_id": "entra_id_governance",
@@ -3620,14 +3620,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-03",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-03",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "azure_virtual_network_segmentation",
       "semantic_family_id": "azure_virtual_network_segmentation",
@@ -3671,14 +3671,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-03",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-03",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "network_security_groups",
       "semantic_family_id": "network_security_groups",
@@ -3722,14 +3722,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-03",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-03",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "azure_firewall",
       "semantic_family_id": "azure_firewall",
@@ -3773,14 +3773,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-03",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-03",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "azure_web_application_firewall",
       "semantic_family_id": "azure_web_application_firewall",
@@ -3824,14 +3824,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-03",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-03",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "azure_bastion",
       "semantic_family_id": "azure_bastion",
@@ -3875,14 +3875,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-03",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-03",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "azure_key_vault",
       "semantic_family_id": "azure_key_vault",
@@ -3926,14 +3926,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-03",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-03",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "microsoft_defender_for_cloud",
       "semantic_family_id": "microsoft_defender_for_cloud",
@@ -3977,14 +3977,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-03",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-03",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "cloud_security_posture_management",
       "semantic_family_id": "cloud_security_posture_management",
@@ -4028,14 +4028,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-03",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-03",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "security_policies_standards_recommendations",
       "semantic_family_id": "security_policies_standards_recommendations",
@@ -4079,14 +4079,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-03",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-03",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "cloud_workload_protection",
       "semantic_family_id": "cloud_workload_protection",
@@ -4130,17 +4130,17 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-04",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-04",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "siem_and_soar",
-      "semantic_family_id": "siem_and_soar",
+      "semantic_family_id": "sentinel_siem_soar_automation",
       "source_family_id": "learn-microsoft_sentinel",
       "stem_style": "distinction_comparison",
       "future_probe_suitability": "eligible",
@@ -4181,17 +4181,17 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-04",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-04",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "sentinel_threat_detection_mitigation",
-      "semantic_family_id": "sentinel_analytics_detection",
+      "semantic_family_id": "sentinel_siem_soar_automation",
       "source_family_id": "learn-microsoft_sentinel",
       "stem_style": "capability_selection",
       "future_probe_suitability": "eligible",
@@ -4232,17 +4232,17 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-04",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-04",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "sentinel_threat_detection_mitigation",
-      "semantic_family_id": "sentinel_automation_response",
+      "semantic_family_id": "sentinel_siem_soar_automation",
       "source_family_id": "learn-microsoft_sentinel",
       "stem_style": "short_scenario",
       "future_probe_suitability": "eligible",
@@ -4283,14 +4283,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-04",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-04",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "defender_xdr_services",
       "semantic_family_id": "defender_xdr_services",
@@ -4334,14 +4334,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-04",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-04",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "defender_threat_intelligence",
       "semantic_family_id": "defender_threat_intelligence",
@@ -4385,14 +4385,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-04",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-04",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "defender_for_endpoint",
       "semantic_family_id": "defender_for_endpoint",
@@ -4436,14 +4436,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-04",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-04",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "defender_for_office_365",
       "semantic_family_id": "defender_for_office_365",
@@ -4487,14 +4487,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-04",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-04",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "defender_for_cloud_apps",
       "semantic_family_id": "defender_for_cloud_apps",
@@ -4538,14 +4538,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-04",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-04",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "defender_for_identity",
       "semantic_family_id": "defender_for_identity",
@@ -4589,14 +4589,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-04",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-compliance-management-capabilities-microsoft/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-04",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "service_trust_portal_offerings",
       "semantic_family_id": "service_trust_portal_offerings",
@@ -4640,14 +4640,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-05",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-compliance-management-capabilities-microsoft/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-05",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "microsoft_privacy_principles",
       "semantic_family_id": "microsoft_privacy_principles",
@@ -4691,14 +4691,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-05",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-05",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "purview_portal",
       "semantic_family_id": "purview_portal",
@@ -4742,14 +4742,14 @@
       "question_type": "single",
       "source_name": "Microsoft documentation",
       "provenance": {
+        "batch": "phase2-batch-05",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft documentation",
           "url": "https://learn.microsoft.com/en-us/purview/compliance-manager-scoring"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-05",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "compliance_score",
       "semantic_family_id": "compliance_score",
@@ -4793,17 +4793,17 @@
       "question_type": "single",
       "source_name": "Microsoft documentation",
       "provenance": {
+        "batch": "phase2-batch-05",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft documentation",
           "url": "https://learn.microsoft.com/en-us/purview/data-classification-activity-explorer"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-05",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "content_and_activity_explorer",
-      "semantic_family_id": "activity_explorer_labeled_content",
+      "semantic_family_id": "content_and_activity_explorer",
       "source_family_id": "learn-purview_information_protection_lifecycle",
       "stem_style": "capability_selection",
       "future_probe_suitability": "eligible",
@@ -4844,14 +4844,14 @@
       "question_type": "single",
       "source_name": "Microsoft documentation",
       "provenance": {
+        "batch": "phase2-batch-05",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft documentation",
           "url": "https://learn.microsoft.com/en-us/purview/records-management"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-05",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "records_management",
       "semantic_family_id": "records_management",
@@ -4895,17 +4895,17 @@
       "question_type": "single",
       "source_name": "Microsoft documentation",
       "provenance": {
+        "batch": "phase2-batch-05",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft documentation",
           "url": "https://learn.microsoft.com/en-us/purview/retention"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-05",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "retention_policies_labels",
-      "semantic_family_id": "retention_item_level_labels",
+      "semantic_family_id": "retention_policies_labels",
       "source_family_id": "learn-purview_information_protection_lifecycle",
       "stem_style": "distinction_comparison",
       "future_probe_suitability": "eligible",
@@ -4946,14 +4946,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-05",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-05",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "data_classification",
       "semantic_family_id": "data_classification",
@@ -4997,14 +4997,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-05",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-05",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "insider_risk_management",
       "semantic_family_id": "insider_risk_management",
@@ -5048,14 +5048,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-05",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-05",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "ediscovery",
       "semantic_family_id": "ediscovery",
@@ -5099,14 +5099,14 @@
       "question_type": "single",
       "source_name": "Microsoft Learn",
       "provenance": {
+        "batch": "phase2-batch-05",
+        "extractor_version": "",
+        "imported_at": "2026-09-11T12:00:00+00:00",
         "origin": "manual",
         "source": {
           "title": "Microsoft Learn",
           "url": "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance/"
-        },
-        "extractor_version": "",
-        "batch": "phase2-batch-05",
-        "imported_at": "2026-09-11T12:36:48+00:00"
+        }
       },
       "blueprint_leaf_id": "audit",
       "semantic_family_id": "audit",

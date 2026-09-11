@@ -16,6 +16,7 @@ from ingestion.bank_quality import phase1_review_status, validate_phase1_questio
 from ingestion.models import ValidationError, load_taxonomy, normalize_text
 from tools.validate_bank import validate_bank
 from tools.validate_sc900_phase1 import REVIEW_CHECK_FIELDS, validate_source_inventory
+from tools.build_sc900_phase2 import BUILD_RECEIPT_PATH, DEFAULT_BANK, SEMANTIC_AUDIT_PATH, review_content_sha256, sha256_file
 
 EXPECTED_PHASE2_DOMAIN_COUNTS = {
     "security_compliance_identity": 12,
@@ -398,6 +399,117 @@ def _load_review_receipts(*paths: Path) -> list[dict[str, Any]]:
     return receipts
 
 
+def _load_phase2_records(path: Path) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    if not path.exists():
+        return rows
+    for batch_path in sorted(path.glob("*.jsonl")):
+        for line in batch_path.read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            payload = json.loads(line)
+            if isinstance(payload, dict):
+                rows.append(payload)
+    return rows
+
+
+def validate_phase2_review_custody(
+    records: Sequence[Mapping[str, Any]], review_receipts: Sequence[Mapping[str, Any]]
+) -> list[dict[str, Any]]:
+    errors: list[dict[str, Any]] = []
+    reviews = _review_index(review_receipts)
+    ids = [normalize_text(row.get("id")) for row in records]
+    if len(ids) != 50 or len(set(ids)) != 50:
+        errors.append(_error("REVIEW_CUSTODY_INPUT_SET_INVALID", "custody verification requires exactly 50 unique Phase-2 authored records"))
+    for record in records:
+        qid = normalize_text(record.get("id"))
+        receipt = reviews.get(qid)
+        if receipt is None:
+            errors.append(_error("MISSING_PHASE2_REVIEW_CUSTODY", "Phase-2 authored record lacks a review receipt", question_id=qid))
+            continue
+        expected = review_content_sha256(record)
+        actual = normalize_text(receipt.get("reviewed_content_sha256")).lower()
+        if actual != expected:
+            errors.append(_error("REVIEW_CONTENT_HASH_MISMATCH", "review receipt is not bound to the authored question content", question_id=qid, expected=expected, actual=actual))
+    return errors
+
+
+def validate_question_source_links(questions: Sequence[Mapping[str, Any]], inventory: Mapping[str, Any]) -> list[dict[str, Any]]:
+    errors: list[dict[str, Any]] = []
+    by_url: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
+    for source in inventory.get("sources", []):
+        if isinstance(source, Mapping) and normalize_text(source.get("url")):
+            by_url[normalize_text(source.get("url"))].append(source)
+    for record in questions:
+        if phase1_review_status(record) != "approved":
+            continue
+        qid = normalize_text(record.get("id"))
+        objective = normalize_text(record.get("objective"))
+        metadata = record.get("metadata") if isinstance(record.get("metadata"), Mapping) else {}
+        leaf = normalize_text(metadata.get("blueprint_leaf_id"))
+        urls = {normalize_text(value) for value in record.get("references", []) if normalize_text(value)}
+        urls.update(normalize_text(value) for value in metadata.get("source_urls", []) if normalize_text(value))
+        if not urls:
+            errors.append(_error("QUESTION_SOURCE_LINK_MISSING", "approved question has no source URL to join to inventory", question_id=qid))
+            continue
+        for url in sorted(urls):
+            candidates = by_url.get(url, [])
+            if not candidates:
+                errors.append(_error("QUESTION_SOURCE_NOT_IN_INVENTORY", "approved question source URL is absent from source inventory", question_id=qid, url=url))
+                continue
+            if not any(objective in set(source.get("objective_ids", [])) and leaf in set(source.get("leaf_ids", [])) for source in candidates):
+                errors.append(_error("QUESTION_SOURCE_SCOPE_MISMATCH", "source inventory entry does not claim the question objective and blueprint leaf", question_id=qid, url=url, objective=objective, leaf=leaf))
+    return errors
+
+
+def validate_semantic_audit(questions: Sequence[Mapping[str, Any]], audit: Mapping[str, Any]) -> list[dict[str, Any]]:
+    errors: list[dict[str, Any]] = []
+    approved = [row for row in questions if phase1_review_status(row) == "approved"]
+    decisions = {normalize_text(row.get("question_id")): row for row in audit.get("decisions", []) if isinstance(row, Mapping)}
+    approved_ids = {normalize_text(row.get("id")) for row in approved}
+    if set(decisions) != approved_ids:
+        errors.append(_error("SEMANTIC_AUDIT_COVERAGE_MISMATCH", "semantic-family audit must cover exactly every approved cumulative question", expected=len(approved_ids), actual=len(decisions)))
+        return errors
+    for record in approved:
+        qid = normalize_text(record.get("id"))
+        metadata = record.get("metadata") if isinstance(record.get("metadata"), Mapping) else {}
+        actual_family = normalize_text(metadata.get("semantic_family_id"))
+        expected_family = normalize_text(decisions[qid].get("semantic_family_id"))
+        if not expected_family or actual_family != expected_family:
+            errors.append(_error("SEMANTIC_AUDIT_STORE_MISMATCH", "canonical store family does not match audited family assignment", question_id=qid, expected=expected_family, actual=actual_family))
+    reported_count = audit.get("family_count")
+    actual_count = len({normalize_text(row.get("semantic_family_id")) for row in decisions.values()})
+    if reported_count != actual_count:
+        errors.append(_error("SEMANTIC_AUDIT_COUNT_MISMATCH", "semantic audit family_count is inconsistent", expected=actual_count, actual=reported_count))
+    return errors
+
+
+def validate_build_receipt(store_dir: Path, compiled_path: Path, receipt: Mapping[str, Any]) -> list[dict[str, Any]]:
+    errors: list[dict[str, Any]] = []
+    if normalize_text(receipt.get("status")) != "REPRODUCIBLE":
+        errors.append(_error("BUILD_RECEIPT_NOT_REPRODUCIBLE", "Phase-2 build receipt must declare REPRODUCIBLE"))
+        return errors
+    outputs = receipt.get("outputs") if isinstance(receipt.get("outputs"), Mapping) else {}
+    store_hashes = outputs.get("store") if isinstance(outputs.get("store"), Mapping) else {}
+    for name in ("questions.json", "source_material.json", "quarantine.json", "review.json", "review_decisions.json"):
+        file_path = store_dir / name
+        expected = normalize_text(store_hashes.get(name)).lower()
+        actual = sha256_file(file_path) if file_path.exists() else ""
+        if expected != actual:
+            errors.append(_error("BUILD_STORE_HASH_MISMATCH", "committed store artifact differs from build receipt", file=name, expected=expected, actual=actual))
+    expected_compiled = normalize_text(outputs.get("compiled_sha256")).lower()
+    actual_compiled = sha256_file(compiled_path) if compiled_path.exists() else ""
+    if expected_compiled != actual_compiled:
+        errors.append(_error("BUILD_COMPILED_HASH_MISMATCH", "compiled candidate differs from build receipt", expected=expected_compiled, actual=actual_compiled))
+    expected_default = normalize_text(outputs.get("default_launch_bank_sha256")).lower()
+    actual_default = sha256_file(DEFAULT_BANK) if DEFAULT_BANK.exists() else ""
+    if expected_default != actual_default:
+        errors.append(_error("DEFAULT_BANK_HASH_MISMATCH", "default launch bank changed relative to Phase-2 build receipt", expected=expected_default, actual=actual_default))
+    if receipt.get("pending_before_approval_count") != 50 or receipt.get("approved_after_review_count") != 100:
+        errors.append(_error("BUILD_CUSTODY_COUNTS_INVALID", "build receipt does not prove 50 pending imports followed by 100 cumulative approvals"))
+    return errors
+
+
 def _load_phase2_ids(path: Path) -> list[str]:
     ids: list[str] = []
     if not path.exists():
@@ -450,17 +562,33 @@ def main() -> int:
     if not isinstance(questions, list):
         questions = []
     reviews = _load_review_receipts(args.phase1_reviews, args.phase2_reviews)
-    phase2_ids = _load_phase2_ids(args.phase2_batches)
+    phase2_records = _load_phase2_records(args.phase2_batches)
+    phase2_ids = [normalize_text(row.get("id")) for row in phase2_records]
     inventory = _load_json(args.source_inventory, {})
     if not isinstance(inventory, Mapping):
         inventory = {}
 
     source_errors = validate_source_inventory(inventory, taxonomy)
+    source_errors.extend(validate_question_source_links(questions, inventory))
     result = validate_phase2_set(questions, taxonomy, reviews, phase2_ids)
+    review_custody_errors = validate_phase2_review_custody(phase2_records, reviews)
+    semantic_audit = _load_json(SEMANTIC_AUDIT_PATH, {})
+    if not isinstance(semantic_audit, Mapping):
+        semantic_audit = {}
+    semantic_audit_errors = validate_semantic_audit(questions, semantic_audit)
+    build_receipt = _load_json(BUILD_RECEIPT_PATH, {})
+    if not isinstance(build_receipt, Mapping):
+        build_receipt = {}
+    build_receipt_errors = validate_build_receipt(args.store, args.compiled, build_receipt)
     compiled_count, bank_issues = _bank_validation_issues(args.compiled)
     result["source_inventory_errors"] = source_errors
+    result["review_custody_errors"] = review_custody_errors
+    result["semantic_audit_errors"] = semantic_audit_errors
+    result["build_receipt_errors"] = build_receipt_errors
     result["bank_validation_issues"] = bank_issues
     result["compiled_count"] = compiled_count
+    result["compiled_sha256"] = sha256_file(args.compiled) if args.compiled.exists() else ""
+    result["default_launch_bank_sha256"] = sha256_file(DEFAULT_BANK) if DEFAULT_BANK.exists() else ""
     result["cand01_gate2_status"] = "GATE_2_BLOCKED_INSUFFICIENT_BANK_STRUCTURE"
     result["implementation_authorized"] = False
 
@@ -473,7 +601,7 @@ def main() -> int:
                 compiled=compiled_count,
             )
         )
-    if source_errors or bank_issues or result["quality_errors"]:
+    if source_errors or review_custody_errors or semantic_audit_errors or build_receipt_errors or bank_issues or result["quality_errors"]:
         result["status"] = "PHASE_2_INCOMPLETE"
     else:
         result["status"] = "PHASE_2_STRUCTURALLY_ACCEPTED"

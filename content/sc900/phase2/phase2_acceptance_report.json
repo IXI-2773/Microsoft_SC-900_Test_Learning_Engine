@@ -1,8 +1,11 @@
 {
   "approved_count": 100,
   "bank_validation_issues": [],
+  "build_receipt_errors": [],
   "cand01_gate2_status": "GATE_2_BLOCKED_INSUFFICIENT_BANK_STRUCTURE",
   "compiled_count": 100,
+  "compiled_sha256": "f98dd302c6eed1d10a4d466aad5c83bfb70b6ad43d6341313cac2845ca6dfe23",
+  "default_launch_bank_sha256": "60842eb28810d328fe56a427b7d72baedd6b31179ca4f1c98744392aa318a426",
   "distinct_leaf_count": 58,
   "domain_counts": {
     "microsoft_compliance_solutions": 22,
@@ -34,7 +37,9 @@
     "train_only": 2
   },
   "quality_errors": [],
-  "semantic_family_count": 63,
+  "review_custody_errors": [],
+  "semantic_audit_errors": [],
+  "semantic_family_count": 57,
   "source_inventory_errors": [],
   "status": "PHASE_2_STRUCTURALLY_ACCEPTED",
   "withheld_count": 0

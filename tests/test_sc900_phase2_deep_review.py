@@ -2,7 +2,7 @@ import unittest
 from copy import deepcopy
 
 from ingestion.models import load_taxonomy
-from tests.test_sc900_phase2 import _complete_phase2_set, _load_phase2_module
+from tests.test_sc900_phase2 import _approved_question, _complete_phase2_set, _load_phase2_module
 
 class Phase2DeepReviewRegressionTests(unittest.TestCase):
     def setUp(self):
@@ -47,6 +47,34 @@ class Phase2DeepReviewRegressionTests(unittest.TestCase):
         questions, reviews, phase2_ids = _complete_phase2_set(self.taxonomy)
         result = self.module.validate_phase2_set(questions, self.taxonomy, reviews, phase2_ids[:-1] + [phase2_ids[0]])
         self.assertIn("PHASE2_BATCH_ID_SET_INVALID", {row["code"] for row in result["quality_errors"]})
+
+class Phase2EvidenceChainTests(unittest.TestCase):
+    def setUp(self):
+        self.taxonomy = load_taxonomy()
+        self.module = _load_phase2_module(self)
+
+    def test_review_content_hash_detects_substantive_mutation(self):
+        from tools.build_sc900_phase2 import review_content_sha256
+        question = _approved_question(1, "security_compliance_concepts", "security_compliance_identity", "shared_responsibility_model", phase2=True)
+        original = review_content_sha256(question)
+        question["stem"] += " changed"
+        self.assertNotEqual(original, review_content_sha256(question))
+
+    def test_semantic_audit_merges_same_leaf_even_when_prior_family_differs(self):
+        from tools.build_sc900_phase2 import compute_semantic_family_audit
+        left = _approved_question(1, "entra_authentication", "microsoft_entra", "multifactor_authentication", phase2=False)
+        right = _approved_question(2, "entra_authentication", "microsoft_entra", "multifactor_authentication", phase2=True)
+        left["metadata"]["semantic_family_id"] = "old-a"
+        right["metadata"]["semantic_family_id"] = "old-b"
+        audit = compute_semantic_family_audit([left, right])
+        families = {row["semantic_family_id"] for row in audit["decisions"]}
+        self.assertEqual({"multifactor_authentication"}, families)
+
+    def test_source_link_validation_requires_exact_inventory_join(self):
+        question = _approved_question(1, "security_compliance_concepts", "security_compliance_identity", "shared_responsibility_model", phase2=True)
+        errors = self.module.validate_question_source_links([question], {"sources": []})
+        self.assertIn("QUESTION_SOURCE_NOT_IN_INVENTORY", {row["code"] for row in errors})
+
 
 if __name__ == "__main__":
     unittest.main()
