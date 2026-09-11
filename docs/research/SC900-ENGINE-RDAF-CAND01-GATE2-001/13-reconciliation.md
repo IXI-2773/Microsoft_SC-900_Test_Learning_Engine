@@ -19,7 +19,7 @@ These are real design improvements.
 
 Positive Gate 2 closure still fails:
 
-- current runtime has no all-path partition boundary;
+- no implementation-ready all-path TRAIN / PROBE exclusion contract and verification matrix has yet been frozen;
 - current bank is only eight placeholder questions;
 - semantic/objective leakage is unresolved;
 - RRC-1 starvation and service fairness need explicit reporting/safeguards;
@@ -38,4 +38,4 @@ Positive Gate 2 closure still fails:
 
 ## Reconciled Conclusion
 
-CAND-01R2 survives as a research direction but not as a Gate-2-earned design. The correct disposition is fail-closed on bank structure and isolation proof.
+CAND-01R2 survives as a research direction but not as a Gate-2-earned design. The correct disposition is fail-closed on bank structure, isolation-contract readiness, and the unresolved material design findings above.

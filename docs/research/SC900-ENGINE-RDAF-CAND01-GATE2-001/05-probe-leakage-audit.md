@@ -5,17 +5,17 @@ RDAF_EPOCH = `SC900-RDAF-EPOCH-2026-09-11-003`
 
 ## Scope
 
-This audit inventories repository paths that can select, insert, render, restore, cache, analyze, or reveal question material. Current runtime does not implement TRAIN / PROBE partitioning. The finding is therefore not "bug in current runtime"; it is a Gate 2 implementation blocker for future CAND-01R2.
+This audit inventories repository paths that can select, insert, render, restore, cache, analyze, or reveal question material. Gate 2 occurs before runtime implementation, so the absence of already-implemented TRAIN / PROBE guards is not itself a Gate-2 failure. The Gate-2 requirement is to freeze a complete all-path leakage inventory, an implementation-ready TRAIN / PROBE exclusion contract, required fail-closed guard semantics, and a future verification matrix.
 
 ## Leakage-Path Inventory
 
 | Path | Evidence | Leakage risk | Disposition |
 | --- | --- | --- | --- |
-| Smart Practice selection | `app_session_builder_mixin.py:994`, `app_session_builder_mixin.py:1363`, `app_session_builder_mixin.py:1893` | Builds candidate pools from `master_questions` / filtered pools; no probe exclusion guard exists. | `BLOCKER_FOR_IMPLEMENTATION` |
-| Smart Practice prewarm/cache | `app.py:400`, `app_session_builder_mixin.py:512`, `smart_practice_worker.py:52` | Detached prewarm can build signal payloads and pools before a probe guard exists. | `BLOCKER_FOR_IMPLEMENTATION` |
-| Normal practice builder | `app_session_builder_mixin.py:843`, `app_session_builder_mixin.py:878` | Uses builder pools without partition membership filtering. | `BLOCKER_FOR_IMPLEMENTATION` |
+| Smart Practice selection | `app_session_builder_mixin.py:994`, `app_session_builder_mixin.py:1363`, `app_session_builder_mixin.py:1893` | Builds candidate pools from `master_questions` / filtered pools; the future exclusion contract must cover these selectors. | `BLOCKER_FOR_IMPLEMENTATION` |
+| Smart Practice prewarm/cache | `app.py:400`, `app_session_builder_mixin.py:512`, `smart_practice_worker.py:52` | Detached prewarm can build signal payloads and pools; the future exclusion contract must cover pre-computation and cache payloads. | `BLOCKER_FOR_IMPLEMENTATION` |
+| Normal practice builder | `app_session_builder_mixin.py:843`, `app_session_builder_mixin.py:878` | Uses builder pools that the future exclusion contract must filter by partition membership. | `BLOCKER_FOR_IMPLEMENTATION` |
 | Full-bank restore | `app_session_builder_mixin.py:891`, `app.py:2186` | Starts a full-bank practice session after restore. Future PROBE items would be exposed unless excluded. | `BLOCKER_FOR_IMPLEMENTATION` |
-| Due review | `progress_store.py:542`, `app_session_builder_mixin.py:987` | Due helper has no partition argument. | `BLOCKER_FOR_IMPLEMENTATION` |
+| Due review | `progress_store.py:542`, `app_session_builder_mixin.py:987` | Due helper will need partition-aware eligibility semantics. | `BLOCKER_FOR_IMPLEMENTATION` |
 | Weak retest | `app_session_builder_mixin.py:944` | Uses due/weak/flagged predicates over filtered master pool. | `BLOCKER_FOR_IMPLEMENTATION` |
 | Twins | `app_question_flow_mixin.py:411`, `app_question_flow_mixin.py:518` | Selects from `master_questions`; excludes current session duplicates and suspended items only. | `BLOCKER_FOR_IMPLEMENTATION` |
 | Delayed recall probe follow-up | `app_question_flow_mixin.py:524` | Despite "probe" label, this is a training follow-up and can select related items from the bank. | `BLOCKER_FOR_IMPLEMENTATION` |
@@ -33,8 +33,8 @@ This audit inventories repository paths that can select, insert, render, restore
 
 ## Critical Finding
 
-The current code has many legitimate question-injection paths. None can be assumed covered by guarding the obvious initial selector. A future CAND-01R2 implementation needs a shared eligibility boundary that every path must call before selecting, inserting, prewarming, restoring, rendering, or exporting material.
+The current code has many legitimate question-injection paths. None can be assumed covered by guarding the obvious initial selector. Gate 2 must therefore freeze an implementation-ready shared eligibility boundary, fail-closed semantics, and tests for every path before later runtime work begins.
 
 ## Gate Consequence
 
-Probe isolation is conceptually specified but not yet proven against implementation. Gate 2 cannot be earned while this inventory remains a set of required future guards rather than verified behavior.
+Probe isolation is conceptually specified but not yet frozen as an all-path implementation contract with a verification matrix. Gate 2 cannot be earned while this inventory remains a list of future guard obligations rather than a complete design contract. Gate 3 must later implement those guards and prove every runtime path enforces them.

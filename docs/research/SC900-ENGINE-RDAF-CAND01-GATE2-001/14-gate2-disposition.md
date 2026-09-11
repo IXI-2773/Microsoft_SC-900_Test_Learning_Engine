@@ -23,7 +23,7 @@ PRIMARY_ENDPOINT = `7-day first-attempt correctness on CLEAN HELD-OUT SC-900 pro
 ## What Blocks Gate 2
 
 - The current bank has only eight placeholder questions and cannot support serious held-out champion/challenger evidence.
-- The current runtime has no implemented all-path TRAIN / PROBE guard.
+- No implementation-ready all-path TRAIN / PROBE exclusion contract and verification matrix has yet been frozen.
 - Follow-up, repair, boss, stealth checkpoint, due, weak, Smart Practice, full-bank restore, render, history, analytics, and export paths are all potential leakage paths.
 - Exact-item withholding does not guarantee meaningful transfer withholding.
 - RRC-1 starvation and overdue-review fairness remain unresolved.
@@ -36,13 +36,18 @@ PRIMARY_ENDPOINT = `7-day first-attempt correctness on CLEAN HELD-OUT SC-900 pro
 
 No runtime work is authorized by this package.
 
+## Gate 2 / Gate 3 Boundary
+
+Gate 2 must complete the all-path leakage inventory, define the implementation-ready TRAIN / PROBE exclusion contract, specify required guard semantics and fail-closed behavior, and specify the future verification/test matrix. Gate 3 or later implementation work must actually implement those guards and prove every runtime path enforces them.
+
 ## Next Gate Requirements
 
 Gate 2 may be reopened only after:
 
 1. a sufficiently large reviewed SC-900 bank exists;
 2. a TRAIN / PROBE manifest design includes semantic-family controls;
-3. leakage guards are specified for every inventory path in `05-probe-leakage-audit.md`;
-4. RRC-1 service fairness and starvation metrics are specified;
-5. prior decay enforcement tests are specified;
-6. unresolved material noetic findings are resolved or reclassified as non-material with basis.
+3. implementation-ready leakage guard semantics and fail-closed behavior are specified for every inventory path in `05-probe-leakage-audit.md`;
+4. a future verification/test matrix covers every selector, injector, restore, prewarm, render, history, analytics, and export path;
+5. RRC-1 service fairness and starvation metrics are specified;
+6. prior decay enforcement tests are specified;
+7. unresolved material noetic findings are resolved or reclassified as non-material with basis.

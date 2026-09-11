@@ -12,11 +12,13 @@ PRIMARY_ENDPOINT = `7-day first-attempt correctness on CLEAN HELD-OUT SC-900 pro
 
 `GATE_2_BLOCKED_INSUFFICIENT_BANK_STRUCTURE`
 
-Gate 2 is not earned. The current CAND-01R2 design is coherent enough to continue research, but positive closure is blocked by three material findings:
+Gate 2 is not earned. The current CAND-01R2 design is coherent enough to continue research, but positive closure is blocked by material design-assurance findings:
 
-1. the current runtime has no implemented TRAIN / PROBE exclusion guard across all question-injection and answer-revealing paths;
+1. no implementation-ready all-path TRAIN / PROBE exclusion contract and verification matrix has yet been frozen;
 2. the current launch bank contains only eight placeholder questions, which cannot support a serious held-out champion/challenger learning-effect comparison;
-3. objective-family leakage, time trend, selection-quality confounding, and RRC-1 starvation remain unresolved design issues until a sufficiently structured bank and partition manifest exist.
+3. semantic/objective-family leakage is unresolved;
+4. RRC-1 starvation and service fairness remain unresolved;
+5. arm allocation, selection-quality confounding, time trend, and material noetic findings remain unresolved until a sufficiently structured bank and partition manifest exist.
 
 No runtime implementation was introduced in this package.
 
