@@ -1,0 +1,156 @@
+name: Phase 3 batch 01 final authoring correction
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/phase3-batch01-final-authoring-fix.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  finalize-authoring:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact authored batch head
+        uses: actions/checkout@v4
+        with:
+          ref: 1caec0652c9911e2b5f8a73bbc784c0622d8b812
+          fetch-depth: 0
+          path: phase3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Apply bounded metadata/choice-order corrections
+        shell: bash
+        run: |
+          cd phase3
+          python - <<'PY'
+          import json
+          from copy import deepcopy
+          from pathlib import Path
+
+          path = Path('content/sc900/phase3/batches/batch-01.jsonl')
+          rows = [json.loads(line) for line in path.read_text(encoding='utf-8').splitlines() if line.strip()]
+          original = deepcopy(rows)
+          styles = {
+              'sc900_p3_q001': 'direct_concept',
+              'sc900_p3_q002': 'responsibility_governance',
+              'sc900_p3_q006': 'capability_selection',
+          }
+          for row in rows:
+              if row['id'] in styles:
+                  row['metadata']['stem_style'] = styles[row['id']]
+              if row['id'] == 'sc900_p3_q006':
+                  by_id = {c['id']: c for c in row['choices']}
+                  row['choices'] = [by_id['a'], by_id['b'], by_id['c'], by_id['d']]
+              if row['id'] == 'sc900_p3_q007':
+                  by_id = {c['id']: c for c in row['choices']}
+                  row['choices'] = [by_id['b'], by_id['a'], by_id['c'], by_id['d']]
+
+          allowed_metadata = set(styles)
+          allowed_choice = {'sc900_p3_q006', 'sc900_p3_q007'}
+          for before, after in zip(original, rows):
+              bid = before['id']
+              bcopy = deepcopy(before)
+              acopy = deepcopy(after)
+              if bid in allowed_metadata:
+                  bcopy['metadata']['stem_style'] = acopy['metadata']['stem_style']
+              if bid in allowed_choice:
+                  bcopy['choices'] = acopy['choices']
+              if bcopy != acopy:
+                  raise SystemExit(f'unexpected content mutation in {bid}')
+          path.write_text('\n'.join(json.dumps(row, separators=(',', ':')) for row in rows) + '\n', encoding='utf-8')
+          print('BOUNDED_CORRECTIONS=stem_style_q001_q002_q006,choice_order_q006_q007')
+          PY
+
+      - name: Run complete pre-review gate
+        shell: bash
+        run: |
+          cd phase3
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from ingestion.bank_quality import validate_phase1_question
+          from ingestion.models import load_taxonomy
+          from tools.validate_sc900_phase2 import validate_question_source_links
+
+          taxonomy = load_taxonomy()
+          rows = [json.loads(line) for line in Path('content/sc900/phase3/batches/batch-01.jsonl').read_text(encoding='utf-8').splitlines() if line.strip()]
+          allocation = json.loads(Path('content/sc900/phase3/authoring_allocation.json').read_text(encoding='utf-8'))
+          expected = [row for row in allocation['items'] if row['batch'] == 'batch-01']
+          inventory = json.loads(Path('content/sc900/phase3/source_inventory.json').read_text(encoding='utf-8'))
+          if len(rows) != 10 or [row['id'] for row in rows] != [row['question_id'] for row in expected]:
+              raise SystemExit('batch IDs/count do not match frozen allocation')
+          positions = ['A','B','C','D']
+          for question, slot in zip(rows, expected):
+              validate_phase1_question(question, taxonomy)
+              metadata = question['metadata']
+              checks = [
+                  (question['domain'], slot['domain'], 'domain'),
+                  (question['objective'], slot['objective'], 'objective'),
+                  (metadata['blueprint_leaf_id'], slot['blueprint_leaf_id'], 'leaf'),
+                  (metadata['source_family_id'], slot['source_family_id'], 'source_family'),
+                  (question['source']['url'], slot['source_url'], 'source_url'),
+              ]
+              for actual, planned, name in checks:
+                  if actual != planned:
+                      raise SystemExit(f"{question['id']} {name} drift: {actual} != {planned}")
+              displayed = next(i for i, choice in enumerate(question['choices']) if choice['id'] == question['correct_answer'])
+              if positions[displayed] != slot['display_correct_position_target']:
+                  raise SystemExit(f"{question['id']} answer-position drift: {positions[displayed]} != {slot['display_correct_position_target']}")
+              if 'promotion_status' in question:
+                  raise SystemExit(f"{question['id']} authored question must remain unpromoted")
+          source_errors = validate_question_source_links(rows, inventory)
+          if source_errors:
+              raise SystemExit(source_errors)
+          if Path('content/sc900/phase3/reviews/batch-01-review.json').exists():
+              raise SystemExit('review materialized before authoring gate')
+          print('BATCH01_AUTHORED_COUNT=10')
+          print('BATCH01_QUALITY_ERRORS=0')
+          print('BATCH01_SOURCE_ERRORS=0')
+          print('BATCH01_ALLOCATION_DRIFT=0')
+          print('BATCH01_AUTHORING_REVIEW_SEPARATION=PASS')
+          PY
+
+      - name: Commit corrected authored batch only
+        shell: bash
+        run: |
+          cd phase3
+          test "$(git status --short | wc -l)" -eq 1
+          git status --short | grep '^ M content/sc900/phase3/batches/batch-01.jsonl$'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add content/sc900/phase3/batches/batch-01.jsonl
+          git commit -m 'fix: finalize SC-900 Phase 3 batch 01 authoring'
+          git push origin HEAD:implementation/sc900-reviewed-bank-phase3
+
+      - name: Remove one-shot workflow
+        if: always()
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: cleanup
+          fetch-depth: 2
+
+      - name: Self-clean main
+        if: always()
+        shell: bash
+        run: |
+          cd cleanup
+          expected_parent='4340226bcaa9f5d8feb54cd454f7a17f6250c888'
+          actual_parent=$(git rev-parse HEAD^)
+          if [ "$actual_parent" != "$expected_parent" ]; then
+            echo "Unexpected main parent: $actual_parent"
+            exit 1
+          fi
+          rm .github/workflows/phase3-batch01-final-authoring-fix.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/workflows/phase3-batch01-final-authoring-fix.yml
+          git commit -m 'chore: remove Phase 3 batch 01 final authoring runner'
+          git push origin HEAD:main
