@@ -216,6 +216,7 @@ def compile_question_bank(store_dir: Path, output_path: Path) -> dict[str, Any]:
     for record in questions:
         if record.get("promotion_status") != "approved":
             continue
+        metadata = dict(record.get("metadata") or {})
         letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         choice_map = {letters[index]: item["text"] for index, item in enumerate(record["choices"])}
         id_to_letter = {item["id"]: letters[index] for index, item in enumerate(record["choices"])}
@@ -233,6 +234,7 @@ def compile_question_bank(store_dir: Path, output_path: Path) -> dict[str, Any]:
                 "chapter": record["objective"],
                 "topics": record["tags"] or [record["objective"]],
                 "objective_code": record["objective"],
+                "subobjective": record.get("subobjective", ""),
                 "question_type": "single" if len(record["correct_answer"]) == 1 else "multi",
                 "source_name": str(
                     record["provenance"]["source"].get("title")
@@ -240,6 +242,13 @@ def compile_question_bank(store_dir: Path, output_path: Path) -> dict[str, Any]:
                     or "Imported SC-900 content"
                 ),
                 "provenance": record["provenance"],
+                "blueprint_leaf_id": metadata.get("blueprint_leaf_id", ""),
+                "semantic_family_id": metadata.get("semantic_family_id", ""),
+                "source_family_id": metadata.get("source_family_id", ""),
+                "stem_style": metadata.get("stem_style", ""),
+                "future_probe_suitability": metadata.get("future_probe_suitability", "needs_review"),
+                "authoring_origin": metadata.get("authoring_origin", ""),
+                "references": list(record.get("references") or []),
             }
         )
     output_path.parent.mkdir(parents=True, exist_ok=True)
