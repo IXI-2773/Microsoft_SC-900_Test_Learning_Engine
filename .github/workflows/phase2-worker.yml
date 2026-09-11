@@ -11,7 +11,7 @@ permissions:
 jobs:
   focused-tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - name: Checkout branch
         uses: actions/checkout@v4
@@ -36,7 +36,7 @@ jobs:
 
           from ingestion.bank_quality import validate_phase1_question
           from ingestion.models import load_taxonomy
-          from tools.validate_sc900_phase1 import REVIEW_CHECK_FIELDS
+          from tools.validate_sc900_phase1 import REVIEW_CHECK_FIELDS, validate_source_inventory
 
           taxonomy = load_taxonomy()
           batch_dir = Path('content/sc900/phase2/batches')
@@ -86,6 +86,11 @@ jobs:
           for row in questions:
               validate_phase1_question(row, taxonomy)
 
+          inventory = json.loads(Path('content/sc900/phase2/source_inventory.json').read_text(encoding='utf-8'))
+          source_errors = validate_source_inventory(inventory, taxonomy)
+          if source_errors:
+              raise SystemExit(f'Phase-2 source inventory errors: {source_errors}')
+
           reviews = []
           for path in sorted(review_dir.glob('batch-*-review.json')):
               payload = json.loads(path.read_text(encoding='utf-8'))
@@ -110,6 +115,79 @@ jobs:
           print('Phase-2 authored increment audit: 50 questions / 50 approved review receipts')
           print('Domain allocation:', domains)
           print('Objective allocation:', objectives)
+          print('Source inventory: valid')
+          PY
+
+      - name: Build cumulative Phase 2 canonical and compiled artifacts
+        if: ${{ hashFiles('content/sc900/phase2/phase2_acceptance_report.json') == '' }}
+        run: |
+          set -euo pipefail
+          rm -rf content/sc900/phase2/store content/sc900/phase2/compiled
+          cp -R content/sc900/phase1/store content/sc900/phase2/store
+
+          for batch in content/sc900/phase2/batches/batch-*.jsonl; do
+            python tools/import_sc900_content.py "$batch" --store content/sc900/phase2/store
+          done
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from ingestion.importer import apply_review_decision, compile_question_bank, promotion_counts
+
+          store = Path('content/sc900/phase2/store')
+          receipts = []
+          for path in sorted(Path('content/sc900/phase2/reviews').glob('batch-*-review.json')):
+              receipts.extend(json.loads(path.read_text(encoding='utf-8'))['reviews'])
+
+          questions = json.loads((store / 'questions.json').read_text(encoding='utf-8'))
+          before = promotion_counts(questions)
+          if before != {'approved': 50, 'pending': 50, 'withheld': 0}:
+              raise SystemExit(f'import did not preserve IMPORT != APPROVAL: {before}')
+
+          decisions_before = json.loads((store / 'review_decisions.json').read_text(encoding='utf-8'))
+          for receipt in receipts:
+              qid = receipt['question_id']
+              pending = [row for row in decisions_before if row.get('id') == qid and row.get('decision') == 'pending' and row.get('actor') == 'import']
+              if not pending:
+                  raise SystemExit(f'{qid}: missing import-pending decision before approval')
+              apply_review_decision(store, qid, 'approved', actor=receipt['reviewer'])
+
+          questions = json.loads((store / 'questions.json').read_text(encoding='utf-8'))
+          after = promotion_counts(questions)
+          if after != {'approved': 100, 'pending': 0, 'withheld': 0}:
+              raise SystemExit(f'approval gate did not reach 100/0/0: {after}')
+
+          output = Path('content/sc900/phase2/compiled/sc900_phase2_reviewed_bank.json')
+          report = compile_question_bank(store, output)
+          if report['compiled'] != 100:
+              raise SystemExit(f"expected compiled=100, got {report['compiled']}")
+          print('Cumulative promotion counts:', after)
+          print('Compiled count:', report['compiled'])
+          PY
+
+          python tools/validate_sc900_phase2.py \
+            --store content/sc900/phase2/store \
+            --compiled content/sc900/phase2/compiled/sc900_phase2_reviewed_bank.json \
+            --phase1-reviews content/sc900/phase1/reviews \
+            --phase2-reviews content/sc900/phase2/reviews \
+            --phase2-batches content/sc900/phase2/batches \
+            --source-inventory content/sc900/phase2/source_inventory.json \
+            --report content/sc900/phase2/phase2_acceptance_report.json
+
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          from ingestion.importer import compile_question_bank
+
+          store = Path('content/sc900/phase2/store')
+          compiled = Path('content/sc900/phase2/compiled/sc900_phase2_reviewed_bank.json')
+          first = hashlib.sha256(compiled.read_bytes()).hexdigest()
+          probe = Path('/tmp/sc900_phase2_reviewed_bank.recompiled.json')
+          compile_question_bank(store, probe)
+          second = hashlib.sha256(probe.read_bytes()).hexdigest()
+          if first != second or compiled.read_bytes() != probe.read_bytes():
+              raise SystemExit(f'non-deterministic compile: {first} != {second}')
+          print('Deterministic compiled SHA-256:', first)
           PY
 
       - name: Run Phase 2 and inherited bank-contract tests
@@ -118,7 +196,19 @@ jobs:
             tests.test_sc900_phase2 \
             tests.test_sc900_bank_quality \
             tests.test_sc900_taxonomy \
+            tests.test_ingestion_importer \
             -v
+
+      - name: Commit generated Phase 2 artifacts
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/sc900/phase2/store content/sc900/phase2/compiled content/sc900/phase2/phase2_acceptance_report.json
+          if ! git diff --cached --quiet; then
+            git commit -m "build: compile SC-900 Phase 2 reviewed bank"
+            git push origin HEAD:implementation/sc900-reviewed-bank-phase2
+          fi
 
       - name: Commit materialized Phase 2 content and remove payload
         if: ${{ hashFiles('tools/_phase2_content_payload.py') != '' }}
