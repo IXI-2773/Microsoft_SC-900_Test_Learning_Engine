@@ -1,0 +1,124 @@
+name: Phase 2 deep-review correction worker
+
+on:
+  push:
+    branches:
+      - implementation/sc900-reviewed-bank-phase2
+    paths:
+      - .github/workflows/phase2-deep-review-correction.yml
+
+permissions:
+  contents: write
+
+jobs:
+  correct-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Patch fail-closed contract and regression tests
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          def replace_once(text, old, new, label):
+              if old not in text:
+                  raise SystemExit(f'missing patch anchor: {label}')
+              return text.replace(old, new, 1)
+
+          path = Path('tools/validate_sc900_phase2.py')
+          text = path.read_text(encoding='utf-8')
+          if 'MANIFEST_SCHEMA_VERSION = "sc900.train-probe-manifest/v1"' not in text:
+              text = replace_once(
+                  text,
+                  'RESOLVED_FAMILY_STATE = "resolved"\n',
+                  'RESOLVED_FAMILY_STATE = "resolved"\nMANIFEST_SCHEMA_VERSION = "sc900.train-probe-manifest/v1"\n',
+                  'manifest constant',
+              )
+
+          approved_anchor = '''    if len(approved) != 100:\n        quality_errors.append(\n            _error(\n                "APPROVED_COUNT_MISMATCH",\n                "Phase 2 requires exactly 100 approved cumulative questions",\n                expected=100,\n                actual=len(approved),\n            )\n        )\n\n'''
+          if '"PENDING_RECORDS_PRESENT"' not in text:
+              text = replace_once(
+                  text,
+                  approved_anchor,
+                  approved_anchor + '''    if pending:\n        quality_errors.append(\n            _error(\n                "PENDING_RECORDS_PRESENT",\n                "Phase 2 terminal acceptance requires zero pending cumulative questions",\n                actual=len(pending),\n            )\n        )\n    if withheld:\n        quality_errors.append(\n            _error(\n                "WITHHELD_RECORDS_PRESENT",\n                "Phase 2 terminal acceptance requires zero withheld cumulative questions",\n                actual=len(withheld),\n            )\n        )\n\n''',
+                  'pending withheld gate',
+              )
+
+          id_anchor = '''    phase2_id_set = {normalize_text(value) for value in phase2_question_ids if normalize_text(value)}\n    approved_id_set = {question_id for question_id in ids if question_id}\n'''
+          if '"PHASE2_BATCH_ID_SET_INVALID"' not in text:
+              text = replace_once(
+                  text,
+                  id_anchor,
+                  '''    phase2_id_list = [normalize_text(value) for value in phase2_question_ids if normalize_text(value)]\n    phase2_id_set = set(phase2_id_list)\n    if len(phase2_id_list) != 50 or len(phase2_id_set) != 50:\n        quality_errors.append(\n            _error(\n                "PHASE2_BATCH_ID_SET_INVALID",\n                "Phase 2 authored batches must contain exactly 50 unique question IDs",\n                actual_rows=len(phase2_id_list),\n                unique_ids=len(phase2_id_set),\n            )\n        )\n    approved_id_set = {question_id for question_id in ids if question_id}\n''',
+                  'phase2 id uniqueness',
+              )
+
+          manifest_anchor = '''    if not normalize_text(manifest.get("schema_version")):\n        errors.append(_error("MISSING_MANIFEST_SCHEMA_VERSION", "manifest schema_version is required"))\n    if not normalize_text(manifest.get("partition_epoch")):\n        errors.append(_error("MISSING_PARTITION_EPOCH", "manifest partition_epoch is required"))\n'''
+          if '"INVALID_MANIFEST_SCHEMA_VERSION"' not in text:
+              text = replace_once(
+                  text,
+                  manifest_anchor,
+                  '''    schema_version = normalize_text(manifest.get("schema_version"))\n    if not schema_version:\n        errors.append(_error("MISSING_MANIFEST_SCHEMA_VERSION", "manifest schema_version is required"))\n    elif schema_version != MANIFEST_SCHEMA_VERSION:\n        errors.append(\n            _error(\n                "INVALID_MANIFEST_SCHEMA_VERSION",\n                "manifest schema_version must match the frozen Phase-2 contract",\n                expected=MANIFEST_SCHEMA_VERSION,\n                actual=schema_version,\n            )\n        )\n    if not normalize_text(manifest.get("partition_epoch")):\n        errors.append(_error("MISSING_PARTITION_EPOCH", "manifest partition_epoch is required"))\n    if not normalize_text(manifest.get("blueprint_version")):\n        errors.append(_error("MISSING_MANIFEST_BLUEPRINT_VERSION", "manifest blueprint_version is required"))\n''',
+                  'manifest header parity',
+              )
+
+          field_anchor = '''        probe_suitability = normalize_text(raw_item.get("future_probe_suitability"))\n        family_state = normalize_text(raw_item.get("family_state")).lower()\n'''
+          if 'assignment_rationale = normalize_text' not in text:
+              text = replace_once(
+                  text,
+                  field_anchor,
+                  field_anchor + '''        blueprint_version = normalize_text(raw_item.get("blueprint_version"))\n        assignment_rationale = normalize_text(raw_item.get("assignment_rationale"))\n        assignment_receipt = raw_item.get("assignment_receipt")\n''',
+                  'manifest item fields',
+              )
+
+          source_anchor = '''        if not source_family_id:\n            errors.append(\n                _error(\n                    "MISSING_MANIFEST_SOURCE_FAMILY",\n                    "source_family_id is required",\n                    question_id=question_id,\n                )\n            )\n'''
+          if '"MISSING_ASSIGNMENT_RATIONALE"' not in text:
+              text = replace_once(
+                  text,
+                  source_anchor,
+                  source_anchor + '''        if not blueprint_version:\n            errors.append(_error("MISSING_ITEM_BLUEPRINT_VERSION", "item blueprint_version is required", question_id=question_id))\n        if not assignment_rationale:\n            errors.append(_error("MISSING_ASSIGNMENT_RATIONALE", "assignment_rationale is required", question_id=question_id))\n        if not isinstance(assignment_receipt, Mapping):\n            errors.append(_error("MISSING_ASSIGNMENT_RECEIPT", "assignment_receipt must be an object", question_id=question_id))\n        elif not normalize_text(assignment_receipt.get("reviewer")) or not normalize_text(assignment_receipt.get("reviewed_at")):\n            errors.append(_error("INCOMPLETE_ASSIGNMENT_RECEIPT", "assignment_receipt requires reviewer and reviewed_at", question_id=question_id))\n''',
+                  'manifest required fields',
+              )
+
+          probe_anchor = '''        if role == "PROBE":\n            if promotion_status != "approved":\n'''
+          if '"TRAIN_REQUIRES_APPROVED"' not in text:
+              text = replace_once(
+                  text,
+                  probe_anchor,
+                  '''        if role == "TRAIN":\n            if promotion_status != "approved":\n                errors.append(_error("TRAIN_REQUIRES_APPROVED", "TRAIN assignment requires approved content", question_id=question_id))\n            if family_state != RESOLVED_FAMILY_STATE:\n                errors.append(_error("TRAIN_REQUIRES_RESOLVED_FAMILY", "TRAIN assignment requires resolved semantic-family membership", question_id=question_id, family_state=family_state))\n\n        if role == "PROBE":\n            if promotion_status != "approved":\n''',
+                  'train fail closed',
+              )
+          path.write_text(text, encoding='utf-8')
+
+          schema_path = Path('content/sc900/phase2/train_probe_manifest.schema.json')
+          schema = json.loads(schema_path.read_text(encoding='utf-8'))
+          item = schema['properties']['items']['items']
+          train_rule = {
+              'if': {'properties': {'role': {'const': 'TRAIN'}}, 'required': ['role']},
+              'then': {'properties': {'promotion_status': {'const': 'approved'}, 'family_state': {'const': 'resolved'}}},
+          }
+          if train_rule not in item['allOf']:
+              item['allOf'].insert(0, train_rule)
+          schema_path.write_text(json.dumps(schema, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+
+          test_path = Path('tests/test_sc900_phase2_deep_review.py')
+          test_path.write_text('''import unittest\nfrom copy import deepcopy\n\nfrom ingestion.models import load_taxonomy\nfrom tests.test_sc900_phase2 import _complete_phase2_set, _load_phase2_module\n\n\nclass Phase2DeepReviewRegressionTests(unittest.TestCase):\n    def setUp(self):\n        self.taxonomy = load_taxonomy()\n        self.module = _load_phase2_module(self)\n\n    def test_terminal_acceptance_rejects_pending_or_withheld_records(self):\n        questions, reviews, phase2_ids = _complete_phase2_set(self.taxonomy)\n        pending = deepcopy(questions[0]); pending["id"] = "pending_extra"; pending["promotion_status"] = "pending"\n        result = self.module.validate_phase2_set(questions + [pending], self.taxonomy, reviews, phase2_ids)\n        self.assertIn("PENDING_RECORDS_PRESENT", {row["code"] for row in result["quality_errors"]})\n        withheld = deepcopy(questions[0]); withheld["id"] = "withheld_extra"; withheld["promotion_status"] = "withheld"\n        result = self.module.validate_phase2_set(questions + [withheld], self.taxonomy, reviews, phase2_ids)\n        self.assertIn("WITHHELD_RECORDS_PRESENT", {row["code"] for row in result["quality_errors"]})\n\n    def manifest_item(self, **overrides):\n        item = {\n            "question_id": "q1", "semantic_family_id": "family-a", "source_family_id": "source-a",\n            "role": "TRAIN", "promotion_status": "approved", "future_probe_suitability": "train_only",\n            "family_state": "resolved", "assignment_rationale": "test",\n            "assignment_receipt": {"reviewer": "reviewer", "reviewed_at": "2026-09-11T00:00:00Z"},\n            "blueprint_version": "2026-07-28",\n        }\n        item.update(overrides); return item\n\n    def manifest(self, item, **overrides):\n        data = {"schema_version": "sc900.train-probe-manifest/v1", "partition_epoch": "epoch", "blueprint_version": "2026-07-28", "items": [item]}\n        data.update(overrides); return data\n\n    def test_train_rejects_pending_withheld_and_unresolved_family(self):\n        for status in ("pending", "withheld"):\n            codes = {row["code"] for row in self.module.validate_train_probe_manifest(self.manifest(self.manifest_item(promotion_status=status)))}\n            self.assertIn("TRAIN_REQUIRES_APPROVED", codes)\n        codes = {row["code"] for row in self.module.validate_train_probe_manifest(self.manifest(self.manifest_item(family_state="disputed")))}\n        self.assertIn("TRAIN_REQUIRES_RESOLVED_FAMILY", codes)\n        self.assertIn("UNRESOLVED_FAMILY_MUST_BE_UNASSIGNED", codes)\n\n    def test_python_manifest_validator_requires_published_schema_fields(self):\n        errors = self.module.validate_train_probe_manifest({\n            "schema_version": "wrong", "partition_epoch": "epoch",\n            "items": [self.manifest_item(assignment_rationale="", assignment_receipt=None, blueprint_version="")],\n        })\n        codes = {row["code"] for row in errors}\n        self.assertIn("INVALID_MANIFEST_SCHEMA_VERSION", codes)\n        self.assertIn("MISSING_MANIFEST_BLUEPRINT_VERSION", codes)\n        self.assertIn("MISSING_ITEM_BLUEPRINT_VERSION", codes)\n        self.assertIn("MISSING_ASSIGNMENT_RATIONALE", codes)\n        self.assertIn("MISSING_ASSIGNMENT_RECEIPT", codes)\n\n    def test_phase2_id_list_must_be_exactly_50_unique_ids(self):\n        questions, reviews, phase2_ids = _complete_phase2_set(self.taxonomy)\n        result = self.module.validate_phase2_set(questions, self.taxonomy, reviews, phase2_ids[:-1] + [phase2_ids[0]])\n        self.assertIn("PHASE2_BATCH_ID_SET_INVALID", {row["code"] for row in result["quality_errors"]})\n\n\nif __name__ == "__main__":\n    unittest.main()\n''', encoding='utf-8')
+          PY
+      - name: Run contract regression tests
+        run: |
+          python -m unittest tests.test_sc900_phase2 tests.test_sc900_phase2_deep_review -v
+      - name: Commit contract correction
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tools/validate_sc900_phase2.py content/sc900/phase2/train_probe_manifest.schema.json tests/test_sc900_phase2_deep_review.py
+          git diff --cached --exit-code && exit 0 || true
+          git commit -m "fix: close Phase 2 review contract gaps"
+          git push origin HEAD:implementation/sc900-reviewed-bank-phase2
