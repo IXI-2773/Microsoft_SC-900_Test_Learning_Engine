@@ -1,0 +1,131 @@
+name: One-shot Phase 2 correction verification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/phase2-one-shot-correction.yml
+
+permissions:
+  contents: write
+
+jobs:
+  correct-and-verify:
+    runs-on: windows-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout runner revision
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify bounded main mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "98ea25ee3303567ca60730853a82b4643931c173"
+          test "$(git rev-parse HEAD^^{tree})" = "f1f21bda876590f7e76c84e1c0d9b3bafb6e9fdf"
+          test "$(git diff --name-only HEAD^ HEAD)" = ".github/workflows/phase2-one-shot-correction.yml"
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install verification tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install black ruff mypy pyinstaller -r requirements-extract.txt
+
+      - name: Checkout exact Phase 2 correction branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin implementation/sc900-reviewed-bank-phase2
+          git checkout -B implementation/sc900-reviewed-bank-phase2 origin/implementation/sc900-reviewed-bank-phase2
+          test "$(git rev-parse HEAD)" = "bbeb2770e40e5585fe6f0eaa5330ea6af44bf24d"
+
+      - name: Apply evidence-chain correction
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/_apply_phase2_evidence_correction.py
+          python tools/build_sc900_phase2.py --write
+          python tools/validate_sc900_phase2.py \
+            --store content/sc900/phase2/store \
+            --compiled content/sc900/phase2/compiled/sc900_phase2_reviewed_bank.json \
+            --phase1-reviews content/sc900/phase1/reviews \
+            --phase2-reviews content/sc900/phase2/reviews \
+            --phase2-batches content/sc900/phase2/batches \
+            --source-inventory content/sc900/phase2/source_inventory.json \
+            --report content/sc900/phase2/phase2_acceptance_report.json
+          python tools/build_sc900_phase2.py --verify-committed
+
+      - name: Run focused correction gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest \
+            tests.test_sc900_phase2 \
+            tests.test_sc900_phase2_deep_review \
+            tests.test_sc900_bank_quality \
+            tests.test_sc900_taxonomy \
+            tests.test_ingestion_importer -v
+
+      - name: Run full repository regression gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -v
+          python tools/lint_bank.py
+          python tools/verify_installation.py
+          python tools/run_quality_checks.py
+
+      - name: Remove transient correction machinery from PR branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f tools/_apply_phase2_evidence_correction.py
+          rm -f .github/workflows/phase2-deep-review-correction.yml
+          rm -f .github/workflows/phase2-correction-reopen-trigger.yml
+          test ! -e tools/_apply_phase2_evidence_correction.py
+          test ! -e .github/workflows/phase2-deep-review-correction.yml
+          test ! -e .github/workflows/phase2-correction-reopen-trigger.yml
+
+      - name: Commit verified evidence correction
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git status --short
+          test -n "$(git diff --cached --name-only)"
+          git commit -m "fix: harden Phase 2 evidence custody"
+          git push origin HEAD:implementation/sc900-reviewed-bank-phase2
+          echo "CORRECTED_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Verify pushed correction branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin implementation/sc900-reviewed-bank-phase2
+          test "$(git rev-parse origin/implementation/sc900-reviewed-bank-phase2)" = "$CORRECTED_HEAD"
+          test -z "$(git ls-tree -r --name-only "$CORRECTED_HEAD" | grep -E '(^tools/_apply_phase2_evidence_correction.py$|^\.github/workflows/phase2-(deep-review-correction|correction-reopen-trigger)\.yml$)' || true)"
+
+      - name: Self-remove runner and restore main tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout -B cleanup-main origin/main
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git rm .github/workflows/phase2-one-shot-correction.yml
+          test "$(git write-tree)" = "f1f21bda876590f7e76c84e1c0d9b3bafb6e9fdf"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: remove one-shot Phase 2 correction runner"
+          test "$(git rev-parse HEAD^{tree})" = "f1f21bda876590f7e76c84e1c0d9b3bafb6e9fdf"
+          git push origin HEAD:main
