@@ -1,0 +1,65 @@
+name: Verify SC-900 v8 baseline
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  verify-existing-source:
+    if: github.head_ref == 'implementation/sc900-v8-baseline'
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout pull request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Record exact source revision
+        shell: bash
+        run: |
+          echo "GITHUB_SHA=$GITHUB_SHA"
+          echo "PR_HEAD_SHA=${{ github.event.pull_request.head.sha }}"
+          echo "CHECKED_OUT_SHA=$(git rev-parse HEAD)"
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+          git status --short
+          git diff --exit-code
+
+      - name: Install verification tools
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install black ruff mypy pyinstaller
+
+      - name: Verify source tree and quality gates
+        shell: bash
+        run: |
+          python -m unittest discover -s tests -v
+          python tools/lint_bank.py
+          python tools/verify_installation.py
+          python tools/run_quality_checks.py
+          git diff --exit-code
+
+      - name: Build and smoke-test existing SC-900 source
+        shell: bash
+        run: |
+          python -m tools.build_windows_release
+          git diff --exit-code
+
+      - name: Upload verified Windows release
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: SC900TestLearningEngine-v8-baseline
+          path: release/SC900TestLearningEngine/
+          if-no-files-found: error

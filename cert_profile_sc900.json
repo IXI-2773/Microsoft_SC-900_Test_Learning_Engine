@@ -1,0 +1,42 @@
+{
+  "vendor": "Microsoft",
+  "exam_code": "SC-900",
+  "exam_name": "Microsoft Security, Compliance, and Identity Fundamentals",
+  "engine_version": "8.0.0",
+  "runtime_bank": "sc900_bank_v8_baseline.json",
+  "placeholder_bank_question_count": 8,
+  "practice_question_count_options": [
+    10,
+    20,
+    40,
+    50
+  ],
+  "practice_question_count_default": 50,
+  "official_scaled_pass_score": 700,
+  "official_scaled_score_max": 1000,
+  "internal_readiness_threshold_pct": 82.5,
+  "internal_readiness_min_attempts": 120,
+  "scoring_disclaimer": "The internal readiness percentage is a study heuristic, not a conversion to Microsoft's scaled exam score. Microsoft's official passing score is 700 on its reported scaled score; the engine does not infer that scaled score from raw practice accuracy.",
+  "domains": [
+    {
+      "code": "1",
+      "name": "Describe the concepts of security, compliance, and identity",
+      "weight": "10-15%"
+    },
+    {
+      "code": "2",
+      "name": "Describe the capabilities of Microsoft Entra",
+      "weight": "25-30%"
+    },
+    {
+      "code": "3",
+      "name": "Describe the capabilities of Microsoft security solutions",
+      "weight": "35-40%"
+    },
+    {
+      "code": "4",
+      "name": "Describe the capabilities of Microsoft compliance solutions",
+      "weight": "20-25%"
+    }
+  ]
+}

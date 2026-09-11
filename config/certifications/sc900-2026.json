@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "exam": "SC-900",
+  "blueprint_version": "2026",
+  "domains": [
+    {"id": "security_compliance_identity", "name": "Security, compliance, and identity concepts", "weight_range": [10, 15], "objectives": ["security_compliance_identity_concepts"]},
+    {"id": "microsoft_entra", "name": "Microsoft Entra", "weight_range": [25, 30], "objectives": ["entra_identity_access"]},
+    {"id": "microsoft_security_solutions", "name": "Microsoft security solutions", "weight_range": [35, 40], "objectives": ["microsoft_security_solutions"]},
+    {"id": "microsoft_compliance_solutions", "name": "Microsoft compliance solutions", "weight_range": [20, 25], "objectives": ["microsoft_compliance_solutions"]}
+  ]
+}
