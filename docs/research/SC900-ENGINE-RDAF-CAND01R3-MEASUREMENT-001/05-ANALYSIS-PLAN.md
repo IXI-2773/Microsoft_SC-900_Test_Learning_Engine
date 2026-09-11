@@ -12,8 +12,10 @@ This plan is frozen before any real learner observation. Do not change the prima
 
 Clean held-out first attempts from Days 1–6, split by scheduled policy context:
 
-- SMART_PRACTICE: Days 1, 3, 5 (12 scheduled PROBE items)
-- RRC_1: Days 2, 4, 6 (12 scheduled PROBE items)
+- SMART_PRACTICE: Days 1, 3, 5 (12 scheduled PROBE items; 60 frozen TRAIN exposures)
+- RRC_1: Days 2, 4, 6 (12 scheduled PROBE items; 60 frozen TRAIN exposures)
+
+Equal TRAIN opportunity is a precommitted control, not evidence of equal learning. Do not treat the 20-item daily budget as an optimized pedagogical dose.
 
 Do not use training accuracy, retry accuracy, raw lifetime correctness, question familiarity, or Smart Practice internal scores as the primary endpoint.
 

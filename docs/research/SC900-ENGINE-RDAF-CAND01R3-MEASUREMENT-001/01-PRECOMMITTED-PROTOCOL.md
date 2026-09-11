@@ -1,7 +1,8 @@
 # 01 — Precommitted protocol
 
 ```text
-PROTOCOL_VERSION = cand01r3-measurement-001-v1
+PROTOCOL_VERSION = cand01r3-measurement-001-v2
+SUPERSEDED_PROTOCOL_VERSION = cand01r3-measurement-001-v1
 MEASUREMENT_EPOCH = cand01r3-measurement-001
 SCHEDULE_VERSION = cand01r3-probe-schedule-v1
 POLICY_SEQUENCE_VERSION = cand01r3-alt-crossover-v1
@@ -55,6 +56,12 @@ Improper PROBE exposure is recorded as contaminated, excluded from the clean pri
 ## First-attempt rule
 
 Only the earliest valid clean scored PROBE attempt for `(learner_id, SC-900, partition_epoch, question_id)` is primary. Retry, redo, restored duplicates, and imported duplicates are excluded.
+
+## Primary-day TRAIN exposure budget
+
+v2 freezes 20 counted TRAIN exposures per active arm on Days 1–6. This is a methodological exposure-control constant, not an empirically optimized dose. SMART_PRACTICE and RRC_1 each receive 60 primary TRAIN exposures. Day 7 remains 10 + 10 and is not part of the simple Days 1–6 contrast.
+
+A counted exposure is one TRAIN question presented in the scheduled policy-controlled training session. PROBE, rejected, preview, debug, and unobserved records do not count. Excess exposure is recorded as `OVER_BUDGET_TRAIN_EXPOSURE` and is not silently kept as in-budget dose.
 
 ## Activation
 

@@ -37,7 +37,15 @@ class SessionPersistenceMixin:
         return int(self.elapsed_base + (time.time() - self.clock_started_at))
 
     def calculate_session_question_limit(self, base_count):
-        return calculate_session_question_limit(base_count)
+        native = calculate_session_question_limit(base_count)
+        from cand01r3_protocol import measurement_train_session_limit
+
+        capped = measurement_train_session_limit()
+        if capped is None:
+            return native
+        if native <= 0:
+            return capped
+        return min(native, capped)
 
     def current_session_signature(self, mode=None, questions: list[QuestionRuntimeState] | None = None, question_numbers=None):
         mode = str(mode or self.active_session_mode or MODE_PRACTICE)

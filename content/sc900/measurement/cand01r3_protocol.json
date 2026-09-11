@@ -32,11 +32,12 @@
       "policy_id": "SMART_PRACTICE",
       "primary_policy_contrast": true,
       "scheduled_day": 1,
+      "train_item_budget": 20,
       "training": true,
       "training_blocks": [
         {
           "policy_id": "SMART_PRACTICE",
-          "train_item_budget": null
+          "train_item_budget": 20
         }
       ]
     },
@@ -45,11 +46,12 @@
       "policy_id": "RRC_1",
       "primary_policy_contrast": true,
       "scheduled_day": 2,
+      "train_item_budget": 20,
       "training": true,
       "training_blocks": [
         {
           "policy_id": "RRC_1",
-          "train_item_budget": null
+          "train_item_budget": 20
         }
       ]
     },
@@ -58,11 +60,12 @@
       "policy_id": "SMART_PRACTICE",
       "primary_policy_contrast": true,
       "scheduled_day": 3,
+      "train_item_budget": 20,
       "training": true,
       "training_blocks": [
         {
           "policy_id": "SMART_PRACTICE",
-          "train_item_budget": null
+          "train_item_budget": 20
         }
       ]
     },
@@ -71,11 +74,12 @@
       "policy_id": "RRC_1",
       "primary_policy_contrast": true,
       "scheduled_day": 4,
+      "train_item_budget": 20,
       "training": true,
       "training_blocks": [
         {
           "policy_id": "RRC_1",
-          "train_item_budget": null
+          "train_item_budget": 20
         }
       ]
     },
@@ -84,11 +88,12 @@
       "policy_id": "SMART_PRACTICE",
       "primary_policy_contrast": true,
       "scheduled_day": 5,
+      "train_item_budget": 20,
       "training": true,
       "training_blocks": [
         {
           "policy_id": "SMART_PRACTICE",
-          "train_item_budget": null
+          "train_item_budget": 20
         }
       ]
     },
@@ -97,11 +102,12 @@
       "policy_id": "RRC_1",
       "primary_policy_contrast": true,
       "scheduled_day": 6,
+      "train_item_budget": 20,
       "training": true,
       "training_blocks": [
         {
           "policy_id": "RRC_1",
-          "train_item_budget": null
+          "train_item_budget": 20
         }
       ]
     },
@@ -110,6 +116,7 @@
       "policy_id": "DAY7_BALANCED_MEASUREMENT",
       "primary_policy_contrast": false,
       "scheduled_day": 7,
+      "train_item_budget": null,
       "training": true,
       "training_blocks": [
         {
@@ -124,11 +131,17 @@
     }
   ],
   "policy_sequence_version": "cand01r3-alt-crossover-v1",
+  "primary_daily_train_budget": 20,
   "primary_endpoint": "7-day first-attempt correctness on CLEAN HELD-OUT SC-900 PROBE items",
+  "primary_train_exposure_totals": {
+    "PRIMARY_TRAIN_EXPOSURE_DIFFERENCE": 0,
+    "RRC_1": 60,
+    "SMART_PRACTICE": 60
+  },
   "probe_family_count": 7,
   "probe_question_count": 29,
-  "protocol_sha256": "493b371d6200c88fe51428953947fac864fae8535667374e38050198b018e081",
-  "protocol_version": "cand01r3-measurement-001-v1",
+  "protocol_sha256": "51dbee61e2a7d0c23ad48e7f37799812bd67918e37aacd1b60e3600787365c72",
+  "protocol_version": "cand01r3-measurement-001-v2",
   "question_count": 200,
   "real_observations": 0,
   "schedule": [
@@ -454,5 +467,13 @@
   ],
   "schedule_version": "cand01r3-probe-schedule-v1",
   "stopping_rule": "Complete the scheduled 7-day protocol, or terminate the epoch on a protocol-invalidating event. Do not stop early because one policy looks ahead. Do not extend because a desired result has not appeared.",
+  "supersession": {
+    "EMPIRICAL_DATA_INVALIDATED": "NO",
+    "REAL_OBSERVATIONS_AT_SUPERSESSION": 0,
+    "SUPERSESSION_REASON": "PRIMARY_DAYS_TRAINING_DOSE_WAS_UNBOUNDED",
+    "V1_SUPERSEDED_BEFORE_EMPIRICAL_RUN": "YES",
+    "superseded_protocol_sha256": "493b371d6200c88fe51428953947fac864fae8535667374e38050198b018e081",
+    "superseded_protocol_version": "cand01r3-measurement-001-v1"
+  },
   "train_question_count": 171
 }

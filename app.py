@@ -1568,9 +1568,28 @@ class TestingEngineApp(
         policy_id = set_measurement_day(day)
         card = today_measurement_card(day)
         ids = ", ".join(row["question_id"] for row in card["questions"])
+        remaining = int(card.get("train_exposures_remaining") or 0)
+        self.session_question_limit = remaining
+        if int(day) >= 7:
+            blocks = card.get("day7_blocks") or []
+            block_text = "\n".join(
+                f"{block['policy_id']}: {block['train_budget']} TRAIN "
+                f"({block['train_exposures_remaining']} remaining)"
+                for block in blocks
+            )
+            messagebox.showinfo(
+                f"Day {day}",
+                f"Policy: {policy_id}\n{block_text}\nthen 5 scheduled PROBE\n\n{ids}",
+            )
+            return
+        status = card.get("training_block_status")
+        next_action = card.get("next_action")
         messagebox.showinfo(
             f"Day {day}",
-            f"Policy: {policy_id}\nScheduled PROBE IDs:\n{ids}",
+            f"Policy: {policy_id}\nTRAIN BUDGET = {card.get('train_budget')}\n"
+            f"TRAIN EXPOSURES COMPLETED = {card.get('train_exposures_completed')}\n"
+            f"TRAIN EXPOSURES REMAINING = {remaining}\n{status}\n{next_action}\n\n"
+            f"Scheduled PROBE IDs:\n{ids}",
         )
 
     def show_cand01r3_measurement_card(self):
@@ -1580,11 +1599,26 @@ class TestingEngineApp(
         if not day:
             return
         card = today_measurement_card(day)
-        lines = [f"Policy: {card['policy_id']}", f"Active: {card['measurement_active']}", ""]
+        if int(day) >= 7:
+            lines = [f"Policy: {card['policy_id']}", "Day 7 balanced training then 5 PROBE", ""]
+            for block in card.get("day7_blocks") or []:
+                lines.append(
+                    f"{block['policy_id']} TRAIN BUDGET = {block['train_budget']} | "
+                    f"completed {block['train_exposures_completed']} | remaining {block['train_exposures_remaining']}"
+                )
+            lines.append("then 5 scheduled PROBE")
+        else:
+            lines = [
+                f"Policy: {card['policy_id']}",
+                f"TRAIN BUDGET = {card.get('train_budget')}",
+                f"TRAIN EXPOSURES COMPLETED = {card.get('train_exposures_completed')}",
+                f"TRAIN EXPOSURES REMAINING = {card.get('train_exposures_remaining')}",
+                str(card.get("training_block_status") or ""),
+                str(card.get("next_action") or ""),
+                "",
+            ]
         for row in card["questions"]:
-            lines.append(
-                f"{row['sequence_position']}. {row['question_id']} / {row['semantic_family_id']}"
-            )
+            lines.append(f"{row['sequence_position']}. {row['question_id']} / {row['semantic_family_id']}")
         messagebox.showinfo(f"Day {day} measurement card", "\n".join(lines))
 
     def record_cand01r3_outside_study(self):

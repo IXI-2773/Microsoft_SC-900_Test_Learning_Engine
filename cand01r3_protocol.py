@@ -53,11 +53,16 @@ ROOT = Path(__file__).resolve().parent
 PROTOCOL_PATH = ROOT / "content" / "sc900" / "measurement" / "cand01r3_protocol.json"
 DEFAULT_LAUNCH_BANK_SHA256 = "60842eb28810d328fe56a427b7d72baedd6b31179ca4f1c98744392aa318a426"
 
-PROTOCOL_VERSION = "cand01r3-measurement-001-v1"
+PROTOCOL_VERSION = "cand01r3-measurement-001-v2"
+SUPERSEDED_PROTOCOL_VERSION = "cand01r3-measurement-001-v1"
+SUPERSEDED_PROTOCOL_SHA256 = "493b371d6200c88fe51428953947fac864fae8535667374e38050198b018e081"
 MEASUREMENT_EPOCH = "cand01r3-measurement-001"
 SCHEDULE_VERSION = "cand01r3-probe-schedule-v1"
 POLICY_SEQUENCE_VERSION = "cand01r3-alt-crossover-v1"
 ANALYSIS_VERSION = "cand01r3-analysis-plan-v1"
+PRIMARY_DAILY_TRAIN_BUDGET = 20
+DAY7_BLOCK_TRAIN_BUDGET = 10
+SUPERSESSION_REASON = "PRIMARY_DAYS_TRAINING_DOSE_WAS_UNBOUNDED"
 CANDIDATE = "CAND-01R3"
 PRIMARY_ENDPOINT = "7-day first-attempt correctness on CLEAN HELD-OUT SC-900 PROBE items"
 STOPPING_RULE = (
@@ -112,7 +117,8 @@ POLICY_SEQUENCE: list[dict[str, Any]] = [
         "training": True,
         "measurement": True,
         "primary_policy_contrast": True,
-        "training_blocks": [{"policy_id": "SMART_PRACTICE", "train_item_budget": None}],
+        "train_item_budget": PRIMARY_DAILY_TRAIN_BUDGET,
+        "training_blocks": [{"policy_id": "SMART_PRACTICE", "train_item_budget": PRIMARY_DAILY_TRAIN_BUDGET}],
     },
     {
         "scheduled_day": 2,
@@ -120,7 +126,8 @@ POLICY_SEQUENCE: list[dict[str, Any]] = [
         "training": True,
         "measurement": True,
         "primary_policy_contrast": True,
-        "training_blocks": [{"policy_id": "RRC_1", "train_item_budget": None}],
+        "train_item_budget": PRIMARY_DAILY_TRAIN_BUDGET,
+        "training_blocks": [{"policy_id": "RRC_1", "train_item_budget": PRIMARY_DAILY_TRAIN_BUDGET}],
     },
     {
         "scheduled_day": 3,
@@ -128,7 +135,8 @@ POLICY_SEQUENCE: list[dict[str, Any]] = [
         "training": True,
         "measurement": True,
         "primary_policy_contrast": True,
-        "training_blocks": [{"policy_id": "SMART_PRACTICE", "train_item_budget": None}],
+        "train_item_budget": PRIMARY_DAILY_TRAIN_BUDGET,
+        "training_blocks": [{"policy_id": "SMART_PRACTICE", "train_item_budget": PRIMARY_DAILY_TRAIN_BUDGET}],
     },
     {
         "scheduled_day": 4,
@@ -136,7 +144,8 @@ POLICY_SEQUENCE: list[dict[str, Any]] = [
         "training": True,
         "measurement": True,
         "primary_policy_contrast": True,
-        "training_blocks": [{"policy_id": "RRC_1", "train_item_budget": None}],
+        "train_item_budget": PRIMARY_DAILY_TRAIN_BUDGET,
+        "training_blocks": [{"policy_id": "RRC_1", "train_item_budget": PRIMARY_DAILY_TRAIN_BUDGET}],
     },
     {
         "scheduled_day": 5,
@@ -144,7 +153,8 @@ POLICY_SEQUENCE: list[dict[str, Any]] = [
         "training": True,
         "measurement": True,
         "primary_policy_contrast": True,
-        "training_blocks": [{"policy_id": "SMART_PRACTICE", "train_item_budget": None}],
+        "train_item_budget": PRIMARY_DAILY_TRAIN_BUDGET,
+        "training_blocks": [{"policy_id": "SMART_PRACTICE", "train_item_budget": PRIMARY_DAILY_TRAIN_BUDGET}],
     },
     {
         "scheduled_day": 6,
@@ -152,7 +162,8 @@ POLICY_SEQUENCE: list[dict[str, Any]] = [
         "training": True,
         "measurement": True,
         "primary_policy_contrast": True,
-        "training_blocks": [{"policy_id": "RRC_1", "train_item_budget": None}],
+        "train_item_budget": PRIMARY_DAILY_TRAIN_BUDGET,
+        "training_blocks": [{"policy_id": "RRC_1", "train_item_budget": PRIMARY_DAILY_TRAIN_BUDGET}],
     },
     {
         "scheduled_day": 7,
@@ -160,9 +171,10 @@ POLICY_SEQUENCE: list[dict[str, Any]] = [
         "training": True,
         "measurement": True,
         "primary_policy_contrast": False,
+        "train_item_budget": None,
         "training_blocks": [
-            {"policy_id": "SMART_PRACTICE", "train_item_budget": 10},
-            {"policy_id": "RRC_1", "train_item_budget": 10},
+            {"policy_id": "SMART_PRACTICE", "train_item_budget": DAY7_BLOCK_TRAIN_BUDGET},
+            {"policy_id": "RRC_1", "train_item_budget": DAY7_BLOCK_TRAIN_BUDGET},
         ],
     },
 ]
@@ -208,6 +220,7 @@ class MeasurementSession:
     ledger_path: Path | None = None
     allow_synthetic: bool = False
     protocol_locked: bool = False
+    current_scheduled_day: int | None = None
     protocol: dict[str, Any] = field(default_factory=dict)
     schedule_index: dict[str, dict[str, Any]] = field(default_factory=dict)
     train_ids: set[str] = field(default_factory=set)
@@ -365,6 +378,16 @@ def build_protocol(authority: RuntimeAuthority | None = None) -> dict[str, Any]:
         "empirical_result": "NOT_YET_AVAILABLE",
         "deployment_authorized": "NO",
         "default_bank_unchanged": "YES",
+        "primary_daily_train_budget": PRIMARY_DAILY_TRAIN_BUDGET,
+        "primary_train_exposure_totals": primary_train_exposure_totals(),
+        "supersession": {
+            "superseded_protocol_version": SUPERSEDED_PROTOCOL_VERSION,
+            "superseded_protocol_sha256": SUPERSEDED_PROTOCOL_SHA256,
+            "V1_SUPERSEDED_BEFORE_EMPIRICAL_RUN": "YES",
+            "SUPERSESSION_REASON": SUPERSESSION_REASON,
+            "REAL_OBSERVATIONS_AT_SUPERSESSION": 0,
+            "EMPIRICAL_DATA_INVALIDATED": "NO",
+        },
     }
     protocol["protocol_sha256"] = protocol_sha256(protocol)
     return protocol
@@ -372,6 +395,135 @@ def build_protocol(authority: RuntimeAuthority | None = None) -> dict[str, Any]:
 
 def copy_policy_sequence() -> list[dict[str, Any]]:
     return json.loads(json.dumps(POLICY_SEQUENCE))
+
+
+def primary_train_exposure_totals() -> dict[str, int]:
+    smart = 0
+    rrc = 0
+    for row in POLICY_SEQUENCE:
+        if not row.get("primary_policy_contrast"):
+            continue
+        budget = int(row.get("train_item_budget") or 0)
+        if row["policy_id"] == "SMART_PRACTICE":
+            smart += budget
+        elif row["policy_id"] == "RRC_1":
+            rrc += budget
+    return {
+        "SMART_PRACTICE": smart,
+        "RRC_1": rrc,
+        "PRIMARY_TRAIN_EXPOSURE_DIFFERENCE": abs(smart - rrc),
+    }
+
+
+def allow_v2_supersession(real_observations: int) -> dict[str, Any]:
+    count = int(real_observations)
+    if count == 0:
+        return {
+            "allowed": True,
+            "REAL_OBSERVATIONS_AT_SUPERSESSION": 0,
+            "SUPERSESSION_REASON": SUPERSESSION_REASON,
+            "EMPIRICAL_DATA_INVALIDATED": "NO",
+        }
+    return {
+        "allowed": False,
+        "reason": "NEW_MEASUREMENT_EPOCH_REQUIRED",
+        "REAL_OBSERVATIONS_AT_SUPERSESSION": count,
+    }
+
+
+def require_train_capacity(*, expected_budget: int, actual_eligible: int, policy_id: str = "") -> dict[str, Any]:
+    if int(actual_eligible) < int(expected_budget):
+        return {
+            "status": "INSUFFICIENT_TRAIN_CAPACITY",
+            "policy_id": policy_id,
+            "expected_budget": int(expected_budget),
+            "actual_exposures": int(actual_eligible),
+            "filled_with_probe": False,
+        }
+    return {
+        "status": "OK",
+        "policy_id": policy_id,
+        "expected_budget": int(expected_budget),
+        "actual_exposures": int(actual_eligible),
+        "filled_with_probe": False,
+    }
+
+
+def _ledger_real_observation_count(path: Path) -> int:
+    if not path.exists() or path.stat().st_size == 0:
+        return 0
+    count = 0
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        try:
+            payload = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if payload.get("synthetic") or str(payload.get("marker") or "") in SYNTHETIC_MARKERS:
+            continue
+        if payload.get("status") in {
+            STATUS_PRIMARY,
+            STATUS_UNOBSERVED,
+            STATUS_CONTAMINATED,
+            STATUS_DUPLICATE,
+            STATUS_DEVIATION,
+        }:
+            count += 1
+    return count
+
+
+def _policy_row(scheduled_day: int) -> dict[str, Any]:
+    for row in POLICY_SEQUENCE:
+        if int(row["scheduled_day"]) == int(scheduled_day):
+            return row
+    raise ValueError("UNKNOWN_SCHEDULED_DAY")
+
+
+def current_train_block(scheduled_day: int) -> dict[str, Any]:
+    row = _policy_row(scheduled_day)
+    blocks = list(row.get("training_blocks") or [])
+    if int(scheduled_day) < 7:
+        return dict(blocks[0])
+    for block in blocks:
+        budget = int(block.get("train_item_budget") or 0)
+        if _counted_train_exposures(scheduled_day, str(block["policy_id"])) < budget:
+            return dict(block)
+    return dict(blocks[-1])
+
+
+def train_budget_for_day(scheduled_day: int, policy_id: str | None = None) -> int:
+    if int(scheduled_day) < 7:
+        return int(_policy_row(scheduled_day).get("train_item_budget") or PRIMARY_DAILY_TRAIN_BUDGET)
+    block = current_train_block(scheduled_day)
+    if policy_id and policy_id != block.get("policy_id"):
+        for item in _policy_row(scheduled_day).get("training_blocks") or []:
+            if item.get("policy_id") == policy_id:
+                return int(item.get("train_item_budget") or 0)
+    return int(block.get("train_item_budget") or 0)
+
+
+def _counted_train_exposures(scheduled_day: int, policy_id: str | None = None) -> int:
+    count = 0
+    for row in _SESSION.train_log:
+        if not row.get("counted"):
+            continue
+        if int(row.get("scheduled_day") or 0) != int(scheduled_day):
+            continue
+        if policy_id and str(row.get("policy_id") or "") != policy_id:
+            continue
+        count += 1
+    return count
+
+
+def measurement_train_session_limit() -> int | None:
+    if not is_measurement_active() or _SESSION.current_scheduled_day is None:
+        return None
+    day = int(_SESSION.current_scheduled_day)
+    block = current_train_block(day)
+    budget = int(block.get("train_item_budget") or 0)
+    completed = _counted_train_exposures(day, str(block.get("policy_id") or ""))
+    return max(0, budget - completed)
 
 
 def load_committed_protocol() -> dict[str, Any]:
@@ -470,6 +622,10 @@ def begin_cand01r3_measurement(
     path.parent.mkdir(parents=True, exist_ok=True)
     if not path.exists():
         path.write_text("", encoding="utf-8")
+    real_count = _ledger_real_observation_count(path)
+    gate = allow_v2_supersession(real_count)
+    if not gate["allowed"]:
+        raise Cand01R3AuthorityError(str(gate.get("reason") or "NEW_MEASUREMENT_EPOCH_REQUIRED"))
     activate_cand01r3_experiment(
         policy_id=POLICY_SMART_PRACTICE,
         experiment_id=MEASUREMENT_EPOCH,
@@ -526,6 +682,8 @@ def _exposure_snapshot() -> tuple[dict[str, Any], dict[str, Any]]:
     seen: dict[str, set[str]] = {"SMART_PRACTICE": set(), "RRC_1": set()}
     families: dict[str, set[str]] = {"SMART_PRACTICE": set(), "RRC_1": set()}
     for row in _SESSION.train_log:
+        if row.get("counted") is False:
+            continue
         policy_id = str(row.get("policy_id") or "")
         if policy_id not in policies:
             policies[policy_id] = _empty_policy_exposure()
@@ -568,17 +726,65 @@ def record_train_exposure(
     service_class: str = "",
     session_duration_seconds: float | None = None,
     rrc1_fairness: Mapping[str, Any] | None = None,
+    scheduled_day: int | None = None,
 ) -> dict[str, Any]:
-    row = {
+    qid = canonical_question_id(question_id)
+    day = scheduled_day if scheduled_day is not None else _SESSION.current_scheduled_day
+    row: dict[str, Any] = {
         "policy_id": policy_id,
-        "question_id": canonical_question_id(question_id),
+        "question_id": qid,
         "semantic_family_id": semantic_family_id,
         "domain": domain,
         "objective": objective,
         "service_class": service_class,
         "session_duration_seconds": session_duration_seconds,
         "rrc1_fairness": dict(rrc1_fairness or {}),
+        "scheduled_day": day,
+        "counted": False,
+        "status": "COUNTED",
+        "reason": "OK",
     }
+    if qid in _SESSION.probe_ids:
+        row["status"] = "NOT_ELIGIBLE"
+        row["reason"] = "PROBE_CANNOT_SATISFY_TRAIN_BUDGET"
+        return row
+    if _SESSION.active and _SESSION.train_ids and qid not in _SESSION.train_ids:
+        row["status"] = "NOT_ELIGIBLE"
+        row["reason"] = "QUESTION_NOT_IN_TRAIN"
+        return row
+    if day is not None:
+        expected_policy = allocated_policy_for_day(int(day))
+        if int(day) < 7 and policy_id != expected_policy:
+            row["status"] = "PROTOCOL_DEVIATION"
+            row["reason"] = "WRONG_POLICY_USED"
+            if _SESSION.active:
+                _SESSION.train_log.append(row)
+            return row
+        budget = train_budget_for_day(int(day), policy_id if int(day) >= 7 else expected_policy)
+        completed = _counted_train_exposures(int(day), policy_id if int(day) >= 7 else None)
+        if completed >= budget:
+            row["status"] = "PROTOCOL_DEVIATION"
+            row["reason"] = "OVER_BUDGET_TRAIN_EXPOSURE"
+            if _SESSION.active:
+                _SESSION.train_log.append(row)
+                payload = {
+                    "event_id": str(uuid.uuid4()),
+                    "status": STATUS_DEVIATION,
+                    "reason": "OVER_BUDGET_TRAIN_EXPOSURE",
+                    "question_id": qid,
+                    "scheduled_day": day,
+                    "policy_context": policy_id,
+                    "intended_use": INTENDED_USE_TRAINING,
+                    "observed": False,
+                    "synthetic": False,
+                    "measurement_epoch": _SESSION.measurement_epoch,
+                    "protocol_version": _SESSION.protocol_version,
+                }
+                _SESSION.events.append(payload)
+                if _SESSION.ledger_path is not None:
+                    _append_ledger(payload, _SESSION.ledger_path)
+            return row
+    row["counted"] = True
     if _SESSION.active:
         _SESSION.train_log.append(row)
     return row
@@ -955,9 +1161,16 @@ def replace_active_protocol(new_protocol: Mapping[str, Any]) -> None:
 
 def set_measurement_day(scheduled_day: int) -> str:
     policy_id = allocated_policy_for_day(scheduled_day)
+    _SESSION.current_scheduled_day = int(scheduled_day)
     if is_cand01r3_active():
-        get_context().policy_id = RUNTIME_POLICY_MAP.get(policy_id, policy_id)
-        get_context().intended_use = INTENDED_USE_MEASUREMENT if policy_id == POLICY_DAY7 else INTENDED_USE_TRAINING
+        if int(scheduled_day) >= 7:
+            block = current_train_block(int(scheduled_day))
+            runtime_policy = str(block.get("policy_id") or policy_id)
+            get_context().policy_id = RUNTIME_POLICY_MAP.get(runtime_policy, runtime_policy)
+            get_context().intended_use = INTENDED_USE_TRAINING
+        else:
+            get_context().policy_id = RUNTIME_POLICY_MAP.get(policy_id, policy_id)
+            get_context().intended_use = INTENDED_USE_TRAINING
     return policy_id
 
 
@@ -984,6 +1197,7 @@ def notify_scored_attempt(
             domain=str(question.get("domain") or ""),
             objective=str(question.get("objective") or question.get("objective_code") or ""),
             service_class=service_class,
+            scheduled_day=_SESSION.current_scheduled_day,
         )
         return None
     return record_measurement_event(question, selected=selected, correct=correct, kind=kind)
@@ -992,12 +1206,42 @@ def notify_scored_attempt(
 def today_measurement_card(scheduled_day: int) -> dict[str, Any]:
     protocol = _SESSION.protocol or build_protocol()
     rows = [row for row in protocol["schedule"] if int(row["scheduled_day"]) == int(scheduled_day)]
+    policy_id = allocated_policy_for_day(scheduled_day)
+    if int(scheduled_day) >= 7:
+        block = current_train_block(int(scheduled_day))
+        budget = int(block.get("train_item_budget") or 0)
+        completed = _counted_train_exposures(int(scheduled_day), str(block.get("policy_id") or ""))
+        remaining = max(0, budget - completed)
+        day7_blocks = []
+        for item in _policy_row(int(scheduled_day)).get("training_blocks") or []:
+            item_budget = int(item.get("train_item_budget") or 0)
+            item_done = _counted_train_exposures(int(scheduled_day), str(item.get("policy_id") or ""))
+            day7_blocks.append(
+                {
+                    "policy_id": item.get("policy_id"),
+                    "train_budget": item_budget,
+                    "train_exposures_completed": item_done,
+                    "train_exposures_remaining": max(0, item_budget - item_done),
+                }
+            )
+    else:
+        budget = train_budget_for_day(int(scheduled_day))
+        completed = _counted_train_exposures(int(scheduled_day))
+        remaining = max(0, budget - completed)
+        day7_blocks = []
+    complete = remaining == 0 and budget > 0
     return {
         "scheduled_day": scheduled_day,
-        "policy_id": allocated_policy_for_day(scheduled_day),
+        "policy_id": policy_id,
         "questions": rows,
         "measurement_active": is_measurement_active(),
         "real_observations": len([event for event in _SESSION.events if not event.get("synthetic")]),
+        "train_budget": budget,
+        "train_exposures_completed": completed,
+        "train_exposures_remaining": remaining,
+        "training_block_status": "TRAINING_BLOCK_COMPLETE" if complete else "IN_PROGRESS",
+        "next_action": "PROCEED TO TODAY'S SCHEDULED PROBE" if complete else "CONTINUE TRAIN BLOCK",
+        "day7_blocks": day7_blocks,
     }
 
 

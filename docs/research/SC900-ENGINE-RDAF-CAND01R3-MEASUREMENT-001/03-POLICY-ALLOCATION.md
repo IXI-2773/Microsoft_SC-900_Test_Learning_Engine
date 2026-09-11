@@ -12,17 +12,25 @@ Task 7 (`10-TASK7-ALLOCATION-CONFOUNDS.md`) requires a predeclared policy order 
 
 ## Frozen sequence
 
-| Day | Policy | Training | Primary policy contrast |
+| Day | Policy | TRAIN budget | Primary policy contrast |
 | --- | --- | --- | --- |
-| 1 | SMART_PRACTICE | yes | yes |
-| 2 | RRC_1 | yes | yes |
-| 3 | SMART_PRACTICE | yes | yes |
-| 4 | RRC_1 | yes | yes |
-| 5 | SMART_PRACTICE | yes | yes |
-| 6 | RRC_1 | yes | yes |
-| 7 | DAY7_BALANCED_MEASUREMENT | yes, both arms, 10 TRAIN items each | no |
+| 1 | SMART_PRACTICE | 20 | yes |
+| 2 | RRC_1 | 20 | yes |
+| 3 | SMART_PRACTICE | 20 | yes |
+| 4 | RRC_1 | 20 | yes |
+| 5 | SMART_PRACTICE | 20 | yes |
+| 6 | RRC_1 | 20 | yes |
+| 7 | DAY7_BALANCED_MEASUREMENT | 10 SMART_PRACTICE then 10 RRC_1 | no |
 
-Days 1–6 give each policy three training/measurement days (12 scheduled PROBE items each). Day 7 is predeclared as a balanced dual TRAIN block (SMART_PRACTICE then RRC_1, 10 TRAIN items each) followed by the remaining five PROBE items. Those five items are descriptive / time-trend observations, not part of the simple Day 1–6 policy contrast.
+```text
+SMART_PRACTICE_PRIMARY_TRAIN_EXPOSURES = 60
+RRC1_PRIMARY_TRAIN_EXPOSURES = 60
+PRIMARY_TRAIN_EXPOSURE_DIFFERENCE = 0
+```
+
+Days 1–6 give each policy three training/measurement days (12 scheduled PROBE items each) and exactly 20 TRAIN exposures per day. Day 7 remains a balanced dual TRAIN block followed by five descriptive/time-trend PROBE items.
+
+v1 left Days 1–6 `train_item_budget = null`. That unbounded dose is superseded before empirical collection. Policy order is unchanged.
 
 SMART_PRACTICE still starts Day 1. That order is a logged confound, not hidden randomization.
 
