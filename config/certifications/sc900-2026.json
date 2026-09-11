@@ -1,11 +1,208 @@
 {
   "schema_version": 1,
   "exam": "SC-900",
-  "blueprint_version": "2026",
+  "blueprint_version": "2026-07-28",
+  "skills_effective_date": "2026-07-28",
   "domains": [
-    {"id": "security_compliance_identity", "name": "Security, compliance, and identity concepts", "weight_range": [10, 15], "objectives": ["security_compliance_identity_concepts"]},
-    {"id": "microsoft_entra", "name": "Microsoft Entra", "weight_range": [25, 30], "objectives": ["entra_identity_access"]},
-    {"id": "microsoft_security_solutions", "name": "Microsoft security solutions", "weight_range": [35, 40], "objectives": ["microsoft_security_solutions"]},
-    {"id": "microsoft_compliance_solutions", "name": "Microsoft compliance solutions", "weight_range": [20, 25], "objectives": ["microsoft_compliance_solutions"]}
+    {
+      "id": "security_compliance_identity",
+      "name": "Security, compliance, and identity concepts",
+      "weight_range": [10, 15],
+      "objectives": [
+        "security_compliance_concepts",
+        "identity_concepts"
+      ]
+    },
+    {
+      "id": "microsoft_entra",
+      "name": "Microsoft Entra",
+      "weight_range": [25, 30],
+      "objectives": [
+        "entra_identity_types_and_function",
+        "entra_authentication",
+        "entra_access_management",
+        "entra_identity_protection_governance"
+      ]
+    },
+    {
+      "id": "microsoft_security_solutions",
+      "name": "Microsoft security solutions",
+      "weight_range": [35, 40],
+      "objectives": [
+        "azure_infrastructure_security",
+        "azure_security_management",
+        "microsoft_sentinel",
+        "defender_xdr"
+      ]
+    },
+    {
+      "id": "microsoft_compliance_solutions",
+      "name": "Microsoft compliance solutions",
+      "weight_range": [20, 25],
+      "objectives": [
+        "service_trust_privacy",
+        "purview_compliance_management",
+        "purview_information_protection_lifecycle",
+        "purview_insider_risk_ediscovery_audit"
+      ]
+    }
+  ],
+  "objective_details": [
+    {
+      "id": "security_compliance_concepts",
+      "name": "Describe security and compliance concepts",
+      "domain_id": "security_compliance_identity",
+      "leaf_skills": [
+        {"id": "shared_responsibility_model", "name": "Describe the shared responsibility model"},
+        {"id": "defense_in_depth", "name": "Describe defense-in-depth"},
+        {"id": "zero_trust_model", "name": "Describe the Zero Trust model"},
+        {"id": "encryption_and_hashing", "name": "Describe encryption and hashing"},
+        {"id": "grc_concepts", "name": "Describe Governance, Risk, and Compliance (GRC) concepts"}
+      ]
+    },
+    {
+      "id": "identity_concepts",
+      "name": "Define identity concepts",
+      "domain_id": "security_compliance_identity",
+      "leaf_skills": [
+        {"id": "identity_primary_security_perimeter", "name": "Define identity as the primary security perimeter"},
+        {"id": "authentication", "name": "Define authentication"},
+        {"id": "authorization", "name": "Define authorization"},
+        {"id": "identity_providers", "name": "Describe identity providers"},
+        {"id": "directory_services_active_directory", "name": "Describe the concept of directory services and Active Directory"},
+        {"id": "federation", "name": "Describe the concept of federation"}
+      ]
+    },
+    {
+      "id": "entra_identity_types_and_function",
+      "name": "Describe function and identity types of Microsoft Entra ID",
+      "domain_id": "microsoft_entra",
+      "leaf_skills": [
+        {"id": "entra_id_overview", "name": "Describe Microsoft Entra ID"},
+        {"id": "identity_types_including_agent_id", "name": "Describe types of identities, including agent ID"},
+        {"id": "hybrid_identity", "name": "Describe hybrid identity"}
+      ]
+    },
+    {
+      "id": "entra_authentication",
+      "name": "Describe authentication capabilities of Microsoft Entra ID",
+      "domain_id": "microsoft_entra",
+      "leaf_skills": [
+        {"id": "authentication_methods", "name": "Describe the authentication methods"},
+        {"id": "multifactor_authentication", "name": "Describe multifactor authentication (MFA)"},
+        {"id": "password_protection_management", "name": "Describe password protection and management capabilities"}
+      ]
+    },
+    {
+      "id": "entra_access_management",
+      "name": "Describe access management capabilities of Microsoft Entra ID",
+      "domain_id": "microsoft_entra",
+      "leaf_skills": [
+        {"id": "conditional_access", "name": "Describe Microsoft Entra Conditional Access"},
+        {"id": "entra_roles_rbac", "name": "Describe Microsoft Entra roles and role-based access control (RBAC)"}
+      ]
+    },
+    {
+      "id": "entra_identity_protection_governance",
+      "name": "Describe identity protection and governance capabilities of Microsoft Entra",
+      "domain_id": "microsoft_entra",
+      "leaf_skills": [
+        {"id": "entra_id_governance", "name": "Describe Microsoft Entra ID Governance"},
+        {"id": "access_reviews", "name": "Describe access reviews"},
+        {"id": "privileged_identity_management", "name": "Describe the capabilities of Microsoft Entra Privileged Identity Management"},
+        {"id": "entra_id_protection", "name": "Describe Microsoft Entra ID Protection"}
+      ]
+    },
+    {
+      "id": "azure_infrastructure_security",
+      "name": "Describe core infrastructure security services in Azure",
+      "domain_id": "microsoft_security_solutions",
+      "leaf_skills": [
+        {"id": "azure_ddos_protection", "name": "Describe Azure DDoS Protection"},
+        {"id": "azure_firewall", "name": "Describe Azure Firewall"},
+        {"id": "azure_web_application_firewall", "name": "Describe Azure Web Application Firewall (WAF)"},
+        {"id": "azure_virtual_network_segmentation", "name": "Describe network segmentation with Azure virtual networks"},
+        {"id": "network_security_groups", "name": "Describe network security groups (NSGs)"},
+        {"id": "azure_bastion", "name": "Describe Azure Bastion"},
+        {"id": "azure_key_vault", "name": "Describe Azure Key Vault"}
+      ]
+    },
+    {
+      "id": "azure_security_management",
+      "name": "Describe security management capabilities of Azure",
+      "domain_id": "microsoft_security_solutions",
+      "leaf_skills": [
+        {"id": "microsoft_defender_for_cloud", "name": "Describe Microsoft Defender for Cloud"},
+        {"id": "cloud_security_posture_management", "name": "Describe Cloud Security Posture Management (CSPM)"},
+        {"id": "security_policies_standards_recommendations", "name": "Describe how security policies, standards, and recommendations improve the cloud security posture"},
+        {"id": "cloud_workload_protection", "name": "Describe enhanced security features provided by cloud workload protection"}
+      ]
+    },
+    {
+      "id": "microsoft_sentinel",
+      "name": "Describe capabilities of Microsoft Sentinel",
+      "domain_id": "microsoft_security_solutions",
+      "leaf_skills": [
+        {"id": "siem_and_soar", "name": "Define the concepts of security information and event management (SIEM) and security orchestration automated response (SOAR)"},
+        {"id": "sentinel_threat_detection_mitigation", "name": "Describe threat detection and mitigation capabilities in Microsoft Sentinel"}
+      ]
+    },
+    {
+      "id": "defender_xdr",
+      "name": "Describe threat protection with Microsoft Defender XDR",
+      "domain_id": "microsoft_security_solutions",
+      "leaf_skills": [
+        {"id": "defender_xdr_services", "name": "Describe Microsoft Defender XDR services"},
+        {"id": "defender_for_office_365", "name": "Describe Microsoft Defender for Office 365"},
+        {"id": "defender_for_endpoint", "name": "Describe Microsoft Defender for Endpoint"},
+        {"id": "defender_for_cloud_apps", "name": "Describe Microsoft Defender for Cloud Apps"},
+        {"id": "defender_for_identity", "name": "Describe Microsoft Defender for Identity"},
+        {"id": "defender_vulnerability_management", "name": "Describe Microsoft Defender Vulnerability Management"},
+        {"id": "defender_threat_intelligence", "name": "Describe Microsoft Defender Threat Intelligence (Defender TI)"},
+        {"id": "defender_portal", "name": "Describe the Microsoft Defender portal"}
+      ]
+    },
+    {
+      "id": "service_trust_privacy",
+      "name": "Describe Microsoft Service Trust Portal and privacy principles",
+      "domain_id": "microsoft_compliance_solutions",
+      "leaf_skills": [
+        {"id": "service_trust_portal_offerings", "name": "Describe the Service Trust Portal offerings"},
+        {"id": "microsoft_privacy_principles", "name": "Describe the privacy principles of Microsoft"}
+      ]
+    },
+    {
+      "id": "purview_compliance_management",
+      "name": "Describe compliance management capabilities of Microsoft Purview",
+      "domain_id": "microsoft_compliance_solutions",
+      "leaf_skills": [
+        {"id": "purview_portal", "name": "Describe the Microsoft Purview portal"},
+        {"id": "compliance_manager", "name": "Describe Compliance Manager"},
+        {"id": "compliance_score", "name": "Describe the uses and benefits of compliance score"}
+      ]
+    },
+    {
+      "id": "purview_information_protection_lifecycle",
+      "name": "Describe information protection, data lifecycle management, and data governance capabilities of Microsoft Purview",
+      "domain_id": "microsoft_compliance_solutions",
+      "leaf_skills": [
+        {"id": "data_classification", "name": "Describe the data classification capabilities"},
+        {"id": "content_and_activity_explorer", "name": "Describe the benefits of Content explorer and Activity explorer"},
+        {"id": "sensitivity_labels_and_policies", "name": "Describe sensitivity labels and sensitivity label policies"},
+        {"id": "data_loss_prevention", "name": "Describe data loss prevention (DLP)"},
+        {"id": "records_management", "name": "Describe records management"},
+        {"id": "retention_policies_labels", "name": "Describe retention policies, retention labels, and retention label policies"}
+      ]
+    },
+    {
+      "id": "purview_insider_risk_ediscovery_audit",
+      "name": "Describe insider risk, eDiscovery, and audit capabilities in Microsoft Purview",
+      "domain_id": "microsoft_compliance_solutions",
+      "leaf_skills": [
+        {"id": "insider_risk_management", "name": "Describe insider risk management"},
+        {"id": "ediscovery", "name": "Describe eDiscovery solutions in Microsoft Purview"},
+        {"id": "audit", "name": "Describe audit solutions in Microsoft Purview"}
+      ]
+    }
   ]
 }

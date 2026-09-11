@@ -103,5 +103,5 @@ def exchange_question(index: int, *, question_text: str, source_page: int) -> di
         "extraction_warnings": [],
         "source_license": "original-fixture",
         "domain": "microsoft_entra",
-        "objective": "entra_identity_access",
+        "objective": "entra_identity_types_and_function",
     }

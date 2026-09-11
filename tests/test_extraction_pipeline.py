@@ -20,7 +20,7 @@ C. Microsoft Defender
 D. Microsoft Intune
 Answer: B
 Explanation: Microsoft Entra ID provides identity and access management.
-Objective: entra_identity_access
+Objective: entra_identity_types_and_function
 Domain: microsoft_entra
 """
 

@@ -30,7 +30,7 @@ def _question(index: int) -> str:
             CHOICES,
             "Answer: B",
             "Explanation: This original fixture names Microsoft Entra ID as the identity service.",
-            "Objective: entra_identity_access",
+            "Objective: entra_identity_types_and_function",
             "Domain: microsoft_entra",
         ]
     )

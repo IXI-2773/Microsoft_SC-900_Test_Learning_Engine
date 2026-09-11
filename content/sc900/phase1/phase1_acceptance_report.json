@@ -1,0 +1,38 @@
+{
+  "approved_count": 50,
+  "bank_validation_issues": [],
+  "compiled_count": 50,
+  "distinct_leaf_count": 47,
+  "domain_counts": {
+    "microsoft_compliance_solutions": 11,
+    "microsoft_entra": 14,
+    "microsoft_security_solutions": 19,
+    "security_compliance_identity": 6
+  },
+  "objective_counts": {
+    "azure_infrastructure_security": 6,
+    "azure_security_management": 4,
+    "defender_xdr": 6,
+    "entra_access_management": 3,
+    "entra_authentication": 4,
+    "entra_identity_protection_governance": 4,
+    "entra_identity_types_and_function": 3,
+    "identity_concepts": 3,
+    "microsoft_sentinel": 3,
+    "purview_compliance_management": 2,
+    "purview_information_protection_lifecycle": 4,
+    "purview_insider_risk_ediscovery_audit": 3,
+    "security_compliance_concepts": 3,
+    "service_trust_privacy": 2
+  },
+  "pending_count": 0,
+  "probe_suitability_counts": {
+    "eligible": 49,
+    "train_only": 1
+  },
+  "quality_errors": [],
+  "semantic_family_count": 48,
+  "source_inventory_errors": [],
+  "status": "PHASE_1_STRUCTURALLY_ACCEPTED",
+  "withheld_count": 0
+}
