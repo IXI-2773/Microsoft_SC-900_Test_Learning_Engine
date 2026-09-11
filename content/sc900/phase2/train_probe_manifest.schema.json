@@ -1,33 +1,153 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "sc900.train-probe-manifest.schema/v1",
   "$comment": "DESIGN-ONLY Phase-2 contract. No runtime selector, scheduler, renderer, history path, analytics path, restore path, or export path is authorized to consume this schema until Gate 3 or later implementation authority explicitly permits it.",
-  "title": "SC-900 TRAIN/PROBE manifest design contract",
-  "type": "object",
+  "$id": "sc900.train-probe-manifest.schema/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
-  "required": [
-    "schema_version",
-    "partition_epoch",
-    "blueprint_version",
-    "items"
-  ],
   "properties": {
-    "schema_version": {
-      "const": "sc900.train-probe-manifest/v1"
-    },
-    "partition_epoch": {
-      "type": "string",
-      "minLength": 1
-    },
     "blueprint_version": {
-      "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "type": "string"
     },
     "items": {
-      "type": "array",
       "items": {
-        "type": "object",
         "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "role": {
+                  "const": "TRAIN"
+                }
+              },
+              "required": [
+                "role"
+              ]
+            },
+            "then": {
+              "properties": {
+                "family_state": {
+                  "const": "resolved"
+                },
+                "promotion_status": {
+                  "const": "approved"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "role": {
+                  "const": "PROBE"
+                }
+              },
+              "required": [
+                "role"
+              ]
+            },
+            "then": {
+              "properties": {
+                "family_state": {
+                  "const": "resolved"
+                },
+                "future_probe_suitability": {
+                  "const": "eligible"
+                },
+                "promotion_status": {
+                  "const": "approved"
+                }
+              }
+            }
+          }
+        ],
+        "properties": {
+          "assignment_rationale": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "assignment_receipt": {
+            "additionalProperties": false,
+            "properties": {
+              "override_type": {
+                "enum": [
+                  "none",
+                  "family_merge",
+                  "family_split",
+                  "role_change"
+                ]
+              },
+              "prior_family_ids": {
+                "items": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": "array",
+                "uniqueItems": true
+              },
+              "reviewed_at": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "reviewer": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "reviewer",
+              "reviewed_at"
+            ],
+            "type": "object"
+          },
+          "blueprint_version": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "family_state": {
+            "enum": [
+              "resolved",
+              "unknown",
+              "disputed",
+              "needs_review"
+            ]
+          },
+          "future_probe_suitability": {
+            "enum": [
+              "eligible",
+              "train_only",
+              "needs_review"
+            ]
+          },
+          "promotion_status": {
+            "enum": [
+              "approved",
+              "pending",
+              "withheld"
+            ]
+          },
+          "question_id": {
+            "description": "Immutable canonical question identifier.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "TRAIN",
+              "PROBE",
+              "UNASSIGNED"
+            ]
+          },
+          "semantic_family_id": {
+            "description": "Conservative transfer/leakage family identifier. Unknown family membership must fail closed outside PROBE.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "source_family_id": {
+            "description": "Official-source family identifier used for sibling-source leakage review.",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
         "required": [
           "question_id",
           "semantic_family_id",
@@ -40,82 +160,24 @@
           "assignment_receipt",
           "blueprint_version"
         ],
-        "properties": {
-          "question_id": {
-            "type": "string",
-            "minLength": 1,
-            "description": "Immutable canonical question identifier."
-          },
-          "semantic_family_id": {
-            "type": "string",
-            "minLength": 1,
-            "description": "Conservative transfer/leakage family identifier. Unknown family membership must fail closed outside PROBE."
-          },
-          "source_family_id": {
-            "type": "string",
-            "minLength": 1,
-            "description": "Official-source family identifier used for sibling-source leakage review."
-          },
-          "role": {
-            "enum": ["TRAIN", "PROBE", "UNASSIGNED"]
-          },
-          "promotion_status": {
-            "enum": ["approved", "pending", "withheld"]
-          },
-          "future_probe_suitability": {
-            "enum": ["eligible", "train_only", "needs_review"]
-          },
-          "family_state": {
-            "enum": ["resolved", "unknown", "disputed", "needs_review"]
-          },
-          "assignment_rationale": {
-            "type": "string",
-            "minLength": 1
-          },
-          "assignment_receipt": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": ["reviewer", "reviewed_at"],
-            "properties": {
-              "reviewer": {
-                "type": "string",
-                "minLength": 1
-              },
-              "reviewed_at": {
-                "type": "string",
-                "minLength": 1
-              },
-              "override_type": {
-                "enum": ["none", "family_merge", "family_split", "role_change"]
-              },
-              "prior_family_ids": {
-                "type": "array",
-                "items": {"type": "string", "minLength": 1},
-                "uniqueItems": true
-              }
-            }
-          },
-          "blueprint_version": {
-            "type": "string",
-            "minLength": 1
-          }
-        },
-        "allOf": [
-          {
-            "if": {
-              "properties": {"role": {"const": "PROBE"}},
-              "required": ["role"]
-            },
-            "then": {
-              "properties": {
-                "promotion_status": {"const": "approved"},
-                "future_probe_suitability": {"const": "eligible"},
-                "family_state": {"const": "resolved"}
-              }
-            }
-          }
-        ]
-      }
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "partition_epoch": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "sc900.train-probe-manifest/v1"
     }
-  }
+  },
+  "required": [
+    "schema_version",
+    "partition_epoch",
+    "blueprint_version",
+    "items"
+  ],
+  "title": "SC-900 TRAIN/PROBE manifest design contract",
+  "type": "object"
 }

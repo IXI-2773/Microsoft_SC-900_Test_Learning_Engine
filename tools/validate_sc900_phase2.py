@@ -41,6 +41,7 @@ EXPECTED_PHASE2_OBJECTIVE_COUNTS = {
 }
 MANIFEST_ROLES = {"TRAIN", "PROBE", "UNASSIGNED"}
 RESOLVED_FAMILY_STATE = "resolved"
+MANIFEST_SCHEMA_VERSION = "sc900.train-probe-manifest/v1"
 
 
 def _error(code: str, message: str, **context: Any) -> dict[str, Any]:
@@ -89,7 +90,34 @@ def validate_phase2_set(
             )
         )
 
-    phase2_id_set = {normalize_text(value) for value in phase2_question_ids if normalize_text(value)}
+    if pending:
+        quality_errors.append(
+            _error(
+                "PENDING_RECORDS_PRESENT",
+                "Phase 2 terminal acceptance requires zero pending cumulative questions",
+                actual=len(pending),
+            )
+        )
+    if withheld:
+        quality_errors.append(
+            _error(
+                "WITHHELD_RECORDS_PRESENT",
+                "Phase 2 terminal acceptance requires zero withheld cumulative questions",
+                actual=len(withheld),
+            )
+        )
+
+    phase2_id_list = [normalize_text(value) for value in phase2_question_ids if normalize_text(value)]
+    phase2_id_set = set(phase2_id_list)
+    if len(phase2_id_list) != 50 or len(phase2_id_set) != 50:
+        quality_errors.append(
+            _error(
+                "PHASE2_BATCH_ID_SET_INVALID",
+                "Phase 2 authored batches must contain exactly 50 unique question IDs",
+                actual_rows=len(phase2_id_list),
+                unique_ids=len(phase2_id_set),
+            )
+        )
     approved_id_set = {question_id for question_id in ids if question_id}
     phase2_new_approved_count = len(phase2_id_set & approved_id_set)
     if phase2_new_approved_count != 50:
@@ -209,10 +237,22 @@ def validate_phase2_set(
 
 def validate_train_probe_manifest(manifest: Mapping[str, Any]) -> list[dict[str, Any]]:
     errors: list[dict[str, Any]] = []
-    if not normalize_text(manifest.get("schema_version")):
+    schema_version = normalize_text(manifest.get("schema_version"))
+    if not schema_version:
         errors.append(_error("MISSING_MANIFEST_SCHEMA_VERSION", "manifest schema_version is required"))
+    elif schema_version != MANIFEST_SCHEMA_VERSION:
+        errors.append(
+            _error(
+                "INVALID_MANIFEST_SCHEMA_VERSION",
+                "manifest schema_version must match the frozen Phase-2 contract",
+                expected=MANIFEST_SCHEMA_VERSION,
+                actual=schema_version,
+            )
+        )
     if not normalize_text(manifest.get("partition_epoch")):
         errors.append(_error("MISSING_PARTITION_EPOCH", "manifest partition_epoch is required"))
+    if not normalize_text(manifest.get("blueprint_version")):
+        errors.append(_error("MISSING_MANIFEST_BLUEPRINT_VERSION", "manifest blueprint_version is required"))
 
     raw_items = manifest.get("items")
     items = list(raw_items) if isinstance(raw_items, list) else []
@@ -231,6 +271,9 @@ def validate_train_probe_manifest(manifest: Mapping[str, Any]) -> list[dict[str,
         promotion_status = normalize_text(raw_item.get("promotion_status")).lower()
         probe_suitability = normalize_text(raw_item.get("future_probe_suitability"))
         family_state = normalize_text(raw_item.get("family_state")).lower()
+        blueprint_version = normalize_text(raw_item.get("blueprint_version"))
+        assignment_rationale = normalize_text(raw_item.get("assignment_rationale"))
+        assignment_receipt = raw_item.get("assignment_receipt")
 
         if not question_id:
             errors.append(_error("MISSING_MANIFEST_QUESTION_ID", "question_id is required", index=index))
@@ -261,6 +304,14 @@ def validate_train_probe_manifest(manifest: Mapping[str, Any]) -> list[dict[str,
                     question_id=question_id,
                 )
             )
+        if not blueprint_version:
+            errors.append(_error("MISSING_ITEM_BLUEPRINT_VERSION", "item blueprint_version is required", question_id=question_id))
+        if not assignment_rationale:
+            errors.append(_error("MISSING_ASSIGNMENT_RATIONALE", "assignment_rationale is required", question_id=question_id))
+        if not isinstance(assignment_receipt, Mapping):
+            errors.append(_error("MISSING_ASSIGNMENT_RECEIPT", "assignment_receipt must be an object", question_id=question_id))
+        elif not normalize_text(assignment_receipt.get("reviewer")) or not normalize_text(assignment_receipt.get("reviewed_at")):
+            errors.append(_error("INCOMPLETE_ASSIGNMENT_RECEIPT", "assignment_receipt requires reviewer and reviewed_at", question_id=question_id))
         if role not in MANIFEST_ROLES:
             errors.append(
                 _error(
@@ -272,6 +323,12 @@ def validate_train_probe_manifest(manifest: Mapping[str, Any]) -> list[dict[str,
             )
         elif semantic_family_id and role in {"TRAIN", "PROBE"}:
             roles_by_family[semantic_family_id].add(role)
+
+        if role == "TRAIN":
+            if promotion_status != "approved":
+                errors.append(_error("TRAIN_REQUIRES_APPROVED", "TRAIN assignment requires approved content", question_id=question_id))
+            if family_state != RESOLVED_FAMILY_STATE:
+                errors.append(_error("TRAIN_REQUIRES_RESOLVED_FAMILY", "TRAIN assignment requires resolved semantic-family membership", question_id=question_id, family_state=family_state))
 
         if role == "PROBE":
             if promotion_status != "approved":
