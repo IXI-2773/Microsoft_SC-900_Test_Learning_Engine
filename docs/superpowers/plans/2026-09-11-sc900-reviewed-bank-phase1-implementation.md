@@ -34,7 +34,7 @@
 
 The implementation should converge on these responsibilities:
 
-- `config/certifications/sc900-2026.json` — authoritative four-domain taxonomy, 12 skill-group objectives, and 58 July-28-2026 blueprint leaves.
+- `config/certifications/sc900-2026.json` — authoritative four-domain taxonomy, 14 skill-group objectives, and 58 July-28-2026 blueprint leaves.
 - `ingestion/bank_quality.py` — Phase-1 quality/metadata validation only; no scheduler logic.
 - `ingestion/models.py` — keep canonicalization generic; only minimal changes if needed to preserve approved Phase-1 metadata.
 - `ingestion/importer.py` — preserve quality metadata in compiled candidate banks; keep approval gating unchanged.
@@ -63,7 +63,7 @@ The committed JSONL batches remain the human-reviewable authoring source. The re
 - Consumes: existing `load_taxonomy()` from `ingestion.models`.
 - Produces: domain `objectives` lists compatible with existing `_taxonomy_objectives(...)`, plus top-level `objective_details` records whose `leaf_skills` are used by later quality validation.
 
-The taxonomy must keep the four existing domain IDs but replace the four coarse objectives with these 12 objective IDs:
+The taxonomy must keep the four existing domain IDs but replace the four coarse objectives with these 14 objective IDs:
 
 ```text
 security_compliance_identity:
@@ -447,7 +447,7 @@ For each objective/leaf, record the specific official Learn module/product-doc U
 
 Tests must assert that:
 
-- every one of the 12 objectives has at least one official source entry;
+- every one of the 14 objectives has at least one official source entry;
 - every source host is official Microsoft;
 - no source URL is a Practice Assessment or module assessment;
 - every referenced leaf ID exists in the refined taxonomy;
@@ -1041,7 +1041,7 @@ Do not claim `PHASE_1_STRUCTURALLY_ACCEPTED` unless the validator actually emitt
 Document:
 
 - Microsoft SC-900 skills effective July 28, 2026;
-- 12 objective groups / 58 taxonomy leaves;
+- 14 objective groups / 58 taxonomy leaves;
 - official-source-only policy;
 - no assessment/exam-dump reuse;
 - actual source inventory hash.

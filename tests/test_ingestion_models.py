@@ -9,7 +9,7 @@ class IngestionModelTests(unittest.TestCase):
         self.record = {
             "exam": "SC-900",
             "domain": "microsoft_entra",
-            "objective": "entra_identity_access",
+            "objective": "entra_identity_types_and_function",
             "difficulty": "beginner",
             "type": "multiple_choice",
             "stem": "Which service provides cloud identity management?",

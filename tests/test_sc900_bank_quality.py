@@ -279,7 +279,7 @@ class SC900BankQualityTests(unittest.TestCase):
     def test_complete_phase1_set_requires_exact_50_and_frozen_allocations(self):
         questions, reviews = approved_phase1_set(self.taxonomy)
         result = validate_phase1_set(questions, self.taxonomy, reviews)
-        self.assertEqual("PHASE_1_ACCEPTED", result["status"])
+        self.assertEqual("PHASE_1_STRUCTURALLY_ACCEPTED", result["status"])
         self.assertEqual(50, result["approved_count"])
         self.assertEqual(EXPECTED_DOMAIN_COUNTS, result["domain_counts"])
         self.assertEqual(EXPECTED_OBJECTIVE_COUNTS, result["objective_counts"])

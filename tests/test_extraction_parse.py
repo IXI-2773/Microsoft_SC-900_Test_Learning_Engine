@@ -22,7 +22,7 @@ C. Microsoft Defender
 D. Microsoft Intune
 Answer: B
 Explanation: Microsoft Entra ID provides identity and access management.
-Objective: entra_identity_access
+Objective: entra_identity_types_and_function
 Domain: microsoft_entra
 """
 
@@ -37,7 +37,7 @@ class ParseTests(unittest.TestCase):
         self.assertEqual(["B"], list(record.source_answer))
         self.assertIn("Entra ID", record.source_explanation or "")
         self.assertEqual(1, record.source_page)
-        self.assertEqual("entra_identity_access", record.objective)
+        self.assertEqual("entra_identity_types_and_function", record.objective)
 
     def test_supports_alternate_question_and_choice_markers(self) -> None:
         text = """
@@ -48,7 +48,7 @@ C: Microsoft Defender
 D. Microsoft Sentinel
 Correct answer: B
 Rationale: Conditional Access is an Entra capability.
-Objective: entra_identity_access
+Objective: entra_identity_types_and_function
 Domain: microsoft_entra
 """
         records = parse_question_blocks(_pages(text.strip()))
@@ -64,7 +64,7 @@ B. Microsoft Purview
 C. Microsoft Defender
 D. Microsoft Intune
 Explanation: The source does not print a key.
-Objective: entra_identity_access
+Objective: entra_identity_types_and_function
 Domain: microsoft_entra
 """
         records = parse_question_blocks(_pages(text.strip()))
@@ -83,7 +83,7 @@ C. Microsoft Intune
 D. Microsoft Sentinel
 Answer: A
 Explanation: Duplicate labels are invalid.
-Objective: entra_identity_access
+Objective: entra_identity_types_and_function
 Domain: microsoft_entra
 """
         records = parse_question_blocks(_pages(text.strip()))
@@ -91,7 +91,7 @@ Domain: microsoft_entra
 
     def test_multi_page_question_keeps_start_and_end_pages(self) -> None:
         page_one = "Question 4 Which service protects identities?\nA. Microsoft Purview\nB. Microsoft Entra ID"
-        page_two = "C. Microsoft Defender\nD. Microsoft Intune\nAnswer: B\nExplanation: Entra ID.\nObjective: entra_identity_access\nDomain: microsoft_entra"
+        page_two = "C. Microsoft Defender\nD. Microsoft Intune\nAnswer: B\nExplanation: Entra ID.\nObjective: entra_identity_types_and_function\nDomain: microsoft_entra"
         records = parse_question_blocks(_pages(page_one, page_two))
         self.assertEqual(1, len(records))
         self.assertEqual(1, records[0].source_page)

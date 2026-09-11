@@ -2,11 +2,16 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from collections import Counter
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from ingestion.bank_quality import phase1_review_status, validate_phase1_question
 from ingestion.models import ValidationError, load_taxonomy, normalize_text
@@ -339,7 +344,7 @@ def validate_phase1_set(
             ).items()
         )
     )
-    status = "PHASE_1_ACCEPTED" if not quality_errors else "PHASE_1_INCOMPLETE"
+    status = "PHASE_1_STRUCTURALLY_ACCEPTED" if not quality_errors else "PHASE_1_INCOMPLETE"
     return {
         "status": status,
         "approved_count": len(approved),
@@ -429,12 +434,12 @@ def main() -> int:
     if source_errors or bank_issues or result["quality_errors"]:
         result["status"] = "PHASE_1_INCOMPLETE"
     else:
-        result["status"] = "PHASE_1_ACCEPTED"
+        result["status"] = "PHASE_1_STRUCTURALLY_ACCEPTED"
 
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.report.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(result, indent=2, sort_keys=True))
-    return 0 if result["status"] == "PHASE_1_ACCEPTED" else 1
+    return 0 if result["status"] == "PHASE_1_STRUCTURALLY_ACCEPTED" else 1
 
 
 if __name__ == "__main__":
