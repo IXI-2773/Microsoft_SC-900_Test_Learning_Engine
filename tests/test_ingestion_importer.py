@@ -13,7 +13,7 @@ def question(index: int, *, stem: str | None = None, page: int | None = None):
     return {
         "exam": "SC-900",
         "domain": "microsoft_entra",
-        "objective": "entra_identity_access",
+        "objective": "entra_access_management",
         "difficulty": "beginner",
         "type": "multiple_choice",
         "stem": stem or f"Which Entra capability applies rule {index}?",
