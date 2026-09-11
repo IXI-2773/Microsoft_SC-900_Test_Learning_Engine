@@ -1,0 +1,109 @@
+name: Phase 3 Task 3 provenance correction
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/phase3-task3-provenance-correction.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  correct-provenance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact Phase 3 allocation head
+        uses: actions/checkout@v4
+        with:
+          ref: 6c2158bb65995715a2d9cc57d17a6361386e38cb
+          fetch-depth: 0
+          path: phase3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Tighten Insider Risk provenance join
+        shell: bash
+        run: |
+          cd phase3
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          inventory_path = Path('content/sc900/phase3/source_inventory.json')
+          inventory = json.loads(inventory_path.read_text(encoding='utf-8'))
+          target = next(row for row in inventory['sources'] if row['source_id'] == 'question-source-54a1385da82f')
+          target['leaf_ids'] = [leaf for leaf in target['leaf_ids'] if leaf != 'insider_risk_management']
+          inventory_path.write_text(json.dumps(inventory, indent=2) + '\n', encoding='utf-8')
+
+          allocation_path = Path('content/sc900/phase3/authoring_allocation.json')
+          allocation = json.loads(allocation_path.read_text(encoding='utf-8'))
+          changed = 0
+          for item in allocation['items']:
+              if item['blueprint_leaf_id'] == 'insider_risk_management':
+                  item['source_inventory_id'] = 'question-source-2ed5cc704ae0'
+                  item['source_url'] = 'https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions/'
+                  item['source_family_id'] = 'learn-purview-insider-risk'
+                  changed += 1
+          if changed != 2:
+              raise SystemExit(f'expected exactly 2 insider-risk allocation rows, got {changed}')
+          allocation_path.write_text(json.dumps(allocation, indent=2) + '\n', encoding='utf-8')
+          PY
+
+      - name: Verify allocation and actual source inventory
+        shell: bash
+        run: |
+          cd phase3
+          python -m unittest tests.test_sc900_phase3_authoring_allocation tests.test_sc900_phase3 -v
+          python - <<'PY'
+          import json
+          from ingestion.models import load_taxonomy
+          from tools.validate_sc900_phase3 import validate_phase3_source_inventory
+          inventory = json.load(open('content/sc900/phase3/source_inventory.json', encoding='utf-8'))
+          errors = validate_phase3_source_inventory(inventory, load_taxonomy())
+          if errors:
+              raise SystemExit(errors)
+          print('ACTUAL_PHASE3_SOURCE_INVENTORY=VALID')
+          PY
+
+      - name: Commit only provenance corrections
+        shell: bash
+        run: |
+          cd phase3
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add content/sc900/phase3/source_inventory.json content/sc900/phase3/authoring_allocation.json
+          actual=$(git diff --cached --name-only | sort)
+          expected=$(printf '%s\n' content/sc900/phase3/authoring_allocation.json content/sc900/phase3/source_inventory.json | sort)
+          test "$actual" = "$expected"
+          git commit -m 'fix: tighten Phase 3 insider-risk provenance'
+          git push origin HEAD:implementation/sc900-reviewed-bank-phase3
+
+      - name: Remove one-shot workflow
+        if: always()
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: cleanup
+          fetch-depth: 2
+
+      - name: Self-clean main
+        if: always()
+        shell: bash
+        run: |
+          cd cleanup
+          expected_parent='b54530ec20f797bac1c89cb8aa970b6682adc222'
+          actual_parent=$(git rev-parse HEAD^)
+          if [ "$actual_parent" != "$expected_parent" ]; then
+            echo "Unexpected main parent: $actual_parent"
+            exit 1
+          fi
+          rm .github/workflows/phase3-task3-provenance-correction.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/workflows/phase3-task3-provenance-correction.yml
+          git commit -m 'chore: remove Phase 3 Task 3 provenance runner'
+          git push origin HEAD:main
