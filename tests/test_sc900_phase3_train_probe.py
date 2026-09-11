@@ -24,6 +24,10 @@ RUNTIME_CONSUMER_ALLOWLIST = {
     "tools/build_sc900_phase3.py",
     "tools/validate_sc900_phase3.py",
     "tests/test_sc900_phase3_train_probe.py",
+    "cand01r3_partition.py",
+    "cand01r3_paths.py",
+    "tests/test_cand01r3_partition.py",
+    "tests/cand01r3_fixtures.py",
 }
 
 
