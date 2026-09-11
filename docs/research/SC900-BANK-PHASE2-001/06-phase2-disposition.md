@@ -78,11 +78,13 @@ Verified results:
 - repository quality checks (`ruff`, `black --check`, `mypy`): PASS;
 - deterministic committed rebuild verification: `REPRODUCIBLE`.
 
-The correction runner then removed transient correction helpers/workflows, committed the remaining verified Phase-2 state as:
+The correction runner then removed transient correction helpers/workflows and committed the remaining verified Phase-2 evidence state as:
 
 `414b9be4d7cc8d7fd97f6beaa52e353c16bb16e2`
 
-No separate GitHub check-run is attached directly to that commit SHA; the verification authority for this disposition is the successful one-shot run above plus the committed deterministic build receipt.
+The terminal disposition itself was added afterward as a documentation-only closure commit. That later documentation commit does not change the tested bank, validator, build receipt, semantic-family audit, source inventory, or runtime code.
+
+No separate GitHub check-run is attached directly to `414b9be4d7cc8d7fd97f6beaa52e353c16bb16e2`; the verification authority for the evidence state is the successful one-shot run above plus the committed deterministic build receipt.
 
 ## Runtime Boundary
 
