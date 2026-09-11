@@ -178,8 +178,9 @@ class SC900Phase2Tests(unittest.TestCase):
     def test_phase2_set_rejects_duplicate_id_and_missing_review(self):
         module = _load_phase2_module(self)
         questions, reviews, phase2_ids = _complete_phase2_set(self.taxonomy)
+        missing_review_id = questions[0]["id"]
         questions[-1]["id"] = questions[-2]["id"]
-        reviews = reviews[:-1]
+        reviews = [row for row in reviews if row["question_id"] != missing_review_id]
         result = module.validate_phase2_set(questions, self.taxonomy, reviews, phase2_ids)
         codes = {row["code"] for row in result["quality_errors"]}
         self.assertEqual("PHASE_2_INCOMPLETE", result["status"])
