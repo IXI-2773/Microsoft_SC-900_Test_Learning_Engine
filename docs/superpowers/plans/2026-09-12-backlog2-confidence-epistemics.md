@@ -28,10 +28,10 @@
 - Modify: `progress_store.py`
 - Test: `tests/test_backlog2_confidence_epistemics.py`
 
-- [ ] **Step 1: Write failing tests** for B2-004, B2-005, B2-008–B2-014, B2-031–B2-034.
-- [ ] **Step 2: Run focused tests RED.**
-- [ ] **Step 3: Implement `normalize_confidence` → Unknown, observed-only require, miss-reason/recall-failure/review-grade contracts.**
-- [ ] **Step 4: Run those tests GREEN.**
+- [x] **Step 1: Write failing tests** for B2-004, B2-005, B2-008–B2-014, B2-031–B2-034.
+- [x] **Step 2: Run focused tests RED.**
+- [x] **Step 3: Implement `normalize_confidence` → Unknown, observed-only require, miss-reason/recall-failure/review-grade contracts.**
+- [x] **Step 4: Run those tests GREEN.**
 
 ### Task 2: Capture-before-commit lifecycle
 
@@ -39,10 +39,10 @@
 - Modify: `app_question_flow_mixin.py`
 - Test: `tests/test_backlog2_confidence_epistemics.py`
 
-- [ ] **Step 1: Write failing tests** for B2-001–B2-003, B2-006, B2-007, B2-039, B2-041, B2-043.
-- [ ] **Step 2: Run focused tests RED.**
-- [ ] **Step 3: Restore `_show_feedback_popover`. Stage then capture. Keyboard cannot bypass. Exam/PROBE commit Unknown.**
-- [ ] **Step 4: Run those tests GREEN.** Keep existing regression stubs of `_show_feedback_popover` working.
+- [x] **Step 1: Write failing tests** for B2-001–B2-003, B2-006, B2-007, B2-039, B2-041, B2-043.
+- [x] **Step 2: Run focused tests RED.**
+- [x] **Step 3: Restore `_show_feedback_popover`. Stage then capture. Keyboard cannot bypass. Exam/PROBE commit Unknown.**
+- [x] **Step 4: Run those tests GREEN.** Keep existing regression stubs of `_show_feedback_popover` working.
 
 ### Task 3: Canonical answer-event identity and correction authority
 
@@ -50,11 +50,11 @@
 - Modify: `confidence_epistemics.py`, `session_models.py`, `progress_store.py`, `app.py`, `app_question_flow_mixin.py`, `app_session_persistence_mixin.py`
 - Test: `tests/test_backlog2_confidence_epistemics.py`
 
-- [ ] **Step 1: Write failing tests** for B2-015–B2-025, B2-029, B2-035–B2-038, B2-040.
-- [ ] **Step 2: Run focused tests RED.**
-- [ ] **Step 3: Mint `answer_event_id` at commit; copy into all representations; implement `correct_answer_event_confidence` with history rebuild.**
-- [ ] **Step 4: Route retag and super-confident through that authority.**
-- [ ] **Step 5: Run those tests GREEN.**
+- [x] **Step 1: Write failing tests** for B2-015–B2-025, B2-029, B2-035–B2-038, B2-040.
+- [x] **Step 2: Run focused tests RED.**
+- [x] **Step 3: Mint `answer_event_id` at commit; copy into all representations; implement `correct_answer_event_confidence` with history rebuild.**
+- [x] **Step 4: Route retag and super-confident through that authority.**
+- [x] **Step 5: Run those tests GREEN.**
 
 ### Task 4: Downstream consumers and restore
 
@@ -62,12 +62,12 @@
 - Modify: `app_game_mixin.py`, `app_analytics_mixin.py`, `app_question_render_mixin.py`, `app_session_builder_mixin.py` only as required
 - Test: `tests/test_backlog2_confidence_epistemics.py`
 
-- [ ] **Step 1: Write failing tests** for B2-026–B2-028, B2-030.
-- [ ] **Step 2: Neutral Unknown weighting. Invalidate Smart Practice/analytics caches. Recompute current-session quests from history.**
-- [ ] **Step 3: Run GREEN.**
+- [x] **Step 1: Write failing tests** for B2-026–B2-028, B2-030.
+- [x] **Step 2: Neutral Unknown weighting. Invalidate Smart Practice/analytics caches. Recompute current-session quests from history.**
+- [x] **Step 3: Run GREEN.**
 
 ### Task 5: Verification, receipt, and draft PR
 
-- [ ] **Step 1: Read-only verification on a clean tree.** Include BACKLOG-1 segments, BACKLOG-2 tests, Gate-3 CAND tests, full suite, quality gates.
-- [ ] **Step 2: Write `docs/research/SC900-BACKLOG-2-CONFIDENCE-EPISTEMICS-001/01-CONFIDENCE-INTEGRITY-CLOSURE.md`.**
+- [x] **Step 1: Read-only verification on a clean tree.** Include BACKLOG-1 segments, BACKLOG-2 tests, Gate-3 CAND tests, full suite, quality gates.
+- [x] **Step 2: Write `docs/research/SC900-BACKLOG-2-CONFIDENCE-EPISTEMICS-001/01-CONFIDENCE-INTEGRITY-CLOSURE.md`.**
 - [ ] **Step 3: Open a new draft PR from the BACKLOG-2 branch onto `publication/sc900-backlog1-without-measurement`. Do not merge. Do not retarget PR #19.**
