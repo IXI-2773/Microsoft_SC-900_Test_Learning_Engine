@@ -6,12 +6,12 @@ Do not add questions unless package B finds a specific material coverage deficie
 
 ## A. BOOK / ARTIFACT CLEANUP
 
+Completed on `stabilization/sc900-final-bank-audit-debug`. See `docs/research/SC900-FINAL-BANK-AUDIT-001/01-CLEANUP-RECEIPT.md`.
+
 - `BOOK_SUPPLEMENT_REQUIRED = NO`
 - `BOOK_SUPPLEMENT_STARTED = NO`
+- `ACTIVE_BOOK_HANDOFF = NO`
 - Do not process the book.
-- Delete or archive the parked book handoff, one-shot corpus capture scripts if they are no longer needed, unused builder constants, placeholder artifacts, and generated files that should not be source authority.
-- Keep PR #13 frozen artifacts untouched.
-- Keep the default launch bank untouched unless a later activation package says otherwise.
 
 ## B. FULL BANK QUALITY + SUFFICIENCY AUDIT
 
