@@ -28,14 +28,28 @@ jobs:
       - name: Install exact Black version
         run: python -m pip install 'black==25.12.0'
 
-      - name: Format only the two quality-gate files
-        run: python -m black cand01r3_runtime.py cand01r3_protocol.py
-
-      - name: Prove formatting is syntax-only and limited to target files
+      - name: Preserve original ASTs and format only target files
         run: |
-          git diff --name-only
+          cp cand01r3_runtime.py /tmp/cand01r3_runtime.py.before
+          cp cand01r3_protocol.py /tmp/cand01r3_protocol.py.before
+          python -m black cand01r3_runtime.py cand01r3_protocol.py
+
+      - name: Prove formatting is AST-equivalent and limited to target files
+        run: |
           test "$(git diff --name-only | sort)" = $'cand01r3_protocol.py\ncand01r3_runtime.py'
           python -m compileall -q cand01r3_runtime.py cand01r3_protocol.py
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+
+          for name in ('cand01r3_runtime.py', 'cand01r3_protocol.py'):
+              before = Path('/tmp') / f'{name}.before'
+              after = Path(name)
+              before_ast = ast.dump(ast.parse(before.read_text(encoding='utf-8')), include_attributes=False)
+              after_ast = ast.dump(ast.parse(after.read_text(encoding='utf-8')), include_attributes=False)
+              assert before_ast == after_ast, name
+              print(f'AST_EQUIVALENT={name}')
+          PY
 
       - name: Upload formatted files
         uses: actions/upload-artifact@v4
