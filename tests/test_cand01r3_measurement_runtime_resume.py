@@ -42,6 +42,7 @@ _RuntimeResumeTests.tearDown = _tear_down_with_controlled_calendar
 _RuntimeResumeTests._finish_days = _finish_days_with_calendar_progression
 
 Cand01R3MeasurementRuntimeResumeTests = _RuntimeResumeTests
+del _RuntimeResumeTests
 
 
 if __name__ == "__main__":
