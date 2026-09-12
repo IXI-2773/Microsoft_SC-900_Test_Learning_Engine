@@ -7,6 +7,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from question_identity import (
+    ProgressIdentityError,
+    migrate_legacy_progress_keys,
+    registered_progress_identity_bank,
+)
 from storage_utils import backup_bad_json_file, load_json_or_backup, safe_write_json
 
 
@@ -16,7 +21,41 @@ class RuntimePersistence:
     backup_dir: Path
 
     def load_json_with_backup(self, path: Path):
-        return load_json_or_backup(path)
+        target = Path(path)
+        if target.name.endswith("_progress.json"):
+            return self.load_progress_with_identity_migration(target)
+        return load_json_or_backup(target)
+
+    def load_progress_with_identity_migration(self, path: Path, questions=None):
+        target = Path(path)
+        data, backup, err = load_json_or_backup(target)
+        if err or not isinstance(data, dict):
+            return data, backup, err
+
+        authority = tuple(questions) if questions is not None else registered_progress_identity_bank()
+        try:
+            migrated, changed = migrate_legacy_progress_keys(data, authority)
+        except ProgressIdentityError as exc:
+            logging.warning("Progress identity migration rejected: %s", exc)
+            return None, None, exc
+
+        if not changed:
+            return migrated, None, None
+
+        migration_backup = self.backup_progress_file(target, suffix="before_identity_migration_v1")
+        if migration_backup is None:
+            exc = OSError("Could not create pre-migration progress backup.")
+            logging.warning("Progress identity migration aborted: %s", exc)
+            return None, None, exc
+
+        try:
+            self.write_json(target, migrated)
+        except OSError as exc:
+            logging.warning("Progress identity migration write failed: %s", exc)
+            return None, migration_backup, exc
+
+        logging.info("Migrated progress identity to canonical question IDs: %s", target)
+        return migrated, migration_backup, None
 
     def write_json(self, path: Path, payload: Any, *, indent: int = 2) -> None:
         safe_write_json(path, payload, indent=indent)
