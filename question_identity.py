@@ -42,15 +42,19 @@ def canonical_question_id(question: Mapping[str, Any] | str | None) -> str:
 
 def require_canonical_question_id(question: Mapping[str, Any] | str | None) -> str:
     value = canonical_question_id(question)
-    if not value:
-        raise ProgressIdentityError(MISSING_CANONICAL_QUESTION_ID)
-    return value
+    if value:
+        return value
+    if isinstance(question, Mapping) and set(question) == {"question_number"}:
+        return resolve_registered_question_id_from_number(question.get("question_number"))
+    raise ProgressIdentityError(MISSING_CANONICAL_QUESTION_ID)
 
 
 def validate_canonical_question_ids(questions: Iterable[Mapping[str, Any]]) -> None:
     seen_ids: set[str] = set()
     for question in questions:
-        question_id = require_canonical_question_id(question)
+        question_id = canonical_question_id(question)
+        if not question_id:
+            raise ProgressIdentityError(MISSING_CANONICAL_QUESTION_ID)
         if question_id in seen_ids:
             raise ProgressIdentityError(DUPLICATE_CANONICAL_QUESTION_ID, question_id)
         seen_ids.add(question_id)
@@ -72,7 +76,7 @@ def build_number_to_question_id_index(questions: Iterable[Mapping[str, Any]]) ->
     validate_canonical_question_ids(materialized)
     by_number: dict[str, str] = {}
     for question in materialized:
-        question_id = require_canonical_question_id(question)
+        question_id = canonical_question_id(question)
         raw_number = question.get("question_number")
         if raw_number in (None, ""):
             continue
@@ -108,9 +112,15 @@ def migrate_legacy_progress_keys(
     if schema == "canonical":
         return copy.deepcopy(dict(payload)), False
 
-    index = build_number_to_question_id_index(questions)
     legacy_questions = payload.get("questions")
     assert isinstance(legacy_questions, Mapping)
+    if not legacy_questions:
+        migrated = copy.deepcopy(dict(payload))
+        migrated["progress_identity_version"] = PROGRESS_IDENTITY_VERSION
+        migrated["question_identity"] = PROGRESS_IDENTITY_KIND
+        return migrated, True
+
+    index = build_number_to_question_id_index(questions)
     migrated_questions: dict[str, Any] = {}
     for legacy_key, record in legacy_questions.items():
         raw_key = str(legacy_key).strip()
@@ -144,3 +154,22 @@ def register_progress_identity_bank(questions: Iterable[Mapping[str, Any]]) -> N
 
 def registered_progress_identity_bank() -> tuple[Mapping[str, Any], ...]:
     return _registered_bank_questions
+
+
+def resolve_registered_question_id_from_number(question_number: Any) -> str:
+    try:
+        target = int(question_number)
+    except (TypeError, ValueError) as exc:
+        raise ProgressIdentityError(MISSING_CANONICAL_QUESTION_ID) from exc
+    matches = {
+        canonical_question_id(question)
+        for question in _registered_bank_questions
+        if question.get("question_number") not in (None, "")
+        and int(question.get("question_number")) == target
+        and canonical_question_id(question)
+    }
+    if len(matches) == 1:
+        return next(iter(matches))
+    if len(matches) > 1:
+        raise ProgressIdentityError(LEGACY_PROGRESS_AMBIGUOUS, str(target))
+    raise ProgressIdentityError(MISSING_CANONICAL_QUESTION_ID, str(target))
