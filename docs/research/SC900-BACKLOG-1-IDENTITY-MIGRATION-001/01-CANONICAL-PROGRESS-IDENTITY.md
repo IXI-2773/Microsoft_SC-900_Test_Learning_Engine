@@ -91,13 +91,24 @@ The initial focused RED test commit was created before the production identity i
 
 - `db990c44c03a1cd7980e82ba142b0095f72e9484` — `test: reproduce canonical progress identity defects`
 
-The focused module was subsequently expanded to 21 `unittest` cases covering canonical key separation, renumbering stability, unique migration, record preservation, idempotence, ambiguous number mapping, duplicate IDs, collision, unmapped records, source preservation on failure, pre-replacement backup, canonical new writes, missing-ID rejection, default-bank IDs, CAND-01R3 resolver parity, canonical aggregation, no-extra-backup idempotence, schema ambiguity, and identifier-only UI-reference resolution.
+The focused module currently contains 21 `unittest` cases covering canonical key separation, renumbering stability, unique migration, record preservation, idempotence, ambiguous number mapping, duplicate IDs, collision, unmapped records, source preservation on failure, pre-replacement backup, canonical new writes, missing-ID rejection, default-bank IDs, CAND-01R3 resolver parity, canonical aggregation, no-extra-backup idempotence, schema ambiguity, and identifier-only UI-reference resolution that now uses the explicit number resolver rather than `question_key()`.
 
-### Verification limitation
+The adversarial review module adds 10 further cases: bare-number progress keys fail closed, unsupported future identity schema fails closed, malformed records fail before rewrite, read-only legacy lookup remains available, history matching prefers canonical IDs, legacy number-only history can still match, backup failure preserves source, restore-from-source does not mutate the selected file, blocked application migration refuses later progress saves, and issue reports retain canonical IDs.
 
-Actual RED/GREEN execution evidence is **not available in this work session**. The authorized repository desktop/terminal connector reported that no device was connected, and the repository's existing GitHub Actions workflows are intentionally restricted to other named verification branches. No workflow was modified merely to manufacture a green result.
+### Fresh non-mutating verification
 
-Therefore this document does **not** claim Segment-1 acceptance yet. Focused tests, affected regression tests, full suite, ruff, black, and mypy still require direct execution before acceptance can be asserted.
+Executed on committed SHA `a88d03af31ba683a15c5e3750d140d40ddf109be` with a clean worktree before and after. Verification did not apply patch scripts, rewrite tests to obtain green, commit, or push.
+
+- Focused Segment-1 tests: `python -m unittest -v tests.test_backlog1_progress_identity_migration tests.test_backlog1_segment1_adversarial_review` — **31 run, 0 failed, OK**
+- Pre-repair RED on the same modules at live Segment-2 head `75e8d417f6ea5467702f6ad4e2d3ab2c24550172`: 21 focused identity tests already passed; all 10 adversarial tests failed or errored because the review package existed only as `tools/backlog1_apply_review_*.py`
+- The review package was applied once as ordinary committed source, then those apply scripts were deleted
+- `.github/workflows/verify-backlog1-segment1.yml` on this lineage is now `permissions: contents: read` and does not apply, commit, or push
+- Repository quality convention `python -m tools.run_quality_checks`: **PASS** (ruff/black/mypy on the documented quality target set)
+- `python -m tools.lint_bank`: **PASS**
+- `python -m tools.verify_installation`: **PASS**
+- Full suite `python -m unittest discover -s tests -v`: **837 run, 5 failed, 1 error**. The remaining failures are pre-existing on starting Segment-2 head `75e8d417f6ea5467702f6ad4e2d3ab2c24550172` (`test_cand01r3_rrc1` five cases and `test_g3_007_probe_rejected_from_weak_retest_path`). They are not treated as Segment-1 identity failures.
+
+`HEAD_BEFORE` and `HEAD_AFTER` for this verification were both `a88d03af31ba683a15c5e3750d140d40ddf109be`. `TRACKED_SOURCE_MUTATION_DURING_VERIFICATION = NO`.
 
 ## Files changed by Segment 1
 
@@ -125,13 +136,15 @@ Explicitly deferred to Segments 2/3:
 
 ## Current disposition
 
-- `CANONICAL_QUESTION_ID_AUTHORITY = IMPLEMENTED_IN_BRANCH`
-- `QUESTION_NUMBER_AS_DURABLE_PROGRESS_AUTHORITY = REMOVED_FOR_REAL_QUESTION_WRITES`
-- `LEGACY_PROGRESS_MIGRATION = IMPLEMENTED_IN_BRANCH`
-- `AMBIGUOUS_MIGRATION = FAIL_CLOSED_BY_DESIGN`
-- `MIGRATION_BACKUP = IMPLEMENTED_IN_BRANCH`
-- `MIGRATION_IDEMPOTENCE = IMPLEMENTED_IN_BRANCH`
-- `SESSION_RESTORE_IDENTITY = DEFERRED_TO_SEGMENT_2`
+- `BACKLOG1_SEGMENT1_CANONICAL_PROGRESS_IDENTITY = ACCEPTED`
+- `CANONICAL_QUESTION_ID_AUTHORITY = IMPLEMENTED`
+- `QUESTION_NUMBER_AS_DURABLE_PROGRESS_AUTHORITY = REMOVED_FOR_NEW_WRITES`
+- `LEGACY_PROGRESS_MIGRATION = IMPLEMENTED`
+- `AMBIGUOUS_MIGRATION = FAIL_CLOSED`
+- `MIGRATION_BACKUP = VERIFIED`
+- `MIGRATION_IDEMPOTENCE = VERIFIED`
+- `SESSION_RESTORE_IDENTITY = IMPLEMENTED_IN_SEGMENT_2`
 - `BACKLOG1_COMPLETE = NO`
-- `SEGMENT_2_STARTED = NO`
-- `SEGMENT_1_ACCEPTED = NO` pending executable verification evidence.
+- `SEGMENT_2_STARTED = YES`
+- `SEGMENT_3_STARTED = NO`
+- `SEGMENT_1_ACCEPTED = YES`
