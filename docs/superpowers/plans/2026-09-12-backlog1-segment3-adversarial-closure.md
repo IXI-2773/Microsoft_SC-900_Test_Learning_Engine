@@ -69,6 +69,6 @@
 
 ### Task 5: Verification, receipt, and draft PR
 
-- [ ] **Step 1: Read-only verification on a clean tree.**
-- [ ] **Step 2: Write `docs/research/SC900-BACKLOG-1-IDENTITY-MIGRATION-001/03-ADVERSARIAL-CLOSURE.md`.**
+- [x] **Step 1: Read-only verification on a clean tree.**
+- [x] **Step 2: Write `docs/research/SC900-BACKLOG-1-IDENTITY-MIGRATION-001/03-ADVERSARIAL-CLOSURE.md`.**
 - [ ] **Step 3: Open a new draft PR from the Segment-3 branch. Do not merge PR #17 or close Issue #14.**
