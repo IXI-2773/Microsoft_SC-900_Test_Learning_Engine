@@ -13,8 +13,11 @@ from cand01r3_runtime import (
     restore_experimental_session,
 )
 from progress_store import set_progress_flag, set_progress_suspended, update_progress_record
+from question_identity import canonical_question_id
+from session_identity import bank_content_fingerprint, canonical_session_signature, ordered_question_ids
 from session_models import QuestionRuntimeState, apply_answer_state
 from session_store import (
+    answer_states_by_question_id,
     build_session_snapshot,
     calculate_session_question_limit,
     checkpoint_file_path,
@@ -39,22 +42,107 @@ class SessionPersistenceMixin:
     def calculate_session_question_limit(self, base_count):
         return calculate_session_question_limit(base_count)
 
+    def _session_bank_questions(self):
+        source = list((getattr(self, 'master_questions', None) or self.questions) or [])
+        if not source:
+            raise ValueError('Session identity requires a loaded question bank.')
+        return source
+
+    def current_bank_fingerprint(self):
+        return bank_content_fingerprint(self._session_bank_questions())
+
+    def _canonical_ids_for_questions(self, questions):
+        return ordered_question_ids(list(questions or []))
+
+    def _questions_for_canonical_ids(self, question_ids):
+        source = self._session_bank_questions()
+        source_ids = ordered_question_ids(source)
+        lookup = dict(zip(source_ids, source))
+        resolved = []
+        for question_id in question_ids:
+            canonical_id = str(question_id or '').strip()
+            question = lookup.get(canonical_id)
+            if question is None:
+                raise ValueError(f'Unknown canonical question reference in session: {canonical_id}')
+            resolved.append(question)
+        if len(resolved) != len(question_ids):
+            raise ValueError('Session canonical question identity could not be resolved exactly.')
+        return resolved
+
+    def _questions_for_question_numbers(self, question_numbers):
+        source = self._session_bank_questions()
+        lookup = {}
+        for question in source:
+            number = str(question.get('question_number') or '').strip()
+            if not number:
+                continue
+            if number in lookup:
+                raise ValueError(f'Ambiguous question number in loaded bank: {number}')
+            lookup[number] = question
+        resolved = []
+        for question_number in question_numbers:
+            number = str(question_number or '').strip()
+            question = lookup.get(number)
+            if question is None:
+                raise ValueError(f'Unknown question number in loaded bank: {number}')
+            resolved.append(question)
+        return resolved
+
     def current_session_signature(self, mode=None, questions: list[QuestionRuntimeState] | None = None, question_numbers=None):
         mode = str(mode or self.active_session_mode or MODE_PRACTICE)
-        if question_numbers is None:
-            questions = questions if questions is not None else self.questions
-            question_numbers = [q.get('question_number', '') for q in questions]
-        return session_signature(mode, list(question_numbers))
+        if is_cand01r3_active():
+            if question_numbers is None:
+                questions = questions if questions is not None else self.questions
+                question_numbers = [q.get('question_number', '') for q in questions]
+            return session_signature(mode, list(question_numbers))
+        if questions is None:
+            if question_numbers is None:
+                questions = self.questions
+            else:
+                questions = self._questions_for_question_numbers(question_numbers)
+        question_ids = self._canonical_ids_for_questions(questions)
+        return canonical_session_signature(mode, self.current_bank_fingerprint(), question_ids)
 
     def runtime_bank_stem(self, bank_path):
         return runtime_bank_stem(bank_path)
 
-    def session_file_for_bank(self, bank_path, mode=None, questions: list[QuestionRuntimeState] | None = None, question_numbers=None):
+    def session_file_for_bank(
+        self,
+        bank_path,
+        mode=None,
+        questions: list[QuestionRuntimeState] | None = None,
+        question_numbers=None,
+        question_ids=None,
+    ):
         mode = str(mode or self.active_session_mode or MODE_PRACTICE)
+        if is_cand01r3_active():
+            if question_numbers is None:
+                questions = questions if questions is not None else self.questions
+                question_numbers = [q.get('question_number') for q in questions]
+            return session_file_path(self.user_data_dir, bank_path, mode, list(question_numbers))
+        if question_ids is None:
+            if questions is None:
+                if question_numbers is None:
+                    questions = self.questions
+                else:
+                    questions = self._questions_for_question_numbers(question_numbers)
+            question_ids = self._canonical_ids_for_questions(questions)
+        canonical_ids = [str(question_id or '').strip() for question_id in question_ids]
+        if not canonical_ids or any(not question_id for question_id in canonical_ids):
+            raise ValueError('Session file identity requires canonical question IDs.')
         if question_numbers is None:
-            questions = questions if questions is not None else self.questions
-            question_numbers = [q.get('question_number') for q in questions]
-        return session_file_path(self.user_data_dir, bank_path, mode, list(question_numbers))
+            if questions is not None:
+                question_numbers = [q.get('question_number') for q in questions]
+            else:
+                question_numbers = [q.get('question_number') for q in self._questions_for_canonical_ids(canonical_ids)]
+        return session_file_path(
+            self.user_data_dir,
+            bank_path,
+            mode,
+            list(question_numbers),
+            bank_fingerprint=self.current_bank_fingerprint(),
+            question_ids=canonical_ids,
+        )
 
     def checkpoint_file_for_bank(self, bank_path, answered_count: int):
         return checkpoint_file_path(self.checkpoint_dir, bank_path, self.active_session_mode, answered_count)
@@ -75,7 +163,25 @@ class SessionPersistenceMixin:
         questions = questions if questions is not None else self.questions
         current_qnums = [q.get('question_number') for q in questions]
         restore_qnums = list(self.session_restore_question_numbers or current_qnums)
-        return saved_session_matches_current(saved, self.active_session_mode, current_qnums, restore_qnums)
+        if is_cand01r3_active() or (isinstance(saved, dict) and saved.get('cand01r3')):
+            return saved_session_matches_current(
+                saved,
+                self.active_session_mode,
+                current_qnums,
+                restore_qnums,
+                allow_legacy=True,
+            )
+        current_ids = self._canonical_ids_for_questions(questions)
+        restore_ids = list(getattr(self, 'session_restore_question_ids', None) or current_ids)
+        return saved_session_matches_current(
+            saved,
+            self.active_session_mode,
+            current_qnums,
+            restore_qnums,
+            bank_fingerprint=self.current_bank_fingerprint(),
+            current_question_ids=current_ids,
+            restore_question_ids=restore_ids,
+        )
 
     def normalize_builder_context(self, raw=None, *, mode=None, count=None, randomize=None, source_label=None):
         try:
@@ -121,6 +227,11 @@ class SessionPersistenceMixin:
         desired = self.normalize_builder_context(builder_context)
         latest_completed_at = self._latest_completed_session_timestamp(desired)
         candidates = []
+        experimental = is_cand01r3_active()
+        available_questions = self._session_bank_questions()
+        available_qnums = [q.get('question_number') for q in available_questions]
+        available_ids = None if experimental else ordered_question_ids(available_questions)
+        fingerprint = None if experimental else self.current_bank_fingerprint()
         for path in self.user_data_dir.glob(self._session_builder_glob_pattern(desired.get('mode', self.active_session_mode))):
             if latest_completed_at and path.stat().st_mtime <= latest_completed_at:
                 continue
@@ -130,8 +241,24 @@ class SessionPersistenceMixin:
                     logging.warning('Skipped resumable session candidate after read failure: %s', path)
                     self._show_bad_json_warning('Session', path, backup, err)
                 continue
+            candidate_experimental = experimental or bool(isinstance(saved, dict) and saved.get('cand01r3'))
             try:
-                migrated = migrate_session_snapshot(saved, desired.get('mode', self.active_session_mode), [])
+                if candidate_experimental:
+                    migrated = migrate_session_snapshot(
+                        saved,
+                        desired.get('mode', self.active_session_mode),
+                        [],
+                        available_question_numbers=available_qnums,
+                        allow_legacy=True,
+                    )
+                else:
+                    migrated = migrate_session_snapshot(
+                        saved,
+                        desired.get('mode', self.active_session_mode),
+                        [],
+                        bank_fingerprint=fingerprint,
+                        available_question_ids=available_ids,
+                    )
             except (TypeError, ValueError, KeyError, IndexError) as exc:
                 backup = self.persistence.quarantine_invalid_runtime_file(path, label='session')
                 self._show_bad_json_warning('Session', path, backup, exc)
@@ -151,12 +278,33 @@ class SessionPersistenceMixin:
             return 0
         desired = self.normalize_builder_context(builder_context)
         removed = 0
+        experimental = is_cand01r3_active()
+        available_questions = self._session_bank_questions()
+        available_qnums = [q.get('question_number') for q in available_questions]
+        available_ids = None if experimental else ordered_question_ids(available_questions)
+        fingerprint = None if experimental else self.current_bank_fingerprint()
         for path in self.user_data_dir.glob(self._session_builder_glob_pattern(desired.get('mode', self.active_session_mode))):
             saved, _backup, err = self.persistence.load_json_with_backup(path)
             if err or not saved:
                 continue
+            candidate_experimental = experimental or bool(isinstance(saved, dict) and saved.get('cand01r3'))
             try:
-                migrated = migrate_session_snapshot(saved, desired.get('mode', self.active_session_mode), [])
+                if candidate_experimental:
+                    migrated = migrate_session_snapshot(
+                        saved,
+                        desired.get('mode', self.active_session_mode),
+                        [],
+                        available_question_numbers=available_qnums,
+                        allow_legacy=True,
+                    )
+                else:
+                    migrated = migrate_session_snapshot(
+                        saved,
+                        desired.get('mode', self.active_session_mode),
+                        [],
+                        bank_fingerprint=fingerprint,
+                        available_question_ids=available_ids,
+                    )
             except (TypeError, ValueError, KeyError, IndexError):
                 self.persistence.quarantine_invalid_runtime_file(path, label='session')
                 continue
@@ -173,11 +321,20 @@ class SessionPersistenceMixin:
         if not self.bank_path:
             return
         identity_qnums = list(self.session_restore_question_numbers or [q.get('question_number') for q in self.questions])
-        self.session_path = self.session_file_for_bank(
-            self.bank_path,
-            mode=self.active_session_mode,
-            question_numbers=identity_qnums,
-        )
+        if is_cand01r3_active():
+            self.session_path = self.session_file_for_bank(
+                self.bank_path,
+                mode=self.active_session_mode,
+                question_numbers=identity_qnums,
+            )
+        else:
+            identity_ids = list(getattr(self, 'session_restore_question_ids', None) or self._canonical_ids_for_questions(self.questions))
+            self.session_path = self.session_file_for_bank(
+                self.bank_path,
+                mode=self.active_session_mode,
+                question_numbers=identity_qnums,
+                question_ids=identity_ids,
+            )
         self.last_session_snapshot = None
         if hasattr(self, 'session_label'):
             self.session_label.configure(text=f'Session file: {self.session_path.name}')
@@ -208,6 +365,9 @@ class SessionPersistenceMixin:
             return
         self.questions = pool
         self.session_restore_question_numbers = [q.get('question_number') for q in self.questions]
+        self.session_restore_question_ids = (
+            [] if is_cand01r3_active() else self._canonical_ids_for_questions(self.questions)
+        )
         self.session_base_question_count = len(self.session_restore_question_numbers)
         self.active_session_mode = mode
         self.active_source_label = str(source_label or self.active_source_label or 'Full bank')
@@ -246,6 +406,7 @@ class SessionPersistenceMixin:
             self.bank_path,
             mode=mode,
             question_numbers=self.session_restore_question_numbers,
+            question_ids=(None if is_cand01r3_active() else self.session_restore_question_ids),
         )
         if hasattr(self, 'session_label'):
             self.session_label.configure(text=f'Session file: {self.session_path.name}')
@@ -281,7 +442,10 @@ class SessionPersistenceMixin:
             logging.warning('Session file reset after read failure: %s', self.session_path)
             self._show_bad_json_warning('Session', self.session_path, backup, err)
             return
-        if isinstance(saved, dict) and (saved.get("cand01r3") or is_cand01r3_active()):
+        experimental_session = bool(
+            isinstance(saved, dict) and (saved.get('cand01r3') or is_cand01r3_active())
+        )
+        if experimental_session:
             restored = restore_experimental_session(self.questions, saved)
             if not restored.accepted:
                 return
@@ -289,15 +453,25 @@ class SessionPersistenceMixin:
                 self.questions = restored.questions
         if not skip_identity_check and not self._saved_session_matches_current(saved):
             return
+        available_questions = list(self.master_questions or self.questions)
         try:
-            migrated = migrate_session_snapshot(
-                saved,
-                self.active_session_mode,
-                [q.get('question_number') for q in self.questions],
-                available_question_numbers=[
-                    q.get('question_number') for q in (self.master_questions or self.questions)
-                ],
-            )
+            if experimental_session:
+                migrated = migrate_session_snapshot(
+                    saved,
+                    self.active_session_mode,
+                    [q.get('question_number') for q in self.questions],
+                    available_question_numbers=[q.get('question_number') for q in available_questions],
+                    allow_legacy=True,
+                )
+            else:
+                migrated = migrate_session_snapshot(
+                    saved,
+                    self.active_session_mode,
+                    [q.get('question_number') for q in self.questions],
+                    available_question_numbers=[q.get('question_number') for q in available_questions],
+                    bank_fingerprint=self.current_bank_fingerprint(),
+                    available_question_ids=ordered_question_ids(available_questions),
+                )
         except (TypeError, ValueError, KeyError, IndexError) as exc:
             backup = self.persistence.quarantine_invalid_runtime_file(self.session_path, label='session')
             logging.warning('Session file quarantined after validation failure: %s', self.session_path)
@@ -306,6 +480,22 @@ class SessionPersistenceMixin:
         saved_answers = list(migrated.get('answers', []) or [])
         if saved_answers and all(bool(state.get('answered')) for state in saved_answers):
             return
+
+        if not experimental_session:
+            saved_ids = list(migrated.get('question_ids', []) or [])
+            saved_restore_ids = list(migrated.get('restore_question_ids', []) or saved_ids)
+            try:
+                source_questions = self._questions_for_canonical_ids(saved_ids)
+                restore_questions = self._questions_for_canonical_ids(saved_restore_ids)
+            except ValueError as exc:
+                backup = self.persistence.quarantine_invalid_runtime_file(self.session_path, label='session')
+                logging.warning('Session file quarantined after canonical ID resolution failure: %s', self.session_path)
+                self._show_bad_json_warning('Session', self.session_path, backup, exc)
+                return
+            self.questions = self._clone_questions(source_questions)
+            self.session_restore_question_ids = saved_restore_ids
+            self.session_restore_question_numbers = [q.get('question_number') for q in restore_questions]
+
         self.index = max(0, min(int(migrated.get('current_index', 0)), len(self.questions) - 1))
         self.elapsed_base = int(migrated.get('elapsed_seconds', 0))
         self.clock_started_at = time.time()
@@ -326,28 +516,53 @@ class SessionPersistenceMixin:
             count=migrated.get('session_base_question_count'),
             source_label=migrated.get('source_label'),
         )
-        saved_restore_qnums = list(migrated.get('restore_question_numbers', []) or self.session_restore_question_numbers)
-        if saved_restore_qnums:
-            self.session_restore_question_numbers = saved_restore_qnums
-        self.session_base_question_count = int(migrated.get('session_base_question_count') or len(self.session_restore_question_numbers) or len(self.questions))
-        self.session_question_limit = int(migrated.get('session_question_limit') or self.calculate_session_question_limit(self.session_base_question_count))
-        saved_qnums = list(migrated.get('question_numbers', []) or [])
-        current_qnums = [q.get('question_number') for q in self.questions]
-        if saved_qnums and saved_qnums != current_qnums:
-            lookup = {q.get('question_number'): q for q in self.master_questions}
-            source_questions = []
-            for qnum in saved_qnums:
-                source = lookup.get(qnum)
-                if source is not None:
-                    source_questions.append(source)
-            if len(source_questions) == len(saved_qnums):
-                self.questions = self._clone_questions(source_questions)
+        if experimental_session:
+            saved_restore_qnums = list(migrated.get('restore_question_numbers', []) or self.session_restore_question_numbers)
+            if saved_restore_qnums:
+                self.session_restore_question_numbers = saved_restore_qnums
+        self.session_base_question_count = int(
+            migrated.get('session_base_question_count')
+            or len(self.session_restore_question_numbers)
+            or len(self.questions)
+        )
+        self.session_question_limit = int(
+            migrated.get('session_question_limit')
+            or self.calculate_session_question_limit(self.session_base_question_count)
+        )
+        if experimental_session:
+            saved_qnums = list(migrated.get('question_numbers', []) or [])
+            current_qnums = [q.get('question_number') for q in self.questions]
+            if saved_qnums and saved_qnums != current_qnums:
+                lookup = {q.get('question_number'): q for q in self.master_questions}
+                source_questions = []
+                for qnum in saved_qnums:
+                    source = lookup.get(qnum)
+                    if source is not None:
+                        source_questions.append(source)
+                if len(source_questions) == len(saved_qnums):
+                    self.questions = self._clone_questions(source_questions)
         self.last_session_snapshot = json.dumps(migrated, sort_keys=True, separators=(',', ':'))
+
+        if experimental_session:
+            restore_pairs = [
+                (question, state)
+                for question, state in zip(self.questions, migrated.get('answers', []))
+            ]
+        else:
+            try:
+                answer_map = answer_states_by_question_id(list(migrated.get('answers', [])))
+                restore_pairs = [
+                    (question, answer_map[canonical_question_id(question)])
+                    for question in self.questions
+                ]
+            except (KeyError, ValueError) as exc:
+                backup = self.persistence.quarantine_invalid_runtime_file(self.session_path, label='session')
+                logging.warning('Session file quarantined after answer identity failure: %s', self.session_path)
+                self._show_bad_json_warning('Session', self.session_path, backup, exc)
+                return
+
         progress_changed = False
-        for i, state in enumerate(migrated.get('answers', [])):
-            if i >= len(self.questions):
-                break
-            q = self.questions[i]
+        for q, state in restore_pairs:
             merged_state = dict(state)
             try:
                 self._migrate_legacy_repair_concept_key(q, merged_state)
@@ -445,30 +660,42 @@ class SessionPersistenceMixin:
             self.session_path = None
             self.session_label.configure(text='Session complete: progress saved')
             return
-        snapshot = build_session_snapshot(
-            app_version=APP_VERSION,
-            bank_file=self.bank_path.name if self.bank_path else '',
-            mode=self.active_session_mode,
-            builder_context=self.current_builder_context_data,
-            source_label=self.active_source_label,
-            question_numbers=[q.get('question_number') for q in self.questions],
-            restore_question_numbers=list(self.session_restore_question_numbers),
-            session_base_question_count=int(self.session_base_question_count or len(self.session_restore_question_numbers) or len(self.questions)),
-            session_question_limit=int(self.session_question_limit or self.calculate_session_question_limit(self.session_base_question_count or len(self.questions))),
-            current_index=self.index,
-            elapsed_seconds=self.current_elapsed_seconds(),
-            exam_reveal=self.exam_reveal,
-            checkpoints_saved=sorted(list(self.checkpoints_saved), key=lambda x: int(x)),
-            session_rewards=list(self.session_rewards),
-            unlocked_rewards=sorted(list(self.unlocked_rewards)),
-            session_answer_history=list(self.session_answer_history),
-            current_quests=list(self.current_quests),
-            quest_completion_keys=sorted(list(self.quest_completion_keys)),
-            session_boss_markers=sorted(list(self.session_boss_markers)),
-            session_stealth_markers=sorted(list(self.session_stealth_markers)),
-            session_xp_gained=int(self.session_xp_gained),
-            answers=[serialize_answer_state(q) for q in self.questions],
-        )
+        snapshot_kwargs = {
+            'app_version': APP_VERSION,
+            'bank_file': self.bank_path.name if self.bank_path else '',
+            'mode': self.active_session_mode,
+            'builder_context': self.current_builder_context_data,
+            'source_label': self.active_source_label,
+            'question_numbers': [q.get('question_number') for q in self.questions],
+            'restore_question_numbers': list(self.session_restore_question_numbers),
+            'session_base_question_count': int(self.session_base_question_count or len(self.session_restore_question_numbers) or len(self.questions)),
+            'session_question_limit': int(self.session_question_limit or self.calculate_session_question_limit(self.session_base_question_count or len(self.questions))),
+            'current_index': self.index,
+            'elapsed_seconds': self.current_elapsed_seconds(),
+            'exam_reveal': self.exam_reveal,
+            'checkpoints_saved': sorted(list(self.checkpoints_saved), key=lambda x: int(x)),
+            'session_rewards': list(self.session_rewards),
+            'unlocked_rewards': sorted(list(self.unlocked_rewards)),
+            'session_answer_history': list(self.session_answer_history),
+            'current_quests': list(self.current_quests),
+            'quest_completion_keys': sorted(list(self.quest_completion_keys)),
+            'session_boss_markers': sorted(list(self.session_boss_markers)),
+            'session_stealth_markers': sorted(list(self.session_stealth_markers)),
+            'session_xp_gained': int(self.session_xp_gained),
+            'answers': [serialize_answer_state(q) for q in self.questions],
+        }
+        if is_cand01r3_active():
+            snapshot = build_session_snapshot(**snapshot_kwargs)
+        else:
+            snapshot = build_session_snapshot(
+                **snapshot_kwargs,
+                bank_fingerprint=self.current_bank_fingerprint(),
+                question_ids=self._canonical_ids_for_questions(self.questions),
+                restore_question_ids=list(
+                    getattr(self, 'session_restore_question_ids', None)
+                    or self._canonical_ids_for_questions(self.questions)
+                ),
+            )
         payload = dict(snapshot)
         if is_cand01r3_active():
             payload["cand01r3"] = persistable_authority_metadata()

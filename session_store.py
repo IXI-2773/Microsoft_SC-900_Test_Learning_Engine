@@ -149,6 +149,21 @@ def _coerce_canonical_id_list(value: Any, *, field: str, required: bool = False)
     return ids
 
 
+def answer_states_by_question_id(answers: list[Mapping[str, Any]]) -> dict[str, SessionAnswerState]:
+    by_id: dict[str, SessionAnswerState] = {}
+    for answer in answers:
+        if not isinstance(answer, Mapping):
+            raise ValueError("Session answer row must be a mapping.")
+        row = cast(SessionAnswerState, dict(answer))
+        question_id = str(row.get("question_id") or "").strip()
+        if not question_id:
+            raise ValueError("Canonical session answer row is missing question_id.")
+        if question_id in by_id:
+            raise ValueError("Duplicate canonical question ID in session answers.")
+        by_id[question_id] = row
+    return by_id
+
+
 def migrate_session_snapshot(
     saved: Mapping[str, Any] | None,
     mode: str,
@@ -183,7 +198,6 @@ def migrate_session_snapshot(
         key in payload
         for key in (
             "bank_fingerprint",
-            "question_ids",
             "restore_question_ids",
             "session_identity",
             "session_identity_version",
@@ -557,7 +571,6 @@ def saved_session_matches_current(
         key in saved
         for key in (
             "bank_fingerprint",
-            "question_ids",
             "restore_question_ids",
             "session_identity",
             "session_identity_version",
