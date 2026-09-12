@@ -30,13 +30,14 @@ from app_constants import (
 )
 from app_game_mixin import GameRewardsMixin
 from app_info import APP_NAME, APP_VERSION
-from cert_config import QUESTION_BANK_FILENAME, USER_DATA_DIRNAME
 from app_question_flow_mixin import QuestionFlowMixin
 from app_question_render_mixin import QuestionRenderMixin
 from app_session_builder_mixin import SessionBuilderMixin
 from app_session_persistence_mixin import SessionPersistenceMixin
 from application_bootstrap import BootstrapConfig, BootstrapResult, prepare_application_bootstrap
 from bank_models import QuestionBankData
+from cand01r3_runtime import sanitize_history_event
+from cert_config import QUESTION_BANK_FILENAME, USER_DATA_DIRNAME
 from config_store import DEFAULT_CONFIG, load_config, save_config
 from legacy_source_layout import BASE_DIR
 from progress_models import (
@@ -2256,7 +2257,11 @@ class TestingEngineApp(
         self.progress_data.setdefault("bank_file", self.bank_path.name if self.bank_path else "")
         self.progress_data.setdefault("created_at", now_iso())
         self.progress_data["updated_at"] = now_iso()
-        self._progress_meta()
+        meta = self._progress_meta()
+        from cand01r3_runtime import is_cand01r3_active, persistable_authority_metadata
+
+        if is_cand01r3_active():
+            meta["cand01r3"] = persistable_authority_metadata()
         self.persistence.write_json(self.progress_path, self.progress_data)
         self.last_progress_snapshot = snapshot
 
@@ -2350,6 +2355,7 @@ class TestingEngineApp(
             "event_id": str(prediction_fields.get("prediction_id") or "") + f":{now_iso()}",
             **prediction_fields,
         }
+        event = sanitize_history_event(event, q)
         append_progress_history(self.progress_data, event)
 
     def update_progress_for_answer(self, q, feedback=None):
