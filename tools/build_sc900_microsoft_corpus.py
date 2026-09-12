@@ -44,8 +44,8 @@ ACCEPTANCE_PATH = CORPUS_ROOT / "acceptance_report.json"
 ANALYTICS_PATH = CORPUS_ROOT / "analytics.json"
 SEMANTIC_AUDIT_PATH = CORPUS_ROOT / "semantic_family_audit.json"
 
-WORK_ID = "SC900-MICROSOFT-LEARN-CORPUS-001"
-BUILD_EPOCH = "microsoft-learn-corpus-deterministic-build"
+WORK_ID = "SC900-FINAL-SEMANTIC-EXPANSION-001"
+BUILD_EPOCH = "final-semantic-expansion-deterministic-build"
 DETERMINISTIC_IMPORT_AT = "2026-09-12T18:30:00+00:00"
 REVIEWER = "cursor-grok-4.6-microsoft-corpus-separate-review"
 REVIEW_METHOD = "separate adversarial review pass after authoring; independent answer verification against frozen Microsoft inventory"
@@ -434,7 +434,7 @@ def build_corpus(*, write: bool = True) -> dict[str, Any]:
         "day1_started": False,
         "book_supplement_started": False,
         "frozen_probe_families": sorted(FROZEN_PROBE_FAMILIES),
-        "target_microsoft_approved": 400,
+        "target_microsoft_approved": 500,
         "actual_microsoft_approved": analytics["microsoft_approved"],
         "inventory_counts": inventory.get("counts", {}),
         "knowledge_unit_count": len(units),
