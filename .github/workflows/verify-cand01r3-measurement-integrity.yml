@@ -6,7 +6,7 @@ on:
       - research/sc900-cand01r3-measurement-001
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   r2-integrity:
@@ -22,6 +22,17 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
+      - name: Strengthen RED tests before production repair
+        run: |
+          python tools/strengthen_cand01r3_r2_tests.py
+          if ! git diff --quiet -- tests/test_cand01r3_measurement_integrity.py; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add tests/test_cand01r3_measurement_integrity.py
+            git commit -m "test: strengthen R2 navigation and calendar RED cases"
+            git push origin HEAD:research/sc900-cand01r3-measurement-001
+          fi
 
       - name: Install test dependencies
         run: |
