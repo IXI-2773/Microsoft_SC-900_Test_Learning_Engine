@@ -58,10 +58,10 @@ jobs:
           TARGET_BRANCH: implementation/sc900-backlog1-session-identity
         run: |
           set -euo pipefail
-          if [ -n "$(git status --porcelain -- session_models.py session_store.py app_session_persistence_mixin.py tools/backlog1_segment2_apply_core.py tools/backlog1_segment2_apply_integration.py)" ]; then
+          if [ -n "$(git status --porcelain -- session_models.py session_store.py app_session_persistence_mixin.py tools/)" ]; then
             git config user.name 'BACKLOG-1 Segment-2 verification bot'
             git config user.email 'actions@users.noreply.github.com'
-            git add session_models.py session_store.py app_session_persistence_mixin.py tools/backlog1_segment2_apply_core.py tools/backlog1_segment2_apply_integration.py
+            git add -A -- session_models.py session_store.py app_session_persistence_mixin.py tools/
             git commit -m 'feat: bind ordinary session restore to canonical identity'
             git push origin "HEAD:${TARGET_BRANCH}"
           fi
