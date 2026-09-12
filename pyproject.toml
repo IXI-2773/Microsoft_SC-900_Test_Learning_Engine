@@ -10,6 +10,9 @@ target-version = "py311"
 select = ["E", "F", "I", "B", "UP"]
 ignore = ["E501"]
 
+[tool.ruff.lint.per-file-ignores]
+"cand01r3_protocol.py" = ["F841"]
+
 [tool.ruff.lint.isort]
 known-first-party = [
   "app",
