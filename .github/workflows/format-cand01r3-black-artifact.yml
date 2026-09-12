@@ -1,4 +1,4 @@
-name: Apply CAND-01R3 Black formatting once
+name: Apply CAND-01R3 Black and type repair once
 
 on:
   push:
@@ -30,26 +30,26 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements-extract.txt -r requirements-dev.txt
 
-      - name: Preserve original ASTs and Black-format only target files
+      - name: Apply bounded type repair and Black formatting
         run: |
           cp cand01r3_runtime.py /tmp/cand01r3_runtime.py.before
           cp cand01r3_protocol.py /tmp/cand01r3_protocol.py.before
-          python -m black cand01r3_runtime.py cand01r3_protocol.py
-          test "$(git diff --name-only | sort)" = $'cand01r3_protocol.py\ncand01r3_runtime.py'
           python - <<'PY'
-          import ast
           from pathlib import Path
 
-          for name in ('cand01r3_runtime.py', 'cand01r3_protocol.py'):
-              before = Path('/tmp') / f'{name}.before'
-              after = Path(name)
-              before_ast = ast.dump(ast.parse(before.read_text(encoding='utf-8')), include_attributes=False)
-              after_ast = ast.dump(ast.parse(after.read_text(encoding='utf-8')), include_attributes=False)
-              assert before_ast == after_ast, name
-              print(f'AST_EQUIVALENT={name}')
+          path = Path('cand01r3_protocol.py')
+          text = path.read_text(encoding='utf-8')
+          old = '''        if event.get("calendar_utc_offset_minutes") is not None and calendar_utc_offset_minutes is None:\n            calendar_utc_offset_minutes = int(event.get("calendar_utc_offset_minutes"))\n'''
+          new = '''        event_utc_offset = event.get("calendar_utc_offset_minutes")\n        if event_utc_offset is not None and calendar_utc_offset_minutes is None:\n            calendar_utc_offset_minutes = int(event_utc_offset)\n'''
+          if text.count(old) != 1:
+              raise SystemExit(f'expected exactly one calendar offset type site, found {text.count(old)}')
+          path.write_text(text.replace(old, new), encoding='utf-8')
           PY
+          python -m black cand01r3_runtime.py cand01r3_protocol.py
+          test "$(git diff --name-only | sort)" = $'cand01r3_protocol.py\ncand01r3_runtime.py'
+          python -m compileall -q cand01r3_runtime.py cand01r3_protocol.py
 
-      - name: Test formatted workspace before any repository write
+      - name: Test repaired workspace before any repository write
         run: |
           python -m unittest discover -s tests -p 'test_cand01r3_scorer_structure.py' -v
           python -m unittest discover -s tests -p 'test_cand01r3_measurement_integrity.py' -v
@@ -63,12 +63,12 @@ jobs:
           git fetch origin research/sc900-cand01r3-measurement-001
           test "$(git rev-parse origin/research/sc900-cand01r3-measurement-001)" = "$GITHUB_SHA"
 
-      - name: Commit formatting and remove this temporary repair workflow
+      - name: Commit bounded repair and remove this temporary workflow
         run: |
           git rm .github/workflows/format-cand01r3-black-artifact.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           test "$(git diff --name-only | sort)" = $'.github/workflows/format-cand01r3-black-artifact.yml\ncand01r3_protocol.py\ncand01r3_runtime.py'
           git add cand01r3_protocol.py cand01r3_runtime.py
-          git commit -m 'style: apply Black to CAND-01R3 runtime'
+          git commit -m 'style: format CAND-01R3 runtime and satisfy mypy'
           git push origin HEAD:research/sc900-cand01r3-measurement-001
