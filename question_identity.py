@@ -161,13 +161,17 @@ def resolve_registered_question_id_from_number(question_number: Any) -> str:
         target = int(question_number)
     except (TypeError, ValueError) as exc:
         raise ProgressIdentityError(MISSING_CANONICAL_QUESTION_ID) from exc
-    matches = {
-        canonical_question_id(question)
-        for question in _registered_bank_questions
-        if question.get("question_number") not in (None, "")
-        and int(question.get("question_number")) == target
-        and canonical_question_id(question)
-    }
+    matches: set[str] = set()
+    for question in _registered_bank_questions:
+        try:
+            number = int(question.get("question_number"))
+        except (TypeError, ValueError):
+            continue
+        if number != target:
+            continue
+        question_id = canonical_question_id(question)
+        if question_id:
+            matches.add(question_id)
     if len(matches) == 1:
         return next(iter(matches))
     if len(matches) > 1:
