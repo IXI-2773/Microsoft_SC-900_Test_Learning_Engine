@@ -23,6 +23,7 @@ QUALITY_TARGETS = [
     "cand01r3_runtime.py",
     "cand01r3_rrc1.py",
     "cand01r3_measurement.py",
+    "cand01r3_protocol.py",
     "cand01r3_paths.py",
     "source_trust.py",
     "cert_config.py",

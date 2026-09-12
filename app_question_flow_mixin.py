@@ -16,6 +16,7 @@ from app_constants import (
 )
 from cand01r3_runtime import (
     is_cand01r3_active,
+    is_measurement_answer_mode,
     partition_cache_identity,
     revalidate_training_question,
     training_source_questions,
@@ -177,6 +178,8 @@ class QuestionFlowMixin:
             return False
         if s == "Answered in session" and not q.get("answered"):
             return False
+        if is_measurement_answer_mode() and s in {"Correct in session", "Wrong in session"}:
+            return False
         if s == "Correct in session" and (not q.get("answered") or not self._question_correct(q)):
             return False
         if s == "Wrong in session" and (not q.get("answered") or self._question_correct(q)):
@@ -268,9 +271,12 @@ class QuestionFlowMixin:
         for _idx, q, rec in visible_rows:
             status = "."
             if q.get("answered"):
-                status = "OK" if self._question_correct(q) else "X"
-                if self.active_session_mode == MODE_EXAM and not self.exam_reveal:
+                if is_measurement_answer_mode():
                     status = "R"
+                else:
+                    status = "OK" if self._question_correct(q) else "X"
+                    if self.active_session_mode == MODE_EXAM and not self.exam_reveal:
+                        status = "R"
             if q.get("flagged"):
                 status += "F"
             if q.get("suspended"):
@@ -984,6 +990,26 @@ class QuestionFlowMixin:
         state[concept_key] = row
         return []
 
+    def _record_measurement_probe_answer(self, q: QuestionRuntimeState, selected: list[str]):
+        from cand01r3_protocol import record_measurement_probe_answer
+
+        observation = record_measurement_probe_answer(q, selected=list(selected))
+        if observation.status in {"PRIMARY", "CONTAMINATED", "DUPLICATE_NOT_PRIMARY"}:
+            q["selected"] = []
+            q["pending"] = []
+            q["answered"] = True
+            q["recall_ready"] = False
+            q["last_confidence"] = ""
+            q["last_miss_reason"] = ""
+            q["measurement_status"] = observation.status
+            q["measurement_recorded"] = True
+            self.active_question_started_qnum = None
+            self.active_question_started_at = None
+            self.mark_question_list_dirty()
+            self.schedule_session_save(delay_ms=125)
+            self.render_question()
+        return observation
+
     def _record_answer(
         self,
         q: QuestionRuntimeState,
@@ -991,6 +1017,8 @@ class QuestionFlowMixin:
         anchor_widget=None,
         feedback_override: dict[str, Any] | None = None,
     ):
+        if is_measurement_answer_mode():
+            return self._record_measurement_probe_answer(q, selected)
         rec_before = self._progress_record(q, create=False)
         was_active_weak = is_active_weak(rec_before)
         was_due = is_review_due(rec_before)
@@ -1060,6 +1088,15 @@ class QuestionFlowMixin:
             "smart_graph_bottleneck": float(q.get("smart_graph_bottleneck", 0.0) or 0.0),
         }
         self.session_answer_history.append(event)
+        from cand01r3_protocol import notify_scored_attempt
+
+        prior_attempts = int((rec_before or {}).get("attempts") or 0)
+        notify_scored_attempt(
+            q,
+            selected=list(selected),
+            correct=bool(is_correct),
+            kind="RETRY" if prior_attempts > 0 else "SCORED",
+        )
         self.active_question_started_qnum = None
         self.active_question_started_at = None
         xp_gained = self._apply_xp_for_answer(q, is_correct, feedback, was_active_weak=was_active_weak, was_due=was_due)
@@ -1159,6 +1196,8 @@ class QuestionFlowMixin:
         self._record_answer(q, pending, anchor_widget=self.submit_btn)
 
     def retag_current_answer_confidence(self, confidence):
+        if is_measurement_answer_mode():
+            return
         if not self.questions:
             return
         q = self.current_question()
@@ -1200,6 +1239,8 @@ class QuestionFlowMixin:
         self.render_question()
 
     def mark_current_question_super_confident(self):
+        if is_measurement_answer_mode():
+            return
         if not self.questions:
             return
         q = self.current_question()
@@ -1235,12 +1276,21 @@ class QuestionFlowMixin:
         return False
 
     def _question_resolved_for_finish(self, q):
+        if is_measurement_answer_mode():
+            return bool(q.get("answered"))
         return bool(q.get("answered") or q.get("flagged") or q.get("suspended"))
 
     def _all_session_questions_resolved_for_finish(self):
         return bool(self.questions) and all(self._question_resolved_for_finish(q) for q in self.questions)
 
     def finish_exam(self):
+        if is_measurement_answer_mode():
+            if not self._all_session_questions_resolved_for_finish():
+                messagebox.showinfo("Finish measurement", "Record a response for every scheduled PROBE before finishing.")
+                return
+            self.schedule_session_save(delay_ms=0)
+            self.render_question()
+            return
         if self.active_session_mode != MODE_EXAM:
             if not self._all_session_questions_resolved_for_finish():
                 messagebox.showinfo(
@@ -1259,6 +1309,11 @@ class QuestionFlowMixin:
     def toggle_flag(self):
         q = self.current_question()
         q["flagged"] = not q.get("flagged", False)
+        if is_measurement_answer_mode():
+            self.mark_question_list_dirty()
+            self.schedule_session_save()
+            self._render_current_view(save_session=False)
+            return
         self.update_progress_for_flag(q)
         self.mark_question_list_dirty()
         self.schedule_session_save()
@@ -1267,6 +1322,11 @@ class QuestionFlowMixin:
     def toggle_suspend(self):
         q = self.current_question()
         q["suspended"] = not q.get("suspended", False)
+        if is_measurement_answer_mode():
+            self.mark_question_list_dirty()
+            self.schedule_session_save()
+            self._render_current_view(save_session=False)
+            return
         self.update_progress_for_suspended(q)
         self.mark_question_list_dirty()
         if q.get("suspended"):
@@ -1279,6 +1339,8 @@ class QuestionFlowMixin:
         self._render_current_view(save_session=False)
 
     def redo_question(self):
+        if is_measurement_answer_mode():
+            return
         if not self.questions:
             return
         q = self.current_question()
@@ -1306,6 +1368,8 @@ class QuestionFlowMixin:
         messagebox.showinfo("Next unanswered", "All questions in this session are answered, flagged, or suspended.")
 
     def maybe_auto_next_after_answer(self, q):
+        if is_measurement_answer_mode():
+            return
         if not self.auto_next_correct_var.get():
             return
         if self.active_session_mode == MODE_EXAM:
@@ -1331,6 +1395,8 @@ class QuestionFlowMixin:
             self.auto_next_after_id = None
 
     def format_choice_explanations(self, q):
+        if is_measurement_answer_mode():
+            return "Response recorded."
         selected = sorted(q.get("selected", []))
         correct = sorted(q.get("correct", []))
         explanations = q.get("choice_explanations", {}) or {}

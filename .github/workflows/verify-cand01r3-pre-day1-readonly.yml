@@ -1,0 +1,166 @@
+name: Verify CAND-01R3 pre-Day-1 integrity (read-only)
+
+on:
+  push:
+    branches:
+      - research/sc900-cand01r3-measurement-001
+
+permissions:
+  contents: read
+
+jobs:
+  terminal-verification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact pushed SHA
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install verification dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-extract.txt -r requirements-dev.txt
+
+      - name: Verify exact clean source tree before tests
+        run: |
+          echo "GITHUB_SHA=$GITHUB_SHA"
+          echo "CHECKED_OUT_SHA=$(git rev-parse HEAD)"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain=v1)"
+          git diff --exit-code
+
+      - name: Verify canonical scorer structure
+        run: |
+          python -m unittest discover -s tests -p 'test_cand01r3_scorer_structure.py' -v
+
+      - name: R2 measurement-integrity regression
+        run: |
+          python -m unittest discover -s tests -p 'test_cand01r3_measurement_integrity.py' -v
+
+      - name: R1 runtime-resume regression
+        run: |
+          python -m unittest discover -s tests -p 'test_cand01r3_measurement_runtime_resume.py' -v
+
+      - name: Protocol-v2 regression
+        run: |
+          python -m unittest discover -s tests -p 'test_cand01r3_measurement_protocol_v2.py' -v
+
+      - name: All CAND-01R3 tests
+        run: |
+          python -m unittest discover -s tests -p 'test_cand01r3*.py' -v
+
+      - name: Phase-3 regression
+        run: |
+          python -m unittest discover -s tests -p 'test_sc900_phase3*.py' -v
+
+      - name: Full test suite
+        run: |
+          python -m unittest discover -s tests -v
+
+      - name: Quality gates
+        run: |
+          python -m tools.run_quality_checks
+          python -m tools.lint_bank
+          python -m tools.verify_installation
+
+      - name: Deterministic Phase-3 verifiers
+        run: |
+          python -m tools.build_sc900_phase3 --verify-semantic-audit
+          python -m tools.build_sc900_phase3 --verify-committed
+          python -m tools.build_sc900_phase3 --verify-train-probe-manifest
+
+      - name: Frozen authority and hash proof
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          import hashlib
+          import cert_config
+          from cand01r3_partition import (
+              AUDIT_PATH,
+              COMPILED_PATH,
+              MANIFEST_PATH,
+              STORE_PATH,
+              EXPECTED_SEMANTIC_AUDIT_SHA256,
+              EXPECTED_STORE_SHA256,
+              EXPECTED_COMPILED_SHA256,
+              EXPECTED_MANIFEST_SHA256,
+              sha256_file,
+          )
+          from cand01r3_protocol import build_protocol
+
+          expected_default = "60842eb28810d328fe56a427b7d72baedd6b31179ca4f1c98744392aa318a426"
+          default_path = Path(cert_config.QUESTION_BANK_FILENAME)
+          actual_default = hashlib.sha256(
+              default_path.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+          ).hexdigest()
+          checks = {
+              "TASK4_SEMANTIC_AUDIT": (sha256_file(AUDIT_PATH), EXPECTED_SEMANTIC_AUDIT_SHA256),
+              "TASK5_REVIEWED_STORE": (sha256_file(STORE_PATH), EXPECTED_STORE_SHA256),
+              "TASK5_COMPILED": (sha256_file(COMPILED_PATH), EXPECTED_COMPILED_SHA256),
+              "TASK6_MANIFEST": (sha256_file(MANIFEST_PATH), EXPECTED_MANIFEST_SHA256),
+              "DEFAULT_BANK": (actual_default, expected_default),
+          }
+          for label, (actual, expected) in checks.items():
+              print(f"{label}_SHA256={actual}")
+              assert actual == expected, (label, actual, expected)
+
+          protocol = build_protocol()
+          print(f"PROTOCOL_VERSION={protocol['protocol_version']}")
+          print(f"PROTOCOL_SHA256={protocol['protocol_sha256']}")
+          print(f"TRAIN_QUESTIONS={protocol['train_question_count']}")
+          print(f"PROBE_QUESTIONS={protocol['probe_question_count']}")
+          assert protocol["protocol_version"] == "cand01r3-measurement-001-v2"
+          assert protocol["protocol_sha256"] == "51dbee61e2a7d0c23ad48e7f37799812bd67918e37aacd1b60e3600787365c72"
+          assert int(protocol["train_question_count"]) == 171
+          assert int(protocol["probe_question_count"]) == 29
+
+          committed = json.loads(Path("content/sc900/measurement/cand01r3_protocol.json").read_text(encoding="utf-8"))
+          print(f"COMMITTED_REAL_OBSERVATIONS={int(committed.get('real_observations') or 0)}")
+          print(f"COMMITTED_EMPIRICAL_RESULT={committed.get('empirical_result')}")
+          print(f"COMMITTED_DEPLOYMENT_AUTHORIZED={committed.get('deployment_authorized')}")
+          assert int(committed.get("real_observations") or 0) == 0
+          assert committed.get("empirical_result") == "NOT_YET_AVAILABLE"
+          assert committed.get("deployment_authorized") == "NO"
+          PY
+
+      - name: Protected refs and tag proof
+        run: |
+          git fetch --no-tags origin \
+            +refs/heads/recovery/publish-exact-history/sc900-v8-20260910:refs/remotes/origin/recovery/publish-exact-history/sc900-v8-20260910 \
+            +refs/heads/recovery/publish-sc900-v8-exact-history:refs/remotes/origin/recovery/publish-sc900-v8-exact-history
+          git fetch origin +refs/tags/sc900-v8.0.0-baseline:refs/tags/sc900-v8.0.0-baseline
+          echo "RECOVERY_EXACT_HISTORY=$(git rev-parse refs/remotes/origin/recovery/publish-exact-history/sc900-v8-20260910)"
+          echo "RECOVERY_PUBLISH=$(git rev-parse refs/remotes/origin/recovery/publish-sc900-v8-exact-history)"
+          echo "BASELINE_TAG_OBJECT=$(git rev-parse refs/tags/sc900-v8.0.0-baseline)"
+          test "$(git rev-parse refs/remotes/origin/recovery/publish-exact-history/sc900-v8-20260910)" = "b567d4b74a2f99e50022dd0dafd81ffa75dff0a2"
+          test "$(git rev-parse refs/remotes/origin/recovery/publish-sc900-v8-exact-history)" = "bbc3bd900b73bde89151dc51706ad62fc69e8196"
+          test "$(git rev-parse refs/tags/sc900-v8.0.0-baseline)" = "9c80be5b20e652dc2eb86621dfdf7c32baa06528"
+
+      - name: Adversarial source inventory
+        run: |
+          echo '=== measurement scoring / recording ==='
+          grep -RInE 'score_measurement_probe_answer\(|record_measurement_probe_answer\(|record_measurement_event\(|notify_scored_attempt\(' --include='*.py' . || true
+          echo '=== measurement transition / training mutation ==='
+          grep -RInE 'begin_todays_probe_measurement\(|_record_answer\(|update_progress_for_answer|session_answer_history' --include='*.py' . || true
+          echo '=== redo / retry / flag / suspend / auto-next / reveal ==='
+          grep -RInE 'redo_question|retry|flag|suspend|maybe_auto_next_after_answer|correctness|choice_explan|explanation|exam_reveal' --include='*.py' app*.py cand01r3_*.py session_*.py || true
+          echo '=== persistence / restore / export / analytics / ledger ==='
+          grep -RInE 'save|restore|checkpoint|progress import|analytics|export|ledger|contamination|UNOBSERVED|calendar' --include='*.py' app*.py cand01r3_*.py session_*.py || true
+
+      - name: Verify exact clean source tree after all checks
+        run: |
+          echo "FINAL_CHECKED_OUT_SHA=$(git rev-parse HEAD)"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git diff --exit-code
+          test -z "$(git status --porcelain=v1)"

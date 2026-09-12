@@ -10,6 +10,9 @@ target-version = "py311"
 select = ["E", "F", "I", "B", "UP"]
 ignore = ["E501"]
 
+[tool.ruff.lint.per-file-ignores]
+"cand01r3_protocol.py" = ["B007"]
+
 [tool.ruff.lint.isort]
 known-first-party = [
   "app",
@@ -42,6 +45,7 @@ known-first-party = [
   "cand01r3_runtime",
   "cand01r3_rrc1",
   "cand01r3_measurement",
+  "cand01r3_protocol",
   "cand01r3_paths",
   "source_trust",
   "storage_utils",
@@ -78,6 +82,7 @@ files = [
   "cand01r3_runtime.py",
   "cand01r3_rrc1.py",
   "cand01r3_measurement.py",
+  "cand01r3_protocol.py",
   "cand01r3_paths.py",
   "source_trust.py",
   "tools/run_quality_checks.py",
