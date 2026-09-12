@@ -39,12 +39,18 @@ jobs:
             python tools/backlog1_apply_review_fixes.py
             rm tools/backlog1_apply_review_fixes.py
           fi
+          if [ -f tools/backlog1_apply_review_test_fixes.py ]; then
+            python tools/backlog1_apply_review_test_fixes.py
+            rm tools/backlog1_apply_review_test_fixes.py
+          fi
 
       - name: Run focused Segment-1 tests
         shell: bash
         run: |
           set -euo pipefail
-          python -m unittest -v tests.test_backlog1_progress_identity_migration
+          python -m unittest -v \
+            tests.test_backlog1_progress_identity_migration \
+            tests.test_backlog1_segment1_adversarial_review
 
       - name: Run affected and full regression suite
         shell: bash
@@ -58,7 +64,7 @@ jobs:
           set -euo pipefail
           python -m ruff check .
           python -m black --check --exclude 'SC-900-FREE-STUDY-GUIDE\.md|SC-900-Free-Study-Guide\.md|SC-900 Study Guide\.md' .
-          python -m mypy --ignore-missing-imports --follow-imports=skip --check-untyped-defs --exclude '^tools/scrape_markdown_bank\.py$' --exclude '^tools/recover_free_study_guide\.py$' --exclude '^tools/build_free_study_guide\.py$' --exclude '^tools/build_reviewed_bank\.py$' --exclude '^tests/' --exclude '^implementation/' --exclude '^reference/' --exclude '^public_sources/' --exclude '^user_data/' --exclude '^build/' --exclude '^dist/' $(git ls-files '*.py')
+          python -m mypy --ignore-missing-imports --follow-imports=skip --check-untyped-defs --exclude '^tools/scrape_markdown_bank\.py$' --exclude '^tools/recover_free_study_guide\.py$' --exclude '^tools/build_free_study_guide\.py$' --exclude '^tests/' --exclude '^implementation/' --exclude '^reference/' --exclude '^public_sources/' --exclude '^user_data/' --exclude '^build/' --exclude '^dist/' $(git ls-files '*.py')
 
       - name: Verify frozen scope and commit repaired tree
         shell: bash
