@@ -1,5 +1,5 @@
 from collections.abc import Mapping, MutableMapping
-from typing import Any, TypedDict, cast
+from typing import Any, NotRequired, TypedDict, cast
 
 from bank_models import BankQuestion
 
@@ -35,6 +35,10 @@ class AnswerState(TypedDict):
     legacy_repair_concept_key: str
     prediction_id: str
     prediction_snapshot: dict[str, Any]
+
+
+class SessionAnswerState(AnswerState, total=False):
+    question_id: str
 
 
 class QuestionHistoryEvent(TypedDict):
@@ -122,6 +126,11 @@ class SessionSnapshot(TypedDict):
     schema_version: int
     app_version: str
     bank_file: str
+    session_identity_version: NotRequired[int]
+    session_identity: NotRequired[str]
+    bank_fingerprint: NotRequired[str]
+    question_ids: NotRequired[list[str]]
+    restore_question_ids: NotRequired[list[str]]
     mode: str
     builder_context: BuilderContext
     source_label: str
@@ -144,7 +153,7 @@ class SessionSnapshot(TypedDict):
     session_boss_markers: list[int]
     session_stealth_markers: list[int]
     session_xp_gained: int
-    answers: list[AnswerState]
+    answers: list[SessionAnswerState]
 
 
 class QuestionRuntimeState(BankQuestion, total=False):
