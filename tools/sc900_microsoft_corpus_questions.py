@@ -9,6 +9,10 @@ from tools.sc900_mlc_batch05 import batch_05
 from tools.sc900_mlc_batch06 import batch_06
 from tools.sc900_mlc_batch07 import batch_07
 from tools.sc900_mlc_batch08 import batch_08
+from tools.sc900_mlc_batch09 import batch_09
+from tools.sc900_mlc_batch10 import batch_10
+from tools.sc900_mlc_batch11 import batch_11
+from tools.sc900_mlc_batch12 import batch_12
 
 BATCHES = (
     ("batch-01", batch_01),
@@ -19,6 +23,10 @@ BATCHES = (
     ("batch-06", batch_06),
     ("batch-07", batch_07),
     ("batch-08", batch_08),
+    ("batch-09", batch_09),
+    ("batch-10", batch_10),
+    ("batch-11", batch_11),
+    ("batch-12", batch_12),
 )
 
 
