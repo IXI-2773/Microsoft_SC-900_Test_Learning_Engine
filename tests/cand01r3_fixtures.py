@@ -270,6 +270,12 @@ class SessionBuilderHarness:
     def _smart_practice_worker_snapshot(self, *, base_pool=None):
         return self._builder._smart_practice_worker_snapshot(self, base_pool=base_pool)
 
+    def compute_analytics(self, source=None):
+        return {"domains": []}
+
+    def _recent_history(self, days=14):
+        return list(self.progress_data.get("history") or [])
+
     def _smart_practice_signal_key(self):
         from cand01r3_runtime import partition_cache_identity
 
@@ -335,8 +341,20 @@ class QuestionFlowHarness:
     def _followup_index_signature(self):
         return self._flow._followup_index_signature(self)
 
+    def _session_question_ids(self):
+        return self._flow._session_question_ids(self)
+
+    def _insert_or_replace_followup_clones(self, clones, insert_at):
+        return self._flow._insert_or_replace_followup_clones(self, clones, insert_at)
+
     def _insert_followup_questions(self, current_q, candidates, tag):
         return self._flow._insert_followup_questions(self, current_q, candidates, tag)
+
+    def _is_replaceable_followup_slot(self, q):
+        return self._flow._is_replaceable_followup_slot(self, q)
+
+    def _next_followup_replacement_index(self, start_at):
+        return self._flow._next_followup_replacement_index(self, start_at)
 
     def find_memory_ramp_candidates(self, q, limit: int = 2):
         return self._flow.find_memory_ramp_candidates(self, q, limit=limit)

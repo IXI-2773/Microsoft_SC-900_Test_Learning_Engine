@@ -1,0 +1,84 @@
+name: Verify BACKLOG-1 Segment 1 (read-only)
+
+on:
+  push:
+    branches:
+      - implementation/sc900-backlog1-identity-migration
+  pull_request:
+    branches:
+      - implementation/sc900-backlog1-identity-migration
+
+permissions:
+  contents: read
+
+jobs:
+  verify-backlog1-segment1:
+    runs-on: windows-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Verify exact clean source tree before tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "GITHUB_SHA=$GITHUB_SHA"
+          echo "CHECKED_OUT_SHA=$(git rev-parse HEAD)"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain=v1)"
+          git diff --exit-code
+
+      - name: Install verification tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install black ruff mypy pyinstaller -r requirements-extract.txt
+
+      - name: Run focused Segment-1 tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest -v \
+            tests.test_backlog1_progress_identity_migration \
+            tests.test_backlog1_segment1_adversarial_review
+
+      - name: Run affected and full regression suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -v
+
+      - name: Run quality gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m ruff check .
+          python -m black --check --exclude 'SC-900-FREE-STUDY-GUIDE\.md|SC-900-Free-Study-Guide\.md|SC-900 Study Guide\.md' .
+          python -m mypy --ignore-missing-imports --follow-imports=skip --check-untyped-defs --exclude '^tools/scrape_markdown_bank\.py$' --exclude '^tools/recover_free_study_guide\.py$' --exclude '^tools/build_free_study_guide\.py$' --exclude '^tools/build_reviewed_bank\.py$' --exclude '^tests/' --exclude '^implementation/' --exclude '^reference/' --exclude '^public_sources/' --exclude '^user_data/' --exclude '^build/' --exclude '^dist/' $(git ls-files '*.py')
+
+      - name: Verify frozen CAND scope untouched
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "$(git status --porcelain -- cand01r3_partition.py cand01r3_runtime.py content/sc900/phase3)"
+
+      - name: Verify exact clean source tree after all checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "FINAL_CHECKED_OUT_SHA=$(git rev-parse HEAD)"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git diff --exit-code
+          test -z "$(git status --porcelain=v1)"

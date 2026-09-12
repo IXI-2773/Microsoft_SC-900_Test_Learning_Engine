@@ -27,6 +27,12 @@ from progress_store import (
     sanitize_response_time,
     set_progress_super_confident,
 )
+from question_identity import (
+    canonical_question_history_map,
+    canonical_question_id,
+    history_event_matches_question,
+    question_content_fingerprint,
+)
 from session_models import QuestionRuntimeState, SessionAnswerEvent, clear_runtime_answer_state
 from smart_practice_concept_graph import concept_key_for_question
 
@@ -34,6 +40,9 @@ from smart_practice_concept_graph import concept_key_for_question
 class QuestionFlowMixin:
     def _question_correct(self, q: QuestionRuntimeState) -> bool:
         return set(q.get("selected", [])) == set(q.get("correct", []))
+
+    def _session_question_ids(self) -> set[str]:
+        return {canonical_question_id(item) for item in self.questions if canonical_question_id(item)}
 
     def _infer_miss_reason_from_confidence(self, confidence, is_correct):
         if is_correct:
@@ -340,8 +349,10 @@ class QuestionFlowMixin:
             ]
             if not candidates:
                 return []
-        existing_qnums = {q.get("question_number") for q in self.questions}
-        unique_candidates = [q for q in candidates if q.get("question_number") not in existing_qnums]
+        existing_ids = self._session_question_ids()
+        unique_candidates = [
+            q for q in candidates if canonical_question_id(q) and canonical_question_id(q) not in existing_ids
+        ]
         if not unique_candidates:
             return []
         clones = self._clone_questions(unique_candidates)
@@ -370,8 +381,10 @@ class QuestionFlowMixin:
             ]
             if not candidates:
                 return []
-        existing_qnums = {q.get("question_number") for q in self.questions}
-        unique_candidates = [q for q in candidates if q.get("question_number") not in existing_qnums]
+        existing_ids = self._session_question_ids()
+        unique_candidates = [
+            q for q in candidates if canonical_question_id(q) and canonical_question_id(q) not in existing_ids
+        ]
         if not unique_candidates:
             return []
         clones = self._clone_questions(unique_candidates)
@@ -434,11 +447,11 @@ class QuestionFlowMixin:
         topics = {str(topic).strip() for topic in q.get("topics", []) if str(topic).strip()}
         domain = q.get("domain")
         records = self._progress_questions()
-        current_qnums = {item.get("question_number") for item in self.questions}
+        current_ids = self._session_question_ids()
         ranked = []
         for candidate in training_source_questions(self.master_questions):
-            qnum = candidate.get("question_number")
-            if qnum == q.get("question_number") or qnum in current_qnums:
+            candidate_id = canonical_question_id(candidate)
+            if not candidate_id or candidate_id == canonical_question_id(q) or candidate_id in current_ids:
                 continue
             rec = records.get(self._question_key(candidate), {})
             if is_suspended(rec):
@@ -455,7 +468,7 @@ class QuestionFlowMixin:
                 + (1 if is_review_due(rec) else 0)
                 - int(rec.get("attempts", 0)) * 0.05
             )
-            ranked.append((score, qnum, candidate))
+            ranked.append((score, int(candidate.get("question_number") or 0), candidate))
         ranked.sort(key=lambda row: (row[0], -row[1]), reverse=True)
         return [candidate for _score, _qnum, candidate in ranked[:limit]]
 
@@ -556,12 +569,12 @@ class QuestionFlowMixin:
             return []
         clue = self.deciding_clue_for_question(q)
         records = self._progress_questions()
-        current_qnums = {item.get("question_number") for item in self.questions}
+        current_ids = self._session_question_ids()
         topics = {str(topic).strip() for topic in q.get("topics", []) if str(topic).strip()}
         ranked = []
         for candidate in self._related_followup_candidates(q, clue=clue):
-            qnum = candidate.get("question_number")
-            if qnum == q.get("question_number") or qnum in current_qnums:
+            candidate_id = canonical_question_id(candidate)
+            if not candidate_id or candidate_id == canonical_question_id(q) or candidate_id in current_ids:
                 continue
             candidate_rec = records.get(self._question_key(candidate), {})
             if is_suspended(candidate_rec):
@@ -582,7 +595,7 @@ class QuestionFlowMixin:
                 + (2 if is_review_due(candidate_rec) else 0)
                 - int(candidate_rec.get("correct_streak", 0)) * 0.3
             )
-            ranked.append((score, int(qnum or 0), candidate))
+            ranked.append((score, int(candidate.get("question_number") or 0), candidate))
         ranked.sort(key=lambda row: (row[0], -row[1]), reverse=True)
         return self._insert_delayed_followup_questions(
             q, [candidate for _score, _qnum, candidate in ranked[:1]], QUESTION_TAG_DELAYED_RECALL_PROBE
@@ -596,13 +609,7 @@ class QuestionFlowMixin:
             for qnum in index["by_unit"].get(f"{kind}::{unit}", set())
             if qnum in index["by_number"]
         ]
-        concept_qnums = {int(candidate.get("question_number") or 0) for candidate in concept_questions}
-        history_map: dict[int, list[dict[str, Any]]] = {}
-        for event in self._progress_history():
-            qnum = int(event.get("question_number") or 0)
-            if qnum not in concept_qnums:
-                continue
-            history_map.setdefault(qnum, []).append(event)
+        history_map = canonical_question_history_map(self._progress_history())
         _rows, memory_map = self._build_concept_memory_state_rows(history_map, concept_questions)
         return memory_map.get(f"{kind}::{unit}", {"state": "new", "evidence_count": 0, "next_ramp": "recognition"})
 
@@ -621,7 +628,7 @@ class QuestionFlowMixin:
             return "", []
         kind, unit = self._coverage_unit_for_question(q)
         unit_key = f"{kind}::{unit}"
-        current_qnums = {item.get("question_number") for item in self.questions}
+        current_ids = self._session_question_ids()
         records = self._progress_questions()
         topics = {str(topic).strip() for topic in q.get("topics", []) if str(topic).strip()}
         q_source = str(q.get("source_name") or "")
@@ -629,13 +636,13 @@ class QuestionFlowMixin:
         ranked = []
         index = self._followup_index()
         for candidate in self._related_followup_candidates(q):
-            qnum = candidate.get("question_number")
-            if qnum == q.get("question_number") or qnum in current_qnums:
+            candidate_id = canonical_question_id(candidate)
+            if not candidate_id or candidate_id == canonical_question_id(q) or candidate_id in current_ids:
                 continue
             rec = records.get(self._question_key(candidate), {})
             if is_suspended(rec):
                 continue
-            candidate_meta = index["metadata"].get(int(qnum or 0), {})
+            candidate_meta = index["metadata"].get(int(candidate.get("question_number") or 0), {})
             candidate_topics = set(candidate_meta.get("topics") or ())
             same_unit = str(candidate_meta.get("unit_key") or "") == unit_key
             shared_topics = len(topics & candidate_topics)
@@ -656,7 +663,7 @@ class QuestionFlowMixin:
                 + (2 if is_review_due(rec) else 0)
                 - int(rec.get("correct_streak", 0)) * 0.4
             )
-            ranked.append((score, int(qnum or 0), candidate))
+            ranked.append((score, int(candidate.get("question_number") or 0), candidate))
         ranked.sort(key=lambda row: (row[0], -row[1]), reverse=True)
         return tag, [candidate for _score, _qnum, candidate in ranked[:limit]]
 
@@ -688,13 +695,13 @@ class QuestionFlowMixin:
             return []
         kind, unit = self._coverage_unit_for_question(q)
         unit_key = f"{kind}::{unit}"
-        current_qnums = {item.get("question_number") for item in self.questions}
+        current_ids = self._session_question_ids()
         records = self._progress_questions()
         topics = {str(topic).strip() for topic in q.get("topics", []) if str(topic).strip()}
         ranked = []
         for candidate in training_source_questions(self.master_questions):
-            qnum = candidate.get("question_number")
-            if qnum == q.get("question_number") or qnum in current_qnums:
+            candidate_id = canonical_question_id(candidate)
+            if not candidate_id or candidate_id == canonical_question_id(q) or candidate_id in current_ids:
                 continue
             rec = records.get(self._question_key(candidate), {})
             if is_suspended(rec):
@@ -716,7 +723,7 @@ class QuestionFlowMixin:
                 + int(rec.get("wrong_count", 0))
                 - int(rec.get("correct_streak", 0)) * 0.3
             )
-            ranked.append((score, int(qnum or 0), candidate))
+            ranked.append((score, int(candidate.get("question_number") or 0), candidate))
         ranked.sort(key=lambda row: (row[0], -row[1]), reverse=True)
         return [candidate for _score, _qnum, candidate in ranked[:limit]]
 
@@ -742,13 +749,13 @@ class QuestionFlowMixin:
         if not wrong_labels or not correct_labels:
             return []
         records = self._progress_questions()
-        current_qnums = {item.get("question_number") for item in self.questions}
+        current_ids = self._session_question_ids()
         topics = {str(topic).strip() for topic in q.get("topics", []) if str(topic).strip()}
         domain = q.get("domain")
         ranked = []
         for candidate in training_source_questions(self.master_questions):
-            qnum = candidate.get("question_number")
-            if qnum == q.get("question_number") or qnum in current_qnums:
+            candidate_id = canonical_question_id(candidate)
+            if not candidate_id or candidate_id == canonical_question_id(q) or candidate_id in current_ids:
                 continue
             rec = records.get(self._question_key(candidate), {})
             if is_suspended(rec):
@@ -773,7 +780,7 @@ class QuestionFlowMixin:
                 + (1 if is_review_due(rec) else 0)
                 - int(rec.get("attempts", 0)) * 0.06
             )
-            ranked.append((score, int(qnum or 0), candidate))
+            ranked.append((score, int(candidate.get("question_number") or 0), candidate))
         ranked.sort(key=lambda row: (row[0], -row[1]), reverse=True)
         return [candidate for _score, _qnum, candidate in ranked[:limit]]
 
@@ -800,11 +807,11 @@ class QuestionFlowMixin:
         if self._domain_wrong_streak(domain) < 2:
             return []
         records = self._progress_questions()
-        current_qnums = {item.get("question_number") for item in self.questions}
+        current_ids = self._session_question_ids()
         ranked = []
         for candidate in training_source_questions(self.master_questions):
-            qnum = candidate.get("question_number")
-            if qnum == q.get("question_number") or qnum in current_qnums:
+            candidate_id = canonical_question_id(candidate)
+            if not candidate_id or candidate_id == canonical_question_id(q) or candidate_id in current_ids:
                 continue
             if candidate.get("domain") != domain:
                 continue
@@ -817,7 +824,7 @@ class QuestionFlowMixin:
                 + int(rec.get("wrong_count", 0))
                 - int(rec.get("correct_streak", 0))
             )
-            ranked.append((score, qnum, candidate))
+            ranked.append((score, int(candidate.get("question_number") or 0), candidate))
         ranked.sort(key=lambda row: (row[0], -row[1]), reverse=True)
         inserted = self._insert_followup_questions(
             q, [candidate for _score, _qnum, candidate in ranked[:3]], f"{QUESTION_TAG_STREAK_RESCUE_PREFIX}{domain}"
@@ -848,6 +855,11 @@ class QuestionFlowMixin:
             source_questions = master_questions
         elif isinstance(data, dict):
             source_questions = list(data.get("questions") or [])
+        by_id = {
+            canonical_question_id(question): question
+            for question in source_questions
+            if canonical_question_id(question)
+        }
         by_qnum = {
             int(question.get("question_number") or 0): question
             for question in source_questions
@@ -857,8 +869,10 @@ class QuestionFlowMixin:
         changed = False
         for raw_key, raw_row in state.items():
             row = dict(raw_row or {})
-            qnum = int(row.get("last_question_number") or 0)
-            question = by_qnum.get(qnum)
+            question = by_id.get(str(row.get("question_id") or "").strip())
+            if question is None:
+                qnum = int(row.get("last_question_number") or 0)
+                question = by_qnum.get(qnum)
             if question:
                 canonical_key = self.repair_concept_key_for_question(question)
                 row_key = str(row.get("concept_key") or raw_key or "")
@@ -1026,7 +1040,9 @@ class QuestionFlowMixin:
         feedback["deciding_clue"] = deciding_clue
         self.update_progress_for_answer(q, feedback=feedback)
         event: SessionAnswerEvent = {
+            "question_id": canonical_question_id(q),
             "question_number": int(q.get("question_number") or 0),
+            "question_content_fingerprint": question_content_fingerprint(q),
             "domain": q.get("domain") or "",
             "correct": bool(is_correct),
             "confidence": q.get("last_confidence", ""),
@@ -1187,7 +1203,7 @@ class QuestionFlowMixin:
             q["last_confidence"] = new_conf
             q["last_miss_reason"] = new_reason
             for event in reversed(self._progress_history()):
-                if int(event.get("question_number") or 0) == int(q.get("question_number") or 0):
+                if history_event_matches_question(event, q):
                     event["confidence"] = new_conf
                     event["miss_reason"] = new_reason
                     break
@@ -1210,7 +1226,7 @@ class QuestionFlowMixin:
         q["last_confidence"] = str(rec.get("last_confidence") or "Sure")
         q["last_miss_reason"] = ""
         for event in reversed(self._progress_history()):
-            if int(event.get("question_number") or 0) == int(q.get("question_number") or 0):
+            if history_event_matches_question(event, q):
                 event["confidence"] = "Sure"
                 event["miss_reason"] = ""
                 break

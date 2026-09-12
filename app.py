@@ -62,12 +62,19 @@ from progress_store import (
     is_suspended,
     normalize_progress_record,
     now_iso,
+    progress_record_for_question,
     question_key,
     set_progress_flag,
     set_progress_suspended,
     update_progress_record,
 )
 from question_bank import adaptive_shuffle_question, load_bank, stable_shuffle_question
+from question_identity import (
+    canonical_question_id,
+    history_event_matches_question,
+    question_content_fingerprint,
+    resolve_registered_question_id_from_number,
+)
 from question_widgets import ChoiceRow
 from render_cache import QuestionRenderCache
 from runtime_persistence import RuntimePersistence
@@ -285,6 +292,7 @@ class TestingEngineApp(
         self.session_path = None
         self.progress_path = None
         self.progress_data = blank_progress(app_version=APP_VERSION)
+        self.progress_write_blocked = False
         self.data: QuestionBankData | None = None
         self.master_questions: list[QuestionRuntimeState] = []
         self.questions: list[QuestionRuntimeState] = []
@@ -1528,37 +1536,44 @@ class TestingEngineApp(
         self._open_issue_reports_cache_source = None
         self._open_issue_reports_cache_value = None
 
-    def _open_issue_reports_for_question(self, qnum):
+    def _open_issue_reports_for_question(self, qnum, question_id=""):
         try:
             target_qnum = int(qnum or 0)
         except (TypeError, ValueError):
             return []
-        issue_reports = self._issue_reports()
-        cached_reports = getattr(self, "_open_issue_reports_cache_source", None)
-        indexed_reports = getattr(self, "_open_issue_reports_cache_value", None)
-        if issue_reports is not cached_reports or indexed_reports is None:
-            indexed_reports = {}
-            for report in issue_reports:
-                if str(report.get("status") or "open") != "open":
-                    continue
-                try:
-                    report_qnum = int(report.get("question_number", 0) or 0)
-                except (TypeError, ValueError):
-                    continue
-                indexed_reports.setdefault(report_qnum, []).append(report)
-            self._open_issue_reports_cache_source = issue_reports
-            self._open_issue_reports_cache_value = indexed_reports
-        return list(indexed_reports.get(target_qnum, []))
+        target_id = str(question_id or "").strip()
+        out = []
+        for report in self._issue_reports():
+            if str(report.get("status") or "open") != "open":
+                continue
+            report_id = str(report.get("question_id") or "").strip()
+            if report_id and target_id:
+                if report_id == target_id:
+                    out.append(report)
+                continue
+            try:
+                report_qnum = int(report.get("question_number", 0) or 0)
+            except (TypeError, ValueError):
+                continue
+            if report_qnum == target_qnum:
+                out.append(report)
+        return out
 
     def question_has_open_issue_report(self, q):
-        return bool(self._open_issue_reports_for_question(q.get("question_number")))
+        return bool(
+            self._open_issue_reports_for_question(
+                q.get("question_number"), canonical_question_id(q)
+            )
+        )
 
     def question_has_any_issue(self, q):
         return bool(q.get("flagged_issues")) or self.question_has_open_issue_report(q)
 
     def question_issue_notes(self, q):
         notes = list(q.get("flagged_issues", []))
-        for report in self._open_issue_reports_for_question(q.get("question_number")):
+        for report in self._open_issue_reports_for_question(
+            q.get("question_number"), canonical_question_id(q)
+        ):
             stamp = str(report.get("reported_at") or "").replace("T", " ")[:16]
             if report.get("exclude_from_scoring"):
                 notes.append(
@@ -1569,10 +1584,10 @@ class TestingEngineApp(
         return notes
 
     def set_question_suspended_state(self, qnum, suspended):
-        temp_q = {"question_number": qnum}
-        rec = self._progress_record(temp_q, create=True)
-        rec = set_progress_suspended(rec, suspended)
-        self._progress_questions()[self._question_key(temp_q)] = rec
+        key = resolve_registered_question_id_from_number(qnum)
+        records = self._progress_questions()
+        rec = set_progress_suspended(records.get(key), suspended)
+        records[key] = rec
         self.set_suspended_by_question_number(qnum, suspended)
         if self.questions:
             current = self.current_question()
@@ -1630,6 +1645,14 @@ class TestingEngineApp(
         report["reviewed_at"] = now_iso()
         report["restored_scoring"] = bool(restore_scoring)
         qnum = report.get("question_number")
+        report_id = str(report.get("question_id") or "").strip()
+        if report_id:
+            current = next(
+                (q for q in self.master_questions if canonical_question_id(q) == report_id),
+                None,
+            )
+            if current is not None:
+                qnum = current.get("question_number")
         if restore_scoring and report.get("exclude_from_scoring"):
             self.set_question_suspended_state(qnum, False)
         self._invalidate_issue_report_cache()
@@ -2111,14 +2134,18 @@ class TestingEngineApp(
         self.checkpoint_label.configure(text=f"Q{qnum} verified and enabled for practice.")
 
     def _progress_record(self, q, create=False) -> ProgressRecord | None:
-        key = self._question_key(q)
         records = self._progress_questions()
-        if create and key not in records:
-            records[key] = default_progress_record()
-        record = records.get(key)
-        if record is None:
-            return None
-        return cast(ProgressRecord, record)
+        existing = progress_record_for_question(records, q)
+        if create:
+            key = self._question_key(q)
+            if key not in records:
+                records[key] = (
+                    default_progress_record()
+                    if existing is None
+                    else cast(ProgressRecord, dict(existing))
+                )
+            return cast(ProgressRecord, records[key])
+        return cast(ProgressRecord, existing) if existing is not None else None
 
     def _show_bad_json_warning(self, label, path, backup, err):
         backup_name = backup.name if backup is not None else "not created"
@@ -2169,17 +2196,14 @@ class TestingEngineApp(
         if not path:
             return
         restore_path = Path(path)
-        data, backup, err = self.persistence.load_json_with_backup(restore_path)
+        questions = self.data["questions"] if self.data else None
+        _data, _backup, err = self.persistence.restore_progress_from_source(
+            restore_path, self.progress_path, questions
+        )
         if err:
-            logging.warning("Restore progress source was unreadable: %s", restore_path)
-            self._show_bad_json_warning("Restore progress", restore_path, backup, err)
+            logging.warning("Restore progress rejected without modifying source: %s", restore_path)
+            messagebox.showerror("Restore progress", f"Could not restore progress safely:\n{err}")
             return
-        if not isinstance(data, dict) or not isinstance(data.get("questions"), dict):
-            messagebox.showerror("Restore progress", "That file is not a valid progress JSON file.")
-            return
-        if self.progress_path.exists():
-            self.auto_backup_progress()
-        self.persistence.copy_file(restore_path, self.progress_path, label="restored progress")
         self.load_progress_if_present()
         self.master_questions = self._clone_questions(self.data["questions"])
         self._reset_runtime_question_state(self.master_questions)
@@ -2197,6 +2221,7 @@ class TestingEngineApp(
         messagebox.showinfo("Restore progress", "Progress was restored and the bank was refreshed.")
 
     def load_progress_if_present(self):
+        self.progress_write_blocked = False
         self.progress_data = blank_progress(self.bank_path.name if self.bank_path else "", app_version=APP_VERSION)
         self.last_progress_snapshot = json.dumps(
             self._progress_snapshot_payload(), sort_keys=True, separators=(",", ":")
@@ -2211,8 +2236,19 @@ class TestingEngineApp(
         self.auto_backup_progress()
         data, backup, err = self.persistence.load_json_with_backup(self.progress_path)
         if err:
-            logging.warning("Progress file reset after read failure: %s", self.progress_path)
-            self._show_bad_json_warning("Progress", self.progress_path, backup, err)
+            if self.progress_path and self.progress_path.exists():
+                self.progress_write_blocked = True
+                logging.warning("Progress load blocked; preserved source unchanged: %s", self.progress_path)
+                if hasattr(self, "root"):
+                    messagebox.showwarning(
+                        "Progress migration blocked",
+                        "Existing progress could not be migrated safely and was left unchanged. "
+                        "Progress saving is disabled for this bank until the conflict is resolved.\n\n"
+                        f"{err}",
+                    )
+            else:
+                logging.warning("Progress file reset after read failure: %s", self.progress_path)
+                self._show_bad_json_warning("Progress", self.progress_path, backup, err)
             return
         if not isinstance(data, dict):
             return
@@ -2246,7 +2282,9 @@ class TestingEngineApp(
         logging.info("Loaded progress file: %s", self.progress_path)
 
     def save_progress(self):
-        if not self.progress_path:
+        if not self.progress_path or getattr(self, "progress_write_blocked", False):
+            if getattr(self, "progress_write_blocked", False):
+                logging.warning("Progress save blocked to preserve unresolved source: %s", self.progress_path)
             return
         self.save_queue.cancel("progress")
         snapshot = json.dumps(self._progress_snapshot_payload(), sort_keys=True, separators=(",", ":"))
@@ -2268,7 +2306,7 @@ class TestingEngineApp(
     def apply_progress_to_questions(self, questions):
         records = self._progress_questions()
         for q in questions:
-            rec = records.get(self._question_key(q))
+            rec = progress_record_for_question(records, q)
             if rec:
                 q["flagged"] = bool(rec.get("flagged")) or bool(q.get("flagged"))
                 q["suspended"] = bool(rec.get("suspended"))
@@ -2295,7 +2333,9 @@ class TestingEngineApp(
         event: QuestionHistoryEvent = {
             "at": now_iso(),
             "day": str(rec.get("last_seen") or ""),
+            "question_id": self._question_key(q),
             "question_number": int(q.get("question_number") or 0),
+            "question_content_fingerprint": question_content_fingerprint(q),
             "correct": bool(is_correct),
             "confidence": str((feedback or {}).get("confidence") or ""),
             "miss_reason": str((feedback or {}).get("miss_reason") or ""),
@@ -2542,8 +2582,9 @@ class TestingEngineApp(
         return f"Coaching note: restate why {correct} wins and why {selected} misses. That contrast is where retention usually sticks."
 
     def question_volatility(self, q):
-        qnum = int((q or {}).get("question_number") or 0)
-        events = [event for event in self._progress_history() if int(event.get("question_number") or 0) == qnum]
+        events = [
+            event for event in self._progress_history() if history_event_matches_question(event, q)
+        ]
         attempts = len(events)
         if attempts < 3:
             return {"score": 0.0, "attempts": attempts, "flips": 0, "label": "", "last_outcome": ""}

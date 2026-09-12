@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from progress_store import is_active_weak, is_review_due, is_super_confident_active
+from question_identity import canonical_question_id
 from smart_practice_concept_graph import GRAPH_VERSION, diagnose_root_cause
 from smart_practice_profile import (
     SMART_PRACTICE_POLICY_VERSION,
@@ -94,7 +95,12 @@ def build_smart_practice_score(
         }
     graph_max_utility = float(context.get("graph_max_utility", 4.0) or 4.0)
     graph_pressure = min(graph_max_utility, graph_max_utility * float(diagnosis.get("confidence", 0.0) or 0.0))
-    qnum_outcomes = (context.get("outcomes_by_qnum") or {}).get(qnum, [])
+    question_id = canonical_question_id(question)
+    outcomes_by_id = context.get("outcomes_by_question_id") or {}
+    if question_id:
+        qnum_outcomes = list(outcomes_by_id.get(question_id, []))
+    else:
+        qnum_outcomes = (context.get("outcomes_by_qnum") or {}).get(qnum, [])
     quality_enabled = bool(context.get("quality_enabled", True))
     if quality_enabled:
         quality = question_quality_record(
@@ -455,9 +461,11 @@ def build_smart_practice_score(
         "smart_prediction_offset": float(prediction_calibration.get("recall_probability_offset", 0.0) or 0.0),
         "smart_runtime_policy_controls": runtime_policy_controls,
     }
-    info_id = f"{qnum}:{active_smart_policy.get('policy_id', '')}"
+    question_id = canonical_question_id(question) or str(qnum)
+    info_id = f"{question_id}:{active_smart_policy.get('policy_id', '')}"
     information_history_entry = {
         "record_id": info_id,
+        "question_id": question_id,
         "question_number": qnum,
         "smart_policy_id": str(active_smart_policy.get("policy_id") or ""),
         "information_value": question_updates["smart_information_value"],

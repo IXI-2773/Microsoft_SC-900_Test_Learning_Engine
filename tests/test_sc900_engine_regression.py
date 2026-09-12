@@ -28,8 +28,9 @@ from smart_practice_concept_graph import GRAPH_VERSION, aggregate_concept_state,
 from smart_practice_question_value import INFO_BOUNDS, information_value, normalize_calibration_store, quality_measurement, question_quality_record
 from smart_practice_policy import active_policy, activate_candidate_policy, build_policy_review_report, create_candidate_policy, create_shadow_decision, default_policy_values, detect_drift, empty_governance, evaluate_challenger, exactly_one_active, expire_candidate, normalize_governance, policy_checksum, regression_gate_failures, rollback_policy, validate_policy, validate_policy_values
 from source_trust import derive_source_trust_warning
+from session_identity import bank_content_fingerprint, ordered_question_ids
 from session_models import apply_answer_state, clear_runtime_answer_state, reset_runtime_question_state
-from session_store import migrate_session_snapshot
+from session_store import build_session_snapshot, migrate_session_snapshot, serialize_answer_state
 from storage_utils import load_json_or_backup, safe_write_json
 from tools.clean_bank import clean_bank
 from tools.benchmark_engine import run_benchmark
@@ -52,8 +53,8 @@ class SC900TestLearningEngineTests(unittest.TestCase):
         self.assertEqual('risk', summary['source_health']['tone'])
 
     def test_source_trust_warning_is_risk_only(self):
-        question = {'question_number': 7, 'source_name': 'Source A'}
-        conflict = derive_source_trust_warning(question, {7: {'question_number': 7, 'source_name': 'Source A', 'label': 'Source conflict', 'score': 0.2, 'support_sources': [], 'objective_code': '', 'topic': ''}}, {})
+        question = {'id': 'engine-q7', 'question_number': 7, 'source_name': 'Source A'}
+        conflict = derive_source_trust_warning(question, {7: {'id': 'engine-q7', 'question_number': 7, 'source_name': 'Source A', 'label': 'Source conflict', 'score': 0.2, 'support_sources': [], 'objective_code': '', 'topic': ''}}, {})
         decayed = derive_source_trust_warning(question, {}, {'Source A': {'source_name': 'Source A', 'trust_score': 61.0, 'label': 'Decayed', 'question_count': 1, 'agreement_count': 0, 'supported_count': 0, 'single_source_count': 1, 'conflict_count': 0, 'issue_count': 1, 'decay': 20.0}})
         healthy = derive_source_trust_warning(question, {}, {'Source A': {'source_name': 'Source A', 'trust_score': 82.0, 'label': 'Watch', 'question_count': 1, 'agreement_count': 0, 'supported_count': 0, 'single_source_count': 1, 'conflict_count': 0, 'issue_count': 0, 'decay': 0.0}})
         self.assertEqual('Source conflict', conflict['text'])
@@ -181,14 +182,14 @@ class SC900TestLearningEngineTests(unittest.TestCase):
         self.assertIn('embedded follow-on question removed', notes)
 
     def test_stable_shuffle_keeps_correct_choice_and_explanation_aligned(self):
-        q = {'question_number': 99, 'prompt': 'Which answer is correct?', 'choices': {'A': 'right', 'B': 'wrong one', 'C': 'wrong two', 'D': 'wrong three'}, 'correct': ['A'], 'choice_explanations': {'A': 'right explanation', 'B': 'bad', 'C': 'bad', 'D': 'bad'}}
+        q = {'id': 'engine-q99', 'question_number': 99, 'prompt': 'Which answer is correct?', 'choices': {'A': 'right', 'B': 'wrong one', 'C': 'wrong two', 'D': 'wrong three'}, 'correct': ['A'], 'choice_explanations': {'A': 'right explanation', 'B': 'bad', 'C': 'bad', 'D': 'bad'}}
         shuffled = stable_shuffle_question(q)
         correct_letter = shuffled['correct'][0]
         self.assertEqual('right', shuffled['choices'][correct_letter])
         self.assertEqual('right explanation', shuffled['choice_explanations'][correct_letter])
 
     def test_adaptive_shuffle_keeps_correct_choice_and_explanation_aligned(self):
-        q = {'question_number': 101, 'prompt': 'Pick the strongest control.', 'choices': {'A': 'right choice', 'B': 'wrong one', 'C': 'wrong two', 'D': 'wrong three'}, 'correct': ['A'], 'choice_explanations': {'A': 'right explanation', 'B': 'bad', 'C': 'bad', 'D': 'bad'}}
+        q = {'id': 'engine-q101', 'question_number': 101, 'prompt': 'Pick the strongest control.', 'choices': {'A': 'right choice', 'B': 'wrong one', 'C': 'wrong two', 'D': 'wrong three'}, 'correct': ['A'], 'choice_explanations': {'A': 'right explanation', 'B': 'bad', 'C': 'bad', 'D': 'bad'}}
         shuffled_one = adaptive_shuffle_question(q, 'seed-one')
         arrangements = {tuple(adaptive_shuffle_question(q, seed)['choices'].items()) for seed in ('seed-one', 'seed-two', 'seed-three', 'seed-four')}
         correct_letter = shuffled_one['correct'][0]
@@ -244,13 +245,13 @@ class SC900TestLearningEngineTests(unittest.TestCase):
         self.assertEqual([], rec['last_selected'])
 
     def test_due_review_selection_uses_records(self):
-        questions = [{'question_number': 1}, {'question_number': 2}, {'question_number': 3}]
+        questions = [{'id': 'engine-q1', 'question_number': 1}, {'id': 'engine-q2', 'question_number': 2}, {'id': 'engine-q3', 'question_number': 3}]
         records = {'1': {'next_review': '2026-04-22', 'wrong_count': 1}, '2': {'next_review': '2026-05-01', 'wrong_count': 3}, '3': {'next_review': '2026-04-23', 'wrong_count': 2}}
         due = select_due_review_questions(questions, records, on_date='2026-04-23')
         self.assertEqual([1, 3], [q['question_number'] for q in due])
 
     def test_recovered_single_miss_drops_out_of_active_weak_filters(self):
-        questions = [{'question_number': 1}]
+        questions = [{'id': 'engine-q1', 'question_number': 1}]
         rec = update_progress_record({}, ['B'], False, seen_on='2026-04-23')
         rec = update_progress_record(rec, ['A'], True, seen_on='2026-04-23')
         records = {'1': rec}
@@ -259,14 +260,14 @@ class SC900TestLearningEngineTests(unittest.TestCase):
         self.assertEqual([], select_questions_by_history(questions, records, 'Due/flagged weak', on_date='2026-04-23'))
 
     def test_suspended_question_is_excluded_from_history_selection(self):
-        questions = [{'question_number': 1}, {'question_number': 2}]
+        questions = [{'id': 'engine-q1', 'question_number': 1}, {'id': 'engine-q2', 'question_number': 2}]
         records = {'1': {'attempts': 3, 'wrong_count': 2, 'suspended': True}, '2': {'attempts': 3, 'wrong_count': 2, 'suspended': False, 'last_correct': False}}
         wrong = select_questions_by_history(questions, records, 'Previously wrong', on_date='2026-04-23')
         self.assertEqual([2], [q['question_number'] for q in wrong])
         self.assertEqual('Suspended', study_status_name(records['1']))
 
     def test_repeat_misses_stay_active_weak_until_recovered(self):
-        questions = [{'question_number': 1}]
+        questions = [{'id': 'engine-q1', 'question_number': 1}]
         rec = update_progress_record({}, ['B'], False, seen_on='2026-04-23')
         rec = update_progress_record(rec, ['B'], False, seen_on='2026-04-23')
         rec = update_progress_record(rec, ['A'], True, seen_on='2026-04-23')
@@ -275,7 +276,7 @@ class SC900TestLearningEngineTests(unittest.TestCase):
         self.assertEqual([1], [q['question_number'] for q in select_questions_by_history(questions, records, 'Previously wrong', on_date='2026-04-23')])
 
     def test_history_selection_filters_unseen_wrong_and_flagged_due(self):
-        questions = [{'question_number': 1}, {'question_number': 2}, {'question_number': 3}, {'question_number': 4, 'flagged': True}]
+        questions = [{'id': 'engine-q1', 'question_number': 1}, {'id': 'engine-q2', 'question_number': 2}, {'id': 'engine-q3', 'question_number': 3}, {'id': 'engine-q4', 'question_number': 4, 'flagged': True}]
         records = {'1': {'attempts': 0, 'wrong_count': 0, 'flagged': False, 'next_review': ''}, '2': {'attempts': 3, 'wrong_count': 1, 'flagged': False, 'next_review': '2026-04-22'}, '3': {'attempts': 2, 'wrong_count': 0, 'flagged': False, 'next_review': '2026-05-04'}, '4': {'attempts': 1, 'wrong_count': 0, 'flagged': False, 'next_review': ''}}
         unseen = select_questions_by_history(questions, records, 'Unseen', on_date='2026-04-23')
         wrong = select_questions_by_history(questions, records, 'Previously wrong', on_date='2026-04-23')
@@ -363,12 +364,15 @@ class SC900TestLearningEngineTests(unittest.TestCase):
             user_data = Path(tmp)
             (user_data / 'bad_progress.json').write_text(json.dumps({'questions': {'1': {}}, 'history': [], 'meta': {'xp': 'bad'}}), encoding='utf-8')
             good_path = user_data / 'good_progress.json'
-            good_path.write_text(json.dumps({'questions': {'1': {}, '2': {}}, 'history': [{'question_number': 1}], 'meta': {'xp': 40}}), encoding='utf-8')
+            good_path.write_text(json.dumps({'questions': {'1': {}, '2': {}}, 'history': [{'id': 'engine-q1', 'question_number': 1}], 'meta': {'xp': 40}}), encoding='utf-8')
             best = app_module.best_progress_strength(user_data)
             self.assertEqual(good_path, best[4])
 
     def test_session_snapshot_migration_backfills_restore_identity_and_limit(self):
-        migrated = migrate_session_snapshot({'app_version': 'legacy', 'mode': 'Practice', 'question_numbers': [10, 11], 'current_index': 1, 'elapsed_seconds': 42, 'answers': [{'selected': ['A'], 'pending': ['A'], 'answered': True, 'flagged': False, 'suspended': False, 'last_confidence': '', 'last_miss_reason': '', 'recall_ready': False, 'session_tag': ''}]}, 'Practice', [10, 11])
+        legacy = {'app_version': 'legacy', 'mode': 'Practice', 'question_numbers': [10, 11], 'current_index': 1, 'elapsed_seconds': 42, 'answers': [{'selected': ['A'], 'pending': ['A'], 'answered': True, 'flagged': False, 'suspended': False, 'last_confidence': '', 'last_miss_reason': '', 'recall_ready': False, 'session_tag': ''}]}
+        with self.assertRaisesRegex(ValueError, "Legacy ordinary session"):
+            migrate_session_snapshot(legacy, 'Practice', [10, 11])
+        migrated = migrate_session_snapshot(legacy, 'Practice', [10, 11], allow_legacy=True)
         self.assertEqual(1, migrated['schema_version'])
         self.assertEqual([10, 11], migrated['restore_question_numbers'])
         self.assertEqual(2, migrated['session_base_question_count'])
@@ -376,24 +380,33 @@ class SC900TestLearningEngineTests(unittest.TestCase):
         self.assertTrue(migrated['restore_signature'])
 
     def test_session_snapshot_migration_allows_saved_questions_present_in_bank_but_not_current_pool(self):
+        legacy = {
+            'mode': 'Smart Practice',
+            'question_numbers': [1, 3],
+            'restore_question_numbers': [1, 2],
+            'session_base_question_count': 2,
+            'session_question_limit': 3,
+            'answers': [{}, {}, {}],
+        }
+        with self.assertRaisesRegex(ValueError, "Legacy ordinary session"):
+            migrate_session_snapshot(
+                legacy,
+                'Smart Practice',
+                [1, 2],
+                available_question_numbers=[1, 2, 3],
+            )
         migrated = migrate_session_snapshot(
-            {
-                'mode': 'Smart Practice',
-                'question_numbers': [1, 3],
-                'restore_question_numbers': [1, 2],
-                'session_base_question_count': 2,
-                'session_question_limit': 3,
-                'answers': [{}, {}, {}],
-            },
+            legacy,
             'Smart Practice',
             [1, 2],
             available_question_numbers=[1, 2, 3],
+            allow_legacy=True,
         )
         self.assertEqual([1, 3], migrated['question_numbers'])
         self.assertEqual(3, migrated['session_question_limit'])
 
     def test_runtime_question_state_helpers_apply_reset_and_clear_answer_state(self):
-        question = {'question_number': 77, 'selected': ['B'], 'pending': ['B'], 'answered': True, 'flagged': True, 'suspended': False, 'last_confidence': 'Unsure', 'last_miss_reason': 'Misread', 'recall_ready': True, 'session_tag': 'Question twin'}
+        question = {'id': 'engine-q77', 'question_number': 77, 'selected': ['B'], 'pending': ['B'], 'answered': True, 'flagged': True, 'suspended': False, 'last_confidence': 'Unsure', 'last_miss_reason': 'Misread', 'recall_ready': True, 'session_tag': 'Question twin'}
         clear_runtime_answer_state(question)
         self.assertEqual([], question['selected'])
         self.assertEqual([], question['pending'])
@@ -456,7 +469,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         for folder in (user_data, checkpoints, backups, logs):
             folder.mkdir(parents=True, exist_ok=True)
         bank_path = tmpdir / 'mini_bank.json'
-        bank_payload = {'title': 'Mini Bank', 'questions': [{'question_number': 1, 'prompt': 'Question 1', 'choices': {'A': 'Correct 1', 'B': 'Wrong 1'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic 1']}, {'question_number': 2, 'prompt': 'Question 2', 'choices': {'A': 'Correct 2', 'B': 'Wrong 2'}, 'correct': ['A'], 'domain': 'Domain B', 'topics': ['Topic 2']}, {'question_number': 3, 'prompt': 'Question 3', 'choices': {'A': 'Correct 3', 'B': 'Wrong 3'}, 'correct': ['A'], 'domain': 'Domain C', 'topics': ['Topic 3']}]}
+        bank_payload = {'title': 'Mini Bank', 'questions': [{'id': 'mini-q1', 'question_number': 1, 'prompt': 'Question 1', 'choices': {'A': 'Correct 1', 'B': 'Wrong 1'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic 1']}, {'id': 'mini-q2', 'question_number': 2, 'prompt': 'Question 2', 'choices': {'A': 'Correct 2', 'B': 'Wrong 2'}, 'correct': ['A'], 'domain': 'Domain B', 'topics': ['Topic 2']}, {'id': 'mini-q3', 'question_number': 3, 'prompt': 'Question 3', 'choices': {'A': 'Correct 3', 'B': 'Wrong 3'}, 'correct': ['A'], 'domain': 'Domain C', 'topics': ['Topic 3']}]}
         bank_path.write_text(json.dumps(bank_payload), encoding='utf-8')
         patches = [mock.patch.object(app_module, 'APP_DIR', tmpdir), mock.patch.object(app_module, 'USER_DATA_DIR', user_data), mock.patch.object(app_module, 'CHECKPOINT_DIR', checkpoints), mock.patch.object(app_module, 'BACKUP_DIR', backups), mock.patch.object(app_module, 'CONFIG_PATH', user_data / 'config.json'), mock.patch.object(app_module, 'DEFAULT_BANK', bank_path), mock.patch.object(app_module.TestingEngineApp, '_tick', lambda self: None), mock.patch.object(app_module.TestingEngineApp, '_collect_answer_feedback', lambda self, q, is_correct: {'confidence': 'Sure', 'miss_reason': ''}), mock.patch.object(app_module.messagebox, 'showwarning', return_value=None), mock.patch.object(app_module.messagebox, 'showerror', return_value=None), mock.patch.object(app_module.messagebox, 'showinfo', return_value=None), mock.patch.object(app_module.messagebox, 'askyesno', return_value=True)]
         for patcher in patches:
@@ -679,7 +692,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
                 worker_targets.append(self.target)
         with mock.patch('app_session_builder_mixin.threading.Thread', DeferredThread), mock.patch.object(app.root, 'after', side_effect=lambda delay, callback: scheduled.append(callback)):
             app._start_smart_practice_async('2', False, app.get_filtered_master_pool(), preserve_if_saved=False)
-            app._progress_history().append({'question_number': 1, 'correct': True, 'confidence': 'Sure'})
+            app._progress_history().append({'id': 'engine-q1', 'question_number': 1, 'correct': True, 'confidence': 'Sure'})
             worker_targets[0]()
             self.assertEqual(1, len(scheduled))
             scheduled[0]()
@@ -763,7 +776,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
     def test_screenshot_review_window_enables_verified_placeholder(self):
         app = self.make_app(start_session=False)
         raw = json.loads(app.bank_path.read_text(encoding='utf-8'))
-        raw['questions'].append({'question_number': 99, 'prompt': 'Placeholder prompt', 'choices': {'A': 'Review source screenshot before studying', 'B': 'Needs prompt transcription', 'C': 'Needs answer-key verification', 'D': 'Needs explanation verification'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['General Review'], 'general_explanation': 'Placeholder explanation', 'source_label': 'Chapter 1 screenshot bank', 'source_image': 'question.png', 'source_image_path': str(app.bank_path.with_name('question.png')), 'flagged_issues': ['Screenshot imported as review-needed placeholder; verify before enabling.'], 'suspended': True, 'import_status': 'screenshot_review_needed'})
+        raw['questions'].append({'id': 'engine-q99', 'question_number': 99, 'prompt': 'Placeholder prompt', 'choices': {'A': 'Review source screenshot before studying', 'B': 'Needs prompt transcription', 'C': 'Needs answer-key verification', 'D': 'Needs explanation verification'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['General Review'], 'general_explanation': 'Placeholder explanation', 'source_label': 'Chapter 1 screenshot bank', 'source_image': 'question.png', 'source_image_path': str(app.bank_path.with_name('question.png')), 'flagged_issues': ['Screenshot imported as review-needed placeholder; verify before enabling.'], 'suspended': True, 'import_status': 'screenshot_review_needed'})
         app.bank_path.write_text(json.dumps(raw), encoding='utf-8')
         app.load_from_path(app.bank_path)
         app.open_screenshot_review_window()
@@ -810,7 +823,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         app = self.make_app()
         self.assertFalse(app.question_has_any_issue(app.current_question()))
         app._open_issue_reports_for_question(1)
-        app.progress_data['meta']['issue_reports'] = [{'question_number': 1, 'source_page': '', 'domain': 'General Security Concepts', 'prompt': 'Question 1', 'reported_at': '2026-01-01T00:00:00', 'status': 'open', 'exclude_from_scoring': False, 'source_notes': []}]
+        app.progress_data['meta']['issue_reports'] = [{'id': 'engine-q1', 'question_number': 1, 'source_page': '', 'domain': 'General Security Concepts', 'prompt': 'Question 1', 'reported_at': '2026-01-01T00:00:00', 'status': 'open', 'exclude_from_scoring': False, 'source_notes': []}]
         app._progress_meta_cache_raw = None
         app._progress_meta_cache_value = None
         self.assertTrue(app.question_has_any_issue(app.current_question()))
@@ -909,15 +922,43 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
     def test_restored_oversized_session_does_not_grow_past_saved_limit(self):
         app = self.make_app(start_session=False)
         subset = [dict(app.master_questions[0]), dict(app.master_questions[1])]
+        restored = [dict(question) for question in app.master_questions[:3]]
         app.start_session_from_pool(subset, mode='Smart Practice', count='All visible', randomize=False, reset_clock=False, preserve_if_saved=False)
-        old_payload = {'app_version': 'old-half-cap', 'bank_file': app.bank_path.name, 'mode': 'Smart Practice', 'question_count': 3, 'question_numbers': [1, 2, 3], 'restore_question_numbers': [1, 2], 'session_base_question_count': 2, 'session_question_limit': 3, 'current_index': 0, 'elapsed_seconds': 0, 'exam_reveal': True, 'checkpoints_saved': [], 'answers': [{'selected': [], 'pending': [], 'answered': False, 'flagged': False, 'suspended': False, 'last_confidence': '', 'last_miss_reason': '', 'recall_ready': False, 'session_tag': ''}, {'selected': [], 'pending': [], 'answered': False, 'flagged': False, 'suspended': False, 'last_confidence': '', 'last_miss_reason': '', 'recall_ready': False, 'session_tag': ''}, {'selected': [], 'pending': [], 'answered': False, 'flagged': False, 'suspended': False, 'last_confidence': '', 'last_miss_reason': '', 'recall_ready': False, 'session_tag': 'Question twin'}]}
-        app.session_path.write_text(json.dumps(old_payload), encoding='utf-8')
-        candidate = dict(app.master_questions[0])
-        candidate['question_number'] = 99
-        candidate['prompt'] = 'Synthetic old-session follow-up'
-        app.master_questions.append(candidate)
+        snapshot = build_session_snapshot(
+            app_version='old-half-cap',
+            bank_file=app.bank_path.name,
+            mode='Smart Practice',
+            builder_context=app.current_builder_context_data,
+            source_label=app.active_source_label,
+            question_numbers=[question.get('question_number') for question in restored],
+            restore_question_numbers=[question.get('question_number') for question in subset],
+            bank_fingerprint=bank_content_fingerprint(app.master_questions),
+            question_ids=ordered_question_ids(restored),
+            restore_question_ids=ordered_question_ids(subset),
+            session_base_question_count=2,
+            session_question_limit=3,
+            current_index=0,
+            elapsed_seconds=0,
+            exam_reveal=True,
+            checkpoints_saved=[],
+            session_rewards=[],
+            unlocked_rewards=[],
+            session_answer_history=[],
+            current_quests=[],
+            quest_completion_keys=[],
+            session_boss_markers=[],
+            session_stealth_markers=[],
+            session_xp_gained=0,
+            answers=[serialize_answer_state(question) for question in restored],
+        )
+        snapshot['answers'][2]['session_tag'] = 'Question twin'
+        app.session_path.write_text(json.dumps(snapshot), encoding='utf-8')
         app.load_session_if_present(skip_identity_check=True)
-        inserted = app._insert_followup_questions(app.current_question(), [candidate], 'Question twin')
+        extra = dict(app.master_questions[0])
+        extra['id'] = 'mini-extra'
+        extra['question_number'] = 99
+        extra['prompt'] = 'Synthetic old-session follow-up'
+        inserted = app._insert_followup_questions(app.current_question(), [extra], 'Question twin')
         self.assertEqual(3, app.session_question_limit)
         self.assertEqual(3, len(app.questions))
         self.assertEqual(1, len(inserted))
@@ -1007,9 +1048,9 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         legacy_payload = {'app_version': 'legacy', 'bank_file': app.bank_path.name, 'mode': 'Practice', 'question_count': 2, 'question_numbers': [q.get('question_number') for q in app.questions], 'current_index': 1, 'elapsed_seconds': 21, 'exam_reveal': True, 'checkpoints_saved': [], 'answers': [{'selected': ['A'], 'pending': ['A'], 'answered': True, 'flagged': False, 'suspended': False, 'last_confidence': '', 'last_miss_reason': '', 'recall_ready': False, 'session_tag': ''}, {'selected': [], 'pending': [], 'answered': False, 'flagged': False, 'suspended': False, 'last_confidence': '', 'last_miss_reason': '', 'recall_ready': False, 'session_tag': ''}]}
         app.session_path.write_text(json.dumps(legacy_payload), encoding='utf-8')
         app.start_session_from_pool(subset, mode='Practice', count='All visible', randomize=False, reset_clock=False, preserve_if_saved=True)
-        self.assertEqual(1, app.index)
-        self.assertTrue(app.questions[0]['answered'])
-        self.assertEqual(['A'], app.questions[0]['selected'])
+        self.assertEqual(0, app.index)
+        self.assertFalse(app.questions[0]['answered'])
+        self.assertEqual([], app.questions[0].get('selected', []))
         self.assertEqual(2, app.session_question_limit)
 
     def test_session_restore_property_round_trip_preserves_randomized_unfinished_state(self):
@@ -1124,10 +1165,9 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
     def test_super_confident_button_pushes_question_far_out(self):
         app = self.make_app()
         app.toggle_choice('A')
-        first_qnum = app.questions[0]['question_number']
         app._set_current_index(0)
         app.mark_current_question_super_confident()
-        rec = app._progress_questions()[str(first_qnum)]
+        rec = app._progress_record(app.questions[0])
         self.assertTrue(is_super_confident_active(rec))
         self.assertEqual('Sure', rec['last_confidence'])
         self.assertGreaterEqual(int(rec['correct_streak']), 6)
@@ -1299,26 +1339,26 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         rec2 = update_progress_record({}, ['A'], True, seen_on='2026-04-23', confidence='Sure')
         rec3 = update_progress_record({}, ['A'], True, seen_on='2026-04-15', confidence='Unsure')
         rec3['next_review'] = '2026-04-20'
-        app._progress_questions()['1'] = rec1
-        app._progress_questions()['2'] = rec2
-        app._progress_questions()['3'] = rec3
+        app._progress_questions()['engine-q1'] = rec1
+        app._progress_questions()['engine-q2'] = rec2
+        app._progress_questions()['engine-q3'] = rec3
         pool = app.build_smart_practice_pool('3', randomize=False)
         self.assertEqual(3, len(pool))
         self.assertEqual({1, 2, 3}, {q['question_number'] for q in pool})
 
     def test_smart_practice_prioritizes_imported_screenshot_questions(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'Which policy defines acceptable device use?', 'choices': {'A': 'AUP', 'B': 'BIA'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Governance'], 'source_name': 'Clean bank', 'objective_code': '1.1'}, {'question_number': 2, 'prompt': "Which concept describes a threat actor's reason for attacking?", 'choices': {'A': 'Motive', 'B': 'MTTR'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Threat actors'], 'source_name': 'Screenshot chapter bank', 'source_label': 'Chapter 5 screenshot bank', 'source_image': 'C:/Users/14422/Downloads/ch5/q001.png', 'objective_code': '1.1'}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Which policy defines acceptable device use?', 'choices': {'A': 'AUP', 'B': 'BIA'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Governance'], 'source_name': 'Clean bank', 'objective_code': '1.1'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': "Which concept describes a threat actor's reason for attacking?", 'choices': {'A': 'Motive', 'B': 'MTTR'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Threat actors'], 'source_name': 'Screenshot chapter bank', 'source_label': 'Chapter 5 screenshot bank', 'source_image': 'C:/Users/14422/Downloads/ch5/q001.png', 'objective_code': '1.1'}]
         app._reset_runtime_question_state(app.master_questions)
         pool = app.build_smart_practice_pool('1', randomize=False)
         self.assertEqual([2], [q['question_number'] for q in pool])
 
     def test_recent_screenshot_question_cools_down_when_not_weak_or_due(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'Which screenshot question was just answered?', 'choices': {'A': 'Correct', 'B': 'Distractor'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Threat actors'], 'source_name': 'Screenshot chapter bank', 'source_label': 'Chapter 5 screenshot bank', 'source_image': 'C:/Users/14422/Downloads/ch5/q002.png', 'objective_code': '1.1'}, {'question_number': 2, 'prompt': 'Which fresh question should be preferred?', 'choices': {'A': 'Correct', 'B': 'Distractor'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Governance'], 'source_name': 'Clean bank', 'objective_code': '1.1'}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Which screenshot question was just answered?', 'choices': {'A': 'Correct', 'B': 'Distractor'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Threat actors'], 'source_name': 'Screenshot chapter bank', 'source_label': 'Chapter 5 screenshot bank', 'source_image': 'C:/Users/14422/Downloads/ch5/q002.png', 'objective_code': '1.1'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'Which fresh question should be preferred?', 'choices': {'A': 'Correct', 'B': 'Distractor'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Governance'], 'source_name': 'Clean bank', 'objective_code': '1.1'}]
         app._reset_runtime_question_state(app.master_questions)
-        app._progress_questions()['1'] = update_progress_record({}, ['A'], True, seen_on='2026-06-26', confidence='Sure')
-        app._progress_questions()['1']['next_review'] = '2099-01-01'
+        app._progress_questions()['engine-q1'] = update_progress_record({}, ['A'], True, seen_on='2026-06-26', confidence='Sure')
+        app._progress_questions()['engine-q1']['next_review'] = '2099-01-01'
         app.master_questions[0]['selected'] = ['A']
         app.append_answer_history(app.master_questions[0], True, {'confidence': 'Sure', 'miss_reason': '', 'response_seconds': 4.0})
         freshness = app._build_question_freshness_map(app._recent_history(28), app._progress_questions(), app.master_questions)
@@ -1328,16 +1368,16 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
 
     def test_smart_practice_background_prioritizes_coverage_gaps(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'Which metric measures recovery target time?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source One', 'objective_code': '5.2'}, {'question_number': 2, 'prompt': 'Which metric measures repair speed?', 'choices': {'A': 'Mean Time To Repair (MTTR)', 'B': 'Recovery Time Objective (RTO)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source Two', 'objective_code': '5.2'}, {'question_number': 3, 'prompt': 'Which document defines required recovery order for systems?', 'choices': {'A': 'Business impact analysis', 'B': 'Recovery plan'}, 'correct': ['B'], 'domain': 'Security Program Management and Oversight', 'topics': ['Recovery planning'], 'source_name': 'Source One', 'objective_code': '1.2'}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Which metric measures recovery target time?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source One', 'objective_code': '5.2'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'Which metric measures repair speed?', 'choices': {'A': 'Mean Time To Repair (MTTR)', 'B': 'Recovery Time Objective (RTO)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source Two', 'objective_code': '5.2'}, {'id': 'engine-q3', 'question_number': 3, 'prompt': 'Which document defines required recovery order for systems?', 'choices': {'A': 'Business impact analysis', 'B': 'Recovery plan'}, 'correct': ['B'], 'domain': 'Security Program Management and Oversight', 'topics': ['Recovery planning'], 'source_name': 'Source One', 'objective_code': '1.2'}]
         app._reset_runtime_question_state(app.master_questions)
-        app._progress_questions()['1'] = update_progress_record({}, ['A'], True, seen_on='2026-04-23', confidence='Sure')
-        app._progress_questions()['2'] = update_progress_record({}, ['A'], True, seen_on='2026-04-24', confidence='Sure')
+        app._progress_questions()['engine-q1'] = update_progress_record({}, ['A'], True, seen_on='2026-04-23', confidence='Sure')
+        app._progress_questions()['engine-q2'] = update_progress_record({}, ['A'], True, seen_on='2026-04-24', confidence='Sure')
         pool = app.build_smart_practice_pool('1', randomize=False)
         self.assertEqual([3], [q['question_number'] for q in pool])
 
     def test_background_analytics_detect_source_agreement_coverage_gaps_and_confusion_pairs(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'Which metric measures recovery target time?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source One', 'objective_code': '5.2'}, {'question_number': 2, 'prompt': 'Which metric measures recovery target time?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source Two', 'objective_code': '5.2'}, {'question_number': 3, 'prompt': 'Which document defines required recovery order for systems?', 'choices': {'A': 'Business impact analysis', 'B': 'Recovery plan'}, 'correct': ['B'], 'domain': 'General Security Concepts', 'topics': ['Recovery planning'], 'source_name': 'Source One', 'objective_code': '1.2'}, {'question_number': 4, 'prompt': 'Which metric measures repair speed?', 'choices': {'A': 'Mean Time To Repair (MTTR)', 'B': 'Recovery Time Objective (RTO)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source Two', 'objective_code': '5.2'}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Which metric measures recovery target time?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source One', 'objective_code': '5.2'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'Which metric measures recovery target time?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source Two', 'objective_code': '5.2'}, {'id': 'engine-q3', 'question_number': 3, 'prompt': 'Which document defines required recovery order for systems?', 'choices': {'A': 'Business impact analysis', 'B': 'Recovery plan'}, 'correct': ['B'], 'domain': 'General Security Concepts', 'topics': ['Recovery planning'], 'source_name': 'Source One', 'objective_code': '1.2'}, {'id': 'engine-q4', 'question_number': 4, 'prompt': 'Which metric measures repair speed?', 'choices': {'A': 'Mean Time To Repair (MTTR)', 'B': 'Recovery Time Objective (RTO)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source Two', 'objective_code': '5.2'}]
         app._reset_runtime_question_state(app.master_questions)
         app.start_session_from_pool([dict(app.master_questions[0]), dict(app.master_questions[2])], mode='Smart Practice', count='All visible', randomize=False, reset_clock=False, preserve_if_saved=False)
         app.toggle_choice('B')
@@ -1348,10 +1388,10 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
 
     def test_background_analytics_detects_latent_weakness_source_trust_and_transfer_strength(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'Which metric measures recovery target time?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source One', 'objective_code': '5.2', 'flagged_issues': ['Suspect wording']}, {'question_number': 2, 'prompt': 'Which metric measures repair speed?', 'choices': {'A': 'Mean Time To Repair (MTTR)', 'B': 'Recovery Time Objective (RTO)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source Two', 'objective_code': '5.2'}, {'question_number': 3, 'prompt': 'Which document defines required recovery order for systems?', 'choices': {'A': 'Business impact analysis', 'B': 'Recovery plan'}, 'correct': ['B'], 'domain': 'General Security Concepts', 'topics': ['Recovery planning'], 'source_name': 'Source Two', 'objective_code': '1.2'}, {'question_number': 4, 'prompt': 'Which control validates contractor identities before entry?', 'choices': {'A': 'Badge reader', 'B': 'Visitor log'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Physical security'], 'source_name': 'Source One', 'objective_code': '9.9', 'flagged_issues': ['Needs review']}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Which metric measures recovery target time?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source One', 'objective_code': '5.2', 'flagged_issues': ['Suspect wording']}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'Which metric measures repair speed?', 'choices': {'A': 'Mean Time To Repair (MTTR)', 'B': 'Recovery Time Objective (RTO)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source Two', 'objective_code': '5.2'}, {'id': 'engine-q3', 'question_number': 3, 'prompt': 'Which document defines required recovery order for systems?', 'choices': {'A': 'Business impact analysis', 'B': 'Recovery plan'}, 'correct': ['B'], 'domain': 'General Security Concepts', 'topics': ['Recovery planning'], 'source_name': 'Source Two', 'objective_code': '1.2'}, {'id': 'engine-q4', 'question_number': 4, 'prompt': 'Which control validates contractor identities before entry?', 'choices': {'A': 'Badge reader', 'B': 'Visitor log'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Physical security'], 'source_name': 'Source One', 'objective_code': '9.9', 'flagged_issues': ['Needs review']}]
         app._reset_runtime_question_state(app.master_questions)
-        app._progress_questions()['1'] = update_progress_record({}, ['A'], True, seen_on='2026-05-10', confidence='Guessed')
-        app._progress_questions()['1']['next_review'] = '2026-05-18'
+        app._progress_questions()['engine-q1'] = update_progress_record({}, ['A'], True, seen_on='2026-05-10', confidence='Guessed')
+        app._progress_questions()['engine-q1']['next_review'] = '2026-05-18'
         app.master_questions[0]['selected'] = ['A']
         app.append_answer_history(app.master_questions[0], True, {'confidence': 'Guessed', 'miss_reason': ''})
         analytics = app.compute_analytics(source=app.master_questions)
@@ -1362,19 +1402,19 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
 
     def test_background_analytics_exposes_difficulty_phrasing_and_burnout(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'Which metric best maps recovery target time during an outage?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source One', 'objective_code': '5.2'}, {'question_number': 2, 'prompt': 'Which metric tracks repair speed?', 'choices': {'A': 'Mean Time To Repair (MTTR)', 'B': 'Recovery Time Objective (RTO)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source Two', 'objective_code': '5.2'}, {'question_number': 3, 'prompt': 'LOUD /// PKI ///// TRUST ???? which control BEST BEST BEST confirms identity during remote crypto handshakes?', 'choices': {'A': 'Certificate validation', 'B': 'Visitor badge'}, 'correct': ['A'], 'domain': 'Security Architecture', 'topics': ['Encryption / PKI'], 'source_name': 'Source Three', 'objective_code': '3.9', 'source_notes': ['OCR cleanup', 'Long wording'], 'general_explanation': 'CERTIFICATE TRUST ' * 20}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Which metric best maps recovery target time during an outage?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source One', 'objective_code': '5.2'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'Which metric tracks repair speed?', 'choices': {'A': 'Mean Time To Repair (MTTR)', 'B': 'Recovery Time Objective (RTO)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source Two', 'objective_code': '5.2'}, {'id': 'engine-q3', 'question_number': 3, 'prompt': 'LOUD /// PKI ///// TRUST ???? which control BEST BEST BEST confirms identity during remote crypto handshakes?', 'choices': {'A': 'Certificate validation', 'B': 'Visitor badge'}, 'correct': ['A'], 'domain': 'Security Architecture', 'topics': ['Encryption / PKI'], 'source_name': 'Source Three', 'objective_code': '3.9', 'source_notes': ['OCR cleanup', 'Long wording'], 'general_explanation': 'CERTIFICATE TRUST ' * 20}]
         app._reset_runtime_question_state(app.master_questions)
         rec = update_progress_record({}, ['B'], False, seen_on='2026-05-10', confidence='Guessed', miss_reason='Did not know')
         rec = update_progress_record(rec, ['B'], False, seen_on='2026-05-11', confidence='Unsure', miss_reason='Misread')
         rec = update_progress_record(rec, ['A'], True, seen_on='2026-05-12', confidence='Guessed')
-        app._progress_questions()['1'] = rec
+        app._progress_questions()['engine-q1'] = rec
         app.master_questions[0]['selected'] = ['B']
         app.append_answer_history(app.master_questions[0], False, {'confidence': 'Guessed', 'miss_reason': 'Did not know', 'response_seconds': 8.0})
         app.master_questions[0]['selected'] = ['B']
         app.append_answer_history(app.master_questions[0], False, {'confidence': 'Unsure', 'miss_reason': 'Misread', 'response_seconds': 12.0})
         app.master_questions[0]['selected'] = ['A']
         app.append_answer_history(app.master_questions[0], True, {'confidence': 'Guessed', 'miss_reason': '', 'response_seconds': 11.0})
-        app._progress_questions()['2'] = update_progress_record({}, ['A'], True, seen_on='2026-05-12', confidence='Sure')
+        app._progress_questions()['engine-q2'] = update_progress_record({}, ['A'], True, seen_on='2026-05-12', confidence='Sure')
         app.master_questions[1]['selected'] = ['A']
         app.append_answer_history(app.master_questions[1], True, {'confidence': 'Sure', 'miss_reason': '', 'response_seconds': 6.0})
         app.session_answer_history = [{'correct': True, 'confidence': 'Sure', 'response_seconds': 5.0}, {'correct': True, 'confidence': 'Sure', 'response_seconds': 6.0}, {'correct': True, 'confidence': 'Sure', 'response_seconds': 6.5}, {'correct': False, 'confidence': 'Guessed', 'response_seconds': 17.0}, {'correct': False, 'confidence': 'Unsure', 'response_seconds': 18.0}, {'correct': False, 'confidence': 'Guessed', 'response_seconds': 19.5}]
@@ -1389,21 +1429,21 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
 
     def test_background_analytics_exposes_deeper_learning_signals(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'Which metric measures recovery target time during a disruption?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source One', 'objective_code': '5.2'}, {'question_number': 2, 'prompt': 'A payment service fails during an outage. Which metric best defines the target recovery window for the service?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics', 'Recovery planning'], 'source_name': 'Source Two', 'objective_code': '5.2'}, {'question_number': 3, 'prompt': 'Which document sets recovery order for business services after a disruption?', 'choices': {'A': 'Business impact analysis', 'B': 'Recovery plan'}, 'correct': ['B'], 'domain': 'Security Program Management and Oversight', 'topics': ['Recovery planning'], 'source_name': 'Source One', 'objective_code': '5.3'}, {'question_number': 4, 'prompt': 'Which record verifies a contractor signed in to a secure area?', 'choices': {'A': 'Visitor log', 'B': 'Badge reader'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Physical security'], 'source_name': 'Source Three', 'objective_code': '1.1'}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Which metric measures recovery target time during a disruption?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source One', 'objective_code': '5.2'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'A payment service fails during an outage. Which metric best defines the target recovery window for the service?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics', 'Recovery planning'], 'source_name': 'Source Two', 'objective_code': '5.2'}, {'id': 'engine-q3', 'question_number': 3, 'prompt': 'Which document sets recovery order for business services after a disruption?', 'choices': {'A': 'Business impact analysis', 'B': 'Recovery plan'}, 'correct': ['B'], 'domain': 'Security Program Management and Oversight', 'topics': ['Recovery planning'], 'source_name': 'Source One', 'objective_code': '5.3'}, {'id': 'engine-q4', 'question_number': 4, 'prompt': 'Which record verifies a contractor signed in to a secure area?', 'choices': {'A': 'Visitor log', 'B': 'Badge reader'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Physical security'], 'source_name': 'Source Three', 'objective_code': '1.1'}]
         app._reset_runtime_question_state(app.master_questions)
         rec1 = update_progress_record({}, ['B'], False, seen_on='2026-05-10', confidence='Unsure', miss_reason='Narrowed to two')
         rec1 = update_progress_record(rec1, ['A'], True, seen_on='2026-05-11', confidence='Guessed')
-        app._progress_questions()['1'] = rec1
+        app._progress_questions()['engine-q1'] = rec1
         app.master_questions[0]['selected'] = ['B']
         app.append_answer_history(app.master_questions[0], False, {'confidence': 'Unsure', 'miss_reason': 'Narrowed to two', 'response_seconds': 11.0})
         app.master_questions[0]['selected'] = ['A']
         app.append_answer_history(app.master_questions[0], True, {'confidence': 'Guessed', 'miss_reason': '', 'response_seconds': 10.5})
         rec2 = update_progress_record({}, ['A'], True, seen_on='2026-05-12', confidence='Sure')
-        app._progress_questions()['2'] = rec2
+        app._progress_questions()['engine-q2'] = rec2
         app.master_questions[1]['selected'] = ['A']
         app.append_answer_history(app.master_questions[1], True, {'confidence': 'Sure', 'miss_reason': '', 'response_seconds': 8.5})
         rec4 = update_progress_record({}, ['A'], True, seen_on='2026-05-12', confidence='Sure')
-        app._progress_questions()['4'] = rec4
+        app._progress_questions()['engine-q4'] = rec4
         app.master_questions[3]['selected'] = ['A']
         app.append_answer_history(app.master_questions[3], True, {'confidence': 'Sure', 'miss_reason': '', 'response_seconds': 4.5})
         analytics = app.compute_analytics(source=app.master_questions)
@@ -1432,11 +1472,11 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
 
     def test_smart_practice_uses_blind_spot_and_reinforcement_signals_in_background(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'Which metric measures recovery target time during a disruption?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source One', 'objective_code': '5.2'}, {'question_number': 2, 'prompt': 'Which document sets recovery order for business services after a disruption?', 'choices': {'A': 'Business impact analysis', 'B': 'Recovery plan'}, 'correct': ['B'], 'domain': 'Security Program Management and Oversight', 'topics': ['Recovery planning'], 'source_name': 'Source One', 'objective_code': '5.3'}, {'question_number': 3, 'prompt': 'Which record verifies a contractor signed in to a secure area?', 'choices': {'A': 'Visitor log', 'B': 'Badge reader'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Physical security'], 'source_name': 'Source Two', 'objective_code': '1.1'}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Which metric measures recovery target time during a disruption?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source One', 'objective_code': '5.2'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'Which document sets recovery order for business services after a disruption?', 'choices': {'A': 'Business impact analysis', 'B': 'Recovery plan'}, 'correct': ['B'], 'domain': 'Security Program Management and Oversight', 'topics': ['Recovery planning'], 'source_name': 'Source One', 'objective_code': '5.3'}, {'id': 'engine-q3', 'question_number': 3, 'prompt': 'Which record verifies a contractor signed in to a secure area?', 'choices': {'A': 'Visitor log', 'B': 'Badge reader'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Physical security'], 'source_name': 'Source Two', 'objective_code': '1.1'}]
         app._reset_runtime_question_state(app.master_questions)
         rec1 = update_progress_record({}, ['B'], False, seen_on='2026-05-10', confidence='Unsure', miss_reason='Narrowed to two')
         rec1 = update_progress_record(rec1, ['A'], True, seen_on='2026-05-11', confidence='Guessed')
-        app._progress_questions()['1'] = rec1
+        app._progress_questions()['engine-q1'] = rec1
         app.master_questions[0]['selected'] = ['B']
         app.append_answer_history(app.master_questions[0], False, {'confidence': 'Unsure', 'miss_reason': 'Narrowed to two', 'response_seconds': 11.0})
         app.master_questions[0]['selected'] = ['A']
@@ -1446,10 +1486,10 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
 
     def test_objective_mastery_and_stem_transfer_engine_track_style_diversity(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'Which metric measures recovery target time?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source One', 'objective_code': '5.2'}, {'question_number': 2, 'prompt': 'A core service fails during an outage. What is the first metric you should review to understand the target recovery window?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source Two', 'objective_code': '5.2'}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Which metric measures recovery target time?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source One', 'objective_code': '5.2'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'A core service fails during an outage. What is the first metric you should review to understand the target recovery window?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source Two', 'objective_code': '5.2'}]
         app._reset_runtime_question_state(app.master_questions)
-        app._progress_questions()['1'] = update_progress_record({}, ['A'], True, seen_on='2026-05-10', confidence='Sure')
-        app._progress_questions()['2'] = update_progress_record({}, ['A'], True, seen_on='2026-05-11', confidence='Sure')
+        app._progress_questions()['engine-q1'] = update_progress_record({}, ['A'], True, seen_on='2026-05-10', confidence='Sure')
+        app._progress_questions()['engine-q2'] = update_progress_record({}, ['A'], True, seen_on='2026-05-11', confidence='Sure')
         app.master_questions[0]['selected'] = ['A']
         app.master_questions[1]['selected'] = ['A']
         app.append_answer_history(app.master_questions[0], True, {'confidence': 'Sure', 'miss_reason': ''})
@@ -1462,12 +1502,12 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
 
     def test_interference_map_confidence_compression_and_abstraction_ladder_are_detected(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'Which term describes the metric that defines the target recovery window?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source One', 'objective_code': '5.2'}, {'question_number': 2, 'prompt': 'A core service fails during an outage. What metric best captures the target recovery window?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source Two', 'objective_code': '5.2'}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Which term describes the metric that defines the target recovery window?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source One', 'objective_code': '5.2'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'A core service fails during an outage. What metric best captures the target recovery window?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source Two', 'objective_code': '5.2'}]
         app._reset_runtime_question_state(app.master_questions)
-        app._progress_questions()['1'] = update_progress_record({}, ['B'], False, seen_on='2026-05-10', confidence='Guessed', miss_reason='Did not know')
+        app._progress_questions()['engine-q1'] = update_progress_record({}, ['B'], False, seen_on='2026-05-10', confidence='Guessed', miss_reason='Did not know')
         app.master_questions[0]['selected'] = ['B']
         app.append_answer_history(app.master_questions[0], False, {'confidence': 'Guessed', 'miss_reason': 'Did not know'})
-        app._progress_questions()['2'] = update_progress_record({}, ['A'], True, seen_on='2026-05-11', confidence='Unsure')
+        app._progress_questions()['engine-q2'] = update_progress_record({}, ['A'], True, seen_on='2026-05-11', confidence='Unsure')
         app.master_questions[1]['selected'] = ['A']
         app.append_answer_history(app.master_questions[1], True, {'confidence': 'Unsure', 'miss_reason': ''})
         analytics = app.compute_analytics(source=app.master_questions)
@@ -1479,14 +1519,14 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
 
     def test_smart_practice_interleaving_avoids_back_to_back_same_topic_when_possible(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'Question 1', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic Same'], 'source_name': 'Source One', 'objective_code': '1.1'}, {'question_number': 2, 'prompt': 'Question 2', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic Same'], 'source_name': 'Source One', 'objective_code': '1.1'}, {'question_number': 3, 'prompt': 'Question 3', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain B', 'topics': ['Topic Other'], 'source_name': 'Source Two', 'objective_code': '2.1'}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Question 1', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic Same'], 'source_name': 'Source One', 'objective_code': '1.1'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'Question 2', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic Same'], 'source_name': 'Source One', 'objective_code': '1.1'}, {'id': 'engine-q3', 'question_number': 3, 'prompt': 'Question 3', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain B', 'topics': ['Topic Other'], 'source_name': 'Source Two', 'objective_code': '2.1'}]
         app._reset_runtime_question_state(app.master_questions)
         pool = app.build_smart_practice_pool('3', randomize=False)
         self.assertEqual([1, 3, 2], [q['question_number'] for q in pool])
 
     def test_smart_practice_interleaving_rotates_imported_source_labels(self):
         app = self.make_app(start_session=False)
-        questions = [{'question_number': 1, 'prompt': 'Chapter 5 screenshot item one', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Topic Same'], 'source_name': 'Screenshot chapter bank', 'source_label': 'Chapter 5 screenshot bank', 'objective_code': '1.1'}, {'question_number': 2, 'prompt': 'Chapter 5 screenshot item two', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Topic Same'], 'source_name': 'Screenshot chapter bank', 'source_label': 'Chapter 5 screenshot bank', 'objective_code': '1.1'}, {'question_number': 3, 'prompt': 'Clean-bank transfer check', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Security Architecture', 'topics': ['Topic Other'], 'source_name': 'Clean bank', 'objective_code': '3.1'}, {'question_number': 4, 'prompt': 'Chapter 3 screenshot item', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Security Architecture', 'topics': ['Topic Other'], 'source_name': 'Screenshot chapter bank', 'source_label': 'Chapter 3 screenshot bank', 'objective_code': '3.2'}]
+        questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Chapter 5 screenshot item one', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Topic Same'], 'source_name': 'Screenshot chapter bank', 'source_label': 'Chapter 5 screenshot bank', 'objective_code': '1.1'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'Chapter 5 screenshot item two', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Topic Same'], 'source_name': 'Screenshot chapter bank', 'source_label': 'Chapter 5 screenshot bank', 'objective_code': '1.1'}, {'id': 'engine-q3', 'question_number': 3, 'prompt': 'Clean-bank transfer check', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Security Architecture', 'topics': ['Topic Other'], 'source_name': 'Clean bank', 'objective_code': '3.1'}, {'id': 'engine-q4', 'question_number': 4, 'prompt': 'Chapter 3 screenshot item', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Security Architecture', 'topics': ['Topic Other'], 'source_name': 'Screenshot chapter bank', 'source_label': 'Chapter 3 screenshot bank', 'objective_code': '3.2'}]
         ordered = app._interleave_questions(questions)
         first_labels = [q.get('source_label') or q.get('source_name') for q in ordered[:2]]
         self.assertNotEqual(first_labels[0], first_labels[1])
@@ -1495,10 +1535,10 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         app = self.make_app(start_session=False)
         questions = []
         for idx in range(1, 19):
-            questions.append({'question_number': idx, 'prompt': f'Dominant source question {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic A'], 'source_name': 'Dominant Source', 'source_label': 'Dominant Source', 'objective_code': f'1.{idx}'})
+            questions.append({'id': f'engine-q{idx}', 'question_number': idx, 'prompt': f'Dominant source question {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic A'], 'source_name': 'Dominant Source', 'source_label': 'Dominant Source', 'objective_code': f'1.{idx}'})
         for idx in range(19, 41):
             offset = idx - 19
-            questions.append({'question_number': idx, 'prompt': f'Variety source question {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain B' if offset % 2 else 'Domain C', 'topics': [f'Topic {chr(66 + offset % 4)}'], 'source_name': f'Source {offset % 5}', 'source_label': f'Source {offset % 5}', 'objective_code': f'3.{idx}'})
+            questions.append({'id': f'engine-q{idx}', 'question_number': idx, 'prompt': f'Variety source question {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain B' if offset % 2 else 'Domain C', 'topics': [f'Topic {chr(66 + offset % 4)}'], 'source_name': f'Source {offset % 5}', 'source_label': f'Source {offset % 5}', 'objective_code': f'3.{idx}'})
         app.master_questions = questions
         app._reset_runtime_question_state(app.master_questions)
         pool = app.build_smart_practice_pool('25', randomize=False)
@@ -1521,7 +1561,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
 
     def test_smart_practice_variety_does_not_shrink_narrow_filtered_pool(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': idx, 'prompt': f'Same objective filtered question {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Single Topic'], 'source_name': 'Single Source', 'source_label': 'Single Source', 'objective_code': '1.1'} for idx in range(1, 31)]
+        app.master_questions = [{'id': f'engine-q{idx}', 'question_number': idx, 'prompt': f'Same objective filtered question {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Single Topic'], 'source_name': 'Single Source', 'source_label': 'Single Source', 'objective_code': '1.1'} for idx in range(1, 31)]
         app._reset_runtime_question_state(app.master_questions)
         pool = app.build_smart_practice_pool('25', randomize=False)
         random.seed(11)
@@ -1535,9 +1575,9 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         app = self.make_app(start_session=False)
         questions = []
         for idx in range(1, 16):
-            questions.append({'question_number': idx, 'prompt': f'Dominant ordered first {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': [f'Topic {idx}'], 'source_name': 'Dominant', 'source_label': 'Dominant', 'objective_code': f'1.{idx}'})
+            questions.append({'id': f'engine-q{idx}', 'question_number': idx, 'prompt': f'Dominant ordered first {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': [f'Topic {idx}'], 'source_name': 'Dominant', 'source_label': 'Dominant', 'objective_code': f'1.{idx}'})
         for idx in range(16, 31):
-            questions.append({'question_number': idx, 'prompt': f'Alternate source {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain B', 'topics': [f'Topic {idx}'], 'source_name': f'Alt {idx % 5}', 'source_label': f'Alt {idx % 5}', 'objective_code': f'2.{idx}'})
+            questions.append({'id': f'engine-q{idx}', 'question_number': idx, 'prompt': f'Alternate source {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain B', 'topics': [f'Topic {idx}'], 'source_name': f'Alt {idx % 5}', 'source_label': f'Alt {idx % 5}', 'objective_code': f'2.{idx}'})
         app.master_questions = questions
         app._reset_runtime_question_state(app.master_questions)
         pool = app.build_smart_practice_pool('10', randomize=False)
@@ -1549,7 +1589,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         app = self.make_app(start_session=False)
         questions = []
         for idx in range(1, 31):
-            questions.append({'question_number': idx, 'prompt': f'Quality scored question {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': f'Domain {idx % 3}', 'topics': [f'Topic {idx % 6}'], 'source_name': f'Source {idx % 5}', 'source_label': f'Source {idx % 5}', 'objective_code': f'1.{idx}'})
+            questions.append({'id': f'engine-q{idx}', 'question_number': idx, 'prompt': f'Quality scored question {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': f'Domain {idx % 3}', 'topics': [f'Topic {idx % 6}'], 'source_name': f'Source {idx % 5}', 'source_label': f'Source {idx % 5}', 'objective_code': f'1.{idx}'})
         app.master_questions = questions
         app._reset_runtime_question_state(app.master_questions)
         pool = app.build_smart_practice_pool('25', randomize=False)
@@ -1562,7 +1602,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         app = self.make_app(start_session=False)
         questions = []
         for idx in range(1, 16):
-            questions.append({'question_number': idx, 'prompt': f'Recently seen question {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': f'Domain {idx % 3}', 'topics': [f'Topic {idx % 6}'], 'source_name': f'Source {idx % 5}', 'source_label': f'Source {idx % 5}', 'objective_code': f'1.{idx}'})
+            questions.append({'id': f'engine-q{idx}', 'question_number': idx, 'prompt': f'Recently seen question {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': f'Domain {idx % 3}', 'topics': [f'Topic {idx % 6}'], 'source_name': f'Source {idx % 5}', 'source_label': f'Source {idx % 5}', 'objective_code': f'1.{idx}'})
         app.master_questions = questions
         app._reset_runtime_question_state(app.master_questions)
         app._build_question_freshness_map = lambda _history, _records, source: {int(question.get('question_number') or 0): 20.0 for question in source}
@@ -1576,9 +1616,9 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         questions = []
         for idx in range(1, 25):
             chapter = 1 + idx % 4
-            questions.append({'question_number': idx, 'prompt': f'Imported chapter screenshot {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': [f'Imported Topic {idx % 5}'], 'source_name': 'Screenshot chapter bank', 'source_label': f'Chapter {chapter} screenshot bank', 'source_image': f'C:/screens/q{idx}.png', 'objective_code': f'1.{idx}'})
+            questions.append({'id': f'engine-q{idx}', 'question_number': idx, 'prompt': f'Imported chapter screenshot {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': [f'Imported Topic {idx % 5}'], 'source_name': 'Screenshot chapter bank', 'source_label': f'Chapter {chapter} screenshot bank', 'source_image': f'C:/screens/q{idx}.png', 'objective_code': f'1.{idx}'})
         for idx in range(25, 55):
-            questions.append({'question_number': idx, 'prompt': f'Clean bank question {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Security Architecture', 'topics': [f'Clean Topic {idx % 6}'], 'source_name': f'Clean Source {idx % 5}', 'objective_code': f'3.{idx}'})
+            questions.append({'id': f'engine-q{idx}', 'question_number': idx, 'prompt': f'Clean bank question {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Security Architecture', 'topics': [f'Clean Topic {idx % 6}'], 'source_name': f'Clean Source {idx % 5}', 'objective_code': f'3.{idx}'})
         app.master_questions = questions
         app._reset_runtime_question_state(app.master_questions)
         pool = app.build_smart_practice_pool('25', randomize=False)
@@ -1587,7 +1627,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
 
     def test_smart_practice_recent_concept_cooldown_rotates_away_from_repeats(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'Recent objective practice one', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Repeated Topic'], 'source_name': 'Source A', 'objective_code': '1.1'}, {'question_number': 2, 'prompt': 'Recent objective practice two', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Repeated Topic'], 'source_name': 'Source B', 'objective_code': '1.1'}, {'question_number': 3, 'prompt': 'Same objective candidate', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Repeated Topic'], 'source_name': 'Source C', 'objective_code': '1.1'}, {'question_number': 4, 'prompt': 'Fresh objective candidate', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain B', 'topics': ['Fresh Topic'], 'source_name': 'Source D', 'objective_code': '2.1'}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Recent objective practice one', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Repeated Topic'], 'source_name': 'Source A', 'objective_code': '1.1'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'Recent objective practice two', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Repeated Topic'], 'source_name': 'Source B', 'objective_code': '1.1'}, {'id': 'engine-q3', 'question_number': 3, 'prompt': 'Same objective candidate', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Repeated Topic'], 'source_name': 'Source C', 'objective_code': '1.1'}, {'id': 'engine-q4', 'question_number': 4, 'prompt': 'Fresh objective candidate', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain B', 'topics': ['Fresh Topic'], 'source_name': 'Source D', 'objective_code': '2.1'}]
         app._reset_runtime_question_state(app.master_questions)
         app.append_answer_history(app.master_questions[0], True, {'confidence': 'Sure', 'miss_reason': ''})
         app.append_answer_history(app.master_questions[1], True, {'confidence': 'Sure', 'miss_reason': ''})
@@ -1598,57 +1638,57 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         app = self.make_app(start_session=False)
         questions = []
         for idx in range(1, 4):
-            questions.append({'question_number': idx, 'prompt': f'Active weak question {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Weak Domain', 'topics': ['Weak Topic'], 'source_name': 'Weak Source', 'source_label': 'Weak Source', 'objective_code': f'1.{idx}'})
+            questions.append({'id': f'engine-q{idx}', 'question_number': idx, 'prompt': f'Active weak question {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Weak Domain', 'topics': ['Weak Topic'], 'source_name': 'Weak Source', 'source_label': 'Weak Source', 'objective_code': f'1.{idx}'})
         for idx in range(4, 36):
-            questions.append({'question_number': idx, 'prompt': f'Variety alternative {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': f'Domain {idx % 4}', 'topics': [f'Topic {idx}'], 'source_name': f'Source {idx % 6}', 'source_label': f'Source {idx % 6}', 'objective_code': f'3.{idx}'})
+            questions.append({'id': f'engine-q{idx}', 'question_number': idx, 'prompt': f'Variety alternative {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': f'Domain {idx % 4}', 'topics': [f'Topic {idx}'], 'source_name': f'Source {idx % 6}', 'source_label': f'Source {idx % 6}', 'objective_code': f'3.{idx}'})
         app.master_questions = questions
         app._reset_runtime_question_state(app.master_questions)
         for qnum in range(1, 4):
-            app._progress_questions()[str(qnum)] = update_progress_record({}, ['B'], False, seen_on='2026-06-25', confidence='Sure', miss_reason='Did not know')
+            app._progress_questions()[f'engine-q{qnum}'] = update_progress_record({}, ['B'], False, seen_on='2026-06-25', confidence='Sure', miss_reason='Did not know')
         pool = app.build_smart_practice_pool('25', randomize=False)
         self.assertTrue({1, 2, 3}.issubset({question['question_number'] for question in pool}))
 
     def test_smart_practice_objective_autopilot_prioritizes_under_mastered_objective(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'Which metric measures recovery target time?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source One', 'objective_code': '5.2'}, {'question_number': 2, 'prompt': 'Which metric measures repair speed?', 'choices': {'A': 'Mean Time To Repair (MTTR)', 'B': 'Recovery Time Objective (RTO)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source Two', 'objective_code': '5.2'}, {'question_number': 3, 'prompt': 'Which control validates contractor identities before entry?', 'choices': {'A': 'Badge reader', 'B': 'Visitor log'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Physical security'], 'source_name': 'Source One', 'objective_code': '1.1'}, {'question_number': 4, 'prompt': 'A contractor arrives at the gate after hours. Which control is the best first check before physical access is granted?', 'choices': {'A': 'Badge reader', 'B': 'Visitor log'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Physical security'], 'source_name': 'Source Two', 'objective_code': '1.1'}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Which metric measures recovery target time?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source One', 'objective_code': '5.2'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'Which metric measures repair speed?', 'choices': {'A': 'Mean Time To Repair (MTTR)', 'B': 'Recovery Time Objective (RTO)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source Two', 'objective_code': '5.2'}, {'id': 'engine-q3', 'question_number': 3, 'prompt': 'Which control validates contractor identities before entry?', 'choices': {'A': 'Badge reader', 'B': 'Visitor log'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Physical security'], 'source_name': 'Source One', 'objective_code': '1.1'}, {'id': 'engine-q4', 'question_number': 4, 'prompt': 'A contractor arrives at the gate after hours. Which control is the best first check before physical access is granted?', 'choices': {'A': 'Badge reader', 'B': 'Visitor log'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Physical security'], 'source_name': 'Source Two', 'objective_code': '1.1'}]
         app._reset_runtime_question_state(app.master_questions)
-        app._progress_questions()['1'] = update_progress_record({}, ['A'], True, seen_on='2026-05-10', confidence='Sure')
-        app._progress_questions()['2'] = update_progress_record({}, ['A'], True, seen_on='2026-05-11', confidence='Sure')
-        app._progress_questions()['3'] = update_progress_record({}, ['A'], True, seen_on='2026-05-12', confidence='Guessed')
+        app._progress_questions()['engine-q1'] = update_progress_record({}, ['A'], True, seen_on='2026-05-10', confidence='Sure')
+        app._progress_questions()['engine-q2'] = update_progress_record({}, ['A'], True, seen_on='2026-05-11', confidence='Sure')
+        app._progress_questions()['engine-q3'] = update_progress_record({}, ['A'], True, seen_on='2026-05-12', confidence='Guessed')
         pool = app.build_smart_practice_pool('1', randomize=False)
         self.assertEqual([4], [q['question_number'] for q in pool])
 
     def test_smart_practice_prioritizes_error_boundary_and_counterfactual_followup(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'Which metric measures recovery target time?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source One', 'objective_code': '5.2'}, {'question_number': 2, 'prompt': 'A core service fails during an outage. What metric best captures the target recovery window?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source Two', 'objective_code': '5.2'}, {'question_number': 3, 'prompt': 'Which control validates contractor identities before entry?', 'choices': {'A': 'Badge reader', 'B': 'Visitor log'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Physical security'], 'source_name': 'Source One', 'objective_code': '1.1'}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Which metric measures recovery target time?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source One', 'objective_code': '5.2'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'A core service fails during an outage. What metric best captures the target recovery window?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source Two', 'objective_code': '5.2'}, {'id': 'engine-q3', 'question_number': 3, 'prompt': 'Which control validates contractor identities before entry?', 'choices': {'A': 'Badge reader', 'B': 'Visitor log'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['Physical security'], 'source_name': 'Source One', 'objective_code': '1.1'}]
         app._reset_runtime_question_state(app.master_questions)
         rec = update_progress_record({}, ['B'], False, seen_on='2026-05-10', confidence='Guessed', miss_reason='Did not know')
         rec = update_progress_record(rec, ['A'], True, seen_on='2026-05-11', confidence='Sure')
-        app._progress_questions()['1'] = rec
+        app._progress_questions()['engine-q1'] = rec
         app.master_questions[0]['selected'] = ['B']
         app.append_answer_history(app.master_questions[0], False, {'confidence': 'Guessed', 'miss_reason': 'Did not know'})
         app.master_questions[0]['selected'] = ['A']
         app.append_answer_history(app.master_questions[0], True, {'confidence': 'Sure', 'miss_reason': ''})
         rec = update_progress_record({}, ['A'], True, seen_on='2026-05-12', confidence='Sure')
         rec = update_progress_record(rec, ['A'], True, seen_on='2026-05-13', confidence='Sure')
-        app._progress_questions()['2'] = rec
+        app._progress_questions()['engine-q2'] = rec
         app.master_questions[1]['selected'] = ['A']
         app.append_answer_history(app.master_questions[1], True, {'confidence': 'Sure', 'miss_reason': ''})
         app.append_answer_history(app.master_questions[1], True, {'confidence': 'Sure', 'miss_reason': ''})
-        app._progress_questions()['3'] = update_progress_record({}, ['A'], True, seen_on='2026-05-14', confidence='Sure')
+        app._progress_questions()['engine-q3'] = update_progress_record({}, ['A'], True, seen_on='2026-05-14', confidence='Sure')
         pool = app.build_smart_practice_pool('1', randomize=False)
         self.assertEqual([1], [q['question_number'] for q in pool])
 
     def test_smart_practice_freshness_decay_penalizes_recent_repeats_and_prioritizes_unseen(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'Question 1', 'choices': {'A': 'Correct 1', 'B': 'Wrong 1'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic 1'], 'source_name': 'Source One', 'objective_code': '1.1'}, {'question_number': 2, 'prompt': 'Question 2', 'choices': {'A': 'Correct 2', 'B': 'Wrong 2'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic 1'], 'source_name': 'Source One', 'objective_code': '1.1'}, {'question_number': 3, 'prompt': 'Question 3', 'choices': {'A': 'Correct 3', 'B': 'Wrong 3'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic 1'], 'source_name': 'Source One', 'objective_code': '1.1'}, {'question_number': 4, 'prompt': 'Question 4', 'choices': {'A': 'Correct 4', 'B': 'Wrong 4'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic 1'], 'source_name': 'Source One', 'objective_code': '1.1'}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Question 1', 'choices': {'A': 'Correct 1', 'B': 'Wrong 1'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic 1'], 'source_name': 'Source One', 'objective_code': '1.1'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'Question 2', 'choices': {'A': 'Correct 2', 'B': 'Wrong 2'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic 1'], 'source_name': 'Source One', 'objective_code': '1.1'}, {'id': 'engine-q3', 'question_number': 3, 'prompt': 'Question 3', 'choices': {'A': 'Correct 3', 'B': 'Wrong 3'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic 1'], 'source_name': 'Source One', 'objective_code': '1.1'}, {'id': 'engine-q4', 'question_number': 4, 'prompt': 'Question 4', 'choices': {'A': 'Correct 4', 'B': 'Wrong 4'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic 1'], 'source_name': 'Source One', 'objective_code': '1.1'}]
         app._reset_runtime_question_state(app.master_questions)
-        app._progress_questions()['1'] = update_progress_record({}, ['A'], True, seen_on='2026-05-16', confidence='Sure')
-        app._progress_questions()['2'] = update_progress_record({}, ['A'], True, seen_on='2026-05-17', confidence='Sure')
-        app._progress_questions()['1']['next_review'] = '2099-01-01'
-        app._progress_questions()['2']['next_review'] = '2099-01-01'
-        app._progress_questions()['1']['learner_memory']['next_review_at'] = '2099-01-01'
-        app._progress_questions()['2']['learner_memory']['next_review_at'] = '2099-01-01'
+        app._progress_questions()['engine-q1'] = update_progress_record({}, ['A'], True, seen_on='2026-05-16', confidence='Sure')
+        app._progress_questions()['engine-q2'] = update_progress_record({}, ['A'], True, seen_on='2026-05-17', confidence='Sure')
+        app._progress_questions()['engine-q1']['next_review'] = '2099-01-01'
+        app._progress_questions()['engine-q2']['next_review'] = '2099-01-01'
+        app._progress_questions()['engine-q1']['learner_memory']['next_review_at'] = '2099-01-01'
+        app._progress_questions()['engine-q2']['learner_memory']['next_review_at'] = '2099-01-01'
         app.master_questions[0]['selected'] = ['A']
         app.master_questions[1]['selected'] = ['A']
         app.append_answer_history(app.master_questions[0], True, {'confidence': 'Sure', 'miss_reason': '', 'response_seconds': 6.0})
@@ -1661,18 +1701,18 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
 
     def test_smart_practice_super_confident_questions_are_skipped_when_other_choices_exist(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'Question 1', 'choices': {'A': 'Correct 1', 'B': 'Wrong 1'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic 1'], 'source_name': 'Source One', 'objective_code': '1.1'}, {'question_number': 2, 'prompt': 'Question 2', 'choices': {'A': 'Correct 2', 'B': 'Wrong 2'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic 1'], 'source_name': 'Source One', 'objective_code': '1.1'}, {'question_number': 3, 'prompt': 'Question 3', 'choices': {'A': 'Correct 3', 'B': 'Wrong 3'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic 1'], 'source_name': 'Source Two', 'objective_code': '1.1'}, {'question_number': 4, 'prompt': 'Question 4', 'choices': {'A': 'Correct 4', 'B': 'Wrong 4'}, 'correct': ['A'], 'domain': 'Domain B', 'topics': ['Topic 2'], 'source_name': 'Source Three', 'objective_code': '2.1'}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Question 1', 'choices': {'A': 'Correct 1', 'B': 'Wrong 1'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic 1'], 'source_name': 'Source One', 'objective_code': '1.1'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'Question 2', 'choices': {'A': 'Correct 2', 'B': 'Wrong 2'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic 1'], 'source_name': 'Source One', 'objective_code': '1.1'}, {'id': 'engine-q3', 'question_number': 3, 'prompt': 'Question 3', 'choices': {'A': 'Correct 3', 'B': 'Wrong 3'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic 1'], 'source_name': 'Source Two', 'objective_code': '1.1'}, {'id': 'engine-q4', 'question_number': 4, 'prompt': 'Question 4', 'choices': {'A': 'Correct 4', 'B': 'Wrong 4'}, 'correct': ['A'], 'domain': 'Domain B', 'topics': ['Topic 2'], 'source_name': 'Source Three', 'objective_code': '2.1'}]
         app._reset_runtime_question_state(app.master_questions)
         rec = update_progress_record({}, ['A'], True, seen_on='2026-05-17', confidence='Sure')
         rec = set_progress_super_confident(rec, seen_on='2026-05-17', cooldown_days=120)
-        app._progress_questions()['1'] = rec
+        app._progress_questions()['engine-q1'] = rec
         pool = app.build_smart_practice_pool('2', randomize=False)
-        self.assertTrue(is_super_confident_active(app._progress_questions()['1'], on_date='2026-05-17'))
+        self.assertTrue(is_super_confident_active(app._progress_questions()['engine-q1'], on_date='2026-05-17'))
         self.assertNotIn(1, [q['question_number'] for q in pool])
 
     def test_wrong_answer_queues_confusion_pair_drill_before_generic_twins(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'Which metric measures recovery target time?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source One', 'objective_code': '5.2'}, {'question_number': 2, 'prompt': 'Which metric measures repair speed?', 'choices': {'A': 'Mean Time To Repair (MTTR)', 'B': 'Recovery Time Objective (RTO)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source Two', 'objective_code': '5.2'}, {'question_number': 3, 'prompt': 'Future regular filler question.', 'choices': {'A': 'Unrelated', 'B': 'Other'}, 'correct': ['A'], 'domain': 'Other', 'topics': ['Other'], 'source_name': 'Source Three', 'objective_code': '1.0'}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Which metric measures recovery target time?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source One', 'objective_code': '5.2'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'Which metric measures repair speed?', 'choices': {'A': 'Mean Time To Repair (MTTR)', 'B': 'Recovery Time Objective (RTO)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source Two', 'objective_code': '5.2'}, {'id': 'engine-q3', 'question_number': 3, 'prompt': 'Future regular filler question.', 'choices': {'A': 'Unrelated', 'B': 'Other'}, 'correct': ['A'], 'domain': 'Other', 'topics': ['Other'], 'source_name': 'Source Three', 'objective_code': '1.0'}]
         app._reset_runtime_question_state(app.master_questions)
         app.start_session_from_pool([dict(app.master_questions[0]), dict(app.master_questions[2])], mode='Smart Practice', count='All visible', randomize=False, reset_clock=False, preserve_if_saved=False)
         app.toggle_choice('B')
@@ -1681,7 +1721,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
 
     def test_correct_answer_can_insert_stealth_checkpoint_followup(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'Which metric measures recovery target time?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source One', 'objective_code': '5.2'}, {'question_number': 2, 'prompt': 'Which metric measures repair speed?', 'choices': {'A': 'Mean Time To Repair (MTTR)', 'B': 'Recovery Time Objective (RTO)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source Two', 'objective_code': '5.2'}, {'question_number': 3, 'prompt': 'Future regular filler question.', 'choices': {'A': 'Unrelated', 'B': 'Other'}, 'correct': ['A'], 'domain': 'Other', 'topics': ['Other'], 'source_name': 'Source Three', 'objective_code': '1.0'}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Which metric measures recovery target time?', 'choices': {'A': 'Recovery Time Objective (RTO)', 'B': 'Mean Time To Repair (MTTR)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source One', 'objective_code': '5.2'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'Which metric measures repair speed?', 'choices': {'A': 'Mean Time To Repair (MTTR)', 'B': 'Recovery Time Objective (RTO)'}, 'correct': ['A'], 'domain': 'Security Program Management and Oversight', 'topics': ['BCP / DR Metrics'], 'source_name': 'Source Two', 'objective_code': '5.2'}, {'id': 'engine-q3', 'question_number': 3, 'prompt': 'Future regular filler question.', 'choices': {'A': 'Unrelated', 'B': 'Other'}, 'correct': ['A'], 'domain': 'Other', 'topics': ['Other'], 'source_name': 'Source Three', 'objective_code': '1.0'}]
         app._reset_runtime_question_state(app.master_questions)
         app.start_session_from_pool([dict(app.master_questions[0]), dict(app.master_questions[2])], mode='Smart Practice', count='All visible', randomize=False, reset_clock=False, preserve_if_saved=False)
         app.session_answer_history = [{'question_number': idx, 'domain': 'Security Program Management and Oversight', 'correct': True, 'confidence': 'Sure', 'miss_reason': '', 'was_active_weak': False, 'was_due': False, 'response_seconds': 4.0, 'session_tag': ''} for idx in range(10, 13)]
@@ -1692,7 +1732,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
 
     def test_correct_answer_can_insert_delayed_same_concept_probe(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'Which attack compromises a trusted site to target developers?', 'choices': {'A': 'Watering Hole', 'B': 'Whaling'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source One', 'objective_code': '2.2'}, {'question_number': 2, 'prompt': 'Which attack targets users through a compromised site they already visit?', 'choices': {'A': 'Watering Hole', 'B': 'Smishing'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source Two', 'objective_code': '2.2'}, {'question_number': 3, 'prompt': 'Future regular filler question.', 'choices': {'A': 'Unrelated', 'B': 'Other'}, 'correct': ['A'], 'domain': 'Other', 'topics': ['Other'], 'source_name': 'Source Three', 'objective_code': '1.0'}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Which attack compromises a trusted site to target developers?', 'choices': {'A': 'Watering Hole', 'B': 'Whaling'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source One', 'objective_code': '2.2'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'Which attack targets users through a compromised site they already visit?', 'choices': {'A': 'Watering Hole', 'B': 'Smishing'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source Two', 'objective_code': '2.2'}, {'id': 'engine-q3', 'question_number': 3, 'prompt': 'Future regular filler question.', 'choices': {'A': 'Unrelated', 'B': 'Other'}, 'correct': ['A'], 'domain': 'Other', 'topics': ['Other'], 'source_name': 'Source Three', 'objective_code': '1.0'}]
         app._reset_runtime_question_state(app.master_questions)
         app.start_session_from_pool([dict(app.master_questions[0]), dict(app.master_questions[2])], mode='Smart Practice', count='All visible', randomize=False, reset_clock=False, preserve_if_saved=False)
         app._record_answer(app.questions[0], ['A'], feedback_override={'confidence': 'Sure', 'miss_reason': ''})
@@ -1715,9 +1755,9 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         q2['selected'] = ['A']
         q2['domain'] = 'Threats'
         q2['topics'] = ['Social engineering']
-        app._progress_questions()['1'] = update_progress_record({}, ['B'], False, seen_on='2026-05-10', confidence='Guessed', miss_reason='Did not know')
+        app._progress_questions()['engine-q1'] = update_progress_record({}, ['B'], False, seen_on='2026-05-10', confidence='Guessed', miss_reason='Did not know')
         app.append_answer_history(q1, False, {'confidence': 'Guessed', 'miss_reason': 'Did not know'})
-        app._progress_questions()['2'] = update_progress_record({}, ['A'], True, seen_on='2026-05-11', confidence='Unsure')
+        app._progress_questions()['engine-q2'] = update_progress_record({}, ['A'], True, seen_on='2026-05-11', confidence='Unsure')
         app.append_answer_history(q2, True, {'confidence': 'Unsure', 'miss_reason': ''})
         analytics = app.compute_analytics(source=app.master_questions)
         self.assertTrue(any((row['failure'] == 'Blank recall' for row in analytics['recall_failures'])))
@@ -1728,32 +1768,32 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
 
     def test_concept_memory_states_are_derived_from_history(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'Which attack compromises a trusted website to target developers?', 'choices': {'A': 'Watering Hole', 'B': 'Spear Phishing'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source One', 'objective_code': '2.2'}, {'question_number': 2, 'prompt': 'A team visits a compromised industry forum. What attack is this?', 'choices': {'A': 'Watering Hole', 'B': 'Whaling'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source Two', 'objective_code': '2.2'}, {'question_number': 3, 'prompt': 'Which option best describes compromising a site used by a target group?', 'choices': {'A': 'Watering Hole', 'B': 'Smishing'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source Three', 'objective_code': '2.2'}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Which attack compromises a trusted website to target developers?', 'choices': {'A': 'Watering Hole', 'B': 'Spear Phishing'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source One', 'objective_code': '2.2'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'A team visits a compromised industry forum. What attack is this?', 'choices': {'A': 'Watering Hole', 'B': 'Whaling'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source Two', 'objective_code': '2.2'}, {'id': 'engine-q3', 'question_number': 3, 'prompt': 'Which option best describes compromising a site used by a target group?', 'choices': {'A': 'Watering Hole', 'B': 'Smishing'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source Three', 'objective_code': '2.2'}]
         app._reset_runtime_question_state(app.master_questions)
         analytics = app.compute_analytics(source=app.master_questions)
         memory_row = next((row for row in analytics['concept_memory_states'] if row['unit'] == '2.2'))
         self.assertEqual('new', memory_row['state'])
         q1, q2, q3 = app.master_questions
         q1['selected'] = ['A']
-        app._progress_questions()['1'] = update_progress_record({}, ['A'], True, seen_on='2026-05-01', confidence='Guessed')
+        app._progress_questions()['engine-q1'] = update_progress_record({}, ['A'], True, seen_on='2026-05-01', confidence='Guessed')
         app.append_answer_history(q1, True, {'confidence': 'Guessed', 'miss_reason': ''})
         app.analytics_source_cache_key = None
         memory_row = next((row for row in app.compute_analytics(source=app.master_questions)['concept_memory_states'] if row['unit'] == '2.2'))
         self.assertEqual('recognizable', memory_row['state'])
         q1['selected'] = ['A']
-        app._progress_questions()['1'] = update_progress_record(app._progress_questions()['1'], ['A'], True, seen_on='2026-05-02', confidence='Sure')
+        app._progress_questions()['engine-q1'] = update_progress_record(app._progress_questions()['engine-q1'], ['A'], True, seen_on='2026-05-02', confidence='Sure')
         app.append_answer_history(q1, True, {'confidence': 'Sure', 'miss_reason': ''})
         app.analytics_source_cache_key = None
         memory_row = next((row for row in app.compute_analytics(source=app.master_questions)['concept_memory_states'] if row['unit'] == '2.2'))
         self.assertEqual('retrievable', memory_row['state'])
         q2['selected'] = ['A']
-        app._progress_questions()['2'] = update_progress_record({}, ['A'], True, seen_on='2026-05-03', confidence='Sure')
+        app._progress_questions()['engine-q2'] = update_progress_record({}, ['A'], True, seen_on='2026-05-03', confidence='Sure')
         app.append_answer_history(q2, True, {'confidence': 'Sure', 'miss_reason': ''})
         app.analytics_source_cache_key = None
         memory_row = next((row for row in app.compute_analytics(source=app.master_questions)['concept_memory_states'] if row['unit'] == '2.2'))
         self.assertEqual('transferable', memory_row['state'])
         q3['selected'] = ['A']
-        app._progress_questions()['3'] = update_progress_record({}, ['A'], True, seen_on='2026-05-04', confidence='Sure')
+        app._progress_questions()['engine-q3'] = update_progress_record({}, ['A'], True, seen_on='2026-05-04', confidence='Sure')
         app.append_answer_history(q3, True, {'confidence': 'Sure', 'miss_reason': ''})
         recent_delayed_success = (datetime.now() - timedelta(days=5)).isoformat(timespec='seconds')
         for event in app._progress_history():
@@ -1767,10 +1807,10 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         q = app.master_questions[0]
         q.update({'prompt': 'Which attack compromises a trusted website to target developers?', 'choices': {'A': 'Watering Hole', 'B': 'Spear Phishing'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source One', 'objective_code': '2.2'})
         q['selected'] = ['B']
-        app._progress_questions()['1'] = update_progress_record({}, ['B'], False, confidence='Sure', miss_reason='Misread')
+        app._progress_questions()['engine-q1'] = update_progress_record({}, ['B'], False, confidence='Sure', miss_reason='Misread')
         app.append_answer_history(q, False, {'confidence': 'Sure', 'miss_reason': 'Misread'})
         q['selected'] = ['B']
-        app._progress_questions()['1'] = update_progress_record(app._progress_questions()['1'], ['B'], False, confidence='Unsure', miss_reason='Narrowed to two')
+        app._progress_questions()['engine-q1'] = update_progress_record(app._progress_questions()['engine-q1'], ['B'], False, confidence='Unsure', miss_reason='Narrowed to two')
         app.append_answer_history(q, False, {'confidence': 'Unsure', 'miss_reason': 'Narrowed to two'})
         analytics = app.compute_analytics(source=app.master_questions[:1])
         memory = analytics['wrong_answer_memory'][0]
@@ -1780,7 +1820,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         self.assertGreaterEqual(memory['pressure'], 40.0)
         pressure_before = memory['pressure']
         q['selected'] = ['A']
-        app._progress_questions()['1'] = update_progress_record(app._progress_questions()['1'], ['A'], True, confidence='Sure')
+        app._progress_questions()['engine-q1'] = update_progress_record(app._progress_questions()['engine-q1'], ['A'], True, confidence='Sure')
         app.append_answer_history(q, True, {'confidence': 'Sure', 'miss_reason': ''})
         app.analytics_source_cache_key = None
         memory_after = app.compute_analytics(source=app.master_questions[:1])['wrong_answer_memory'][0]
@@ -1797,7 +1837,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         q.update({'prompt': 'Which attack compromises a trusted website to target developers?', 'choices': {'A': 'Watering Hole', 'B': 'Spear Phishing'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source One', 'objective_code': '2.2'})
         for _ in range(2):
             q['selected'] = ['B']
-            app._progress_questions()['1'] = update_progress_record(app._progress_questions().get('1', {}), ['B'], False, confidence='Unsure', miss_reason='Narrowed to two')
+            app._progress_questions()['engine-q1'] = update_progress_record(app._progress_questions().get('engine-q1', {}), ['B'], False, confidence='Unsure', miss_reason='Narrowed to two')
             app.append_answer_history(q, False, {'confidence': 'Unsure', 'miss_reason': 'Narrowed to two'})
         payload = app._build_smart_practice_signal_payload()
         self.assertEqual('Repair weak spots', payload['session_intent']['label'])
@@ -1805,12 +1845,12 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
 
     def test_smart_practice_recycles_tempting_wrong_answer_contrasts(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'Which attack compromises a trusted website to target developers?', 'choices': {'A': 'Watering Hole', 'B': 'Spear Phishing'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source One', 'objective_code': '2.2'}, {'question_number': 2, 'prompt': 'Contrast Watering Hole with Spear Phishing for compromised trusted websites.', 'choices': {'A': 'Watering Hole', 'B': 'Spear Phishing'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source Two', 'objective_code': '2.2'}, {'question_number': 3, 'prompt': 'Which control protects against power loss?', 'choices': {'A': 'UPS', 'B': 'WAF'}, 'correct': ['A'], 'domain': 'Operations', 'topics': ['Resilience'], 'source_name': 'Source Three', 'objective_code': '4.1'}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Which attack compromises a trusted website to target developers?', 'choices': {'A': 'Watering Hole', 'B': 'Spear Phishing'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source One', 'objective_code': '2.2'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'Contrast Watering Hole with Spear Phishing for compromised trusted websites.', 'choices': {'A': 'Watering Hole', 'B': 'Spear Phishing'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source Two', 'objective_code': '2.2'}, {'id': 'engine-q3', 'question_number': 3, 'prompt': 'Which control protects against power loss?', 'choices': {'A': 'UPS', 'B': 'WAF'}, 'correct': ['A'], 'domain': 'Operations', 'topics': ['Resilience'], 'source_name': 'Source Three', 'objective_code': '4.1'}]
         app._reset_runtime_question_state(app.master_questions)
         q = app.master_questions[0]
         for _ in range(2):
             q['selected'] = ['B']
-            app._progress_questions()['1'] = update_progress_record(app._progress_questions().get('1', {}), ['B'], False, confidence='Sure', miss_reason='Misread')
+            app._progress_questions()['engine-q1'] = update_progress_record(app._progress_questions().get('engine-q1', {}), ['B'], False, confidence='Sure', miss_reason='Misread')
             app.append_answer_history(q, False, {'confidence': 'Sure', 'miss_reason': 'Misread'})
         payload = app._build_smart_practice_signal_payload()
         pool = app.build_smart_practice_pool('1', randomize=False)
@@ -1819,11 +1859,11 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
 
     def test_correct_answer_can_insert_memory_ramp_followup(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'Which attack compromises a trusted website to target developers?', 'choices': {'A': 'Watering Hole', 'B': 'Spear Phishing'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source One', 'objective_code': '2.2'}, {'question_number': 2, 'prompt': 'Which attack targets users through a compromised site they already visit?', 'choices': {'A': 'Watering Hole', 'B': 'Whaling'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source Two', 'objective_code': '2.2'}, {'question_number': 3, 'prompt': 'Future regular filler question.', 'choices': {'A': 'Unrelated', 'B': 'Other'}, 'correct': ['A'], 'domain': 'Other', 'topics': ['Other'], 'source_name': 'Source Three', 'objective_code': '1.0'}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Which attack compromises a trusted website to target developers?', 'choices': {'A': 'Watering Hole', 'B': 'Spear Phishing'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source One', 'objective_code': '2.2'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'Which attack targets users through a compromised site they already visit?', 'choices': {'A': 'Watering Hole', 'B': 'Whaling'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source Two', 'objective_code': '2.2'}, {'id': 'engine-q3', 'question_number': 3, 'prompt': 'Future regular filler question.', 'choices': {'A': 'Unrelated', 'B': 'Other'}, 'correct': ['A'], 'domain': 'Other', 'topics': ['Other'], 'source_name': 'Source Three', 'objective_code': '1.0'}]
         app._reset_runtime_question_state(app.master_questions)
         prior = app.master_questions[0]
         prior['selected'] = ['A']
-        app._progress_questions()['1'] = update_progress_record({}, ['A'], True, confidence='Guessed')
+        app._progress_questions()['engine-q1'] = update_progress_record({}, ['A'], True, confidence='Guessed')
         app.append_answer_history(prior, True, {'confidence': 'Guessed', 'miss_reason': ''})
         app.start_session_from_pool([dict(app.master_questions[0]), dict(app.master_questions[2])], mode='Smart Practice', count='All visible', randomize=False, reset_clock=False, preserve_if_saved=False)
         app._record_answer(app.questions[0], list(app.questions[0]['correct']), feedback_override={'confidence': 'Unsure', 'miss_reason': ''})
@@ -1833,7 +1873,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
 
     def test_wrong_answer_memory_followup_precedes_generic_twins(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'Which attack compromises a trusted website to target developers?', 'choices': {'A': 'Watering Hole', 'B': 'Spear Phishing'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source One', 'objective_code': '2.2'}, {'question_number': 2, 'prompt': 'Which attack is confused with spear phishing when a trusted site is compromised?', 'choices': {'A': 'Watering Hole', 'B': 'Spear Phishing'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source Two', 'objective_code': '2.2'}, {'question_number': 3, 'prompt': 'A generic social engineering follow-up question.', 'choices': {'A': 'Watering Hole', 'B': 'Whaling'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source Three', 'objective_code': '2.2'}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Which attack compromises a trusted website to target developers?', 'choices': {'A': 'Watering Hole', 'B': 'Spear Phishing'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source One', 'objective_code': '2.2'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'Which attack is confused with spear phishing when a trusted site is compromised?', 'choices': {'A': 'Watering Hole', 'B': 'Spear Phishing'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source Two', 'objective_code': '2.2'}, {'id': 'engine-q3', 'question_number': 3, 'prompt': 'A generic social engineering follow-up question.', 'choices': {'A': 'Watering Hole', 'B': 'Whaling'}, 'correct': ['A'], 'domain': 'Threats', 'topics': ['Social engineering'], 'source_name': 'Source Three', 'objective_code': '2.2'}]
         app._reset_runtime_question_state(app.master_questions)
         app.start_session_from_pool([dict(app.master_questions[0]), dict(app.master_questions[2])], mode='Smart Practice', count='All visible', randomize=False, reset_clock=False, preserve_if_saved=False)
         with mock.patch.object(app, 'maybe_queue_confusion_pair_drill', return_value=[]):
@@ -1846,7 +1886,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         app = self.make_app()
         initial = app.progress_summary()
         self.assertEqual(0, initial['attempted'])
-        app._progress_questions()['1'] = update_progress_record({}, ['B'], False, seen_on='2026-05-10', confidence='Sure', miss_reason='Misread')
+        app._progress_questions()['engine-q1'] = update_progress_record({}, ['B'], False, seen_on='2026-05-10', confidence='Sure', miss_reason='Misread')
         updated = app.progress_summary()
         self.assertEqual(1, updated['attempted'])
         self.assertEqual(1, updated['wrong'])
@@ -1863,7 +1903,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
 
     def test_practice_count_is_applied_before_question_cloning(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': idx, 'prompt': f'Question {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic A']} for idx in range(1, 101)]
+        app.master_questions = [{'id': f'engine-q{idx}', 'question_number': idx, 'prompt': f'Question {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic A']} for idx in range(1, 101)]
         with mock.patch.object(app, '_clone_questions', wraps=app._clone_questions) as wrapped:
             app.start_session_from_pool(app.master_questions, mode='Practice', count='25', randomize=False, reset_clock=False, preserve_if_saved=False)
         self.assertEqual(25, len(wrapped.call_args.args[0]))
@@ -1880,9 +1920,9 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
 
     def test_analytics_reports_readiness_trend_and_roi(self):
         app = self.make_app()
-        app._progress_questions()['1'] = update_progress_record({}, ['B'], False, seen_on='2026-05-10', confidence='Guessed', miss_reason='Did not know')
+        app._progress_questions()['engine-q1'] = update_progress_record({}, ['B'], False, seen_on='2026-05-10', confidence='Guessed', miss_reason='Did not know')
         app.append_answer_history(app.master_questions[0], False, {'confidence': 'Guessed', 'miss_reason': 'Did not know'})
-        app._progress_questions()['2'] = update_progress_record({}, ['A'], True, seen_on='2026-05-10', confidence='Sure')
+        app._progress_questions()['engine-q2'] = update_progress_record({}, ['A'], True, seen_on='2026-05-10', confidence='Sure')
         app.append_answer_history(app.master_questions[1], True, {'confidence': 'Sure', 'miss_reason': ''})
         analytics = app.compute_analytics(source=app.master_questions)
         self.assertIn('readiness', analytics['domains'][0])
@@ -1907,8 +1947,8 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         app.questions[1]['topics'] = ['Wireless attacks']
         app.questions[0]['domain'] = 'Threats'
         app.questions[1]['domain'] = 'Threats'
-        app._progress_questions()['1'] = update_progress_record({}, ['B'], False, seen_on='2026-05-10', confidence='Sure', miss_reason='Misread')
-        app._progress_questions()['2'] = update_progress_record({}, ['C'], False, seen_on='2026-05-11', confidence='Unsure', miss_reason='Narrowed to two')
+        app._progress_questions()['engine-q1'] = update_progress_record({}, ['B'], False, seen_on='2026-05-10', confidence='Sure', miss_reason='Misread')
+        app._progress_questions()['engine-q2'] = update_progress_record({}, ['C'], False, seen_on='2026-05-11', confidence='Unsure', miss_reason='Narrowed to two')
         app.questions[0]['selected'] = ['B']
         app.questions[1]['selected'] = ['C']
         app.append_answer_history(app.questions[0], False, {'confidence': 'Sure', 'miss_reason': 'Misread'})
@@ -1939,7 +1979,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
             question['domain'] = 'Shared Domain'
         for question in app.questions:
             question['domain'] = 'Shared Domain'
-        app.session_answer_history = [{'question_number': 1, 'domain': 'Shared Domain', 'correct': False}, {'question_number': 2, 'domain': 'Shared Domain', 'correct': False}]
+        app.session_answer_history = [{'id': 'engine-q1', 'question_number': 1, 'domain': 'Shared Domain', 'correct': False}, {'id': 'engine-q2', 'question_number': 2, 'domain': 'Shared Domain', 'correct': False}]
         app.questions = [app.questions[0]]
         app.index = 0
         inserted = app.maybe_trigger_streak_rescue(app.questions[0])
@@ -2101,11 +2141,11 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         q1['prompt'] = 'Which is the BEST control?'
         wrong_letter = 'B' if 'B' not in q1.get('correct', []) else 'A'
         q1['selected'] = [wrong_letter]
-        app._progress_questions()['1'] = update_progress_record({}, [wrong_letter], False, seen_on='2026-05-10', confidence='Sure', miss_reason='Misread')
+        app._progress_questions()['engine-q1'] = update_progress_record({}, [wrong_letter], False, seen_on='2026-05-10', confidence='Sure', miss_reason='Misread')
         app.append_answer_history(q1, False, {'confidence': 'Sure', 'miss_reason': 'Misread'})
         q2 = app.master_questions[1]
         q2['selected'] = ['A']
-        app._progress_questions()['2'] = update_progress_record({}, ['A'], True, seen_on='2026-05-10', confidence='Unsure')
+        app._progress_questions()['engine-q2'] = update_progress_record({}, ['A'], True, seen_on='2026-05-10', confidence='Unsure')
         app.append_answer_history(q2, True, {'confidence': 'Unsure', 'miss_reason': ''})
         analytics = app.compute_analytics(source=app.master_questions)
         self.assertIn('decision_quality', analytics['overall'])
@@ -2120,13 +2160,13 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         q = app.master_questions[0]
         correct_letter = q.get('correct', ['A'])[0]
         wrong_letter = next((letter for letter in q.get('choices', {}) if q['choices'].get(letter) and letter not in q.get('correct', [])))
-        app._progress_questions()['1'] = update_progress_record({}, [wrong_letter], False, seen_on='2026-05-08', confidence='Sure', miss_reason='Misread')
+        app._progress_questions()['engine-q1'] = update_progress_record({}, [wrong_letter], False, seen_on='2026-05-08', confidence='Sure', miss_reason='Misread')
         q['selected'] = [wrong_letter]
         app.append_answer_history(q, False, {'confidence': 'Sure', 'miss_reason': 'Misread'})
-        app._progress_questions()['1'] = update_progress_record(app._progress_questions()['1'], [correct_letter], True, seen_on='2026-05-09', confidence='Sure')
+        app._progress_questions()['engine-q1'] = update_progress_record(app._progress_questions()['engine-q1'], [correct_letter], True, seen_on='2026-05-09', confidence='Sure')
         q['selected'] = [correct_letter]
         app.append_answer_history(q, True, {'confidence': 'Sure', 'miss_reason': ''})
-        app._progress_questions()['1'] = update_progress_record(app._progress_questions()['1'], [wrong_letter], False, seen_on='2026-05-10', confidence='Unsure', miss_reason='Narrowed to two')
+        app._progress_questions()['engine-q1'] = update_progress_record(app._progress_questions()['engine-q1'], [wrong_letter], False, seen_on='2026-05-10', confidence='Unsure', miss_reason='Narrowed to two')
         q['selected'] = [wrong_letter]
         app.append_answer_history(q, False, {'confidence': 'Unsure', 'miss_reason': 'Narrowed to two'})
         volatility = app.question_volatility(q)
@@ -2143,7 +2183,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         app.questions[0]['correct'] = ['A']
         wrong_letter = 'B'
         for day in ('2026-05-08', '2026-05-09', '2026-05-10'):
-            app._progress_questions()['1'] = update_progress_record(app._progress_questions().get('1', {}), [wrong_letter], False, seen_on=day, confidence='Sure', miss_reason='Misread')
+            app._progress_questions()['engine-q1'] = update_progress_record(app._progress_questions().get('engine-q1', {}), [wrong_letter], False, seen_on=day, confidence='Sure', miss_reason='Misread')
             q['selected'] = [wrong_letter]
             app.append_answer_history(q, False, {'confidence': 'Sure', 'miss_reason': 'Misread'})
         analytics = app.compute_analytics(source=app.master_questions)
@@ -2169,7 +2209,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
     def test_study_hud_combines_rewards_level_combo_and_quests(self):
         app = self.make_app()
         app.choose_session_quests()
-        app.session_answer_history = [{'question_number': 1, 'domain': 'Domain A', 'correct': True, 'confidence': 'Sure'}, {'question_number': 2, 'domain': 'Domain A', 'correct': True, 'confidence': 'Sure'}]
+        app.session_answer_history = [{'id': 'engine-q1', 'question_number': 1, 'domain': 'Domain A', 'correct': True, 'confidence': 'Sure'}, {'id': 'engine-q2', 'question_number': 2, 'domain': 'Domain A', 'correct': True, 'confidence': 'Sure'}]
         app.session_rewards = ['3-Streak']
         app.session_xp_gained = 24
         app._update_progress()
@@ -2297,7 +2337,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
 
     def test_boss_round_inserts_challenge_after_ten_answers(self):
         app = self.make_app()
-        boss_candidate = {'question_number': 99, 'prompt': 'Boss question', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Boss Topic']}
+        boss_candidate = {'id': 'engine-q99', 'question_number': 99, 'prompt': 'Boss question', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Boss Topic']}
         app.master_questions.append(boss_candidate)
         app.session_answer_history = [{'question_number': idx, 'domain': 'Domain A', 'correct': True} for idx in range(1, 11)]
         app.session_question_limit = len(app.questions) + 1
@@ -2310,7 +2350,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         q = app.master_questions[0]
         wrong_letter = 'B'
         for day in ('2026-05-08', '2026-05-09', '2026-05-10'):
-            app._progress_questions()['1'] = update_progress_record(app._progress_questions().get('1', {}), [wrong_letter], False, seen_on=day, confidence='Sure', miss_reason='Misread')
+            app._progress_questions()['engine-q1'] = update_progress_record(app._progress_questions().get('engine-q1', {}), [wrong_letter], False, seen_on=day, confidence='Sure', miss_reason='Misread')
             q['selected'] = [wrong_letter]
             app.append_answer_history(q, False, {'confidence': 'Sure', 'miss_reason': 'Misread', 'response_seconds': 3.2})
         analytics = app.compute_analytics(source=app.master_questions)
@@ -2323,7 +2363,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         q['topics'] = ['Social engineering']
         q['objective_code'] = '2.2'
         q['selected'] = ['B']
-        app._progress_questions()['1'] = update_progress_record({}, ['B'], False, confidence='Sure', miss_reason='Misread')
+        app._progress_questions()['engine-q1'] = update_progress_record({}, ['B'], False, confidence='Sure', miss_reason='Misread')
         app.append_answer_history(q, False, {'confidence': 'Sure', 'miss_reason': 'Misread', 'response_seconds': 3.0})
         app.append_answer_history(q, False, {'confidence': 'Sure', 'miss_reason': 'Misread', 'response_seconds': 4.0})
         q['selected'] = ['A']
@@ -2361,7 +2401,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
 
     def test_pass_score_crossing_colors_medal_and_shows_victory_banner(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': idx, 'prompt': f'Question {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic A']} for idx in range(1, 6)]
+        app.master_questions = [{'id': f'engine-q{idx}', 'question_number': idx, 'prompt': f'Question {idx}', 'choices': {'A': 'Right', 'B': 'Wrong'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic A']} for idx in range(1, 6)]
         app._reset_runtime_question_state(app.master_questions)
         app.start_session_from_pool(app.master_questions, mode='Practice', count='All visible', randomize=False, reset_clock=False, preserve_if_saved=False)
         for q in app.questions[:4]:
@@ -2435,10 +2475,10 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
 
     def test_smart_practice9_low_source_trust_is_penalty_not_reward(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'High trust due item', 'choices': {'A': 'A', 'B': 'B'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['General Review'], 'source_name': 'Trusted'}, {'question_number': 2, 'prompt': 'Low trust due item', 'choices': {'A': 'A', 'B': 'B'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['General Review'], 'source_name': 'Decayed'}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'High trust due item', 'choices': {'A': 'A', 'B': 'B'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['General Review'], 'source_name': 'Trusted'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'Low trust due item', 'choices': {'A': 'A', 'B': 'B'}, 'correct': ['A'], 'domain': 'General Security Concepts', 'topics': ['General Review'], 'source_name': 'Decayed'}]
         app.questions = list(app.master_questions)
-        app._progress_questions()['1'] = update_progress_record({}, ['B'], False, seen_on='2026-04-23')
-        app._progress_questions()['2'] = update_progress_record({}, ['B'], False, seen_on='2026-04-23')
+        app._progress_questions()['engine-q1'] = update_progress_record({}, ['B'], False, seen_on='2026-04-23')
+        app._progress_questions()['engine-q2'] = update_progress_record({}, ['B'], False, seen_on='2026-04-23')
         app.smart_practice_signal_cache_key = app._smart_practice_signal_key()
         app.smart_practice_signal_cache_payload = app._build_smart_practice_signal_payload()
         app.smart_practice_signal_cache_payload['source_trust_map'] = {'Trusted': {'trust_score': 95.0, 'label': 'Trusted'}, 'Decayed': {'trust_score': 45.0, 'label': 'Decayed'}}
@@ -2462,7 +2502,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
     def test_smart_practice9_repair_state_schedules_one_distinct_probe(self):
         app = self.make_app(start_session=False)
         app.active_session_mode = app_module.MODE_SMART_PRACTICE
-        app.master_questions = [{'question_number': 1, 'prompt': 'Which attack poisons a common site?', 'choices': {'A': 'Phishing', 'B': 'Watering hole'}, 'correct': ['B'], 'domain': 'Threats, Vulnerabilities, and Mitigations', 'topics': ['Threats']}, {'question_number': 2, 'prompt': 'A trusted industry site is compromised for developers.', 'choices': {'A': 'Watering hole', 'B': 'Smishing'}, 'correct': ['A'], 'domain': 'Threats, Vulnerabilities, and Mitigations', 'topics': ['Threats']}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Which attack poisons a common site?', 'choices': {'A': 'Phishing', 'B': 'Watering hole'}, 'correct': ['B'], 'domain': 'Threats, Vulnerabilities, and Mitigations', 'topics': ['Threats']}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'A trusted industry site is compromised for developers.', 'choices': {'A': 'Watering hole', 'B': 'Smishing'}, 'correct': ['A'], 'domain': 'Threats, Vulnerabilities, and Mitigations', 'topics': ['Threats']}]
         app.questions = [dict(app.master_questions[0])]
         app.index = 0
         app.session_question_limit = 2
@@ -2474,18 +2514,18 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         self.assertIn(app.repair_concept_key_for_question(app.questions[0]), app.progress_data['meta']['repair_state'])
 
     def test_smart_practice9_answer_state_preserves_selection_telemetry(self):
-        question = {'question_number': 7, 'selected': ['A'], 'pending': ['A'], 'answered': True, 'smart_primary_role': 'weak_repair', 'smart_selection_reasons': ['repair', 'source risk'], 'smart_utility': 13.5, 'smart_utility_breakdown': {'misconception_repair_value': 10.0}, 'smart_policy_version': 'smart-practice-9', 'repair_stage': 'contrast', 'repair_concept_key': 'topic::Threats'}
+        question = {'id': 'engine-q7', 'question_number': 7, 'selected': ['A'], 'pending': ['A'], 'answered': True, 'smart_primary_role': 'weak_repair', 'smart_selection_reasons': ['repair', 'source risk'], 'smart_utility': 13.5, 'smart_utility_breakdown': {'misconception_repair_value': 10.0}, 'smart_policy_version': 'smart-practice-9', 'repair_stage': 'contrast', 'repair_concept_key': 'topic::Threats'}
         state = app_module.serialize_answer_state(question) if hasattr(app_module, 'serialize_answer_state') else None
         if state is None:
             from session_store import serialize_answer_state
             state = serialize_answer_state(question)
-        restored = apply_answer_state({'question_number': 7}, state)
+        restored = apply_answer_state({'id': 'engine-q7', 'question_number': 7}, state)
         self.assertEqual('weak_repair', restored['smart_primary_role'])
         self.assertEqual(['repair', 'source risk'], restored['smart_selection_reasons'])
         self.assertEqual('contrast', restored['repair_stage'])
 
     def _sp9_question(self, qnum, domain='General Security Concepts', topic='General Review', source='Clean'):
-        return {'question_number': qnum, 'prompt': f'Question {qnum}', 'choices': {'A': 'Alpha', 'B': 'Beta'}, 'correct': ['A'], 'domain': domain, 'topics': [topic], 'source_name': source, 'source_label': source}
+        return {'id': f'engine-q{qnum}', 'question_number': qnum, 'prompt': f'Question {qnum}', 'choices': {'A': 'Alpha', 'B': 'Beta'}, 'correct': ['A'], 'domain': domain, 'topics': [topic], 'source_name': source, 'source_label': source}
 
     def _sp9_app_with_role_pool(self):
         app = self.make_app(start_session=False)
@@ -2503,12 +2543,12 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         app.master_questions = questions
         app.questions = list(questions)
         for qnum in range(1, 7):
-            app._progress_questions()[str(qnum)] = update_progress_record({}, ['B'], False, seen_on='2026-04-20')
+            app._progress_questions()[f'engine-q{qnum}'] = update_progress_record({}, ['B'], False, seen_on='2026-04-20')
         for qnum in range(7, 13):
             rec = update_progress_record({}, ['A'], True, seen_on='2026-04-20', confidence='Sure')
             rec['learner_memory']['next_review_at'] = '2026-04-20'
             rec['next_review'] = '2026-04-20'
-            app._progress_questions()[str(qnum)] = rec
+            app._progress_questions()[f'engine-q{qnum}'] = rec
         return app
 
     def test_sp9_01_weak_and_due_survive_abundant_unseen_screenshots(self):
@@ -2607,7 +2647,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
 
     def test_sp9_19_missing_metadata_produces_neutral_valid_utility(self):
         app = self.make_app(start_session=False)
-        app.master_questions = [{'question_number': 1, 'prompt': 'x', 'choices': {'A': 'A'}, 'correct': ['A']}]
+        app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'x', 'choices': {'A': 'A'}, 'correct': ['A']}]
         app.questions = list(app.master_questions)
         q = app.build_smart_practice_pool('1', randomize=False)[0]
         self.assertIsInstance(q['smart_utility'], float)
@@ -2704,7 +2744,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
     def test_sp9_29_cache_invalidates_after_memory_update(self):
         app = self._sp9_app_with_role_pool()
         before = app._smart_practice_signal_key()
-        app._progress_questions()['1'] = update_progress_record(app._progress_questions()['1'], ['A'], True)
+        app._progress_questions()['engine-q1'] = update_progress_record(app._progress_questions()['engine-q1'], ['A'], True)
         after = app._smart_practice_signal_key()
         self.assertNotEqual(before, after)
 
@@ -3269,7 +3309,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
     def test_sp10_09_shadow_decision_persists_separately(self):
         gov = self._sp10_governance()
         candidate, gov, _rejected = create_candidate_policy(gov, [self._sp10_recommendation(gov)], created_at='2026-01-02T00:00:00')
-        decision, gov = create_shadow_decision(gov, [{'question_number': 1, 'smart_primary_role': 'due_retention', 'smart_utility': 1}], [{'question_number': 2, 'smart_primary_role': 'weak_repair', 'smart_utility': 2}], challenger_policy_id=candidate['policy_id'], created_at='2026-01-03T00:00:00', learner_state_signature='learner-a', candidate_snapshot_signature='pool-a')
+        decision, gov = create_shadow_decision(gov, [{'id': 'engine-q1', 'question_number': 1, 'smart_primary_role': 'due_retention', 'smart_utility': 1}], [{'id': 'engine-q2', 'question_number': 2, 'smart_primary_role': 'weak_repair', 'smart_utility': 2}], challenger_policy_id=candidate['policy_id'], created_at='2026-01-03T00:00:00', learner_state_signature='learner-a', candidate_snapshot_signature='pool-a')
         self.assertIn(decision['shadow_decision_id'], gov['shadow_decisions'])
         self.assertEqual([1], decision['champion_question_numbers'])
 
@@ -3277,8 +3317,8 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         gov = self._sp10_governance()
         candidate, gov, _rejected = create_candidate_policy(gov, [self._sp10_recommendation(gov)], created_at='2026-01-02T00:00:00')
         args = dict(challenger_policy_id=candidate['policy_id'], created_at='2026-01-03T00:00:00', learner_state_signature='learner-a', candidate_snapshot_signature='pool-a')
-        first, _ = create_shadow_decision(gov, [{'question_number': 1}], [{'question_number': 2}], **args)
-        second, _ = create_shadow_decision(gov, [{'question_number': 1}], [{'question_number': 2}], **args)
+        first, _ = create_shadow_decision(gov, [{'id': 'engine-q1', 'question_number': 1}], [{'id': 'engine-q2', 'question_number': 2}], **args)
+        second, _ = create_shadow_decision(gov, [{'id': 'engine-q1', 'question_number': 1}], [{'id': 'engine-q2', 'question_number': 2}], **args)
         self.assertEqual(first['shadow_decision_id'], second['shadow_decision_id'])
 
     def test_sp10_11_low_evidence_blocks_promotion(self):
@@ -3510,8 +3550,8 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
 
     def test_sp10_completion_03_champion_and_challenger_same_input_snapshot(self):
         gov, candidate = self._sp10_candidate()
-        champion = [{'question_number': 1, 'smart_primary_role': 'due_retention'}]
-        challenger = [{'question_number': 2, 'smart_primary_role': 'weak_repair'}]
+        champion = [{'id': 'engine-q1', 'question_number': 1, 'smart_primary_role': 'due_retention'}]
+        challenger = [{'id': 'engine-q2', 'question_number': 2, 'smart_primary_role': 'weak_repair'}]
         decision, _gov = create_shadow_decision(gov, champion, challenger, challenger_policy_id=candidate['policy_id'], created_at='2026-03-03T00:00:00', learner_state_signature='learner-same', candidate_snapshot_signature='pool-same')
         self.assertEqual('learner-same', decision['learner_state_signature'])
         self.assertEqual('pool-same', decision['candidate_snapshot_signature'])
@@ -3520,21 +3560,21 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         app = self._sp9_app_with_role_pool()
         before = copy.deepcopy(app.progress_data)
         gov, candidate = self._sp10_candidate()
-        create_shadow_decision(gov, [{'question_number': 1}], [{'question_number': 2}], challenger_policy_id=candidate['policy_id'], created_at='2026-03-03T00:00:00', learner_state_signature='x', candidate_snapshot_signature='y')
+        create_shadow_decision(gov, [{'id': 'engine-q1', 'question_number': 1}], [{'id': 'engine-q2', 'question_number': 2}], challenger_policy_id=candidate['policy_id'], created_at='2026-03-03T00:00:00', learner_state_signature='x', candidate_snapshot_signature='y')
         self.assertEqual(before, app.progress_data)
 
     def test_sp10_completion_05_shadow_selection_cannot_schedule_repair(self):
         app = self._sp9_app_with_role_pool()
         before = copy.deepcopy(app.progress_data.get('meta', {}).get('repair_state', {}))
         gov, candidate = self._sp10_candidate()
-        create_shadow_decision(gov, [{'question_number': 1}], [{'question_number': 2}], challenger_policy_id=candidate['policy_id'], created_at='2026-03-03T00:00:00', learner_state_signature='x', candidate_snapshot_signature='y')
+        create_shadow_decision(gov, [{'id': 'engine-q1', 'question_number': 1}], [{'id': 'engine-q2', 'question_number': 2}], challenger_policy_id=candidate['policy_id'], created_at='2026-03-03T00:00:00', learner_state_signature='x', candidate_snapshot_signature='y')
         self.assertEqual(before, app.progress_data.get('meta', {}).get('repair_state', {}))
 
     def test_sp10_completion_06_shadow_selection_cannot_change_live_session(self):
         app = self._sp9_app_with_role_pool()
         before = [q['question_number'] for q in app.questions]
         gov, candidate = self._sp10_candidate()
-        create_shadow_decision(gov, [{'question_number': 1}], [{'question_number': 2}], challenger_policy_id=candidate['policy_id'], created_at='2026-03-03T00:00:00', learner_state_signature='x', candidate_snapshot_signature='y')
+        create_shadow_decision(gov, [{'id': 'engine-q1', 'question_number': 1}], [{'id': 'engine-q2', 'question_number': 2}], challenger_policy_id=candidate['policy_id'], created_at='2026-03-03T00:00:00', learner_state_signature='x', candidate_snapshot_signature='y')
         self.assertEqual(before, [q['question_number'] for q in app.questions])
 
     def test_sp10_completion_07_unsupported_challenger_has_no_fabricated_result(self):
@@ -3802,7 +3842,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         self.assertNotEqual(concept_key_for_question(left)[0], concept_key_for_question(right)[0])
 
     def test_sp11_03_question_fallback_concepts_remain_isolated(self):
-        self.assertNotEqual(concept_key_for_question({'question_number': 1})[0], concept_key_for_question({'question_number': 2})[0])
+        self.assertNotEqual(concept_key_for_question({'id': 'engine-q1', 'question_number': 1})[0], concept_key_for_question({'id': 'engine-q2', 'question_number': 2})[0])
 
     def test_sp11_04_duplicate_active_edges_are_rejected(self):
         graph, _source, _target, source_key, target_key = self._sp11_graph_with_prereq()
@@ -3870,14 +3910,14 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
     def test_sp11_15_isolated_bad_item_can_produce_item_specific(self):
         q = self._sp11_question(1)
         key = concept_key_for_question(q)[0]
-        history = [{'question_number': 1, 'correct': False}, {'question_number': 1, 'correct': False}, {'question_number': 2, 'correct': True}, {'question_number': 3, 'correct': True}]
+        history = [{'id': 'engine-q1', 'question_number': 1, 'correct': False}, {'id': 'engine-q1', 'question_number': 1, 'correct': False}, {'id': 'engine-q2', 'question_number': 2, 'correct': True}, {'id': 'engine-q3', 'question_number': 3, 'correct': True}]
         diagnosis = diagnose_root_cause(q, normalize_graph({}, [q]), {key: {'lowest_retrievability': 0.7, 'wrong_count': 0, 'correct_count': 2}}, history, policy={'policy_values': default_policy_values()})
         self.assertEqual('item_specific_failure', diagnosis['diagnosis'])
 
     def test_sp11_16_source_problem_requires_healthier_source_comparison(self):
         q = self._sp11_question(1, source='Source conflict')
         key = concept_key_for_question(q)[0]
-        history = [{'question_number': 1, 'correct': False}, {'question_number': 2, 'correct': True, 'source_label': 'Clean'}]
+        history = [{'id': 'engine-q1', 'question_number': 1, 'correct': False}, {'id': 'engine-q2', 'question_number': 2, 'correct': True, 'source_label': 'Clean'}]
         diagnosis = diagnose_root_cause(q, normalize_graph({}, [q]), {key: {'lowest_retrievability': 0.7}}, history, source_trust={'label': 'Source conflict'}, policy={'policy_values': default_policy_values()})
         self.assertEqual('source_quality_problem', diagnosis['diagnosis'])
 
@@ -3926,7 +3966,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
     def test_sp11_23_item_specific_does_not_weaken_full_concept(self):
         q = self._sp11_question(1)
         key = concept_key_for_question(q)[0]
-        diagnosis = diagnose_root_cause(q, normalize_graph({}, [q]), {key: {'lowest_retrievability': 0.8, 'wrong_count': 0, 'correct_count': 2}}, [{'question_number': 1, 'correct': False}, {'question_number': 1, 'correct': False}, {'question_number': 2, 'correct': True}, {'question_number': 3, 'correct': True}], policy={'policy_values': default_policy_values()})
+        diagnosis = diagnose_root_cause(q, normalize_graph({}, [q]), {key: {'lowest_retrievability': 0.8, 'wrong_count': 0, 'correct_count': 2}}, [{'id': 'engine-q1', 'question_number': 1, 'correct': False}, {'id': 'engine-q1', 'question_number': 1, 'correct': False}, {'id': 'engine-q2', 'question_number': 2, 'correct': True}, {'id': 'engine-q3', 'question_number': 3, 'correct': True}], policy={'policy_values': default_policy_values()})
         self.assertEqual('item_specific_failure', diagnosis['diagnosis'])
         self.assertNotIn('target_repeated_weakness', diagnosis['evidence'])
 
@@ -4195,7 +4235,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         self.assertEqual(0.0, q['smart_information_value'])
 
     def _quality_outcomes(self, n, correct=False, **extra):
-        return [{'question_number': 1, 'session_id': f's{i}', 'correct': correct, **extra} for i in range(n)]
+        return [{'id': 'engine-q1', 'question_number': 1, 'session_id': f's{i}', 'correct': correct, **extra} for i in range(n)]
 
     def test_sp12_30_low_sample_item_insufficient_data(self):
         self.assertEqual('insufficient_data', question_quality_record(self._sp11_question(1), self._quality_outcomes(3))['status'])
@@ -4227,7 +4267,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         self.assertNotEqual('source_conflicted', question_quality_record(q, self._quality_outcomes(10, correct=False))['status'])
 
     def test_sp12_37_one_learner_repeated_session_cannot_dominate_quality(self):
-        outcomes = [{'question_number': 1, 'session_id': 'same', 'correct': False} for _ in range(20)]
+        outcomes = [{'id': 'engine-q1', 'question_number': 1, 'session_id': 'same', 'correct': False} for _ in range(20)]
         self.assertEqual('insufficient_data', question_quality_record(self._sp11_question(1), outcomes)['status'])
 
     def test_sp12_38_question_quality_risk_does_not_weaken_full_concept(self):

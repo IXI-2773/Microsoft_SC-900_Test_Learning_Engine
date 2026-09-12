@@ -35,8 +35,8 @@ class Cand01R3Rrc1Tests(unittest.TestCase):
 
     def records(self, **overrides):
         base = {
-            "1": progress_record(attempts=3, wrong_count=3, correct_count=0, last_correct=False, last_seen="2026-09-01"),
-            "2": progress_record(
+            "repair_q": progress_record(attempts=3, wrong_count=3, correct_count=0, last_correct=False, last_seen="2026-09-01"),
+            "review_q": progress_record(
                 attempts=2,
                 wrong_count=0,
                 correct_count=2,
@@ -45,9 +45,9 @@ class Cand01R3Rrc1Tests(unittest.TestCase):
                 next_review="2026-09-01",
                 learner_memory={"next_review_at": "2026-09-01", "retrievability": 0.2},
             ),
-            "3": progress_record(attempts=0, last_seen=""),
-            "4": progress_record(attempts=1, correct_count=1, last_correct=True, last_seen="2026-09-10"),
-            "9": progress_record(attempts=5, wrong_count=5, last_correct=False),
+            "cover_q": progress_record(attempts=0, last_seen=""),
+            "cover_q2": progress_record(attempts=1, correct_count=1, last_correct=True, last_seen="2026-09-10"),
+            "probe_a": progress_record(attempts=5, wrong_count=5, last_correct=False),
         }
         for key, value in overrides.items():
             base[key] = value
@@ -57,7 +57,7 @@ class Cand01R3Rrc1Tests(unittest.TestCase):
         from cand01r3_rrc1 import classify_question, select_rrc1_session
 
         records = self.records()
-        self.assertIsNone(classify_question(self.questions[-1], records["9"], self.authority))
+        self.assertIsNone(classify_question(self.questions[-1], records["probe_a"], self.authority))
         result = select_rrc1_session(self.questions, records, self.authority, session_size=10)
         selected_ids = [row["id"] for row in result.questions]
         self.assertNotIn("probe_a", selected_ids)
@@ -79,12 +79,12 @@ class Cand01R3Rrc1Tests(unittest.TestCase):
     def test_review_contains_due_nonweak_item(self):
         from cand01r3_rrc1 import CLASS_REVIEW, classify_question
 
-        self.assertEqual(CLASS_REVIEW, classify_question(self.questions[1], self.records()["2"], self.authority))
+        self.assertEqual(CLASS_REVIEW, classify_question(self.questions[1], self.records()["review_q"], self.authority))
 
     def test_coverage_contains_neither_weak_nor_due(self):
         from cand01r3_rrc1 import CLASS_COVERAGE, classify_question
 
-        self.assertEqual(CLASS_COVERAGE, classify_question(self.questions[2], self.records()["3"], self.authority))
+        self.assertEqual(CLASS_COVERAGE, classify_question(self.questions[2], self.records()["cover_q"], self.authority))
 
     def test_classes_are_mutually_exclusive(self):
         from cand01r3_rrc1 import classify_classes
@@ -110,7 +110,7 @@ class Cand01R3Rrc1Tests(unittest.TestCase):
         from cand01r3_rrc1 import select_rrc1_session
 
         records = self.records()
-        records["1"] = progress_record(attempts=0)
+        records["repair_q"] = progress_record(attempts=0)
         result = select_rrc1_session(self.questions[1:], records, self.authority, session_size=3)
         self.assertIn("EMPTY_CLASS_SKIP", result.events)
         self.assertEqual("REPAIR", result.events["EMPTY_CLASS_SKIP"][0]["class_name"])
@@ -132,8 +132,8 @@ class Cand01R3Rrc1Tests(unittest.TestCase):
         q_b = question("cover_b", question_number=20, domain="d2", objective="o3")
         q_a = question("cover_a", question_number=21, domain="d2", objective="o3")
         records = {
-            "20": progress_record(attempts=0, last_seen=""),
-            "21": progress_record(attempts=0, last_seen=""),
+            "cover_b": progress_record(attempts=0, last_seen=""),
+            "cover_a": progress_record(attempts=0, last_seen=""),
         }
         ordered = in_class_order(CLASS_COVERAGE, [q_b, q_a], records, self.authority)
         self.assertEqual(["cover_a", "cover_b"], [row["id"] for row in ordered])
@@ -169,7 +169,7 @@ class Cand01R3Rrc1Tests(unittest.TestCase):
     def test_g3_039_confidence_mutation_cannot_change_rrc1_class(self):
         from cand01r3_rrc1 import classify_question
 
-        record = self.records()["3"]
+        record = self.records()["cover_q"]
         baseline = classify_question(self.questions[2], record, self.authority)
         mutated = copy.deepcopy(record)
         mutated["last_confidence"] = "Guessed"
@@ -179,7 +179,7 @@ class Cand01R3Rrc1Tests(unittest.TestCase):
     def test_g3_040_response_time_mutation_cannot_change_rrc1_class(self):
         from cand01r3_rrc1 import classify_question
 
-        record = self.records()["3"]
+        record = self.records()["cover_q"]
         baseline = classify_question(self.questions[2], record, self.authority)
         mutated = copy.deepcopy(record)
         mutated["response_seconds"] = 180.0
