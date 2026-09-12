@@ -1,4 +1,4 @@
-name: Format CAND-01R3 Black artifact
+name: Apply CAND-01R3 Black formatting once
 
 on:
   push:
@@ -8,36 +8,34 @@ on:
       - .github/workflows/format-cand01r3-black-artifact.yml
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  format-artifact:
+  bounded-format-repair:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout exact pushed SHA
         uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
-          persist-credentials: false
+          fetch-depth: 0
 
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install exact Black version
-        run: python -m pip install 'black==25.12.0'
+      - name: Install repository verification dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-extract.txt -r requirements-dev.txt
 
-      - name: Preserve original ASTs and format only target files
+      - name: Preserve original ASTs and Black-format only target files
         run: |
           cp cand01r3_runtime.py /tmp/cand01r3_runtime.py.before
           cp cand01r3_protocol.py /tmp/cand01r3_protocol.py.before
           python -m black cand01r3_runtime.py cand01r3_protocol.py
-
-      - name: Prove formatting is AST-equivalent and limited to target files
-        run: |
           test "$(git diff --name-only | sort)" = $'cand01r3_protocol.py\ncand01r3_runtime.py'
-          python -m compileall -q cand01r3_runtime.py cand01r3_protocol.py
           python - <<'PY'
           import ast
           from pathlib import Path
@@ -51,12 +49,26 @@ jobs:
               print(f'AST_EQUIVALENT={name}')
           PY
 
-      - name: Upload formatted files
-        uses: actions/upload-artifact@v4
-        with:
-          name: cand01r3-black-formatted
-          path: |
-            cand01r3_runtime.py
-            cand01r3_protocol.py
-          if-no-files-found: error
-          retention-days: 1
+      - name: Test formatted workspace before any repository write
+        run: |
+          python -m unittest discover -s tests -p 'test_cand01r3_scorer_structure.py' -v
+          python -m unittest discover -s tests -p 'test_cand01r3_measurement_integrity.py' -v
+          python -m unittest discover -s tests -p 'test_cand01r3_measurement_runtime_resume.py' -v
+          python -m unittest discover -s tests -p 'test_cand01r3_measurement_protocol_v2.py' -v
+          python -m unittest discover -s tests -v
+          python -m tools.run_quality_checks
+
+      - name: Fail closed if branch moved
+        run: |
+          git fetch origin research/sc900-cand01r3-measurement-001
+          test "$(git rev-parse origin/research/sc900-cand01r3-measurement-001)" = "$GITHUB_SHA"
+
+      - name: Commit formatting and remove this temporary repair workflow
+        run: |
+          git rm .github/workflows/format-cand01r3-black-artifact.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          test "$(git diff --name-only | sort)" = $'.github/workflows/format-cand01r3-black-artifact.yml\ncand01r3_protocol.py\ncand01r3_runtime.py'
+          git add cand01r3_protocol.py cand01r3_runtime.py
+          git commit -m 'style: apply Black to CAND-01R3 runtime'
+          git push origin HEAD:research/sc900-cand01r3-measurement-001
