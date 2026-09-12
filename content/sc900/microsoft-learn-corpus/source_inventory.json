@@ -1,0 +1,2482 @@
+{
+  "authority": "Microsoft Learn / official Microsoft documentation",
+  "exam": "SC-900",
+  "source_inventory_captured_at": "2026-09-12T18:30:00+00:00",
+  "sc900_study_guide_last_updated": "2026-06-26T19:26:00.0000000Z",
+  "sc900_skills_effective_date": "2026-07-28",
+  "inventory_hash_algorithm": "sha256(canonical compact provenance; no page bodies)",
+  "assessment_content_used": false,
+  "page_bodies_stored": false,
+  "sources": [
+    {
+      "source_id": "sc900-study-guide-2026-07-28",
+      "source_type": "study_guide",
+      "title": "Study guide for Exam SC-900: Microsoft Security, Compliance, and Identity Fundamentals",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/sc-900",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [],
+      "leaf_ids": [],
+      "assessment_content_used": false,
+      "ms_date": "2026-05-31T00:00:00.0000000Z",
+      "updated_at": "2026-06-26T19:26:00.0000000Z",
+      "git_commit_id": "c9bf397dd57a8921046818266f784cb53c9c88d3",
+      "skills_effective_date": "2026-07-28",
+      "content_hash": "85bd5c64c9f045cd8e6bc68a4c837de8d63d598ff44602851bf972bac8300381"
+    },
+    {
+      "source_id": "path-concepts",
+      "source_type": "learning_path",
+      "title": "Introduction to security, compliance, and identity concepts",
+      "url": "https://learn.microsoft.com/en-us/training/paths/describe-concepts-of-security-compliance-identity/",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "security_compliance_concepts",
+        "identity_concepts"
+      ],
+      "leaf_ids": [],
+      "assessment_content_used": false,
+      "ms_date": "2026-04-27T00:00:00.0000000Z",
+      "updated_at": "2026-04-27T23:59:00.0000000Z",
+      "git_commit_id": "8b33d0d28891383f78b73b1a0f920377bee8f9d6",
+      "module_slugs": [
+        "describe-security-concepts-methodologies",
+        "describe-identity-principles-concepts"
+      ],
+      "content_hash": "7b1f12409b3a20c259f356361d6848403b0e0591aa6e0651a5a944d63ebbc1e2"
+    },
+    {
+      "source_id": "path-entra",
+      "source_type": "learning_path",
+      "title": "Introduction to Microsoft Entra",
+      "url": "https://learn.microsoft.com/en-us/training/paths/describe-capabilities-of-microsoft-identity-access/",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "entra_identity_types_and_function",
+        "entra_authentication",
+        "entra_access_management",
+        "entra_identity_protection_governance"
+      ],
+      "leaf_ids": [],
+      "assessment_content_used": false,
+      "ms_date": "2026-04-27T00:00:00.0000000Z",
+      "updated_at": "2026-04-27T23:59:00.0000000Z",
+      "git_commit_id": "8b33d0d28891383f78b73b1a0f920377bee8f9d6",
+      "module_slugs": [
+        "explore-basic-services-identity-types",
+        "explore-authentication-capabilities",
+        "explore-access-management-capabilities",
+        "describe-identity-protection-governance-capabilities"
+      ],
+      "content_hash": "8b92d193c7a537bc41eb284f36a0234a4d0a6d99694ef2160a262c3353ca5b73"
+    },
+    {
+      "source_id": "path-security-solutions",
+      "source_type": "learning_path",
+      "title": "Introduction to Microsoft security solutions",
+      "url": "https://learn.microsoft.com/en-us/training/paths/describe-capabilities-of-microsoft-security-solutions/",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "azure_infrastructure_security",
+        "azure_security_management",
+        "microsoft_sentinel",
+        "defender_xdr"
+      ],
+      "leaf_ids": [],
+      "assessment_content_used": false,
+      "ms_date": "2026-04-27T00:00:00.0000000Z",
+      "updated_at": "2026-04-27T23:59:00.0000000Z",
+      "git_commit_id": "8b33d0d28891383f78b73b1a0f920377bee8f9d6",
+      "module_slugs": [
+        "security-copilot-getting-started",
+        "describe-basic-security-capabilities-azure",
+        "describe-security-management-capabilities-of-azure",
+        "describe-security-capabilities-of-azure-sentinel",
+        "describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "content_hash": "b43c0f6a002ab45781fb570f0f1b0d16b466bfda99baad88ee4d3efa1d34c6a8"
+    },
+    {
+      "source_id": "path-compliance-solutions",
+      "source_type": "learning_path",
+      "title": "Introduction to Microsoft Purview and Microsoft's privacy principles",
+      "url": "https://learn.microsoft.com/en-us/training/paths/describe-capabilities-of-microsoft-compliance-solutions/",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "service_trust_privacy",
+        "purview_compliance_management",
+        "purview_information_protection_lifecycle",
+        "purview_insider_risk_ediscovery_audit"
+      ],
+      "leaf_ids": [],
+      "assessment_content_used": false,
+      "ms_date": "2026-04-27T00:00:00.0000000Z",
+      "updated_at": "2026-04-27T23:59:00.0000000Z",
+      "git_commit_id": "8b33d0d28891383f78b73b1a0f920377bee8f9d6",
+      "module_slugs": [
+        "describe-compliance-management-capabilities-microsoft",
+        "describe-purview-data-solutions",
+        "describe-purview-risk-compliance-governance",
+        "describe-purview-data-governance"
+      ],
+      "content_hash": "c79ada07334b3c3a72f1e9b5af8470da19cec9bbd6994b4e3460eaf9d159d94b"
+    },
+    {
+      "source_id": "module-describe-security-concepts-methodologies",
+      "source_type": "module",
+      "title": "Describe Security Concepts and Methodologies",
+      "url": "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "security_compliance_concepts"
+      ],
+      "leaf_ids": [
+        "shared_responsibility_model",
+        "defense_in_depth",
+        "zero_trust_model",
+        "encryption_and_hashing",
+        "grc_concepts"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-05-15T00:00:00.0000000Z",
+      "updated_at": "2026-05-15T23:11:00.0000000Z",
+      "git_commit_id": "bf6860500950aebd18167a8bcb802e06150f9d9e",
+      "path_id": "path-concepts",
+      "exam_in_scope": true,
+      "scope_note": "",
+      "units": [
+        {
+          "unit_uid": "learn.wwl.describe-security-concepts-methodologies.introduction",
+          "unit_key": "introduction",
+          "title": "introduction",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-security-concepts-methodologies.describe-shared-responsibility-model",
+          "unit_key": "describe-shared-responsibility-model",
+          "title": "describe shared responsibility model",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-security-concepts-methodologies.describe-defense-depth",
+          "unit_key": "describe-defense-depth",
+          "title": "describe defense depth",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-security-concepts-methodologies.describe-zero-trust-methodology",
+          "unit_key": "describe-zero-trust-methodology",
+          "title": "describe zero trust methodology",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-security-concepts-methodologies.describe-ways-encryption,-hashing,-signing-can-secure-your-data",
+          "unit_key": "describe-ways-encryption,-hashing,-signing-can-secure-your-data",
+          "title": "describe ways encryption, hashing, signing can secure your data",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-security-concepts-methodologies.describe-compliance-concepts",
+          "unit_key": "describe-compliance-concepts",
+          "title": "describe compliance concepts",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-security-concepts-methodologies.knowledge-check",
+          "unit_key": "knowledge-check",
+          "title": "knowledge check",
+          "assessment_unit": true,
+          "question_source_permitted": false
+        },
+        {
+          "unit_uid": "learn.wwl.describe-security-concepts-methodologies.summary-resources",
+          "unit_key": "summary-resources",
+          "title": "summary resources",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        }
+      ],
+      "unit_count": 8,
+      "assessment_unit_count": 1,
+      "content_hash": "b84df09b9445110d5700656796a3de1facd6656fec08be5c67ec60c1b540b076"
+    },
+    {
+      "source_id": "module-describe-identity-principles-concepts",
+      "source_type": "module",
+      "title": "Describe Identity Concepts",
+      "url": "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts/",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "identity_concepts"
+      ],
+      "leaf_ids": [
+        "identity_primary_security_perimeter",
+        "authentication",
+        "authorization",
+        "identity_providers",
+        "directory_services_active_directory",
+        "federation"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-06-16T00:00:00.0000000Z",
+      "updated_at": "2026-06-16T17:34:00.0000000Z",
+      "git_commit_id": "d3fbe32ca30806804bb7f0de9e8d9db4b6c748a9",
+      "path_id": "path-concepts",
+      "exam_in_scope": true,
+      "scope_note": "",
+      "units": [
+        {
+          "unit_uid": "learn.wwl.describe-identity-principles-concepts.introduction",
+          "unit_key": "introduction",
+          "title": "introduction",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-identity-principles-concepts.define-authentication-and-authorization",
+          "unit_key": "define-authentication-and-authorization",
+          "title": "define authentication and authorization",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-identity-principles-concepts.define-identity-as-primary-security-perimeter",
+          "unit_key": "define-identity-as-primary-security-perimeter",
+          "title": "define identity as primary security perimeter",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-identity-principles-concepts.describe-modern-authentication-role-identity-provider",
+          "unit_key": "describe-modern-authentication-role-identity-provider",
+          "title": "describe modern authentication role identity provider",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-identity-principles-concepts.describe-concept-of-directory-services-active-directory",
+          "unit_key": "describe-concept-of-directory-services-active-directory",
+          "title": "describe concept of directory services active directory",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-identity-principles-concepts.describe-concept-federated-services",
+          "unit_key": "describe-concept-federated-services",
+          "title": "describe concept federated services",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-identity-principles-concepts.knowledge-check",
+          "unit_key": "knowledge-check",
+          "title": "knowledge check",
+          "assessment_unit": true,
+          "question_source_permitted": false
+        },
+        {
+          "unit_uid": "learn.wwl.describe-identity-principles-concepts.summary-resources",
+          "unit_key": "summary-resources",
+          "title": "summary resources",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        }
+      ],
+      "unit_count": 8,
+      "assessment_unit_count": 1,
+      "content_hash": "a23cc45624c1a588d0db3c92193eb2d02bce499d3eae53a21fd9b31488a139af"
+    },
+    {
+      "source_id": "module-explore-basic-services-identity-types",
+      "source_type": "module",
+      "title": "Describe the Function and Identity Types of Microsoft Entra ID",
+      "url": "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types/",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "entra_identity_types_and_function"
+      ],
+      "leaf_ids": [
+        "entra_id_overview",
+        "identity_types_including_agent_id",
+        "hybrid_identity"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-06-12T00:00:00.0000000Z",
+      "updated_at": "2026-08-03T07:12:00.0000000Z",
+      "git_commit_id": "bb6cc97aeb7265d2fcb12fd501e08068c23c0e30",
+      "path_id": "path-entra",
+      "exam_in_scope": true,
+      "scope_note": "",
+      "units": [
+        {
+          "unit_uid": "learn.wwl.explore-basic-services-identity-types-of-azure-active-directory-azure-ad.introduction",
+          "unit_key": "introduction",
+          "title": "introduction",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.explore-basic-services-identity-types-of-azure-active-directory-azure-ad.describe-microsoft-entra",
+          "unit_key": "describe-microsoft-entra",
+          "title": "describe microsoft entra",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.explore-basic-services-identity-types-of-azure-active-directory-azure-ad.describe-what-is",
+          "unit_key": "describe-what-is",
+          "title": "describe what is",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.explore-basic-services-identity-types-of-azure-active-directory-azure-ad.describe-identity-types",
+          "unit_key": "describe-identity-types",
+          "title": "describe identity types",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.explore-basic-services-identity-types-of-azure-active-directory-azure-ad.describe-microsoft-entra-agent-id",
+          "unit_key": "describe-microsoft-entra-agent-id",
+          "title": "describe microsoft entra agent id",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.explore-basic-services-identity-types-of-azure-active-directory-azure-ad.describe-concept-of-hybrid-identities",
+          "unit_key": "describe-concept-of-hybrid-identities",
+          "title": "describe concept of hybrid identities",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.explore-basic-services-identity-types-of-azure-active-directory-azure-ad.describe-external-identities",
+          "unit_key": "describe-external-identities",
+          "title": "describe external identities",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.explore-basic-services-identity-types-of-azure-active-directory-azure-ad.knowledge-check",
+          "unit_key": "knowledge-check",
+          "title": "knowledge check",
+          "assessment_unit": true,
+          "question_source_permitted": false
+        },
+        {
+          "unit_uid": "learn.wwl.explore-basic-services-identity-types-of-azure-active-directory-azure-ad.summary-resources",
+          "unit_key": "summary-resources",
+          "title": "summary resources",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        }
+      ],
+      "unit_count": 9,
+      "assessment_unit_count": 1,
+      "content_hash": "d1387b1bd445ccbcbe656114c8c4370057b3b9ca8921a23723e780fc4d50a796"
+    },
+    {
+      "source_id": "module-explore-authentication-capabilities",
+      "source_type": "module",
+      "title": "Describe the Authentication Capabilities of Microsoft Entra ID",
+      "url": "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities/",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "entra_authentication"
+      ],
+      "leaf_ids": [
+        "authentication_methods",
+        "multifactor_authentication",
+        "password_protection_management"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-06-10T00:00:00.0000000Z",
+      "updated_at": "2026-08-03T07:12:00.0000000Z",
+      "git_commit_id": "bb6cc97aeb7265d2fcb12fd501e08068c23c0e30",
+      "path_id": "path-entra",
+      "exam_in_scope": true,
+      "scope_note": "",
+      "units": [
+        {
+          "unit_uid": "learn.wwl.explore-authentication-capabilities-of-azure-ad.introduction",
+          "unit_key": "introduction",
+          "title": "introduction",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.explore-authentication-capabilities-of-azure-ad.describe-different-authentication-methods",
+          "unit_key": "describe-different-authentication-methods",
+          "title": "describe different authentication methods",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.explore-authentication-capabilities-of-azure-ad.describe-multi-factor-authentication-mfa",
+          "unit_key": "describe-multi-factor-authentication-mfa",
+          "title": "describe multi factor authentication mfa",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.explore-authentication-capabilities-of-azure-ad.describe-self-service-password-reset",
+          "unit_key": "describe-self-service-password-reset",
+          "title": "describe self service password reset",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.explore-authentication-capabilities-of-azure-ad.describe-password-protection-&amp;amp;-management",
+          "unit_key": "describe-password-protection-&amp;amp;-management",
+          "title": "describe password protection &amp;amp; management",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.explore-authentication-capabilities-of-azure-ad.knowledge-check",
+          "unit_key": "knowledge-check",
+          "title": "knowledge check",
+          "assessment_unit": true,
+          "question_source_permitted": false
+        },
+        {
+          "unit_uid": "learn.wwl.explore-authentication-capabilities-of-azure-ad.summary-resources",
+          "unit_key": "summary-resources",
+          "title": "summary resources",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        }
+      ],
+      "unit_count": 7,
+      "assessment_unit_count": 1,
+      "content_hash": "3e4985c693f18cd43cefc336b868fc8bd43df08c9384561b029fd301e8f68117"
+    },
+    {
+      "source_id": "module-explore-access-management-capabilities",
+      "source_type": "module",
+      "title": "Describe Access Management Capabilities of Microsoft Entra",
+      "url": "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities/",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "entra_access_management"
+      ],
+      "leaf_ids": [
+        "conditional_access",
+        "entra_roles_rbac"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-06-08T00:00:00.0000000Z",
+      "updated_at": "2026-08-03T07:12:00.0000000Z",
+      "git_commit_id": "bb6cc97aeb7265d2fcb12fd501e08068c23c0e30",
+      "path_id": "path-entra",
+      "exam_in_scope": true,
+      "scope_note": "",
+      "units": [
+        {
+          "unit_uid": "learn.wwl.explore-access-management-capabilities-of-azure-ad.introduction",
+          "unit_key": "introduction",
+          "title": "introduction",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.explore-access-management-capabilities-of-azure-ad.describe-conditional-access-its-benefits",
+          "unit_key": "describe-conditional-access-its-benefits",
+          "title": "describe conditional access its benefits",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.explore-access-management-capabilities-of-azure-ad.describe-global-secure-access",
+          "unit_key": "describe-global-secure-access",
+          "title": "describe global secure access",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.explore-access-management-capabilities-of-azure-ad.describe-azure-role-based-access-control-rbac",
+          "unit_key": "describe-azure-role-based-access-control-rbac",
+          "title": "describe azure role based access control rbac",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.explore-access-management-capabilities-of-azure-ad.knowledge-check",
+          "unit_key": "knowledge-check",
+          "title": "knowledge check",
+          "assessment_unit": true,
+          "question_source_permitted": false
+        },
+        {
+          "unit_uid": "learn.wwl.explore-access-management-capabilities-of-azure-ad.summary-resources",
+          "unit_key": "summary-resources",
+          "title": "summary resources",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        }
+      ],
+      "unit_count": 6,
+      "assessment_unit_count": 1,
+      "content_hash": "43b4249877a423cc8711526b02ef3a68c61ca74a776211d763511619070c3b01"
+    },
+    {
+      "source_id": "module-describe-identity-protection-governance-capabilities",
+      "source_type": "module",
+      "title": "Describe the Identity Protection and Governance Capabilities of Microsoft Entra",
+      "url": "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities/",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "entra_identity_protection_governance"
+      ],
+      "leaf_ids": [
+        "entra_id_governance",
+        "access_reviews",
+        "privileged_identity_management",
+        "entra_id_protection"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-06-09T00:00:00.0000000Z",
+      "updated_at": "2026-08-03T07:12:00.0000000Z",
+      "git_commit_id": "bb6cc97aeb7265d2fcb12fd501e08068c23c0e30",
+      "path_id": "path-entra",
+      "exam_in_scope": true,
+      "scope_note": "",
+      "units": [
+        {
+          "unit_uid": "learn.wwl.describe-identity-protection-governance-capabilities-of-azure-ad.introduction",
+          "unit_key": "introduction",
+          "title": "introduction",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-identity-protection-governance-capabilities-of-azure-ad.describe-identity-governance",
+          "unit_key": "describe-identity-governance",
+          "title": "describe identity governance",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-identity-protection-governance-capabilities-of-azure-ad.describe-what-is-entitlement-management-access-reviews",
+          "unit_key": "describe-what-is-entitlement-management-access-reviews",
+          "title": "describe what is entitlement management access reviews",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-identity-protection-governance-capabilities-of-azure-ad.describe-entitlement-management-terms-use",
+          "unit_key": "describe-entitlement-management-terms-use",
+          "title": "describe entitlement management terms use",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-identity-protection-governance-capabilities-of-azure-ad.describe-privileged-identity-management",
+          "unit_key": "describe-privileged-identity-management",
+          "title": "describe privileged identity management",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-identity-protection-governance-capabilities-of-azure-ad.describe-azure",
+          "unit_key": "describe-azure",
+          "title": "describe azure",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-identity-protection-governance-capabilities-of-azure-ad.describe-entra-verified-id",
+          "unit_key": "describe-entra-verified-id",
+          "title": "describe entra verified id",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-identity-protection-governance-capabilities-of-azure-ad.describe-entra-integration-in-copilot",
+          "unit_key": "describe-entra-integration-in-copilot",
+          "title": "describe entra integration in copilot",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-identity-protection-governance-capabilities-of-azure-ad.knowledge-check",
+          "unit_key": "knowledge-check",
+          "title": "knowledge check",
+          "assessment_unit": true,
+          "question_source_permitted": false
+        },
+        {
+          "unit_uid": "learn.wwl.describe-identity-protection-governance-capabilities-of-azure-ad.summary-resources",
+          "unit_key": "summary-resources",
+          "title": "summary resources",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        }
+      ],
+      "unit_count": 10,
+      "assessment_unit_count": 1,
+      "content_hash": "b1c08d615a7eb8c9eb981cb823bc3bfc43b34113c147dc90e00befb1308411c6"
+    },
+    {
+      "source_id": "module-security-copilot-getting-started",
+      "source_type": "module",
+      "title": "Describe Microsoft Security Copilot",
+      "url": "https://learn.microsoft.com/en-us/training/modules/security-copilot-getting-started/",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [],
+      "leaf_ids": [],
+      "assessment_content_used": false,
+      "ms_date": "2026-05-01T00:00:00.0000000Z",
+      "updated_at": "2026-05-01T23:14:00.0000000Z",
+      "git_commit_id": "9db2e0018b77123212b5cbab988262d40a868792",
+      "path_id": "path-security-solutions",
+      "exam_in_scope": false,
+      "scope_note": "Present on the current security-solutions learning path; not listed as a July 28, 2026 study-guide leaf.",
+      "units": [
+        {
+          "unit_uid": "learn-wwl.security-copilot-getting-started.introduction",
+          "unit_key": "introduction",
+          "title": "introduction",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn-wwl.security-copilot-getting-started.describe-security-copilot",
+          "unit_key": "describe-security-copilot",
+          "title": "describe security copilot",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn-wwl.security-copilot-getting-started.describe-terminology",
+          "unit_key": "describe-terminology",
+          "title": "describe terminology",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn-wwl.security-copilot-getting-started.describe-how-copilot-processes-prompts",
+          "unit_key": "describe-how-copilot-processes-prompts",
+          "title": "describe how copilot processes prompts",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn-wwl.security-copilot-getting-started.create-effective-prompts",
+          "unit_key": "create-effective-prompts",
+          "title": "create effective prompts",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn-wwl.security-copilot-getting-started.describe-how-to-enable-security-copilot",
+          "unit_key": "describe-how-to-enable-security-copilot",
+          "title": "describe how to enable security copilot",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn-wwl.security-copilot-getting-started.knowledge-check",
+          "unit_key": "knowledge-check",
+          "title": "knowledge check",
+          "assessment_unit": true,
+          "question_source_permitted": false
+        },
+        {
+          "unit_uid": "learn-wwl.security-copilot-getting-started.summary",
+          "unit_key": "summary",
+          "title": "summary",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        }
+      ],
+      "unit_count": 8,
+      "assessment_unit_count": 1,
+      "content_hash": "1ab1ab367a76cff5e6430d13ab5cd4d686487ab3a0ff5a7b7906ac909a433449"
+    },
+    {
+      "source_id": "module-describe-basic-security-capabilities-azure",
+      "source_type": "module",
+      "title": "Describe Core Infrastructure Security Services in Azure",
+      "url": "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure/",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "azure_infrastructure_security"
+      ],
+      "leaf_ids": [
+        "azure_ddos_protection",
+        "azure_firewall",
+        "azure_web_application_firewall",
+        "azure_virtual_network_segmentation",
+        "network_security_groups",
+        "azure_bastion",
+        "azure_key_vault"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-06-12T00:00:00.0000000Z",
+      "updated_at": "2026-06-16T17:34:00.0000000Z",
+      "git_commit_id": "d3fbe32ca30806804bb7f0de9e8d9db4b6c748a9",
+      "path_id": "path-security-solutions",
+      "exam_in_scope": true,
+      "scope_note": "",
+      "units": [
+        {
+          "unit_uid": "learn.wwl.describe-basic-security-capabilities-azure.introduction",
+          "unit_key": "introduction",
+          "title": "introduction",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-basic-security-capabilities-azure.describe-azure-ddos-protection",
+          "unit_key": "describe-azure-ddos-protection",
+          "title": "describe azure ddos protection",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-basic-security-capabilities-azure.describe-what-is-azure-firewall",
+          "unit_key": "describe-what-is-azure-firewall",
+          "title": "describe what is azure firewall",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-basic-security-capabilities-azure.describe-what-is-web-application-firewall",
+          "unit_key": "describe-what-is-web-application-firewall",
+          "title": "describe what is web application firewall",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-basic-security-capabilities-azure.describe-network-segmentation",
+          "unit_key": "describe-network-segmentation",
+          "title": "describe network segmentation",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-basic-security-capabilities-azure.describe-azure-network-security-groups",
+          "unit_key": "describe-azure-network-security-groups",
+          "title": "describe azure network security groups",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-basic-security-capabilities-azure.describe-what-is-azure-bastion",
+          "unit_key": "describe-what-is-azure-bastion",
+          "title": "describe what is azure bastion",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-basic-security-capabilities-azure.describe-ways-azure-encrypts-data",
+          "unit_key": "describe-ways-azure-encrypts-data",
+          "title": "describe ways azure encrypts data",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-basic-security-capabilities-azure.knowledge-check",
+          "unit_key": "knowledge-check",
+          "title": "knowledge check",
+          "assessment_unit": true,
+          "question_source_permitted": false
+        },
+        {
+          "unit_uid": "learn.wwl.describe-basic-security-capabilities-azure.summary-resources",
+          "unit_key": "summary-resources",
+          "title": "summary resources",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        }
+      ],
+      "unit_count": 10,
+      "assessment_unit_count": 1,
+      "content_hash": "8ebc637e2e959a703a698cd2050d66a275b7468b0ad4e52b4f59404641e1439f"
+    },
+    {
+      "source_id": "module-describe-security-management-capabilities-of-azure",
+      "source_type": "module",
+      "title": "Describe the Security Management Capabilities in Azure",
+      "url": "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure/",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "azure_security_management"
+      ],
+      "leaf_ids": [
+        "microsoft_defender_for_cloud",
+        "cloud_security_posture_management",
+        "security_policies_standards_recommendations",
+        "cloud_workload_protection"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-06-11T00:00:00.0000000Z",
+      "updated_at": "2026-06-11T22:11:00.0000000Z",
+      "git_commit_id": "c6dc51bbf725f1ba47c07d9c7b74788c3affc2f9",
+      "path_id": "path-security-solutions",
+      "exam_in_scope": true,
+      "scope_note": "",
+      "units": [
+        {
+          "unit_uid": "learn.wwl.describe-security-management-capabilities-of-azure.introduction",
+          "unit_key": "introduction",
+          "title": "introduction",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-security-management-capabilities-of-azure.describe-&amp;amp;-explore-azure-security-center",
+          "unit_key": "describe-&amp;amp;-explore-azure-security-center",
+          "title": "describe &amp;amp; explore azure security center",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-security-management-capabilities-of-azure.baselines-for-azure",
+          "unit_key": "baselines-for-azure",
+          "title": "baselines for azure",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-security-management-capabilities-of-azure.describe-cloud-security-posture-management-cspm",
+          "unit_key": "describe-cloud-security-posture-management-cspm",
+          "title": "describe cloud security posture management cspm",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-security-management-capabilities-of-azure.describe-benefit-use-cases-defender",
+          "unit_key": "describe-benefit-use-cases-defender",
+          "title": "describe benefit use cases defender",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-security-management-capabilities-of-azure.describe-dev-ops-security-management",
+          "unit_key": "describe-dev-ops-security-management",
+          "title": "describe dev ops security management",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-security-management-capabilities-of-azure.knowledge-check",
+          "unit_key": "knowledge-check",
+          "title": "knowledge check",
+          "assessment_unit": true,
+          "question_source_permitted": false
+        },
+        {
+          "unit_uid": "learn.wwl.describe-security-management-capabilities-of-azure.summary-resources",
+          "unit_key": "summary-resources",
+          "title": "summary resources",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        }
+      ],
+      "unit_count": 8,
+      "assessment_unit_count": 1,
+      "content_hash": "c1541ba57961ddbe702b7003406ee7e44b6998c3ea67194809c09d3a81757c47"
+    },
+    {
+      "source_id": "module-describe-security-capabilities-of-azure-sentinel",
+      "source_type": "module",
+      "title": "Describe the Capabilities in Microsoft Sentinel",
+      "url": "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel/",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "microsoft_sentinel"
+      ],
+      "leaf_ids": [
+        "siem_and_soar",
+        "sentinel_threat_detection_mitigation"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-06-15T00:00:00.0000000Z",
+      "updated_at": "2026-06-16T17:34:00.0000000Z",
+      "git_commit_id": "d3fbe32ca30806804bb7f0de9e8d9db4b6c748a9",
+      "path_id": "path-security-solutions",
+      "exam_in_scope": true,
+      "scope_note": "",
+      "units": [
+        {
+          "unit_uid": "learn.wwl.describe-security-capabilities-of-azure-sentinel.introduction",
+          "unit_key": "introduction",
+          "title": "introduction",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-security-capabilities-of-azure-sentinel.define-concepts-of-siem,-soar,-xdr",
+          "unit_key": "define-concepts-of-siem,-soar,-xdr",
+          "title": "define concepts of siem, soar, xdr",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-security-capabilities-of-azure-sentinel.describe-role-value-of-sentinel-providing-integrated-threat-protection",
+          "unit_key": "describe-role-value-of-sentinel-providing-integrated-threat-protection",
+          "title": "describe role value of sentinel providing integrated threat protection",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-security-capabilities-of-azure-sentinel.describe-security-copilot",
+          "unit_key": "describe-security-copilot",
+          "title": "describe security copilot",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-security-capabilities-of-azure-sentinel.knowledge-check",
+          "unit_key": "knowledge-check",
+          "title": "knowledge check",
+          "assessment_unit": true,
+          "question_source_permitted": false
+        },
+        {
+          "unit_uid": "learn.wwl.describe-security-capabilities-of-azure-sentinel.summary-resources",
+          "unit_key": "summary-resources",
+          "title": "summary resources",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        }
+      ],
+      "unit_count": 6,
+      "assessment_unit_count": 1,
+      "content_hash": "206a49af05e627128e7055ae19e7ce73b411790535bc2ba587b84ec5963ef300"
+    },
+    {
+      "source_id": "module-describe-threat-protection-with-microsoft-365-defender",
+      "source_type": "module",
+      "title": "Describe Threat Protection with Microsoft Defender XDR",
+      "url": "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "defender_xdr"
+      ],
+      "leaf_ids": [
+        "defender_xdr_services",
+        "defender_for_office_365",
+        "defender_for_endpoint",
+        "defender_for_cloud_apps",
+        "defender_for_identity",
+        "defender_vulnerability_management",
+        "defender_threat_intelligence",
+        "defender_portal"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-06-23T00:00:00.0000000Z",
+      "updated_at": "2026-06-23T22:24:00.0000000Z",
+      "git_commit_id": "398074b6fd3e8fab2bb66a55a79fef0ee730e0df",
+      "path_id": "path-security-solutions",
+      "exam_in_scope": true,
+      "scope_note": "",
+      "units": [
+        {
+          "unit_uid": "learn.wwl.describe-threat-protection-with-microsoft-365-defender.introduction",
+          "unit_key": "introduction",
+          "title": "introduction",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-threat-protection-with-microsoft-365-defender.describe-services",
+          "unit_key": "describe-services",
+          "title": "describe services",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-threat-protection-with-microsoft-365-defender.describe-microsoft-defender-for-office-365-formerly-office-365-atp",
+          "unit_key": "describe-microsoft-defender-for-office-365-formerly-office-365-atp",
+          "title": "describe microsoft defender for office 365 formerly office 365 atp",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-threat-protection-with-microsoft-365-defender.describe-microsoft-defender-for-endpoint-formerly-microsoft-defender-atp",
+          "unit_key": "describe-microsoft-defender-for-endpoint-formerly-microsoft-defender-atp",
+          "title": "describe microsoft defender for endpoint formerly microsoft defender atp",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-threat-protection-with-microsoft-365-defender.describe-microsoft-cloud-app-security",
+          "unit_key": "describe-microsoft-cloud-app-security",
+          "title": "describe microsoft cloud app security",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-threat-protection-with-microsoft-365-defender.describe-microsoft-defender-for-identity-formerly-azure-atp",
+          "unit_key": "describe-microsoft-defender-for-identity-formerly-azure-atp",
+          "title": "describe microsoft defender for identity formerly azure atp",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-threat-protection-with-microsoft-365-defender.describe-defender-vulnerability-management",
+          "unit_key": "describe-defender-vulnerability-management",
+          "title": "describe defender vulnerability management",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-threat-protection-with-microsoft-365-defender.describe-defender-threat-intelligence",
+          "unit_key": "describe-defender-threat-intelligence",
+          "title": "describe defender threat intelligence",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-threat-protection-with-microsoft-365-defender.describe-security-exposure-management",
+          "unit_key": "describe-security-exposure-management",
+          "title": "describe security exposure management",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-threat-protection-with-microsoft-365-defender.describe-microsoft-defender-portal",
+          "unit_key": "describe-microsoft-defender-portal",
+          "title": "describe microsoft defender portal",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-threat-protection-with-microsoft-365-defender.describe-copilot-in-defender-xdr",
+          "unit_key": "describe-copilot-in-defender-xdr",
+          "title": "describe copilot in defender xdr",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-threat-protection-with-microsoft-365-defender.knowledge-check",
+          "unit_key": "knowledge-check",
+          "title": "knowledge check",
+          "assessment_unit": true,
+          "question_source_permitted": false
+        },
+        {
+          "unit_uid": "learn.wwl.describe-threat-protection-with-microsoft-365-defender.summary-resources",
+          "unit_key": "summary-resources",
+          "title": "summary resources",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        }
+      ],
+      "unit_count": 13,
+      "assessment_unit_count": 1,
+      "content_hash": "e7905a14fdf570ddaa18d1f26f3dc396be0ef0fb7a0929fb51242d0a02182dfc"
+    },
+    {
+      "source_id": "module-describe-compliance-management-capabilities-microsoft",
+      "source_type": "module",
+      "title": "Describe Microsoft’s Service Trust Portal and Privacy Principles",
+      "url": "https://learn.microsoft.com/en-us/training/modules/describe-compliance-management-capabilities-microsoft/",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "service_trust_privacy"
+      ],
+      "leaf_ids": [
+        "service_trust_portal_offerings",
+        "microsoft_privacy_principles"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-04-27T00:00:00.0000000Z",
+      "updated_at": "2026-04-27T23:59:00.0000000Z",
+      "git_commit_id": "8b33d0d28891383f78b73b1a0f920377bee8f9d6",
+      "path_id": "path-compliance-solutions",
+      "exam_in_scope": true,
+      "scope_note": "",
+      "units": [
+        {
+          "unit_uid": "learn.wwl.describe-compliance-management-capabilities-microsoft.introduction",
+          "unit_key": "introduction",
+          "title": "introduction",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-compliance-management-capabilities-microsoft.describe-offerings-of-service-trust-portal",
+          "unit_key": "describe-offerings-of-service-trust-portal",
+          "title": "describe offerings of service trust portal",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-compliance-management-capabilities-microsoft.describe-microsofts-privacy-principles",
+          "unit_key": "describe-microsofts-privacy-principles",
+          "title": "describe microsofts privacy principles",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.describe-compliance-management-capabilities-microsoft.knowledge-check",
+          "unit_key": "knowledge-check",
+          "title": "knowledge check",
+          "assessment_unit": true,
+          "question_source_permitted": false
+        },
+        {
+          "unit_uid": "learn.wwl.describe-compliance-management-capabilities-microsoft.summary-resources",
+          "unit_key": "summary-resources",
+          "title": "summary resources",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        }
+      ],
+      "unit_count": 5,
+      "assessment_unit_count": 1,
+      "content_hash": "9b72672c22e76fa4943e8a6204a1f05cec262007aee542e9a3b610b530505b0e"
+    },
+    {
+      "source_id": "module-describe-purview-data-solutions",
+      "source_type": "module",
+      "title": "Describe the Data Security Solutions of Microsoft Purview",
+      "url": "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions/",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "purview_information_protection_lifecycle",
+        "purview_compliance_management"
+      ],
+      "leaf_ids": [
+        "purview_portal",
+        "data_classification",
+        "content_and_activity_explorer",
+        "sensitivity_labels_and_policies",
+        "data_loss_prevention"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-06-22T00:00:00.0000000Z",
+      "updated_at": "2026-06-23T22:24:00.0000000Z",
+      "git_commit_id": "f834084716c7eb031c5859b9524f47ee44b67aaf",
+      "path_id": "path-compliance-solutions",
+      "exam_in_scope": true,
+      "scope_note": "",
+      "units": [
+        {
+          "unit_uid": "learn.describe-purview-data-solutions.introduction",
+          "unit_key": "introduction",
+          "title": "introduction",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.describe-purview-data-solutions.identify-sensitive-data",
+          "unit_key": "identify-sensitive-data",
+          "title": "identify sensitive data",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.describe-purview-data-solutions.describe-sensitivity-labels-policies",
+          "unit_key": "describe-sensitivity-labels-policies",
+          "title": "describe sensitivity labels policies",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.describe-purview-data-solutions.describe-data-loss-prevention",
+          "unit_key": "describe-data-loss-prevention",
+          "title": "describe data loss prevention",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.describe-purview-data-solutions.describe-insider-risk-management",
+          "unit_key": "describe-insider-risk-management",
+          "title": "describe insider risk management",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.describe-purview-data-solutions.describe-adaptive-protection",
+          "unit_key": "describe-adaptive-protection",
+          "title": "describe adaptive protection",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.describe-purview-data-solutions.describe-data-security-posture-management",
+          "unit_key": "describe-data-security-posture-management",
+          "title": "describe data security posture management",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.describe-purview-data-solutions.describe-data-security-investigations",
+          "unit_key": "describe-data-security-investigations",
+          "title": "describe data security investigations",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.describe-purview-data-solutions.knowledge-check",
+          "unit_key": "knowledge-check",
+          "title": "knowledge check",
+          "assessment_unit": true,
+          "question_source_permitted": false
+        },
+        {
+          "unit_uid": "learn.describe-purview-data-solutions.summary",
+          "unit_key": "summary",
+          "title": "summary",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        }
+      ],
+      "unit_count": 10,
+      "assessment_unit_count": 1,
+      "content_hash": "dfa0c0ee8c7f0b11928a3419455a466b36b2641af698dd5cfbcb699d0913e4ad"
+    },
+    {
+      "source_id": "module-describe-purview-risk-compliance-governance",
+      "source_type": "module",
+      "title": "Describe the Data Compliance Solutions of Microsoft Purview",
+      "url": "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance/",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "purview_compliance_management",
+        "purview_information_protection_lifecycle",
+        "purview_insider_risk_ediscovery_audit"
+      ],
+      "leaf_ids": [
+        "compliance_manager",
+        "compliance_score",
+        "records_management",
+        "retention_policies_labels",
+        "insider_risk_management",
+        "ediscovery",
+        "audit"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-06-17T00:00:00.0000000Z",
+      "updated_at": "2026-06-18T17:19:00.0000000Z",
+      "git_commit_id": "9a5161820fb7874cc18ebf87e60eac8d65bd74d0",
+      "path_id": "path-compliance-solutions",
+      "exam_in_scope": true,
+      "scope_note": "",
+      "units": [
+        {
+          "unit_uid": "learn.describe-purview-risk-compliance-governance.introduction",
+          "unit_key": "introduction",
+          "title": "introduction",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.describe-purview-risk-compliance-governance.describe-compliance-manager",
+          "unit_key": "describe-compliance-manager",
+          "title": "describe compliance manager",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.describe-purview-risk-compliance-governance.describe-communication-compliance",
+          "unit_key": "describe-communication-compliance",
+          "title": "describe communication compliance",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.describe-purview-risk-compliance-governance.describe-ediscovery",
+          "unit_key": "describe-ediscovery",
+          "title": "describe ediscovery",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.describe-purview-risk-compliance-governance.describe-audit",
+          "unit_key": "describe-audit",
+          "title": "describe audit",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.describe-purview-risk-compliance-governance.describe-data-lifecycle-management",
+          "unit_key": "describe-data-lifecycle-management",
+          "title": "describe data lifecycle management",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.describe-purview-risk-compliance-governance.describe-records-management",
+          "unit_key": "describe-records-management",
+          "title": "describe records management",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.describe-purview-risk-compliance-governance.knowledge-check",
+          "unit_key": "knowledge-check",
+          "title": "knowledge check",
+          "assessment_unit": true,
+          "question_source_permitted": false
+        },
+        {
+          "unit_uid": "learn.describe-purview-risk-compliance-governance.summary",
+          "unit_key": "summary",
+          "title": "summary",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        }
+      ],
+      "unit_count": 9,
+      "assessment_unit_count": 1,
+      "content_hash": "7534f96282d902125ef0d7e7afa6da19852c0ee5f75bbcaa5a68ab194223c47d"
+    },
+    {
+      "source_id": "module-explore-plan-compliance-microsoft-365",
+      "source_type": "module",
+      "title": "Explore compliance in Microsoft 365",
+      "url": "https://learn.microsoft.com/en-us/training/modules/explore-plan-compliance-microsoft-365/",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "purview_compliance_management"
+      ],
+      "leaf_ids": [
+        "compliance_manager",
+        "compliance_score"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2024-12-24T00:00:00.0000000Z",
+      "updated_at": "2024-12-24T18:03:00.0000000Z",
+      "git_commit_id": "126116de2703828d5eca286dc31b8ed794425301",
+      "path_id": "path-compliance-solutions",
+      "exam_in_scope": true,
+      "scope_note": "Still live Microsoft Learn module cited by predecessor questions; not listed among the four current SC-900 path module cards captured on 2026-09-12.",
+      "units": [
+        {
+          "unit_uid": "learn.wwl.explore-plan-compliance-microsoft-365.introduction",
+          "unit_key": "introduction",
+          "title": "introduction",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.explore-plan-compliance-microsoft-365.plan-security-compliance-microsoft-365",
+          "unit_key": "plan-security-compliance-microsoft-365",
+          "title": "plan security compliance microsoft 365",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.explore-plan-compliance-microsoft-365.plan-compliance-tasks-microsoft-purview",
+          "unit_key": "plan-compliance-tasks-microsoft-purview",
+          "title": "plan compliance tasks microsoft purview",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.explore-plan-compliance-microsoft-365.manage-compliance-requirements-compliance-manager",
+          "unit_key": "manage-compliance-requirements-compliance-manager",
+          "title": "manage compliance requirements compliance manager",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.explore-plan-compliance-microsoft-365.examine-compliance-manager-dashboard",
+          "unit_key": "examine-compliance-manager-dashboard",
+          "title": "examine compliance manager dashboard",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.explore-plan-compliance-microsoft-365.analyze-microsoft-compliance-score",
+          "unit_key": "analyze-microsoft-compliance-score",
+          "title": "analyze microsoft compliance score",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.wwl.explore-plan-compliance-microsoft-365.knowledge-check",
+          "unit_key": "knowledge-check",
+          "title": "knowledge check",
+          "assessment_unit": true,
+          "question_source_permitted": false
+        },
+        {
+          "unit_uid": "learn.wwl.explore-plan-compliance-microsoft-365.summary",
+          "unit_key": "summary",
+          "title": "summary",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        }
+      ],
+      "unit_count": 8,
+      "assessment_unit_count": 1,
+      "content_hash": "7b32a8e0064d3a91e182c9b6d788b4a2a376880c8391f51009ebee8568076325"
+    },
+    {
+      "source_id": "module-describe-purview-data-governance",
+      "source_type": "module",
+      "title": "Describe the Data Governance Solutions of Microsoft Purview",
+      "url": "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-governance/",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "purview_information_protection_lifecycle"
+      ],
+      "leaf_ids": [],
+      "assessment_content_used": false,
+      "ms_date": "2026-06-19T00:00:00.0000000Z",
+      "updated_at": "2026-06-23T22:24:00.0000000Z",
+      "git_commit_id": "91fb9f8d5dcac69ff4faef1dd45b195b85ce643d",
+      "path_id": "path-compliance-solutions",
+      "exam_in_scope": false,
+      "scope_note": "Current compliance path includes Data Map/Unified Catalog teaching; July 28, 2026 study-guide leaves do not name those products.",
+      "units": [
+        {
+          "unit_uid": "learn.describe-purview-data-governance.introduction",
+          "unit_key": "introduction",
+          "title": "introduction",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.describe-purview-data-governance.describe-benefits-data-governance",
+          "unit_key": "describe-benefits-data-governance",
+          "title": "describe benefits data governance",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.describe-purview-data-governance.describe-data-map",
+          "unit_key": "describe-data-map",
+          "title": "describe data map",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.describe-purview-data-governance.describe-data-catalog",
+          "unit_key": "describe-data-catalog",
+          "title": "describe data catalog",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        },
+        {
+          "unit_uid": "learn.describe-purview-data-governance.knowledge-check",
+          "unit_key": "knowledge-check",
+          "title": "knowledge check",
+          "assessment_unit": true,
+          "question_source_permitted": false
+        },
+        {
+          "unit_uid": "learn.describe-purview-data-governance.summary",
+          "unit_key": "summary",
+          "title": "summary",
+          "assessment_unit": false,
+          "question_source_permitted": true
+        }
+      ],
+      "unit_count": 6,
+      "assessment_unit_count": 1,
+      "content_hash": "1440dfe510d0df35a5292207533f86b2a91f521cc4cacf3cbee9f96214c18f72"
+    },
+    {
+      "source_id": "doc-zero-trust-overview",
+      "source_type": "product_documentation",
+      "title": "Zero Trust as a security foundation",
+      "url": "https://learn.microsoft.com/en-us/security/zero-trust/zero-trust-overview",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "security_compliance_concepts"
+      ],
+      "leaf_ids": [
+        "zero_trust_model"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-05-24T00:00:00.0000000Z",
+      "updated_at": "2026-05-31T12:33:00.0000000Z",
+      "git_commit_id": "a84ca5373964512a66ae39357f5e9c4a6070986b",
+      "fetch_ok": true,
+      "content_hash": "a2cca05eb5b3875c68b1a400ddf6f3c17d986dd8a520106fa98c896689d46d34"
+    },
+    {
+      "source_id": "doc-shared-responsibility",
+      "source_type": "product_documentation",
+      "title": "Shared responsibility in the cloud - Microsoft Azure",
+      "url": "https://learn.microsoft.com/en-us/azure/security/fundamentals/shared-responsibility",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "security_compliance_concepts"
+      ],
+      "leaf_ids": [
+        "shared_responsibility_model"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-08-24T00:00:00.0000000Z",
+      "updated_at": "2026-08-24T22:12:00.0000000Z",
+      "git_commit_id": "b2025db95722a71b7dcc3c7cad4f56453d97c18a",
+      "fetch_ok": true,
+      "content_hash": "bf3696197b67d46fd6cade37bfb27c72290964fe80c9a7aed577eed246d3adef"
+    },
+    {
+      "source_id": "doc-encryption-azure",
+      "source_type": "product_documentation",
+      "title": "Azure encryption overview",
+      "url": "https://learn.microsoft.com/en-us/azure/security/fundamentals/encryption-overview",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "security_compliance_concepts"
+      ],
+      "leaf_ids": [
+        "encryption_and_hashing"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-07-08T00:00:00.0000000Z",
+      "updated_at": "2026-07-21T11:41:00.0000000Z",
+      "git_commit_id": "1db406cc91002fd50ba80c0cafa4204c4127c282",
+      "fetch_ok": true,
+      "content_hash": "48770a8248e936c9a110423cb7fc906c9f320136910cf4426f7d043e2aed3184"
+    },
+    {
+      "source_id": "doc-entra-what-is",
+      "source_type": "product_documentation",
+      "title": "What is Microsoft Entra? - Microsoft Entra",
+      "url": "https://learn.microsoft.com/en-us/entra/fundamentals/whatis",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "entra_identity_types_and_function"
+      ],
+      "leaf_ids": [
+        "entra_id_overview"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-06-18T00:00:00.0000000Z",
+      "updated_at": "2026-09-08T17:35:00.0000000Z",
+      "git_commit_id": "193436706a1bc86da5e36bc69f3a7b1c66f4f66a",
+      "fetch_ok": true,
+      "content_hash": "3c2120d485f0bfb7ffdb635d431045af985432f2353f22d82b049bb56f328b54"
+    },
+    {
+      "source_id": "doc-entra-identity-types",
+      "source_type": "product_documentation",
+      "title": "Architecture overview - Microsoft Entra",
+      "url": "https://learn.microsoft.com/en-us/entra/architecture/architecture",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "entra_identity_types_and_function"
+      ],
+      "leaf_ids": [
+        "identity_types_including_agent_id"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-05-07T00:00:00.0000000Z",
+      "updated_at": "2026-06-15T17:40:00.0000000Z",
+      "git_commit_id": "fcc5c73aed5dc4dec675d62ce9a4f6ba99b6311d",
+      "fetch_ok": true,
+      "content_hash": "ef418677a60aea8962ea4b32594a96fee1ec5eb715ea83768355a7d9e6ce28bd"
+    },
+    {
+      "source_id": "doc-hybrid-identity",
+      "source_type": "product_documentation",
+      "title": "What is hybrid identity with Microsoft Entra ID? - Microsoft Entra ID",
+      "url": "https://learn.microsoft.com/en-us/entra/identity/hybrid/whatis-hybrid-identity",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "entra_identity_types_and_function"
+      ],
+      "leaf_ids": [
+        "hybrid_identity"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2025-04-09T00:00:00.0000000Z",
+      "updated_at": "2026-06-15T17:40:00.0000000Z",
+      "git_commit_id": "7e7f75a19b7980129c9e082f14d3885ef7d15f4a",
+      "fetch_ok": true,
+      "content_hash": "ea5fbca00c8a78bc69f7ced3e5dc199473bb9fbcaf8b0144a0493c78c29a692a"
+    },
+    {
+      "source_id": "doc-authentication-methods",
+      "source_type": "product_documentation",
+      "title": "Microsoft Entra authentication overview - Microsoft Entra ID",
+      "url": "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-authentication-methods",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "entra_authentication"
+      ],
+      "leaf_ids": [
+        "authentication_methods"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-04-30T00:00:00.0000000Z",
+      "updated_at": "2026-06-15T17:40:00.0000000Z",
+      "git_commit_id": "95d306db8380651d366b39dee3f525b434befedd",
+      "fetch_ok": true,
+      "content_hash": "5e6fbf70a83144c918013aa3d673d544e5626c221c7b13df6d1328056195d7d8"
+    },
+    {
+      "source_id": "doc-temporary-access-pass",
+      "source_type": "product_documentation",
+      "title": "Configure a Temporary Access Pass in Microsoft Entra ID to register passwordless authentication methods - Microsoft Entra ID",
+      "url": "https://learn.microsoft.com/en-us/entra/identity/authentication/howto-authentication-temporary-access-pass",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "entra_authentication"
+      ],
+      "leaf_ids": [
+        "authentication_methods"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-03-04T00:00:00.0000000Z",
+      "updated_at": "2026-06-15T17:40:00.0000000Z",
+      "git_commit_id": "95d306db8380651d366b39dee3f525b434befedd",
+      "fetch_ok": true,
+      "content_hash": "fa3a1e7e35cfb52c50cc5b574cef2b74c500b967c36170313cf1bf278c7c62a0"
+    },
+    {
+      "source_id": "doc-mfa",
+      "source_type": "product_documentation",
+      "title": "Microsoft Entra multifactor authentication overview - Microsoft Entra ID",
+      "url": "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-mfa-howitworks",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "entra_authentication"
+      ],
+      "leaf_ids": [
+        "multifactor_authentication"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2025-03-04T00:00:00.0000000Z",
+      "updated_at": "2026-04-01T17:23:00.0000000Z",
+      "git_commit_id": "4d5ae24bc0e7250519985840a65535e7073daac4",
+      "fetch_ok": true,
+      "content_hash": "1f4355af23fee43827bd801d64ab9338e4d7e35ef567070bd7c98db822c55704"
+    },
+    {
+      "source_id": "doc-password-protection",
+      "source_type": "product_documentation",
+      "title": "Password protection in Microsoft Entra ID - Microsoft Entra ID",
+      "url": "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-password-ban-bad",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "entra_authentication"
+      ],
+      "leaf_ids": [
+        "password_protection_management"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2025-03-04T00:00:00.0000000Z",
+      "updated_at": "2026-02-13T06:06:00.0000000Z",
+      "git_commit_id": "9f561e8965589a16193c13f8d422430f942a1433",
+      "fetch_ok": true,
+      "content_hash": "89740076e147db419264c404195aaf89b3b98ac9e926ed45881412c675da3f7f"
+    },
+    {
+      "source_id": "doc-sspr",
+      "source_type": "product_documentation",
+      "title": "Self-service password reset deep dive - Microsoft Entra ID",
+      "url": "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-sspr-howitworks",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "entra_authentication"
+      ],
+      "leaf_ids": [
+        "password_protection_management"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2025-03-04T00:00:00.0000000Z",
+      "updated_at": "2026-03-27T05:06:00.0000000Z",
+      "git_commit_id": "32d7c13c0ac60598d1fb51e7afb923a56830a640",
+      "fetch_ok": true,
+      "content_hash": "ea03ab30ac6113720076aa02b6e1a9bc1841f89c196ea952855f1d85da81f9bf"
+    },
+    {
+      "source_id": "doc-conditional-access",
+      "source_type": "product_documentation",
+      "title": "Microsoft Entra Conditional Access: Zero Trust Policy Engine - Microsoft Entra ID",
+      "url": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "entra_access_management"
+      ],
+      "leaf_ids": [
+        "conditional_access"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-04-27T00:00:00.0000000Z",
+      "updated_at": "2026-04-28T05:19:00.0000000Z",
+      "git_commit_id": "4994b152d89ef50cce69dbfa326c1b90933e385d",
+      "fetch_ok": true,
+      "content_hash": "8b97b8ae2cbcd4d2f9aca8ce46c7ed25f62d3022d34b2678db395a4a95957448"
+    },
+    {
+      "source_id": "doc-entra-rbac",
+      "source_type": "product_documentation",
+      "title": "Overview of Microsoft Entra role-based access control (RBAC) - Microsoft Entra ID",
+      "url": "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/custom-overview",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "entra_access_management"
+      ],
+      "leaf_ids": [
+        "entra_roles_rbac"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-06-01T00:00:00.0000000Z",
+      "updated_at": "2026-06-01T22:39:00.0000000Z",
+      "git_commit_id": "4475afbc261ef5a6b4664ecfd2440841592dd774",
+      "fetch_ok": true,
+      "content_hash": "6a6ca43f2f0636dcc2ec73a3d49fd9aa4e45dbe028c8ab1437360d9e75080204"
+    },
+    {
+      "source_id": "doc-id-governance",
+      "source_type": "product_documentation",
+      "title": "Microsoft Entra ID Governance - Microsoft Entra ID Governance",
+      "url": "https://learn.microsoft.com/en-us/entra/id-governance/identity-governance-overview",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "entra_identity_protection_governance"
+      ],
+      "leaf_ids": [
+        "entra_id_governance"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-05-08T00:00:00.0000000Z",
+      "updated_at": "2026-07-02T07:46:00.0000000Z",
+      "git_commit_id": "ee4e287dab1def2a6212f0bdc83e1d2b2fea1d9b",
+      "fetch_ok": true,
+      "content_hash": "25cb47c2610da07eb0c40215a836f30ce332cdb9076346af98114e96ef5056f2"
+    },
+    {
+      "source_id": "doc-lifecycle-workflows",
+      "source_type": "product_documentation",
+      "title": "What are lifecycle workflows? - Microsoft Entra ID Governance",
+      "url": "https://learn.microsoft.com/en-us/entra/id-governance/what-are-lifecycle-workflows",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "entra_identity_protection_governance"
+      ],
+      "leaf_ids": [
+        "entra_id_governance"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-03-12T00:00:00.0000000Z",
+      "updated_at": "2026-04-14T22:08:00.0000000Z",
+      "git_commit_id": "69d3c404bb75be68447f5ea86dfdebcd14eeac9b",
+      "fetch_ok": true,
+      "content_hash": "0211e6119681804cc24cd1999089dddf9d71be00ed2e4075334bd08f2cd38b6d"
+    },
+    {
+      "source_id": "doc-access-reviews",
+      "source_type": "product_documentation",
+      "title": "What are access reviews? - Microsoft Entra - Microsoft Entra ID Governance",
+      "url": "https://learn.microsoft.com/en-us/entra/id-governance/access-reviews-overview",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "entra_identity_protection_governance"
+      ],
+      "leaf_ids": [
+        "access_reviews"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-03-12T00:00:00.0000000Z",
+      "updated_at": "2026-04-09T05:04:00.0000000Z",
+      "git_commit_id": "6e7ecfff94c6d6f8a591ff86432aba71cf888354",
+      "fetch_ok": true,
+      "content_hash": "ca816dd6469aa09d649d2a00a37c499f3627dd988be0dd3fc8fa33ec4c59fde2"
+    },
+    {
+      "source_id": "doc-pim",
+      "source_type": "product_documentation",
+      "title": "What is Privileged Identity Management? - Microsoft Entra ID Governance",
+      "url": "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "entra_identity_protection_governance"
+      ],
+      "leaf_ids": [
+        "privileged_identity_management"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-04-23T00:00:00.0000000Z",
+      "updated_at": "2026-04-24T05:08:00.0000000Z",
+      "git_commit_id": "f126bf975530aabaa9d76bb4e57106545ae12126",
+      "fetch_ok": true,
+      "content_hash": "7b5367bbc90e1fb9278a7d193667e1f511db493ec76e231af5698b82150c829b"
+    },
+    {
+      "source_id": "doc-id-protection",
+      "source_type": "product_documentation",
+      "title": "What is Microsoft Entra ID Protection? - Microsoft Entra ID Protection",
+      "url": "https://learn.microsoft.com/en-us/entra/id-protection/overview-identity-protection",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "entra_identity_protection_governance"
+      ],
+      "leaf_ids": [
+        "entra_id_protection"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2025-10-30T00:00:00.0000000Z",
+      "updated_at": "2026-02-10T23:11:00.0000000Z",
+      "git_commit_id": "a1b8bef8ae2c0c0e03659b63773d1a815d8ca719",
+      "fetch_ok": true,
+      "content_hash": "f82ae8ad48cec15d3b0d99e5dc187c53e81e6d923c0bed742f96d039ceab6ba3"
+    },
+    {
+      "source_id": "doc-ddos",
+      "source_type": "product_documentation",
+      "title": "Azure DDoS Protection Overview",
+      "url": "https://learn.microsoft.com/en-us/azure/ddos-protection/ddos-protection-overview",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "azure_infrastructure_security"
+      ],
+      "leaf_ids": [
+        "azure_ddos_protection"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2025-07-08T00:00:00.0000000Z",
+      "updated_at": "2026-08-13T22:14:00.0000000Z",
+      "git_commit_id": "3018333ed1a03524e2f765eeaba9278da829d48e",
+      "fetch_ok": true,
+      "content_hash": "b0b6d74b83608f64b54c016af32e3f6b7072b4696f537220abace44625b5b91f"
+    },
+    {
+      "source_id": "doc-azure-firewall",
+      "source_type": "product_documentation",
+      "title": "What is Azure Firewall?",
+      "url": "https://learn.microsoft.com/en-us/azure/firewall/overview",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "azure_infrastructure_security"
+      ],
+      "leaf_ids": [
+        "azure_firewall"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-03-28T00:00:00.0000000Z",
+      "updated_at": "2026-03-29T11:12:00.0000000Z",
+      "git_commit_id": "42bf4396d3ffb32e6a104b6519256bfa46972720",
+      "fetch_ok": true,
+      "content_hash": "82f0b968448f0ee9a008549aa717fd2da648453a4c2de3f837bda2d8d64acdc7"
+    },
+    {
+      "source_id": "doc-waf",
+      "source_type": "product_documentation",
+      "title": "Introduction to Azure Web Application Firewall",
+      "url": "https://learn.microsoft.com/en-us/azure/web-application-firewall/overview",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "azure_infrastructure_security"
+      ],
+      "leaf_ids": [
+        "azure_web_application_firewall"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2025-11-10T00:00:00.0000000Z",
+      "updated_at": "2026-04-28T22:22:00.0000000Z",
+      "git_commit_id": "cc377a388c4291abd3b2bdd887ee88b4d06754be",
+      "fetch_ok": true,
+      "content_hash": "9eaac6bbe3df6c87d4ce3e6a5da0e4b8e9d20c6059f924dbe9d9f5002ce7b182"
+    },
+    {
+      "source_id": "doc-vnet",
+      "source_type": "product_documentation",
+      "title": "What is Azure Virtual Network?",
+      "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "azure_infrastructure_security"
+      ],
+      "leaf_ids": [
+        "azure_virtual_network_segmentation"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2025-07-17T00:00:00.0000000Z",
+      "updated_at": "2026-02-13T12:10:00.0000000Z",
+      "git_commit_id": "fb2bffef7c187084d68e891abfcef957fb752117",
+      "fetch_ok": true,
+      "content_hash": "a2bb1ce0fcac6105e04b3164626f0a20b3577e792c686c798e9c9fea721f4398"
+    },
+    {
+      "source_id": "doc-nsg",
+      "source_type": "product_documentation",
+      "title": "Azure network security groups overview",
+      "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "azure_infrastructure_security"
+      ],
+      "leaf_ids": [
+        "network_security_groups"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2025-07-15T00:00:00.0000000Z",
+      "updated_at": "2025-10-23T11:11:00.0000000Z",
+      "git_commit_id": "aceedff0b0c50c5a106a6dbfa5b6048e181770c2",
+      "fetch_ok": true,
+      "content_hash": "782048172631671537326a79a246eec0e9fe5ec7c13d1729c0b86a33ce95f7c6"
+    },
+    {
+      "source_id": "doc-bastion",
+      "source_type": "product_documentation",
+      "title": "What is Azure Bastion?",
+      "url": "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "azure_infrastructure_security"
+      ],
+      "leaf_ids": [
+        "azure_bastion"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-02-04T00:00:00.0000000Z",
+      "updated_at": "2026-07-01T23:48:00.0000000Z",
+      "git_commit_id": "55ac9d3889f2ffb813e88ef5699c4b1f670d7cf6",
+      "fetch_ok": true,
+      "content_hash": "fd82b9ed019f4d982c82deec9d3bc23bde83c544adf92615cead40067d23ddc0"
+    },
+    {
+      "source_id": "doc-key-vault",
+      "source_type": "product_documentation",
+      "title": "What is Azure Key Vault?",
+      "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/basic-concepts",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "azure_infrastructure_security"
+      ],
+      "leaf_ids": [
+        "azure_key_vault"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-04-10T00:00:00.0000000Z",
+      "updated_at": "2026-06-12T22:35:00.0000000Z",
+      "git_commit_id": "cc9ac0f545a688e4f2016a1541f565f136e23129",
+      "fetch_ok": true,
+      "content_hash": "4bf3293cc741e55d680c626486ba9113c8929f9388a93b5423952ba0a6c8e21a"
+    },
+    {
+      "source_id": "doc-defender-for-cloud",
+      "source_type": "product_documentation",
+      "title": "Microsoft Defender for Cloud Overview - Microsoft Defender for Cloud",
+      "url": "https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "azure_security_management"
+      ],
+      "leaf_ids": [
+        "microsoft_defender_for_cloud"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-08-10T00:00:00.0000000Z",
+      "updated_at": "2026-08-10T22:36:00.0000000Z",
+      "git_commit_id": "e7befdba1686d9190e216b236bf700bd4c7bef2c",
+      "fetch_ok": true,
+      "content_hash": "3ce65197b08ea56624481e43917c17262f869ea194f87279b315c93721e2ce30"
+    },
+    {
+      "source_id": "doc-cspm",
+      "source_type": "product_documentation",
+      "title": "What is Cloud Security Posture Management (CSPM) - Microsoft Defender for Cloud",
+      "url": "https://learn.microsoft.com/en-us/azure/defender-for-cloud/concept-cloud-security-posture-management",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "azure_security_management"
+      ],
+      "leaf_ids": [
+        "cloud_security_posture_management"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-09-11T00:00:00.0000000Z",
+      "updated_at": "2026-09-11T22:34:00.0000000Z",
+      "git_commit_id": "797cbd35772cf562a9faf5c44ec4e144f1adbb1c",
+      "fetch_ok": true,
+      "content_hash": "41eabedf6c8f4be545b4b16c0845183d74c7ad2d8bd353dbd62a2c5dc5e478ab"
+    },
+    {
+      "source_id": "doc-cwp",
+      "source_type": "product_documentation",
+      "title": "Plan a Defender for Servers deployment - Microsoft Defender for Cloud",
+      "url": "https://learn.microsoft.com/en-us/azure/defender-for-cloud/plan-defender-for-servers",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "azure_security_management"
+      ],
+      "leaf_ids": [
+        "cloud_workload_protection"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-08-07T00:00:00.0000000Z",
+      "updated_at": "2026-08-07T22:44:00.0000000Z",
+      "git_commit_id": "acb4e288f585b987bafd55b4cdf3bb7599934b9b",
+      "fetch_ok": true,
+      "content_hash": "54c8cef38ee11657bd9824a00e59e22baeb969aa697bc2426a9e463d5e5b18c6"
+    },
+    {
+      "source_id": "doc-sentinel",
+      "source_type": "product_documentation",
+      "title": "What is Microsoft Sentinel SIEM?",
+      "url": "https://learn.microsoft.com/en-us/azure/sentinel/overview",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "microsoft_sentinel"
+      ],
+      "leaf_ids": [
+        "siem_and_soar",
+        "sentinel_threat_detection_mitigation"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-01-28T00:00:00.0000000Z",
+      "updated_at": "2026-05-14T07:40:00.0000000Z",
+      "git_commit_id": "aaba48fc74346a0a56584faa3aa3e0181c146f2f",
+      "fetch_ok": true,
+      "content_hash": "44013ba97d40e94a0d90b41de3e699c5d962f10f821327b85c46f1152685ce9b"
+    },
+    {
+      "source_id": "doc-defender-xdr",
+      "source_type": "product_documentation",
+      "title": "What is Microsoft Defender XDR? - Microsoft Defender XDR",
+      "url": "https://learn.microsoft.com/en-us/defender-xdr/microsoft-365-defender",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "defender_xdr"
+      ],
+      "leaf_ids": [
+        "defender_xdr_services"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-08-07T00:00:00.0000000Z",
+      "updated_at": "2026-08-07T22:44:00.0000000Z",
+      "git_commit_id": "20450c13d2fe9862d9d19fe5703edd98700ff40a",
+      "fetch_ok": true,
+      "content_hash": "5eba4ea97ca8b361f3b856c66a03666280429079b830c3e4ffbf88cd9723c43b"
+    },
+    {
+      "source_id": "doc-defender-portal",
+      "source_type": "product_documentation",
+      "title": "Microsoft Defender XDR in the Microsoft Defender portal - Microsoft Defender XDR",
+      "url": "https://learn.microsoft.com/en-us/defender-xdr/microsoft-365-defender-portal",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "defender_xdr"
+      ],
+      "leaf_ids": [
+        "defender_portal"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2025-10-31T00:00:00.0000000Z",
+      "updated_at": "2026-09-10T23:55:00.0000000Z",
+      "git_commit_id": "bcb6aaeef1580fe3bd410eb73b0045981b0f8706",
+      "fetch_ok": true,
+      "content_hash": "6f65c2cc4b0552aecb59b87543035813a310707977447f240ca898dfd4031167"
+    },
+    {
+      "source_id": "doc-defender-ti",
+      "source_type": "product_documentation",
+      "title": "Microsoft Threat Intelligence in Microsoft Defender XDR - Microsoft Defender XDR",
+      "url": "https://learn.microsoft.com/en-us/defender-xdr/defender-threat-intelligence",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "defender_xdr"
+      ],
+      "leaf_ids": [
+        "defender_threat_intelligence"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-07-30T00:00:00.0000000Z",
+      "updated_at": "2026-08-02T22:38:00.0000000Z",
+      "git_commit_id": "84a11674317125f16f51fff6a4a70b585c8b65d4",
+      "fetch_ok": true,
+      "content_hash": "2541cd663292cf8eac8e10ea4ee8e47d47a8d8a07fbc69704bd60fe968815242"
+    },
+    {
+      "source_id": "doc-defender-office",
+      "source_type": "product_documentation",
+      "title": "Why do I need Microsoft Defender for Office 365? - Microsoft Defender for Office 365",
+      "url": "https://learn.microsoft.com/en-us/defender-office-365/mdo-about",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "defender_xdr"
+      ],
+      "leaf_ids": [
+        "defender_for_office_365"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-05-21T00:00:00.0000000Z",
+      "updated_at": "2026-06-17T22:34:00.0000000Z",
+      "git_commit_id": "54e8ff382c1a7664529f427cc707e558c40137e3",
+      "fetch_ok": true,
+      "content_hash": "1b5c057c33e06b987a5419b143dde3a227ebe1d9da4f39031421fe6145170d28"
+    },
+    {
+      "source_id": "doc-defender-endpoint",
+      "source_type": "product_documentation",
+      "title": "Microsoft Defender for Endpoint - Microsoft Defender for Endpoint",
+      "url": "https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-endpoint",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "defender_xdr"
+      ],
+      "leaf_ids": [
+        "defender_for_endpoint"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-07-28T00:00:00.0000000Z",
+      "updated_at": "2026-07-28T22:35:00.0000000Z",
+      "git_commit_id": "d9f3f68ab891cdfd96a72acfe81ed338e130a212",
+      "fetch_ok": true,
+      "content_hash": "8f278db0fc8816ee6cf278e53fa8d07d0264640825ce0774511e2f834f6f85c7"
+    },
+    {
+      "source_id": "doc-defender-cloud-apps",
+      "source_type": "product_documentation",
+      "title": "Overview - Microsoft Defender for Cloud Apps",
+      "url": "https://learn.microsoft.com/en-us/defender-cloud-apps/what-is-defender-for-cloud-apps",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "defender_xdr"
+      ],
+      "leaf_ids": [
+        "defender_for_cloud_apps"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2024-06-14T00:00:00.0000000Z",
+      "updated_at": "2026-06-14T17:36:00.0000000Z",
+      "git_commit_id": "fc482ff64f800a6de907c82445fb61ae588efc57",
+      "fetch_ok": true,
+      "content_hash": "c86205ec2543e1583251f2c8339502315e65777a1c405ad36d8f4b88c3ed9746"
+    },
+    {
+      "source_id": "doc-defender-identity",
+      "source_type": "product_documentation",
+      "title": "Microsoft Defender for Identity Overview - Microsoft Defender for Identity",
+      "url": "https://learn.microsoft.com/en-us/defender-for-identity/what-is",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "defender_xdr"
+      ],
+      "leaf_ids": [
+        "defender_for_identity"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-07-23T00:00:00.0000000Z",
+      "updated_at": "2026-07-23T22:34:00.0000000Z",
+      "git_commit_id": "6700a67f863b5fd3b8f4c59647c525f71a1a4fe3",
+      "fetch_ok": true,
+      "content_hash": "cad985cdcab6675d1167b44bb4390727a0ac8bd1a091a090bbd5b565dad7be2a"
+    },
+    {
+      "source_id": "doc-defender-vulnerability-management",
+      "source_type": "product_documentation",
+      "title": "Microsoft Defender Vulnerability Management - Microsoft Defender Vulnerability Management",
+      "url": "https://learn.microsoft.com/en-us/defender-vulnerability-management/defender-vulnerability-management",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "defender_xdr"
+      ],
+      "leaf_ids": [
+        "defender_vulnerability_management"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2025-05-08T00:00:00.0000000Z",
+      "updated_at": "2026-08-07T22:44:00.0000000Z",
+      "git_commit_id": "20450c13d2fe9862d9d19fe5703edd98700ff40a",
+      "fetch_ok": true,
+      "content_hash": "07b6958e426b4dae2aec445fd8280828c4824284c501042d73c1b307c22ce222"
+    },
+    {
+      "source_id": "doc-service-trust-portal",
+      "source_type": "product_documentation",
+      "title": "Compliance offerings for Microsoft 365, Azure, and other Microsoft services.",
+      "url": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "service_trust_privacy"
+      ],
+      "leaf_ids": [
+        "service_trust_portal_offerings"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2023-10-06T00:00:00.0000000Z",
+      "updated_at": "2025-10-14T17:30:00.0000000Z",
+      "git_commit_id": "8e7f78c74aa04c36c5c8dd27f7a3ba73de004fb8",
+      "fetch_ok": true,
+      "content_hash": "8589e2354b7b00eca99adf41d6e0a87ab15e420c12c578529373bb0b57020c1c"
+    },
+    {
+      "source_id": "doc-privacy-principles",
+      "source_type": "product_documentation",
+      "title": "General Data Protection Regulation - Microsoft GDPR",
+      "url": "https://learn.microsoft.com/en-us/compliance/regulatory/gdpr",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "service_trust_privacy"
+      ],
+      "leaf_ids": [
+        "microsoft_privacy_principles"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-05-05T00:00:00.0000000Z",
+      "updated_at": "2026-05-05T22:32:00.0000000Z",
+      "git_commit_id": "cde65f2751b3e0c2403a2bd494c55a962ac168b8",
+      "fetch_ok": true,
+      "content_hash": "087b9a16d218985d347f27c61c28436bb74c39ca5115d4bbed10bef19f77eb0a"
+    },
+    {
+      "source_id": "doc-purview-portal",
+      "source_type": "product_documentation",
+      "title": "Learn about the Microsoft Purview portal",
+      "url": "https://learn.microsoft.com/en-us/purview/purview-portal",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "purview_compliance_management"
+      ],
+      "leaf_ids": [
+        "purview_portal"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-08-05T00:00:00.0000000Z",
+      "updated_at": "2026-08-05T17:36:00.0000000Z",
+      "git_commit_id": "45d7a2cc33f56203ca7de42b3bac971c4cb7cf7f",
+      "fetch_ok": true,
+      "content_hash": "980168e29ed16503560a346b61c49119afbf32b1cb8e34750a651902748e73d4"
+    },
+    {
+      "source_id": "doc-compliance-manager",
+      "source_type": "product_documentation",
+      "title": "Microsoft Purview Compliance Manager",
+      "url": "https://learn.microsoft.com/en-us/purview/compliance-manager",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "purview_compliance_management"
+      ],
+      "leaf_ids": [
+        "compliance_manager"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2025-12-03T00:00:00.0000000Z",
+      "updated_at": "2026-06-25T22:34:00.0000000Z",
+      "git_commit_id": "d97e409d50022299b253e6de9060f0641ba23d37",
+      "fetch_ok": true,
+      "content_hash": "cdd179de276850dc1434ecf633acc1eedecb704775a2f58de65cf3ae5e657faa"
+    },
+    {
+      "source_id": "doc-compliance-score",
+      "source_type": "product_documentation",
+      "title": "Compliance Manager scoring",
+      "url": "https://learn.microsoft.com/en-us/purview/compliance-manager-scoring",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "purview_compliance_management"
+      ],
+      "leaf_ids": [
+        "compliance_score"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2025-02-24T00:00:00.0000000Z",
+      "updated_at": "2026-06-25T22:34:00.0000000Z",
+      "git_commit_id": "d97e409d50022299b253e6de9060f0641ba23d37",
+      "fetch_ok": true,
+      "content_hash": "05285d8d41c04e1dc7f150327aafc8f96153efb42162bcc42b0a813e1b32032f"
+    },
+    {
+      "source_id": "doc-data-classification",
+      "source_type": "product_documentation",
+      "title": "Classifiers overview",
+      "url": "https://learn.microsoft.com/en-us/purview/data-classification-overview",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "purview_information_protection_lifecycle"
+      ],
+      "leaf_ids": [
+        "data_classification"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2025-09-22T00:00:00.0000000Z",
+      "updated_at": "2026-06-15T22:35:00.0000000Z",
+      "git_commit_id": "a580c1c2e34a67b10bce436a05a44376cf21f61d",
+      "fetch_ok": true,
+      "content_hash": "bff20e98ddfdd4e777bbb4d29d3ac8fe8cf48fb65cca6bc2591f8a6801c8d1c1"
+    },
+    {
+      "source_id": "doc-activity-explorer",
+      "source_type": "product_documentation",
+      "title": "Get started with Activity explorer",
+      "url": "https://learn.microsoft.com/en-us/purview/data-classification-activity-explorer",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "purview_information_protection_lifecycle"
+      ],
+      "leaf_ids": [
+        "content_and_activity_explorer"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-07-22T00:00:00.0000000Z",
+      "updated_at": "2026-07-23T17:35:00.0000000Z",
+      "git_commit_id": "467c032b7c135f3593ced6dd3572833919fa00e5",
+      "fetch_ok": true,
+      "content_hash": "4dbe2424e9172e7a3df0eb19d4ca8bca222cba436d958c4636c10a8a12226455"
+    },
+    {
+      "source_id": "doc-content-explorer",
+      "source_type": "product_documentation",
+      "title": "Get started with content explorer",
+      "url": "https://learn.microsoft.com/en-us/purview/data-classification-content-explorer",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "purview_information_protection_lifecycle"
+      ],
+      "leaf_ids": [
+        "content_and_activity_explorer"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2025-07-29T00:00:00.0000000Z",
+      "updated_at": "2026-06-15T22:35:00.0000000Z",
+      "git_commit_id": "a580c1c2e34a67b10bce436a05a44376cf21f61d",
+      "fetch_ok": true,
+      "content_hash": "c0faa9d558f8fca28c0fc530ada3ace5971d68e5a26b502c58948f2eddb0e6dd"
+    },
+    {
+      "source_id": "doc-sensitivity-labels",
+      "source_type": "product_documentation",
+      "title": "Learn about sensitivity labels",
+      "url": "https://learn.microsoft.com/en-us/purview/sensitivity-labels",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "purview_information_protection_lifecycle"
+      ],
+      "leaf_ids": [
+        "sensitivity_labels_and_policies"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-04-15T00:00:00.0000000Z",
+      "updated_at": "2026-06-25T22:34:00.0000000Z",
+      "git_commit_id": "d97e409d50022299b253e6de9060f0641ba23d37",
+      "fetch_ok": true,
+      "content_hash": "b0bc8e745c4401e2a093710d2853501d26e9e2d8961a174b6e903b62fccd6bcb"
+    },
+    {
+      "source_id": "doc-dlp",
+      "source_type": "product_documentation",
+      "title": "Learn about data loss prevention",
+      "url": "https://learn.microsoft.com/en-us/purview/dlp-learn-about-dlp",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "purview_information_protection_lifecycle"
+      ],
+      "leaf_ids": [
+        "data_loss_prevention"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-06-26T00:00:00.0000000Z",
+      "updated_at": "2026-08-28T07:31:00.0000000Z",
+      "git_commit_id": "6122e3057a8a355d36f5eae705d00e0e9104a88c",
+      "fetch_ok": true,
+      "content_hash": "ceb29930e0ec43796e92dfee5649123f8dfcaa04e09d9fdf3902e73f99395fbd"
+    },
+    {
+      "source_id": "doc-records-management",
+      "source_type": "product_documentation",
+      "title": "Records management for documents and emails in Microsoft 365",
+      "url": "https://learn.microsoft.com/en-us/purview/records-management",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "purview_information_protection_lifecycle"
+      ],
+      "leaf_ids": [
+        "records_management"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2025-08-25T00:00:00.0000000Z",
+      "updated_at": "2026-06-25T22:34:00.0000000Z",
+      "git_commit_id": "d97e409d50022299b253e6de9060f0641ba23d37",
+      "fetch_ok": true,
+      "content_hash": "2881d2371c70554c48401956586d920c1a83573795441554ed30bdb580d2e657"
+    },
+    {
+      "source_id": "doc-retention",
+      "source_type": "product_documentation",
+      "title": "Learn about retention policies & labels to retain or delete",
+      "url": "https://learn.microsoft.com/en-us/purview/retention",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "purview_information_protection_lifecycle"
+      ],
+      "leaf_ids": [
+        "retention_policies_labels"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-07-22T00:00:00.0000000Z",
+      "updated_at": "2026-07-23T17:35:00.0000000Z",
+      "git_commit_id": "d95a7ca495a8cc6bcbc019ef35f54dcd8a14b58d",
+      "fetch_ok": true,
+      "content_hash": "6977f282b13ca67b3dacaad0f6b7fec5f7e57c0f356125ba70bb6353ef613d91"
+    },
+    {
+      "source_id": "doc-insider-risk",
+      "source_type": "product_documentation",
+      "title": "Learn about Insider Risk Management",
+      "url": "https://learn.microsoft.com/en-us/purview/insider-risk-management",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "purview_insider_risk_ediscovery_audit"
+      ],
+      "leaf_ids": [
+        "insider_risk_management"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-06-26T00:00:00.0000000Z",
+      "updated_at": "2026-06-26T22:34:00.0000000Z",
+      "git_commit_id": "6a855685384c04be47884d19a1f597265810d3c7",
+      "fetch_ok": true,
+      "content_hash": "bca61b387a3c361c1af40c47b6d4e497ec6dd456ade553b7a6118d51a16dbfbf"
+    },
+    {
+      "source_id": "doc-ediscovery",
+      "source_type": "product_documentation",
+      "title": "Microsoft Purview eDiscovery legacy solutions",
+      "url": "https://learn.microsoft.com/en-us/purview/ediscovery",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "purview_insider_risk_ediscovery_audit"
+      ],
+      "leaf_ids": [
+        "ediscovery"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2024-10-31T00:00:00.0000000Z",
+      "updated_at": "2026-06-11T17:42:00.0000000Z",
+      "git_commit_id": "b2daca1adc7f25d864a644952b8d40ba4a264e9f",
+      "fetch_ok": true,
+      "content_hash": "b77eeff6ef89c7bd325739a6d348d4dfc8d99d738df68553a623b153088ff8e0"
+    },
+    {
+      "source_id": "doc-audit",
+      "source_type": "product_documentation",
+      "title": "Learn about auditing solutions in Microsoft Purview",
+      "url": "https://learn.microsoft.com/en-us/purview/audit-solutions-overview",
+      "retrieved_at": "2026-09-12T18:30:00+00:00",
+      "objective_ids": [
+        "purview_insider_risk_ediscovery_audit"
+      ],
+      "leaf_ids": [
+        "audit"
+      ],
+      "assessment_content_used": false,
+      "ms_date": "2026-05-18T00:00:00.0000000Z",
+      "updated_at": "2026-07-08T17:35:00.0000000Z",
+      "git_commit_id": "bdbbbec7d240cb76b1c7ed660a14c1b49b35a290",
+      "fetch_ok": true,
+      "content_hash": "c1478579797030814a5aac9827e4df11a6a203f9a5689c7cd5f0bb6596dbd04b"
+    }
+  ],
+  "counts": {
+    "sources": 73,
+    "learning_paths": 4,
+    "modules": 16,
+    "units": 131,
+    "product_documentation": 52,
+    "units_as_sources": 0
+  },
+  "inventory_sha256": "4de78824f6ba0a7c46602d4ce53a96190cdc36d8d7863d384d9aadca798b53de"
+}

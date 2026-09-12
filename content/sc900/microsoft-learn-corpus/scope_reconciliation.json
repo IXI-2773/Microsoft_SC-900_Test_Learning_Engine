@@ -1,0 +1,89 @@
+{
+  "captured_at": "2026-09-12T18:30:00+00:00",
+  "skills_effective_date": "2026-07-28",
+  "taxonomy_blueprint_version": "2026-07-28",
+  "live_study_guide_matches_repository_taxonomy": true,
+  "domains_verified": [
+    {
+      "id": "security_compliance_identity",
+      "name": "Security, compliance, and identity concepts",
+      "weight_range": [
+        10,
+        15
+      ]
+    },
+    {
+      "id": "microsoft_entra",
+      "name": "Microsoft Entra",
+      "weight_range": [
+        25,
+        30
+      ]
+    },
+    {
+      "id": "microsoft_security_solutions",
+      "name": "Microsoft security solutions",
+      "weight_range": [
+        35,
+        40
+      ]
+    },
+    {
+      "id": "microsoft_compliance_solutions",
+      "name": "Microsoft compliance solutions",
+      "weight_range": [
+        20,
+        25
+      ]
+    }
+  ],
+  "leaf_skill_count": 58,
+  "taxonomy_rewrite_performed": false,
+  "discrepancies": [
+    {
+      "id": "security-copilot-on-learning-path",
+      "severity": "scope_extra",
+      "summary": "The current Microsoft security solutions learning path includes Microsoft Security Copilot, which is not a July 28, 2026 SC-900 study-guide leaf.",
+      "action": "Record only. Do not rewrite taxonomy. Do not approve Copilot questions as in-scope exam items."
+    },
+    {
+      "id": "purview-data-governance-module-extra",
+      "severity": "scope_extra",
+      "summary": "The current compliance learning path includes a Data Map / Unified Catalog module. Study-guide leaves under information protection name classification, explorers, labels, DLP, records, and retention, not those catalog products.",
+      "action": "Record only. Do not silently add Data Map/Unified Catalog leaves. Do not approve catalog-product trivia as required coverage."
+    },
+    {
+      "id": "entra-sse-mentioned-in-access-module",
+      "severity": "teaching_extra",
+      "summary": "The Entra access-management module currently mentions Security Service Edge / Global Secure Access. The study-guide access-management leaves are Conditional Access and Entra roles/RBAC only.",
+      "action": "Record only. Keep SSE out of approved exam items unless later study-guide leaves require it."
+    },
+    {
+      "id": "key-vault-leaf-without-named-module-unit",
+      "severity": "module_gap",
+      "summary": "The July 28, 2026 study guide still lists Azure Key Vault as a leaf. The current Azure infrastructure training module units emphasize DDoS, Firewall, WAF, segmentation, NSGs, Bastion, and encryption rather than a named Key Vault unit.",
+      "action": "Do not drop the Key Vault leaf. Use current Key Vault product documentation as answer authority."
+    },
+    {
+      "id": "predecessor-cited-compliance-module-not-on-current-path-cards",
+      "severity": "path_drift",
+      "summary": "Predecessor questions cite explore-plan-compliance-microsoft-365. That module remains live but is not listed on the current four SC-900 path module cards, which now use the restructured Purview data security/compliance/governance modules.",
+      "action": "Keep the live module in inventory for predecessor source joins. Prefer current path modules and product docs for new items."
+    }
+  ],
+  "out_of_scope_training_modules": [
+    {
+      "source_id": "module-security-copilot-getting-started",
+      "title": "Describe Microsoft Security Copilot",
+      "url": "https://learn.microsoft.com/en-us/training/modules/security-copilot-getting-started/",
+      "note": "Present on the current security-solutions learning path; not listed as a July 28, 2026 study-guide leaf."
+    },
+    {
+      "source_id": "module-describe-purview-data-governance",
+      "title": "Describe the Data Governance Solutions of Microsoft Purview",
+      "url": "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-governance/",
+      "note": "Current compliance path includes Data Map/Unified Catalog teaching; July 28, 2026 study-guide leaves do not name those products."
+    }
+  ],
+  "current_sc900_scope_verified": true
+}
