@@ -179,6 +179,11 @@ class MeasurementFlowHarness:
     def _auto_next_after_answer(self):
         self.auto_next_calls += 1
 
+    def _record_measurement_probe_answer(self, q, selected):
+        from app_question_flow_mixin import QuestionFlowMixin
+
+        return QuestionFlowMixin._record_measurement_probe_answer(self, q, selected)
+
 
 class Cand01R3MeasurementIntegrityTests(unittest.TestCase):
     def setUp(self):
