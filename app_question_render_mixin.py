@@ -2,7 +2,7 @@ import time
 import tkinter as tk
 
 from app_constants import MODE_EXAM
-from cand01r3_runtime import get_context, is_cand01r3_active, revalidate_training_question
+from cand01r3_runtime import get_context, is_cand01r3_active, is_measurement_answer_mode, revalidate_training_question
 from progress_store import is_super_confident_active, recovery_ladder_stage, study_status_name
 from render_cache import ChoiceRenderSnapshot, QuestionRenderSnapshot
 from source_trust import derive_source_trust_warning
@@ -131,7 +131,7 @@ class QuestionRenderMixin:
             issue_notes=tuple(self.question_issue_notes(q)),
             choices=tuple(choice_snapshots),
             answered=bool(q.get('answered')),
-            correct=bool(self._question_correct(q)),
+            correct=(False if is_measurement_answer_mode() else bool(self._question_correct(q))),
             flagged=bool(q.get('flagged')),
             suspended=bool(q.get('suspended')),
             show_exam_feedback=bool(show_exam_feedback),
@@ -146,6 +146,8 @@ class QuestionRenderMixin:
         return self.render_cache.get(cache_key) or self.render_cache.put(cache_key, snapshot)
 
     def _question_answer_meta(self, q, ladder_stage):
+        if is_measurement_answer_mode():
+            return []
         answer_meta = []
         if q.get('session_tag'):
             answer_meta.append(f"Assist: {q.get('session_tag')}")
@@ -161,6 +163,8 @@ class QuestionRenderMixin:
         return answer_meta
 
     def _inline_explanation_for_question(self, q, show_exam_feedback):
+        if is_measurement_answer_mode():
+            return None, ''
         inline_explanation_text = ''
         inline_explanation_letter = None
         if q.get('answered') and show_exam_feedback:
@@ -219,7 +223,7 @@ class QuestionRenderMixin:
         self.suspend_btn.configure(text='UNSUSPEND' if q.get('suspended') else 'SUSPEND')
         report_open = self.question_has_open_issue_report(q)
         self.report_issue_btn.configure(text=('REPORTED' if report_open else 'REPORT ISSUE'), state=('disabled' if report_open else 'normal'))
-        self.redo_btn.configure(state='normal' if q.get('answered') and (self.active_session_mode != MODE_EXAM or self.exam_reveal) else 'disabled')
+        self.redo_btn.configure(state='disabled' if is_measurement_answer_mode() else ('normal' if q.get('answered') and (self.active_session_mode != MODE_EXAM or self.exam_reveal) else 'disabled'))
         self.submit_btn_visible = bool(q.get('question_type') == 'multi' and not q.get('answered'))
         if self.submit_btn_visible:
             self.action_hint.configure(text='Select all that apply, then Submit.')
@@ -234,7 +238,7 @@ class QuestionRenderMixin:
             self.review_panel.pack(fill='x', pady=(10, 0))
             self.answer_meta_label.pack_forget()
             if not show_exam_feedback:
-                self.status_label.configure(text='Answer recorded', bg='#eef4fb', fg=BLUE)
+                self.status_label.configure(text=('Response recorded.' if is_measurement_answer_mode() else 'Answer recorded'), bg='#eef4fb', fg=BLUE)
             elif self._question_correct(q):
                 combo = self._current_combo_stats() if self.gamification_enabled() else {'correct': 0}
                 streak = int(combo.get('correct') or 0)
@@ -300,7 +304,7 @@ class QuestionRenderMixin:
                 self.active_question_started_at = time.time()
         rec = self._progress_record(q, create=False)
         ladder_stage = recovery_ladder_stage(rec)
-        show_exam_feedback = not (self.active_session_mode == MODE_EXAM and not self.exam_reveal)
+        show_exam_feedback = False if is_measurement_answer_mode() else not (self.active_session_mode == MODE_EXAM and not self.exam_reveal)
         trust_warning = self._source_trust_warning_for_question(q)
         snapshot = self._build_question_render_snapshot(q, show_exam_feedback, ladder_stage, trust_warning)
         if snapshot != self.last_render_snapshot:
@@ -334,7 +338,8 @@ class QuestionRenderMixin:
             self.question_list.selection_clear(0, tk.END)
             self.question_list.selection_set(current_pos)
             self.question_list.see(current_pos)
-        self.refresh_analytics_window()
+        if not is_measurement_answer_mode():
+            self.refresh_analytics_window()
         if self.scroll_to_top_on_render:
             self.content_canvas.yview_moveto(0.0)
             self.scroll_to_top_on_render = False

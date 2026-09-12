@@ -9,7 +9,9 @@ from app_info import APP_VERSION
 from cand01r3_runtime import (
     filter_training_questions,
     is_cand01r3_active,
+    is_measurement_answer_mode,
     persistable_authority_metadata,
+    sanitize_measurement_answer_state,
     restore_experimental_session,
 )
 from progress_store import set_progress_flag, set_progress_suspended, update_progress_record
@@ -200,6 +202,10 @@ class SessionPersistenceMixin:
             pool = filter_training_questions(pool)
             if not pool:
                 return
+        measurement_mode = is_measurement_answer_mode()
+        if measurement_mode:
+            count = 'All visible'
+            randomize = False
         if count != 'All visible':
             try:
                 limit = max(0, int(count))
@@ -209,7 +215,8 @@ class SessionPersistenceMixin:
                 pass
         pool = self._clone_questions(pool)
         self.answer_order_epoch += 1
-        pool = self._apply_adaptive_answer_order(pool)
+        if not measurement_mode:
+            pool = self._apply_adaptive_answer_order(pool)
         if randomize:
             random.shuffle(pool)
         if not pool:
@@ -322,7 +329,7 @@ class SessionPersistenceMixin:
         self.active_source_label = str(migrated.get('source_label') or self.active_source_label)
         self.session_rewards = list(migrated.get('session_rewards', []))
         self.unlocked_rewards = set(migrated.get('unlocked_rewards', []))
-        self.session_answer_history = list(migrated.get('session_answer_history', []))
+        self.session_answer_history = [] if is_measurement_answer_mode() else list(migrated.get('session_answer_history', []))
         self.current_quests = list(migrated.get('current_quests', self.current_quests))
         self.quest_completion_keys = set(migrated.get('quest_completion_keys', []))
         self.session_boss_markers = set(migrated.get('session_boss_markers', []))
@@ -341,7 +348,7 @@ class SessionPersistenceMixin:
         self.session_question_limit = int(migrated.get('session_question_limit') or self.calculate_session_question_limit(self.session_base_question_count))
         saved_qnums = list(migrated.get('question_numbers', []) or [])
         current_qnums = [q.get('question_number') for q in self.questions]
-        if saved_qnums and saved_qnums != current_qnums:
+        if saved_qnums and saved_qnums != current_qnums and not is_measurement_answer_mode():
             lookup = {q.get('question_number'): q for q in self.master_questions}
             source_questions = []
             for qnum in saved_qnums:
@@ -367,6 +374,8 @@ class SessionPersistenceMixin:
             merged_state['suspended'] = bool(state.get('suspended')) or bool(q.get('suspended'))
             apply_answer_state(q, merged_state)
             existing = self._progress_record(q, create=False)
+            if is_measurement_answer_mode():
+                continue
             if q.get('answered') and not int((existing or {}).get('attempts', 0)):
                 self._progress_questions()[self._question_key(q)] = update_progress_record(
                     existing,
@@ -469,13 +478,13 @@ class SessionPersistenceMixin:
             checkpoints_saved=sorted(list(self.checkpoints_saved), key=lambda x: int(x)),
             session_rewards=list(self.session_rewards),
             unlocked_rewards=sorted(list(self.unlocked_rewards)),
-            session_answer_history=list(self.session_answer_history),
+            session_answer_history=([] if is_measurement_answer_mode() else list(self.session_answer_history)),
             current_quests=list(self.current_quests),
             quest_completion_keys=sorted(list(self.quest_completion_keys)),
             session_boss_markers=sorted(list(self.session_boss_markers)),
             session_stealth_markers=sorted(list(self.session_stealth_markers)),
             session_xp_gained=int(self.session_xp_gained),
-            answers=[serialize_answer_state(q) for q in self.questions],
+            answers=[sanitize_measurement_answer_state(q, serialize_answer_state(q)) for q in self.questions],
         )
         payload = dict(snapshot)
         if is_cand01r3_active():
@@ -520,7 +529,7 @@ class SessionPersistenceMixin:
                     'current_index': self.index,
                     'elapsed_seconds': self.current_elapsed_seconds(),
                     'question_numbers': [q.get('question_number') for q in self.questions],
-                    'answers': [serialize_answer_state(q) for q in self.questions],
+                    'answers': [sanitize_measurement_answer_state(q, serialize_answer_state(q)) for q in self.questions],
                 }
                 self.persistence.write_checkpoint(p, payload)
                 self.checkpoints_saved.add(marker)

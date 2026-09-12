@@ -5,7 +5,7 @@ import json
 import uuid
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -244,6 +244,9 @@ class MeasurementSession:
     train_log: list[dict[str, Any]] = field(default_factory=list)
     events: list[dict[str, Any]] = field(default_factory=list)
     day_state: str = STATE_DAY_NOT_STARTED
+    day1_local_date: str = ""
+    calendar_utc_offset_minutes: int | None = None
+    last_local_date: str = ""
 
 
 _SESSION = MeasurementSession()
@@ -508,15 +511,16 @@ def _read_ledger_events(path: Path | None) -> list[dict[str, Any]]:
     if path is None or not path.exists() or path.stat().st_size == 0:
         return []
     events: list[dict[str, Any]] = []
-    for line in path.read_text(encoding="utf-8").splitlines():
+    for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
         if not line.strip():
             continue
         try:
             payload = json.loads(line)
-        except json.JSONDecodeError:
-            continue
-        if isinstance(payload, dict):
-            events.append(payload)
+        except json.JSONDecodeError as exc:
+            raise Cand01R3AuthorityError("EMPIRICAL_LEDGER_CORRUPT") from exc
+        if not isinstance(payload, dict):
+            raise Cand01R3AuthorityError("EMPIRICAL_LEDGER_CORRUPT")
+        events.append(payload)
     return events
 
 
@@ -664,13 +668,17 @@ def measurement_train_session_limit() -> int | None:
     return max(0, budget - completed)
 
 
-def scheduled_probe_ids_for_day(scheduled_day: int) -> set[str]:
+def ordered_scheduled_probe_ids_for_day(scheduled_day: int) -> list[str]:
     protocol = _SESSION.protocol or build_protocol()
-    return {
+    return [
         str(row["question_id"])
         for row in protocol.get("schedule") or []
         if int(row.get("scheduled_day") or 0) == int(scheduled_day)
-    }
+    ]
+
+
+def scheduled_probe_ids_for_day(scheduled_day: int) -> set[str]:
+    return set(ordered_scheduled_probe_ids_for_day(scheduled_day))
 
 
 def todays_scheduled_probe_ids() -> set[str]:
@@ -815,7 +823,18 @@ def _restore_ledger_from_events(ledger: MeasurementLedger, events: Sequence[Mapp
         if not question_id:
             continue
         status = str(event.get("status") or "")
+        if status == STATUS_CONTAMINATED or event.get("contaminated"):
+            ledger.record_contamination(
+                question_id, str(event.get("contamination_reason") or event.get("reason") or "CONTAMINATED")
+            )
+            continue
         if status == STATUS_PRIMARY:
+            if question_id in ledger._unobserved or ledger.is_contaminated(question_id):
+                continue
+            if question_id in ledger._observations:
+                continue
+            if type(event.get("correct")) is not bool:
+                raise Cand01R3AuthorityError("INVALID_MEASUREMENT_SCORE")
             identity_raw = event.get("evaluation_id") or []
             identity = (
                 tuple(str(part) for part in identity_raw)
@@ -831,23 +850,32 @@ def _restore_ledger_from_events(ledger: MeasurementLedger, events: Sequence[Mapp
                 "evaluation_identity": identity,
             }
         elif status == STATUS_UNOBSERVED:
+            if question_id in ledger._observations or ledger.is_contaminated(question_id) or question_id in ledger._unobserved:
+                continue
             ledger._unobserved[question_id] = {
                 "status": STATUS_UNOBSERVED,
                 "reason": event.get("reason") or "UNOBSERVED",
                 "question_id": question_id,
                 "correct": None,
             }
-        elif status == STATUS_CONTAMINATED or event.get("contaminated"):
-            ledger.record_contamination(
-                question_id, str(event.get("contamination_reason") or event.get("reason") or "CONTAMINATED")
-            )
 
 
 def _restore_session_from_events(events: Sequence[Mapping[str, Any]]) -> None:
     train_log: list[dict[str, Any]] = []
     restored_events: list[dict[str, Any]] = []
     current_day: int | None = None
+    day1_local_date = ""
+    calendar_utc_offset_minutes: int | None = None
+    last_local_date = ""
     for event in events:
+        event_day1 = str(event.get("day1_local_date") or "")
+        if event_day1 and not day1_local_date:
+            day1_local_date = event_day1
+        if event.get("calendar_utc_offset_minutes") is not None and calendar_utc_offset_minutes is None:
+            calendar_utc_offset_minutes = int(event.get("calendar_utc_offset_minutes"))
+        event_local_date = str(event.get("calendar_local_date") or "")
+        if event_local_date and (not last_local_date or event_local_date > last_local_date):
+            last_local_date = event_local_date
         restored_events.append(dict(event))
         scheduled_day = event.get("scheduled_day")
         event_type = str(event.get("event_type") or "")
@@ -902,6 +930,9 @@ def _restore_session_from_events(events: Sequence[Mapping[str, Any]]) -> None:
                 current_day = int(event["scheduled_day"])
                 break
     _SESSION.current_scheduled_day = current_day
+    _SESSION.day1_local_date = day1_local_date
+    _SESSION.calendar_utc_offset_minutes = calendar_utc_offset_minutes
+    _SESSION.last_local_date = last_local_date
     if _SESSION.ledger is not None:
         _restore_ledger_from_events(_SESSION.ledger, events)
     _SESSION.protocol_locked = any(
@@ -1372,6 +1403,26 @@ def _inactive_observation(reason: str, question_id: str = "") -> MeasurementObse
     return MeasurementObservation(status=STATUS_NOT_ELIGIBLE, reason=reason, question_id=question_id, payload={})
 
 
+def _current_experiment_local_date() -> str:
+    if _SESSION.calendar_utc_offset_minutes is not None:
+        local_now = datetime.now(UTC) + timedelta(minutes=int(_SESSION.calendar_utc_offset_minutes))
+        return local_now.date().isoformat()
+    return datetime.now().astimezone().date().isoformat()
+
+
+def _current_utc_offset_minutes() -> int:
+    offset = datetime.now().astimezone().utcoffset()
+    return int((offset.total_seconds() if offset is not None else 0) // 60)
+
+
+def _calendar_fields() -> dict[str, Any]:
+    return {
+        "calendar_local_date": _current_experiment_local_date(),
+        "day1_local_date": _SESSION.day1_local_date,
+        "calendar_utc_offset_minutes": _SESSION.calendar_utc_offset_minutes,
+    }
+
+
 def _observation_from_payload(payload: Mapping[str, Any], status: str, reason: str) -> MeasurementObservation:
     identity_raw = payload.get("evaluation_id") or []
     identity: tuple[str, str, str, str] | None = None
@@ -1384,7 +1435,7 @@ def _observation_from_payload(payload: Mapping[str, Any], status: str, reason: s
         status=status,
         reason=reason,
         question_id=str(payload.get("question_id") or ""),
-        correct=None if correct is None else bool(correct),
+        correct=correct if type(correct) is bool else None,
         evaluation_identity=identity,
         clean=clean,
         counts_toward_primary=counts,
@@ -1557,6 +1608,7 @@ def _event_payload(
         "exam": EXAM_ID,
         "measurement_epoch": _SESSION.measurement_epoch,
         "calendar_timestamp": calendar_timestamp or datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        **_calendar_fields(),
         "scheduled_day": scheduled_day,
         "sequence_position": scheduled.get("sequence_position") if scheduled else None,
         "question_id": question_id,
@@ -1612,8 +1664,8 @@ def record_unobserved(
     observation = _SESSION.ledger.record_unobserved(qid, reason=reason)
     payload = _event_payload(
         question_id=qid,
-        status=STATUS_UNOBSERVED,
-        reason=reason,
+        status=observation.status,
+        reason=observation.reason,
         selected=None,
         correct=None,
         kind="UNOBSERVED",
@@ -1631,7 +1683,7 @@ def record_unobserved(
     _append_ledger(payload, Path(ledger_path) if ledger_path else _SESSION.ledger_path)
     _SESSION.events.append(payload)
     _lock_if_real(payload)
-    result = _observation_from_payload(payload, STATUS_UNOBSERVED, reason)
+    result = _observation_from_payload(payload, observation.status, observation.reason)
     result.correct = None
     result.counts_toward_primary = False
     measurement_runtime_state()
@@ -1768,12 +1820,25 @@ def set_measurement_day(scheduled_day: int) -> str:
     new_day = int(scheduled_day)
     _policy_row(new_day)
     current = _SESSION.current_scheduled_day
+    local_date = _current_experiment_local_date()
     if _SESSION.active:
         if current is not None and int(current) != new_day and not _day_is_complete(int(current)):
             raise Cand01R3AuthorityError("PREVIOUS_DAY_INCOMPLETE")
         for prior in range(1, new_day):
             if not _day_is_complete(prior):
                 raise Cand01R3AuthorityError("PREVIOUS_DAY_INCOMPLETE")
+        if _SESSION.last_local_date and local_date < _SESSION.last_local_date:
+            raise Cand01R3AuthorityError("MEASUREMENT_CLOCK_REGRESSION")
+        if not _SESSION.day1_local_date:
+            if new_day != 1:
+                raise Cand01R3AuthorityError("DAY1_CALENDAR_ANCHOR_MISSING")
+            _SESSION.day1_local_date = local_date
+            _SESSION.calendar_utc_offset_minutes = _current_utc_offset_minutes()
+        anchor = date.fromisoformat(_SESSION.day1_local_date)
+        earliest = anchor + timedelta(days=new_day - 1)
+        if date.fromisoformat(local_date) < earliest:
+            raise Cand01R3AuthorityError("MEASUREMENT_DAY_TOO_EARLY")
+        _SESSION.last_local_date = local_date
     policy_id = allocated_policy_for_day(new_day)
     _SESSION.current_scheduled_day = new_day
     if new_day >= 7:
@@ -1789,6 +1854,7 @@ def set_measurement_day(scheduled_day: int) -> str:
             "scheduled_day": new_day,
             "day_state": _SESSION.day_state,
             "calendar_timestamp": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            **_calendar_fields(),
             "counted": False,
             **_session_identity_fields(),
         }
@@ -1813,7 +1879,7 @@ def begin_todays_probe_measurement() -> dict[str, Any]:
             "day_state": state,
             "intended_use": INTENDED_USE_MEASUREMENT,
             "scheduled_day": int(day),
-            "probe_ids": sorted(todays_scheduled_probe_ids()),
+            "probe_ids": ordered_scheduled_probe_ids_for_day(int(day)),
         }
     _SESSION.day_state = STATE_MEASUREMENT
     payload = {
@@ -1824,6 +1890,7 @@ def begin_todays_probe_measurement() -> dict[str, Any]:
         "scheduled_day": int(day),
         "day_state": STATE_MEASUREMENT,
         "calendar_timestamp": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        **_calendar_fields(),
         "counted": False,
         **_session_identity_fields(),
     }
@@ -1837,6 +1904,24 @@ def begin_todays_probe_measurement() -> dict[str, Any]:
         "scheduled_day": int(day),
         "probe_ids": sorted(todays_scheduled_probe_ids()),
     }
+
+
+def score_measurement_probe_answer(question: Mapping[str, Any], selected: Sequence[str] | None = None) -> bool:
+    correct = question.get("correct")
+    if not isinstance(correct, (list, tuple, set)) or not correct:
+        raise Cand01R3AuthorityError("INVALID_MEASUREMENT_ANSWER_KEY")
+    selected_ids = {str(value) for value in (selected or [])}
+    correct_ids = {str(value) for value in correct}
+    return selected_ids == correct_ids
+
+
+def record_measurement_probe_answer(
+    question: Mapping[str, Any],
+    *,
+    selected: Sequence[str] | None = None,
+) -> MeasurementObservation:
+    correct = score_measurement_probe_answer(question, selected)
+    return record_measurement_event(question, selected=list(selected or []), correct=correct, kind="SCORED")
 
 
 def notify_scored_attempt(

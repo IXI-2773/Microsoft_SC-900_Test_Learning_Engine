@@ -149,6 +149,10 @@ def _active_intended_use(stage: str | None = None) -> str:
     return INTENDED_USE_TRAINING
 
 
+def is_measurement_answer_mode() -> bool:
+    return bool(is_cand01r3_active() and get_context().intended_use == INTENDED_USE_MEASUREMENT)
+
+
 def _todays_measurement_probe_ids() -> set[str] | None:
     try:
         from cand01r3_protocol import is_measurement_active, todays_scheduled_probe_ids
@@ -161,6 +165,17 @@ def _todays_measurement_probe_ids() -> set[str] | None:
     return todays_scheduled_probe_ids()
 
 
+def _todays_measurement_probe_order() -> list[str] | None:
+    try:
+        from cand01r3_protocol import current_measurement_session, ordered_scheduled_probe_ids_for_day
+    except ImportError:
+        return None
+    session = current_measurement_session()
+    if not is_measurement_answer_mode() or session.current_scheduled_day is None:
+        return None
+    return ordered_scheduled_probe_ids_for_day(int(session.current_scheduled_day))
+
+
 def filter_training_questions(questions: Iterable[Mapping[str, Any]] | None, stage: str | None = None) -> list[Any]:
     pool = list(questions or [])
     if not is_cand01r3_active():
@@ -169,7 +184,9 @@ def filter_training_questions(questions: Iterable[Mapping[str, Any]] | None, sta
     intended = _active_intended_use(stage)
     if measurement_ids is not None and intended == INTENDED_USE_MEASUREMENT:
         probes = filter_questions(pool, INTENDED_USE_MEASUREMENT, current_authority())
-        return [question for question in probes if canonical_question_id(question) in measurement_ids]
+        by_id = {canonical_question_id(question): question for question in probes}
+        order = _todays_measurement_probe_order() or sorted(measurement_ids)
+        return [by_id[question_id] for question_id in order if question_id in by_id]
     if intended != INTENDED_USE_TRAINING:
         return filter_questions(pool, intended, current_authority())
     return filter_questions(pool, INTENDED_USE_TRAINING, current_authority())
@@ -251,6 +268,12 @@ def restore_experimental_session(
     if requested_ids:
         wanted = set(requested_ids)
         source = [question for question in pool if canonical_question_id(question) in wanted]
+    if context.intended_use == INTENDED_USE_MEASUREMENT:
+        eligible = filter_training_questions(pool, stage="MEASUREMENT")
+        expected_ids = [canonical_question_id(question) for question in eligible]
+        if requested_ids and requested_ids != expected_ids:
+            return RestoreResult(accepted=False, reason="STALE_MEASUREMENT_SESSION", questions=[])
+        return RestoreResult(accepted=True, reason="REVALIDATED_MEASUREMENT", questions=eligible)
     eligible = filter_questions(source, context.intended_use or INTENDED_USE_TRAINING, current_authority())
     return RestoreResult(accepted=True, reason="REVALIDATED", questions=eligible)
 
@@ -261,6 +284,21 @@ def _is_probe_question(question_id: str) -> bool:
         return False
     item = authority.items.get(question_id) or {}
     return item.get("role") == ROLE_PROBE
+
+
+def is_measurement_probe_question(question: Mapping[str, Any] | str) -> bool:
+    return _is_probe_question(canonical_question_id(question))
+
+
+def _redacted_probe_row(row: Mapping[str, Any], question_id: str) -> dict[str, Any]:
+    status = str(row.get("measurement_status") or row.get("status") or ("RECORDED" if row.get("answered") else "PENDING"))
+    return {
+        "question_id": question_id,
+        "scheduled_day": row.get("scheduled_day"),
+        "status": status,
+        "observed": bool(row.get("observed", row.get("answered", status == "RECORDED"))),
+        "redacted": True,
+    }
 
 
 def sanitize_learner_export(payload: Mapping[str, Any]) -> dict[str, Any]:
@@ -278,13 +316,7 @@ def sanitize_learner_export(payload: Mapping[str, Any]) -> dict[str, Any]:
             if not _is_probe_question(question_id):
                 redacted_rows.append(dict(row))
                 continue
-            kept = {
-                "question_id": question_id,
-                "selected_option_ids": list(row.get("selected") or row.get("selected_option_ids") or []),
-                "correct": row.get("correct"),
-                "redacted": True,
-            }
-            redacted_rows.append(kept)
+            redacted_rows.append(_redacted_probe_row(row, question_id))
         cloned["history"] = redacted_rows
     return cloned
 
@@ -296,13 +328,24 @@ def sanitize_history_event(event: Mapping[str, Any], question: Mapping[str, Any]
     question_id = canonical_question_id(question or event)
     if not _is_probe_question(question_id):
         return payload
-    payload["question_id"] = question_id
-    payload.pop("selected_texts", None)
-    payload.pop("correct_texts", None)
-    payload.pop("prompt", None)
-    payload.pop("explanation", None)
-    payload["redacted"] = True
-    return payload
+    return _redacted_probe_row(payload, question_id)
+
+
+def sanitize_measurement_answer_state(question: Mapping[str, Any], state: Mapping[str, Any]) -> dict[str, Any]:
+    payload = dict(state)
+    if not is_cand01r3_active() or not is_measurement_probe_question(question):
+        return payload
+    return {
+        "answered": bool(payload.get("answered")),
+        "selected": [],
+        "pending": [],
+        "flagged": bool(payload.get("flagged")),
+        "suspended": bool(payload.get("suspended")),
+        "last_confidence": "",
+        "last_miss_reason": "",
+        "measurement_status": str(question.get("measurement_status") or ("RECORDED" if payload.get("answered") else "PENDING")),
+        "redacted": True,
+    }
 
 
 def authority_matches_context(metadata: Mapping[str, Any] | None) -> bool:
