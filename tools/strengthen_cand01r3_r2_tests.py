@@ -69,4 +69,44 @@ if old in text:
 elif new not in text:
     raise SystemExit("R2-026 anchor not found")
 
+old = '''    def test_r2_040_no_empirical_winner_is_declared(self):
+        from cand01r3_protocol import load_committed_protocol
+
+        protocol = load_committed_protocol()
+        self.assertEqual("NOT_YET_AVAILABLE", protocol.get("empirical_result"))
+        self.assertEqual("NO", protocol.get("deployment_authorized"))
+
+
+if __name__ == "__main__":
+'''
+new = '''    def test_r2_040_no_empirical_winner_is_declared(self):
+        from cand01r3_protocol import load_committed_protocol
+
+        protocol = load_committed_protocol()
+        self.assertEqual("NOT_YET_AVAILABLE", protocol.get("empirical_result"))
+        self.assertEqual("NO", protocol.get("deployment_authorized"))
+
+    def test_r2_041_measurement_score_uses_frozen_compiled_answer_key(self):
+        from cand01r3_partition import COMPILED_PATH, canonical_question_id
+        from cand01r3_protocol import score_measurement_probe_answer
+
+        self._begin()
+        self._enter_measurement(1)
+        qid = self._probe_ids(1)[0]
+        raw = json.loads(COMPILED_PATH.read_text(encoding="utf-8"))
+        row = next(item for item in raw.get("questions", []) if canonical_question_id(item) == qid)
+        authoritative = list(row.get("correct") or [])
+        self.assertTrue(authoritative)
+        q = question(qid, role_hint="PROBE")
+        q["correct"] = ["__TAMPERED_RUNTIME_KEY__"]
+        self.assertTrue(score_measurement_probe_answer(q, authoritative))
+
+
+if __name__ == "__main__":
+'''
+if old in text:
+    text = text.replace(old, new, 1)
+elif new not in text:
+    raise SystemExit("R2-041 anchor not found")
+
 PATH.write_text(text, encoding="utf-8")
