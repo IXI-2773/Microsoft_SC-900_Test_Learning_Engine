@@ -6,6 +6,11 @@ from datetime import datetime
 
 from app_constants import MODE_EXAM, MODE_PRACTICE
 from app_info import APP_VERSION
+from builder_identity import (
+    builder_identities_match,
+    builder_ui_state_from_context,
+    canonical_builder_identity,
+)
 from cand01r3_runtime import (
     filter_training_questions,
     is_cand01r3_active,
@@ -116,6 +121,8 @@ class SessionPersistenceMixin:
         questions: list[QuestionRuntimeState] | None = None,
         question_numbers=None,
         question_ids=None,
+        builder_context=None,
+        builder_context_fingerprint=None,
     ):
         mode = str(mode or self.active_session_mode or MODE_PRACTICE)
         if is_cand01r3_active():
@@ -138,6 +145,7 @@ class SessionPersistenceMixin:
                 question_numbers = [q.get("question_number") for q in questions]
             else:
                 question_numbers = [q.get("question_number") for q in self._questions_for_canonical_ids(canonical_ids)]
+        fingerprint = self._builder_fingerprint_for_path(builder_context, builder_context_fingerprint)
         return session_file_path(
             self.user_data_dir,
             bank_path,
@@ -145,7 +153,19 @@ class SessionPersistenceMixin:
             list(question_numbers),
             bank_fingerprint=self.current_bank_fingerprint(),
             question_ids=canonical_ids,
+            builder_context_fingerprint=fingerprint,
         )
+
+    def _builder_fingerprint_for_path(self, builder_context=None, builder_context_fingerprint=None):
+        if builder_context_fingerprint:
+            return str(builder_context_fingerprint).strip()
+        source = builder_context
+        if source is None:
+            source = getattr(self, "current_builder_context_data", None)
+        if not isinstance(source, dict) or not source:
+            return None
+        identity = canonical_builder_identity(source)
+        return identity["builder_context_fingerprint"]
 
     def checkpoint_file_for_bank(self, bank_path, answered_count: int):
         return checkpoint_file_path(self.checkpoint_dir, bank_path, self.active_session_mode, answered_count)
@@ -186,57 +206,73 @@ class SessionPersistenceMixin:
             restore_question_ids=restore_ids,
         )
 
-    def normalize_builder_context(self, raw=None, *, mode=None, count=None, randomize=None, source_label=None):
-        try:
-            question_count = int(
-                count
-                or self.session_base_question_count
-                or len(self.session_restore_question_numbers)
-                or len(self.questions)
-                or 0
-            )
-        except (TypeError, ValueError):
-            question_count = int(
-                self.session_base_question_count
-                or len(self.session_restore_question_numbers)
-                or len(self.questions)
-                or 0
-            )
+    def normalize_builder_context(
+        self,
+        raw=None,
+        *,
+        mode=None,
+        count=None,
+        randomize=None,
+        source_label=None,
+        session_source=None,
+        domain_filter=None,
+        topic_filter=None,
+        status_filter=None,
+    ):
         return normalize_builder_context(
             raw,
-            mode=str(mode or self.active_session_mode or ""),
-            source_label=str(source_label or self.active_source_label or ""),
-            question_count=question_count,
+            mode=mode,
+            count=count,
+            randomize=randomize,
+            source_label=source_label,
+            session_source=session_source,
+            domain_filter=domain_filter,
+            topic_filter=topic_filter,
+            status_filter=status_filter,
         )
 
+    def restore_builder_ui_from_context(self, builder_context):
+        state = builder_ui_state_from_context(builder_context)
+        if hasattr(self, "session_mode_var"):
+            self.session_mode_var.set(state["mode"])
+        if hasattr(self, "session_count_var") and state["count"]:
+            self.session_count_var.set(state["count"])
+        if hasattr(self, "session_source_var"):
+            self.session_source_var.set(state["session_source"])
+        if hasattr(self, "session_random_var"):
+            self.session_random_var.set(bool(state["randomize"]))
+        if hasattr(self, "domain_filter_var"):
+            self.domain_filter_var.set(state["domain_filter"])
+        if hasattr(self, "topic_filter_var"):
+            self.topic_filter_var.set(state["topic_filter"])
+        if hasattr(self, "status_filter_var"):
+            self.status_filter_var.set(state["status_filter"])
+        if state["source_label"]:
+            self.active_source_label = state["source_label"]
+
+    def _canonical_builder_identity(self, builder_context=None, **kwargs):
+        return canonical_builder_identity(builder_context, **kwargs)
+
     def _builder_context_matches(self, saved_context, current_context):
-        saved = self.normalize_builder_context(saved_context)
-        current = self.normalize_builder_context(current_context)
-        for key in (
-            "mode",
-            "count",
-            "source_label",
-            "session_source",
-            "randomize",
-            "domain_filter",
-            "topic_filter",
-            "status_filter",
-        ):
-            if saved.get(key) != current.get(key):
-                return False
-        return True
+        saved = saved_context
+        if not isinstance(saved, dict) or "builder_context_fingerprint" not in (saved or {}):
+            saved = canonical_builder_identity(saved_context)
+        current = current_context
+        if not isinstance(current, dict) or "builder_context_fingerprint" not in (current or {}):
+            current = canonical_builder_identity(current_context)
+        return builder_identities_match(saved, current)
 
     def _session_builder_glob_pattern(self, mode):
         safe_mode = str(mode or "").lower().replace(" ", "_").replace("/", "_")
         return f"{self.runtime_bank_stem(self.bank_path)}_{safe_mode}_session_*.json"
 
     def _latest_completed_session_timestamp(self, builder_context):
-        desired = self.normalize_builder_context(builder_context)
+        desired = canonical_builder_identity(builder_context)
+        desired_fp = desired["builder_context_fingerprint"]
         latest = 0.0
         for entry in self._progress_meta().get("session_history", []):
-            if str(entry.get("mode") or "") != desired.get("mode"):
-                continue
-            if str(entry.get("source") or "") != desired.get("source_label"):
+            entry_fp = str(entry.get("builder_context_fingerprint") or "").strip()
+            if not entry_fp or entry_fp != desired_fp:
                 continue
             try:
                 latest = max(latest, datetime.fromisoformat(str(entry.get("at") or "")).timestamp())
@@ -247,8 +283,8 @@ class SessionPersistenceMixin:
     def find_resumable_session_for_builder(self, builder_context):
         if not self.bank_path:
             return None
-        desired = self.normalize_builder_context(builder_context)
-        latest_completed_at = self._latest_completed_session_timestamp(desired)
+        desired = canonical_builder_identity(builder_context)
+        latest_completed_at = self._latest_completed_session_timestamp(desired["builder_context"])
         candidates = []
         experimental = is_cand01r3_active()
         available_questions = self._session_bank_questions()
@@ -256,7 +292,7 @@ class SessionPersistenceMixin:
         available_ids = None if experimental else ordered_question_ids(available_questions)
         fingerprint = None if experimental else self.current_bank_fingerprint()
         for path in self.user_data_dir.glob(
-            self._session_builder_glob_pattern(desired.get("mode", self.active_session_mode))
+            self._session_builder_glob_pattern(desired["builder_context"].get("mode", self.active_session_mode))
         ):
             if latest_completed_at and path.stat().st_mtime <= latest_completed_at:
                 continue
@@ -271,7 +307,7 @@ class SessionPersistenceMixin:
                 if candidate_experimental:
                     migrated = migrate_session_snapshot(
                         saved,
-                        desired.get("mode", self.active_session_mode),
+                        desired["builder_context"].get("mode", self.active_session_mode),
                         [],
                         available_question_numbers=available_qnums,
                         allow_legacy=True,
@@ -279,7 +315,7 @@ class SessionPersistenceMixin:
                 else:
                     migrated = migrate_session_snapshot(
                         saved,
-                        desired.get("mode", self.active_session_mode),
+                        desired["builder_context"].get("mode", self.active_session_mode),
                         [],
                         bank_fingerprint=fingerprint,
                         available_question_ids=available_ids,
@@ -291,7 +327,7 @@ class SessionPersistenceMixin:
             answers = list(migrated.get("answers", []) or [])
             if answers and all(bool(state.get("answered")) for state in answers):
                 continue
-            if self._builder_context_matches(migrated.get("builder_context"), desired):
+            if builder_identities_match(migrated, desired):
                 candidates.append((path.stat().st_mtime, path))
         if not candidates:
             return None
@@ -301,7 +337,7 @@ class SessionPersistenceMixin:
     def clear_resumable_sessions_for_builder(self, builder_context):
         if not self.bank_path:
             return 0
-        desired = self.normalize_builder_context(builder_context)
+        desired = canonical_builder_identity(builder_context)
         removed = 0
         experimental = is_cand01r3_active()
         available_questions = self._session_bank_questions()
@@ -309,7 +345,7 @@ class SessionPersistenceMixin:
         available_ids = None if experimental else ordered_question_ids(available_questions)
         fingerprint = None if experimental else self.current_bank_fingerprint()
         for path in self.user_data_dir.glob(
-            self._session_builder_glob_pattern(desired.get("mode", self.active_session_mode))
+            self._session_builder_glob_pattern(desired["builder_context"].get("mode", self.active_session_mode))
         ):
             saved, _backup, err = self.persistence.load_json_with_backup(path)
             if err or not saved:
@@ -319,7 +355,7 @@ class SessionPersistenceMixin:
                 if candidate_experimental:
                     migrated = migrate_session_snapshot(
                         saved,
-                        desired.get("mode", self.active_session_mode),
+                        desired["builder_context"].get("mode", self.active_session_mode),
                         [],
                         available_question_numbers=available_qnums,
                         allow_legacy=True,
@@ -327,7 +363,7 @@ class SessionPersistenceMixin:
                 else:
                     migrated = migrate_session_snapshot(
                         saved,
-                        desired.get("mode", self.active_session_mode),
+                        desired["builder_context"].get("mode", self.active_session_mode),
                         [],
                         bank_fingerprint=fingerprint,
                         available_question_ids=available_ids,
@@ -335,7 +371,7 @@ class SessionPersistenceMixin:
             except (TypeError, ValueError, KeyError, IndexError):
                 self.persistence.quarantine_invalid_runtime_file(path, label="session")
                 continue
-            if not self._builder_context_matches(migrated.get("builder_context"), desired):
+            if not builder_identities_match(migrated, desired):
                 continue
             try:
                 path.unlink()
@@ -412,13 +448,29 @@ class SessionPersistenceMixin:
         self.session_base_question_count = len(self.session_restore_question_numbers)
         self.active_session_mode = mode
         self.active_source_label = str(source_label or self.active_source_label or "Full bank")
-        self.current_builder_context_data = self.normalize_builder_context(
-            builder_context,
-            mode=mode,
-            count=(count if count != "All visible" else self.session_base_question_count),
-            randomize=randomize,
-            source_label=self.active_source_label,
-        )
+        if builder_context is not None:
+            identity = canonical_builder_identity(builder_context)
+        else:
+            identity = canonical_builder_identity(
+                None,
+                mode=mode,
+                count=count,
+                randomize=randomize,
+                source_label=self.active_source_label,
+                session_source=(
+                    self.normalize_session_source(self.session_source_var.get())
+                    if hasattr(self, "session_source_var") and hasattr(self, "normalize_session_source")
+                    else None
+                ),
+                domain_filter=self.domain_filter_var.get() if hasattr(self, "domain_filter_var") else None,
+                topic_filter=self.topic_filter_var.get() if hasattr(self, "topic_filter_var") else None,
+                status_filter=(
+                    self.normalize_status_filter(self.status_filter_var.get())
+                    if hasattr(self, "status_filter_var") and hasattr(self, "normalize_status_filter")
+                    else None
+                ),
+            )
+        self.current_builder_context_data = identity["builder_context"]
         self.exam_reveal = mode != MODE_EXAM
         self.index = 0
         if reset_clock:
@@ -516,6 +568,14 @@ class SessionPersistenceMixin:
             logging.warning("Session file quarantined after validation failure: %s", self.session_path)
             self._show_bad_json_warning("Session", self.session_path, backup, exc)
             return
+        if not experimental_session and not skip_identity_check:
+            current = getattr(self, "current_builder_context_data", None)
+            if isinstance(current, dict) and current:
+                current_identity = canonical_builder_identity(current)
+                if current_identity.get("builder_context_fingerprint") and not builder_identities_match(
+                    migrated, current_identity
+                ):
+                    return
         saved_answers = list(migrated.get("answers", []) or [])
         if saved_answers and all(bool(state.get("answered")) for state in saved_answers):
             return
@@ -549,12 +609,9 @@ class SessionPersistenceMixin:
         self.session_boss_markers = set(migrated.get("session_boss_markers", []))
         self.session_stealth_markers = set(migrated.get("session_stealth_markers", []))
         self.session_xp_gained = int(migrated.get("session_xp_gained", 0))
-        self.current_builder_context_data = self.normalize_builder_context(
-            migrated.get("builder_context"),
-            mode=self.active_session_mode,
-            count=migrated.get("session_base_question_count"),
-            source_label=migrated.get("source_label"),
-        )
+        self.current_builder_context_data = dict(migrated.get("builder_context") or {})
+        if not experimental_session:
+            self.restore_builder_ui_from_context(self.current_builder_context_data)
         if experimental_session:
             saved_restore_qnums = list(
                 migrated.get("restore_question_numbers", []) or self.session_restore_question_numbers
