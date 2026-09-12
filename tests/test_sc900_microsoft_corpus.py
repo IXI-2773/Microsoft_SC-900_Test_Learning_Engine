@@ -220,15 +220,57 @@ class MicrosoftCorpusContractTests(unittest.TestCase):
         self.assertGreaterEqual(multi, 4)
 
     def test_expanded_candidate_bank_stays_in_working_range(self):
+        from tools.sc900_final_predecessor_overlay import WITHHELD
+
         builder = _load_builder()
         report = builder.build_corpus(write=False)
-        self.assertGreaterEqual(report["approved"], 500)
-        self.assertLessEqual(report["approved"], 600)
-        self.assertEqual(report["pending"], 0)
         self.assertEqual(report["errors"], [])
+        self.assertEqual(report["pending"], 0)
+        self.assertEqual(report["withheld"], len(WITHHELD))
+        self.assertEqual(report["approved"], 500 - len(WITHHELD))
+        self.assertEqual(report["compiled_count"], report["approved"])
         self.assertTrue(report["default_bank_unchanged"])
         self.assertFalse(report["final_bank_activated"])
         self.assertEqual(sha256_file(DEFAULT_BANK), EXPECTED_DEFAULT_BANK_SHA256)
+        compiled = report["compiled_bank"]["questions"]
+        empty_td = [row["id"] for row in compiled if not str(row.get("tested_decision") or "").strip()]
+        self.assertEqual(empty_td, [])
+        leaves = {str(row.get("blueprint_leaf_id") or "") for row in compiled}
+        self.assertEqual(len(leaves), EXPECTED_LEAF_COUNT)
+
+    def test_answer_position_is_not_serial_periodic(self):
+        from tools.sc900_microsoft_corpus_qemit import redistribute_single_select
+        from tools.sc900_microsoft_corpus_questions import BATCHES
+
+        letters = "ABCD"
+        matches = 0
+        total = 0
+        for _batch_id, factory in BATCHES:
+            for record in redistribute_single_select(factory()):
+                if record["type"] == "multi_select":
+                    continue
+                serial = int(str(record["id"]).rsplit("q", 1)[-1])
+                expected = letters[(serial - 1) % 4]
+                answers = record["correct_answer"]
+                correct_id = answers[0] if isinstance(answers, list) else answers
+                actual = letters[next(i for i, choice in enumerate(record["choices"]) if choice["id"] == correct_id)]
+                total += 1
+                if actual == expected:
+                    matches += 1
+        self.assertGreater(total, 200)
+        self.assertLess(matches / total, 0.40)
+
+    def test_predecessor_overlay_covers_all_200(self):
+        from tools.sc900_final_predecessor_overlay import DECISIONS, WITHHELD, validate_overlay
+
+        predecessor = json.loads(
+            (ROOT / "content" / "sc900" / "phase3" / "store" / "questions.json").read_text(encoding="utf-8")
+        )
+        ids = [row["id"] for row in predecessor]
+        self.assertEqual(validate_overlay(ids), [])
+        self.assertEqual(len(DECISIONS), 200)
+        self.assertTrue(WITHHELD)
+        self.assertTrue(set(WITHHELD).isdisjoint(set(WITHHELD.values())))
 
     def test_large_candidate_bank_runtime_compatibility(self):
         from app_constants import MODE_EXAM, MODE_PRACTICE
@@ -241,7 +283,7 @@ class MicrosoftCorpusContractTests(unittest.TestCase):
         compiled = CORPUS_ROOT / "compiled" / "sc900_microsoft_learn_corpus_bank.json"
         bank = load_bank(compiled)
         questions = bank["questions"]
-        self.assertGreaterEqual(len(questions), 500)
+        self.assertGreaterEqual(len(questions), 400)
         self.assertLessEqual(len(questions), 600)
         ids = [canonical_question_id(row) for row in questions]
         self.assertEqual(len(ids), len(set(ids)))

@@ -11,6 +11,7 @@ from typing import Any
 from ingestion.importer import promotion_counts
 from ingestion.models import canonicalize_record, load_taxonomy, normalize_text
 from tools.build_sc900_phase2 import review_content_sha256
+from tools.sc900_final_predecessor_overlay import overlay_row, validate_overlay
 from tools.validate_sc900_microsoft_corpus import (
     CORPUS_ROOT,
     DEFAULT_BANK,
@@ -44,8 +45,8 @@ ACCEPTANCE_PATH = CORPUS_ROOT / "acceptance_report.json"
 ANALYTICS_PATH = CORPUS_ROOT / "analytics.json"
 SEMANTIC_AUDIT_PATH = CORPUS_ROOT / "semantic_family_audit.json"
 
-WORK_ID = "SC900-FINAL-SEMANTIC-EXPANSION-001"
-BUILD_EPOCH = "final-semantic-expansion-deterministic-build"
+WORK_ID = "SC900-FINAL-BANK-AUDIT-001"
+BUILD_EPOCH = "final-bank-audit-deterministic-build"
 DETERMINISTIC_IMPORT_AT = "2026-09-12T18:30:00+00:00"
 REVIEWER = "cursor-grok-4.6-microsoft-corpus-separate-review"
 REVIEW_METHOD = "separate adversarial review pass after authoring; independent answer verification against frozen Microsoft inventory"
@@ -207,8 +208,15 @@ def overlay_predecessor(
         metadata["existing_classification"] = normalize_text(audit.get("classification")) or "UNVERIFIED"
         metadata["currentness_status"] = normalize_text(audit.get("currentness_status")) or "UNVERIFIED"
         metadata["future_probe_suitability"] = "not_assigned_to_frozen_probe"
+        final_overlay = overlay_row(qid)
+        metadata["tested_decision"] = final_overlay["tested_decision"]
+        metadata["semantic_independence"] = final_overlay["semantic_independence"]
+        if final_overlay.get("related_to"):
+            metadata["semantic_related_to"] = final_overlay["related_to"]
         updated["metadata"] = metadata
-        if audit.get("reuse_as_approved") is True and metadata["currentness_status"] in {
+        if final_overlay["disposition"] == "withheld":
+            updated["promotion_status"] = "withheld"
+        elif audit.get("reuse_as_approved") is True and metadata["currentness_status"] in {
             "CURRENT",
             "CURRENT_WITH_TERMINOLOGY_NOTE",
             "CURRENT_BUT_VOLATILE",
@@ -223,7 +231,7 @@ def overlay_predecessor(
 def semantic_duplicate_errors(records: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
     errors: list[dict[str, Any]] = []
     stems: dict[str, str] = {}
-    family_decisions: dict[tuple[str, str], str] = {}
+    family_decisions: dict[tuple[str, str], tuple[str, str]] = {}
     for record in records:
         qid = normalize_text(record.get("id"))
         stem = normalize_text(record.get("stem")).casefold()
@@ -235,19 +243,34 @@ def semantic_duplicate_errors(records: Sequence[Mapping[str, Any]]) -> list[dict
         metadata = record.get("metadata") if isinstance(record.get("metadata"), Mapping) else {}
         family = normalize_text(metadata.get("semantic_family_id"))
         decision = normalize_text(metadata.get("tested_decision")).casefold()
+        independence = normalize_text(metadata.get("semantic_independence")).casefold()
         if family and decision:
             key = (family, decision)
             if key in family_decisions:
-                errors.append(
-                    _error(
-                        "SEMANTIC_DECISION_DUPLICATE",
-                        "same semantic family tests the same learner decision",
-                        question_id=qid,
-                        related_to=family_decisions[key],
-                        semantic_family_id=family,
-                    )
+                previous_id, previous_independence = family_decisions[key]
+                independent_variant = independence == "independent_or_primary" or previous_independence == (
+                    "independent_or_primary"
                 )
-            family_decisions[key] = qid
+                if not independent_variant:
+                    errors.append(
+                        _error(
+                            "SEMANTIC_DECISION_DUPLICATE",
+                            "same semantic family tests the same learner decision",
+                            question_id=qid,
+                            related_to=previous_id,
+                            semantic_family_id=family,
+                        )
+                    )
+            else:
+                family_decisions[key] = (qid, independence)
+        elif not decision:
+            errors.append(
+                _error(
+                    "EMPTY_TESTED_DECISION",
+                    "approved question is missing a durable tested_decision",
+                    question_id=qid,
+                )
+            )
         if (
             metadata.get("assigned_probe_authority")
             or normalize_text(metadata.get("future_probe_suitability")) == "PROBE"
@@ -354,12 +377,14 @@ def compile_records(records: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
                 "provenance": record.get("provenance"),
                 "blueprint_leaf_id": metadata.get("blueprint_leaf_id", ""),
                 "semantic_family_id": metadata.get("semantic_family_id", ""),
+                "tested_decision": metadata.get("tested_decision", ""),
                 "source_family_id": metadata.get("source_family_id", ""),
                 "stem_style": metadata.get("stem_style", ""),
                 "future_probe_suitability": metadata.get("future_probe_suitability", "not_assigned_to_frozen_probe"),
                 "authoring_origin": metadata.get("authoring_origin", ""),
                 "provenance_category": metadata.get("provenance_category", ""),
                 "currentness_status": metadata.get("currentness_status", ""),
+                "semantic_independence": metadata.get("semantic_independence", ""),
                 "references": list(record.get("references") or []),
             }
         )
@@ -393,6 +418,8 @@ def build_corpus(*, write: bool = True) -> dict[str, Any]:
     records = predecessor + new_reviewed
 
     errors: list[dict[str, Any]] = []
+    for message in validate_overlay([normalize_text(row.get("id")) for row in predecessor]):
+        errors.append(_error("PREDECESSOR_OVERLAY_INVALID", message))
     errors.extend(inventory_schema_errors(inventory))
     errors.extend(knowledge_unit_errors(units, inventory, taxonomy))
     errors.extend(existing_audit_errors(audit, [row["id"] for row in predecessor]))
