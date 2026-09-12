@@ -176,6 +176,9 @@ class MeasurementFlowHarness:
     def cancel_auto_next_after_answer(self):
         self.auto_next_after_id = None
 
+    def _auto_next_after_answer(self):
+        self.auto_next_calls += 1
+
 
 class Cand01R3MeasurementIntegrityTests(unittest.TestCase):
     def setUp(self):
