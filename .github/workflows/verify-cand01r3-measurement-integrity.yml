@@ -23,14 +23,19 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Strengthen RED tests before production repair
+      - name: Keep strengthened R2 tests canonical
         run: |
           python tools/strengthen_cand01r3_r2_tests.py
-          if ! git diff --quiet -- tests/test_cand01r3_measurement_integrity.py; then
+          git diff --exit-code -- tests/test_cand01r3_measurement_integrity.py
+
+      - name: Apply bounded measurement-integrity repair
+        run: |
+          python tools/apply_cand01r3_measurement_integrity_repair.py
+          if ! git diff --quiet -- cand01r3_measurement.py cand01r3_protocol.py cand01r3_runtime.py app_question_flow_mixin.py app_question_render_mixin.py app_session_persistence_mixin.py; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add tests/test_cand01r3_measurement_integrity.py
-            git commit -m "test: strengthen R2 navigation and calendar RED cases"
+            git add cand01r3_measurement.py cand01r3_protocol.py cand01r3_runtime.py app_question_flow_mixin.py app_question_render_mixin.py app_session_persistence_mixin.py
+            git commit -m "fix: isolate CAND-01R3 measurement answers [integrity-repair]"
             git push origin HEAD:research/sc900-cand01r3-measurement-001
           fi
 
