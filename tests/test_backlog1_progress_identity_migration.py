@@ -14,6 +14,7 @@ from question_identity import (
     ProgressIdentityError,
     canonical_question_id,
     register_progress_identity_bank,
+    resolve_registered_question_id_from_number,
 )
 from runtime_persistence import RuntimePersistence
 
@@ -217,11 +218,13 @@ class Backlog1ProgressIdentityMigrationTests(unittest.TestCase):
         with self.assertRaisesRegex(ProgressIdentityError, "PROGRESS_IDENTITY_SCHEMA_AMBIGUOUS"):
             progress_store.migrate_legacy_progress_keys(payload, [question("sc900-a", 27)])
 
-    def test_b1_21_identifier_only_ui_reference_resolves_through_loaded_bank(self):
+    def test_b1_21_identifier_only_ui_reference_uses_explicit_resolver(self):
         register_progress_identity_bank([question("sc900-a", 27)])
-        self.assertEqual(question_key({"question_number": 27}), "sc900-a")
         with self.assertRaisesRegex(ValueError, "MISSING_CANONICAL_QUESTION_ID"):
-            question_key({"question_number": 999})
+            question_key({"question_number": 27})
+        self.assertEqual(resolve_registered_question_id_from_number(27), "sc900-a")
+        with self.assertRaisesRegex(ValueError, "MISSING_CANONICAL_QUESTION_ID"):
+            resolve_registered_question_id_from_number(999)
 
 
 if __name__ == "__main__":

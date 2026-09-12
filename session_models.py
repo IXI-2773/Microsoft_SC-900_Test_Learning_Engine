@@ -44,6 +44,7 @@ class SessionAnswerState(AnswerState, total=False):
 class QuestionHistoryEvent(TypedDict):
     at: str
     day: str
+    question_id: str
     question_number: int
     correct: bool
     confidence: str

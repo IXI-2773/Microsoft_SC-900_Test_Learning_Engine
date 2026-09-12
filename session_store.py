@@ -65,6 +65,7 @@ def session_file_path(
         raise ValueError("Canonical session file identity requires fingerprint and question IDs together.")
     return user_data_dir / f"{runtime_bank_stem(bank_path)}_{safe_mode}_session_{count}_{signature}.json"
 
+
 def checkpoint_file_path(checkpoint_dir: Path, bank_path: Path, mode: str, answered_count: int) -> Path:
     safe_mode = str(mode or "").lower().replace(" ", "_")
     return checkpoint_dir / f"{runtime_bank_stem(bank_path)}_{safe_mode}_checkpoint_{answered_count}.json"
@@ -178,9 +179,7 @@ def migrate_session_snapshot(
 ) -> SessionSnapshot:
     payload = dict(saved or {})
     current_qnums = [
-        _coerce_int(qnum, field="question_numbers", minimum=1)
-        for qnum in question_numbers
-        if str(qnum).strip()
+        _coerce_int(qnum, field="question_numbers", minimum=1) for qnum in question_numbers if str(qnum).strip()
     ]
     saved_mode = str(payload.get("mode") or mode or "")
     if saved_mode not in SUPPORTED_SESSION_MODES:
@@ -210,9 +209,7 @@ def migrate_session_snapshot(
     if raw_saved_qnums not in (None, "") and not isinstance(raw_saved_qnums, list):
         raise ValueError("Session question_numbers must be a list.")
     saved_qnums = [
-        _coerce_int(qnum, field="question_numbers", minimum=1)
-        for qnum in raw_saved_qnums
-        if str(qnum).strip()
+        _coerce_int(qnum, field="question_numbers", minimum=1) for qnum in raw_saved_qnums if str(qnum).strip()
     ]
     raw_restore_qnums = payload.get("restore_question_numbers", [])
     if raw_restore_qnums not in (None, "") and not isinstance(raw_restore_qnums, list):
@@ -233,11 +230,14 @@ def migrate_session_snapshot(
     if canonical_snapshot:
         if schema_version != SESSION_SCHEMA_VERSION:
             raise ValueError(f"Canonical session must use schema {SESSION_SCHEMA_VERSION}.")
-        if _coerce_int(
-            payload.get("session_identity_version") or 0,
-            field="session_identity_version",
-            minimum=1,
-        ) != SESSION_IDENTITY_VERSION:
+        if (
+            _coerce_int(
+                payload.get("session_identity_version") or 0,
+                field="session_identity_version",
+                minimum=1,
+            )
+            != SESSION_IDENTITY_VERSION
+        ):
             raise ValueError("Unsupported session identity version.")
         if str(payload.get("session_identity") or "").strip() != SESSION_IDENTITY_KIND:
             raise ValueError("Unsupported session identity kind.")
@@ -387,13 +387,9 @@ def migrate_session_snapshot(
         "restore_question_numbers": restore_qnums,
         "session_base_question_count": base_count,
         "session_question_limit": session_limit,
-        "restore_signature": str(
-            payload.get("restore_signature")
-            or session_signature(mode, restore_qnums)
-        ),
+        "restore_signature": str(payload.get("restore_signature") or session_signature(mode, restore_qnums)),
         "session_signature": str(
-            payload.get("session_signature")
-            or session_signature(mode, saved_qnums or current_qnums)
+            payload.get("session_signature") or session_signature(mode, saved_qnums or current_qnums)
         ),
         "current_index": current_index,
         "elapsed_seconds": elapsed_seconds,
@@ -423,6 +419,7 @@ def migrate_session_snapshot(
         result["restore_question_ids"] = saved_restore_ids
     return result
 
+
 def build_session_snapshot(
     *,
     app_version: str,
@@ -451,9 +448,7 @@ def build_session_snapshot(
     question_ids: list[str] | None = None,
     restore_question_ids: list[str] | None = None,
 ) -> SessionSnapshot:
-    canonical_requested = any(
-        value is not None for value in (bank_fingerprint, question_ids, restore_question_ids)
-    )
+    canonical_requested = any(value is not None for value in (bank_fingerprint, question_ids, restore_question_ids))
     if canonical_requested and not (bank_fingerprint and question_ids and restore_question_ids):
         raise ValueError("Canonical session snapshot requires fingerprint and question IDs together.")
 
@@ -471,7 +466,7 @@ def build_session_snapshot(
         if len(answers) != len(canonical_ids):
             raise ValueError("Session answer cardinality must match canonical question cardinality.")
         bound_answers: list[SessionAnswerState] = []
-        for question_id, answer in zip(canonical_ids, answers):
+        for question_id, answer in zip(canonical_ids, answers, strict=True):
             row = cast(SessionAnswerState, dict(answer))
             row["question_id"] = question_id
             bound_answers.append(row)
@@ -550,6 +545,7 @@ def build_session_snapshot(
         "answers": legacy_answers,
     }
 
+
 def saved_session_matches_current(
     saved: Mapping[str, Any] | None,
     mode: str,
@@ -627,8 +623,7 @@ def saved_session_matches_current(
             if str(qnum).strip()
         ]
         current_qnums = [
-            _coerce_int(qnum, field="current_question_numbers", minimum=1)
-            for qnum in current_question_numbers
+            _coerce_int(qnum, field="current_question_numbers", minimum=1) for qnum in current_question_numbers
         ]
     except (TypeError, ValueError):
         return False

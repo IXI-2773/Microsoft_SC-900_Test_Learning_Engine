@@ -16,6 +16,7 @@ from app_constants import (
 )
 from cand01r3_runtime import training_source_questions
 from progress_models import ProgressMeta, QuestStat, SessionHistoryEntry, session_history_entry_from_summary
+from question_identity import history_event_matches_question
 from progress_store import is_active_weak, is_review_due, is_suspended, now_iso
 from session_models import QuestProgressState
 from ui_theme import AMBER, BG, BLUE, CARD, GREEN, MUTED, RED, TEXT
@@ -670,7 +671,7 @@ class GameRewardsMixin:
         rec = self._progress_record(current_q, create=False) or {}
         qnum = int(current_q.get("question_number") or 0)
         question_history_map = {
-            qnum: [event for event in self._recent_history(28) if int(event.get("question_number") or 0) == qnum]
+            qnum: [event for event in self._recent_history(28) if history_event_matches_question(event, current_q)]
         }
         question_stability = {qnum: self._question_stability_score(current_q, rec, question_history_map.get(qnum, []))}
         source_rows, source_map = self._build_source_agreement_rows(training_source_questions(self.master_questions))

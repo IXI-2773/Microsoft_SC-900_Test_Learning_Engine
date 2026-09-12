@@ -300,6 +300,33 @@ class Segment2SessionIdentityTests(unittest.TestCase):
         self.assertEqual(["A"], by_id["Q-A"]["selected"])
         self.assertTrue(by_id["Q-A"]["answered"])
 
+    def test_migration_rejects_session_signature_mismatch(self):
+        snapshot = self._snapshot()
+        snapshot["session_signature"] = "0" * 24
+        with self.assertRaises(ValueError):
+            migrate_session_snapshot(
+                snapshot,
+                MODE_PRACTICE,
+                [1, 2],
+                bank_fingerprint=self.fingerprint,
+                question_ids=["Q-A", "Q-B"],
+                restore_question_ids=["Q-A", "Q-B"],
+                available_question_ids=["Q-A", "Q-B"],
+            )
+
+    def test_migration_rejects_duplicate_current_canonical_ids(self):
+        snapshot = self._snapshot()
+        with self.assertRaises(ValueError):
+            migrate_session_snapshot(
+                snapshot,
+                MODE_PRACTICE,
+                [1, 2],
+                bank_fingerprint=self.fingerprint,
+                question_ids=["Q-A", "Q-B"],
+                restore_question_ids=["Q-A", "Q-B"],
+                available_question_ids=["Q-A", "Q-A"],
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import Any, Mapping
 
 from progress_store import now_iso
+from question_identity import canonical_question_id, history_event_question_id
 from smart_practice_concept_graph import (
     audit_graph,
     concept_key_for_question as graph_concept_key_for_question,
@@ -229,7 +230,12 @@ def _legacy_repair_key_match(prediction: Mapping[str, Any], raw_repair_key: str)
 
 
 def same_concept(prediction: Mapping[str, Any], event: Mapping[str, Any]) -> tuple[bool, str]:
-    if int(prediction.get("question_number") or 0) == int(event.get("question_number") or 0):
+    prediction_id = canonical_question_id(prediction)
+    event_id = history_event_question_id(event)
+    if prediction_id and event_id:
+        if prediction_id == event_id:
+            return True, "same_question"
+    elif int(prediction.get("question_number") or 0) == int(event.get("question_number") or 0):
         return True, "same_question"
     raw_repair_key = str(event.get("repair_concept_key") or "").strip()
     legacy_match, legacy_basis = _legacy_repair_key_match(prediction, raw_repair_key)

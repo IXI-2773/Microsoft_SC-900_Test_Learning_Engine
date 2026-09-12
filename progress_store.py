@@ -5,8 +5,11 @@ from typing import Any, TypedDict, cast
 from question_identity import (
     PROGRESS_IDENTITY_KIND,
     PROGRESS_IDENTITY_VERSION,
-    migrate_legacy_progress_keys as _migrate_legacy_progress_keys,
+    canonical_question_id,
     require_canonical_question_id,
+)
+from question_identity import (
+    migrate_legacy_progress_keys as _migrate_legacy_progress_keys,
 )
 
 PROGRESS_VERSION = 3
@@ -505,15 +508,33 @@ def is_review_due(record: Mapping[str, Any] | None, on_date=None) -> bool:
     return review_day <= on_date
 
 
+def progress_record_for_question(
+    records: Mapping[str, Mapping[str, Any]], question: Mapping[str, Any]
+) -> Mapping[str, Any] | None:
+    question_id = canonical_question_id(question)
+    if question_id:
+        canonical_record = records.get(question_id)
+        if isinstance(canonical_record, Mapping):
+            return canonical_record
+    try:
+        raw_number = question.get("question_number")
+        if raw_number is None:
+            return None
+        legacy_key = str(int(raw_number))
+    except (TypeError, ValueError):
+        return None
+    legacy_record = records.get(legacy_key)
+    return legacy_record if isinstance(legacy_record, Mapping) else None
+
+
 def aggregate_concept_memory(records: Mapping[str, Mapping[str, Any]], questions) -> dict[str, dict[str, Any]]:
     aggregates: dict[str, dict[str, Any]] = {}
     for question in questions:
-        progress_key = question_key(question)
         objective = str(question.get("objective_code") or "").strip()
         topics = [str(topic).strip() for topic in question.get("topics", []) if str(topic).strip()]
         domain = str(question.get("domain") or "Unsorted").strip()
         key = f"Objective::{objective}" if objective else f"Topic::{topics[0]}" if topics else f"Domain::{domain}"
-        rec = normalize_progress_record(records.get(progress_key, {}))
+        rec = normalize_progress_record(progress_record_for_question(records, question) or {})
         memory = normalize_learner_memory(rec.get("learner_memory"))
         row = aggregates.setdefault(
             key,
@@ -555,7 +576,7 @@ def migrate_legacy_progress_keys(progress_payload, questions):
 
 def select_due_review_questions(questions, records: Mapping[str, Mapping[str, Any]], on_date=None):
     def due_sort(q):
-        rec = records.get(question_key(q), {})
+        rec = progress_record_for_question(records, q) or {}
         return (
             rec.get("next_review") or "9999-12-31",
             -int(rec.get("wrong_count", 0)),
@@ -567,8 +588,8 @@ def select_due_review_questions(questions, records: Mapping[str, Mapping[str, An
             q
             for q in questions
             if not q.get("suspended")
-            and not is_suspended(records.get(question_key(q), {}))
-            and is_review_due(records.get(question_key(q), {}), on_date=on_date)
+            and not is_suspended(progress_record_for_question(records, q) or {})
+            and is_review_due(progress_record_for_question(records, q) or {}, on_date=on_date)
         ],
         key=due_sort,
     )
@@ -583,7 +604,7 @@ def select_questions_by_history(questions, records: Mapping[str, Mapping[str, An
 
     out = []
     for q in questions:
-        rec = records.get(question_key(q), {}) or {}
+        rec = progress_record_for_question(records, q) or {} or {}
         if q.get("suspended") or is_suspended(rec):
             continue
         attempts = int(rec.get("attempts", 0))

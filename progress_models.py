@@ -1,6 +1,8 @@
 from collections.abc import Mapping, MutableMapping
 from typing import Any, NotRequired, TypedDict, cast
 
+from question_identity import canonical_question_id
+
 
 class ProgressStats(TypedDict):
     total_answered: int
@@ -33,6 +35,7 @@ class SessionHistoryEntry(TypedDict):
 
 
 class IssueReport(TypedDict):
+    question_id: NotRequired[str]
     question_number: int
     source_page: str
     domain: str
@@ -197,6 +200,7 @@ def normalize_progress_meta(meta: MutableMapping[str, Any] | Mapping[str, Any] |
             raise ValueError("Invalid list for meta.issue_reports.source_notes")
         issue_reports.append(
             {
+                "question_id": str(row.get("question_id") or "").strip(),
                 "question_number": _coerce_int(
                     row.get("question_number", 0), field="meta.issue_reports.question_number", minimum=0
                 ),
@@ -241,6 +245,7 @@ def issue_report_from_question(
     question: Mapping[str, Any], *, exclude_from_scoring: bool, reported_at: str
 ) -> IssueReport:
     return {
+        "question_id": canonical_question_id(question),
         "question_number": int(question.get("question_number", 0) or 0),
         "source_page": str(question.get("source_page", "") or ""),
         "domain": str(question.get("domain", "") or ""),
