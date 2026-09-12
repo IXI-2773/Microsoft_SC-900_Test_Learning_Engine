@@ -1,6 +1,6 @@
 {
-  "work_id": "SC900-FINAL-BANK-AUDIT-001",
-  "build_epoch": "final-bank-audit-deterministic-build",
+  "work_id": "SC900-EXAM-STYLE-CALIBRATION-001",
+  "build_epoch": "exam-style-calibration-2026-09-12-v1",
   "source_inventory_captured_at": "2026-09-12T18:30:00+00:00",
   "sc900_study_guide_last_updated": "2026-06-26T19:26:00.0000000Z",
   "sc900_skills_effective_date": "2026-07-28",
@@ -9,7 +9,9 @@
   "pending": 0,
   "withheld": 46,
   "compiled_count": 454,
-  "compiled_sha256": "8fe229a51d850d6656a1dcd54bb6b10f556116f0ef992a18f5145fcf6ec1a254",
+  "compiled_sha256": "177a4fb5f8a874ffe4dda6b69e3d1c03dbdad1f5db5a174a990eb8b5a0e5927c",
+  "precalibration_bank_sha256": "8fe229a51d850d6656a1dcd54bb6b10f556116f0ef992a18f5145fcf6ec1a254",
+  "calibration_version": "sc900-exam-calibration-2026-09-12-v1",
   "analytics": {
     "approved": 454,
     "pending": 0,
@@ -101,17 +103,22 @@
       "intermediate": 187
     },
     "stem_style_distribution": {
-      "capability_selection": 61,
+      "capability_selection": 67,
       "concept_distinction": 69,
       "current_topic": 4,
-      "direct_concept": 82,
-      "distinction_comparison": 31,
+      "direct_concept": 87,
+      "distinction_comparison": 34,
       "governance_compliance": 1,
-      "misconception_correction": 44,
+      "misconception_correction": 37,
       "multi_select": 6,
       "responsibility_governance": 3,
       "service_selection": 3,
-      "short_scenario": 150
+      "short_scenario": 143
+    },
+    "exam_calibration_tier_distribution": {
+      "FUNDAMENTALS_APPLIED": 130,
+      "FUNDAMENTALS_CORE": 301,
+      "STRETCH": 23
     },
     "single_multi_distribution": {
       "multi": 5,

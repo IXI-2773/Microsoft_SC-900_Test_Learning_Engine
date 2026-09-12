@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 FINAL_BANK = (
     ROOT / "content" / "sc900" / "microsoft-learn-corpus" / "compiled" / "sc900_microsoft_learn_corpus_bank.json"
 )
-EXPECTED_FINAL_SHA256 = "8fe229a51d850d6656a1dcd54bb6b10f556116f0ef992a18f5145fcf6ec1a254"
+EXPECTED_FINAL_SHA256 = "177a4fb5f8a874ffe4dda6b69e3d1c03dbdad1f5db5a174a990eb8b5a0e5927c"
 
 
 def _blank_answer() -> dict:
