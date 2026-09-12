@@ -1945,24 +1945,6 @@ def record_measurement_probe_answer(
     return record_measurement_event(question, selected=list(selected or []), correct=correct, kind=kind)
 
 
-def score_measurement_probe_answer(question: Mapping[str, Any], selected: Sequence[str] | None = None) -> bool:
-    correct = question.get("correct")
-    if not isinstance(correct, (list, tuple, set)) or not correct:
-        raise Cand01R3AuthorityError("INVALID_MEASUREMENT_ANSWER_KEY")
-    selected_ids = {str(value) for value in (selected or [])}
-    correct_ids = {str(value) for value in correct}
-    return selected_ids == correct_ids
-
-
-def record_measurement_probe_answer(
-    question: Mapping[str, Any],
-    *,
-    selected: Sequence[str] | None = None,
-) -> MeasurementObservation:
-    correct = score_measurement_probe_answer(question, selected)
-    return record_measurement_event(question, selected=list(selected or []), correct=correct, kind="SCORED")
-
-
 def notify_scored_attempt(
     question: Mapping[str, Any],
     *,
