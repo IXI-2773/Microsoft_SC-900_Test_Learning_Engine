@@ -1,0 +1,2614 @@
+{
+  "audited_at": "2026-09-12T18:30:00+00:00",
+  "predecessor_count": 200,
+  "review_method": "independent currentness audit of Phase-1/2/3 approved items against frozen Microsoft inventory",
+  "items": [
+    {
+      "question_id": "sc900_p1_q001",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q002",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q003",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types",
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q004",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q005",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q006",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q007",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q008",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q009",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-compliance-management-capabilities-microsoft",
+        "https://learn.microsoft.com/en-us/training/modules/describe-compliance-management-capabilities-microsoft"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q010",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions",
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q011",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q012",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types",
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q013",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q014",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q015",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q016",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q017",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q018",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q019",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-plan-compliance-microsoft-365",
+        "https://learn.microsoft.com/en-us/training/modules/explore-plan-compliance-microsoft-365"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q020",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions",
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q021",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q022",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q023",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q024",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q025",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q026",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q027",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q028",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q029",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions",
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q030",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance",
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q031",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q032",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types",
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q033",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q034",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q035",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q036",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q037",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q038",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q039",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-compliance-management-capabilities-microsoft",
+        "https://learn.microsoft.com/en-us/training/modules/describe-compliance-management-capabilities-microsoft"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q040",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance",
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q041",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q042",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q043",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q044",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q045",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q046",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q047",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q048",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-plan-compliance-microsoft-365",
+        "https://learn.microsoft.com/en-us/purview/compliance-manager-scoring",
+        "https://learn.microsoft.com/en-us/training/modules/explore-plan-compliance-microsoft-365"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q049",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance",
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p1_q050",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions",
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q001",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q002",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q003",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q004",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q005",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q006",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q007",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types",
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q008",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types",
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q009",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types",
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q010",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q011",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q012",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q013",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q014",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q015",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q016",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q017",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q018",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q019",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q020",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q021",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q022",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q023",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q024",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q025",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q026",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q027",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q028",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q029",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q030",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q031",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q032",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q033",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q034",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q035",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q036",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q037",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q038",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q039",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q040",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-compliance-management-capabilities-microsoft",
+        "https://learn.microsoft.com/en-us/training/modules/describe-compliance-management-capabilities-microsoft"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q041",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-compliance-management-capabilities-microsoft",
+        "https://learn.microsoft.com/en-us/training/modules/describe-compliance-management-capabilities-microsoft"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q042",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance",
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q043",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/purview/compliance-manager-scoring",
+        "https://learn.microsoft.com/en-us/purview/compliance-manager-scoring"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q044",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/purview/data-classification-activity-explorer",
+        "https://learn.microsoft.com/en-us/purview/data-classification-activity-explorer"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q045",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/purview/records-management",
+        "https://learn.microsoft.com/en-us/purview/records-management"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q046",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/purview/retention",
+        "https://learn.microsoft.com/en-us/purview/retention"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q047",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions",
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q048",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance",
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q049",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance",
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p2_q050",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance",
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q001",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q002",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q003",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities",
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/howto-authentication-temporary-access-pass",
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q004",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities",
+        "https://learn.microsoft.com/en-us/entra/id-governance/what-are-lifecycle-workflows",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q005",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q006",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q007",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q008",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q009",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions",
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q010",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions",
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q011",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q012",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q013",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q014",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q015",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q016",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q017",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q018",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q019",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions",
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q020",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions",
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q021",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q022",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q023",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q024",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q025",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q026",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q027",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q028",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/purview/data-classification-activity-explorer",
+        "https://learn.microsoft.com/en-us/purview/data-classification-activity-explorer"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q029",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance",
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q030",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance",
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q031",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q032",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types",
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q033",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q034",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q035",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q036",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q037",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q038",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/purview/data-classification-activity-explorer",
+        "https://learn.microsoft.com/en-us/purview/data-classification-activity-explorer"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q039",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-compliance-management-capabilities-microsoft",
+        "https://learn.microsoft.com/en-us/training/modules/describe-compliance-management-capabilities-microsoft"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q040",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance",
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q041",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q042",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q043",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types",
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q044",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q045",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q046",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q047",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q048",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q049",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions",
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q050",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance",
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q051",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q052",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q053",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q054",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types",
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q055",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q056",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q057",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q058",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q059",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions",
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q060",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-compliance-management-capabilities-microsoft",
+        "https://learn.microsoft.com/en-us/training/modules/describe-compliance-management-capabilities-microsoft"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q061",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q062",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q063",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q064",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q065",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q066",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q067",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q068",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q069",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-plan-compliance-microsoft-365",
+        "https://learn.microsoft.com/en-us/training/modules/explore-plan-compliance-microsoft-365"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q070",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/purview/records-management",
+        "https://learn.microsoft.com/en-us/purview/records-management"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q071",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q072",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types",
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q073",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q074",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q075",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q076",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q077",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q078",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q079",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance",
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q080",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-compliance-management-capabilities-microsoft",
+        "https://learn.microsoft.com/en-us/training/modules/describe-compliance-management-capabilities-microsoft"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q081",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q082",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q083",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types",
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q084",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q085",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q086",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q087",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q088",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q089",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-plan-compliance-microsoft-365",
+        "https://learn.microsoft.com/en-us/training/modules/explore-plan-compliance-microsoft-365"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q090",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/purview/retention",
+        "https://learn.microsoft.com/en-us/purview/retention"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q091",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q092",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q093",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities",
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q094",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types",
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q095",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q096",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q097",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure",
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q098",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q099",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance",
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance"
+      ],
+      "missing_from_inventory_before_refresh": []
+    },
+    {
+      "question_id": "sc900_p3_q100",
+      "classification": "CURRENT_MICROSOFT_SUPPORTED",
+      "currentness_status": "CURRENT",
+      "reuse_as_approved": true,
+      "disposition": "approved",
+      "notes": "Reverified against the July 28, 2026 study guide and the 2026-09-12 Microsoft Learn inventory. Primary URL is present; item remains original Microsoft-grounded content.",
+      "cited_urls": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-compliance-management-capabilities-microsoft",
+        "https://learn.microsoft.com/en-us/training/modules/describe-compliance-management-capabilities-microsoft"
+      ],
+      "missing_from_inventory_before_refresh": []
+    }
+  ],
+  "summary": {
+    "CURRENT_MICROSOFT_SUPPORTED": 200,
+    "CURRENT_BUT_NEEDS_SOURCE_REFRESH": 0
+  }
+}
