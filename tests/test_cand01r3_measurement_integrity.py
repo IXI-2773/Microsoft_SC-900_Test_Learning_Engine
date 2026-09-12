@@ -369,6 +369,8 @@ class Cand01R3MeasurementIntegrityTests(unittest.TestCase):
         qid = self._probe_ids(1)[0]
         correct = MeasurementFlowHarness(question(qid, role_hint="PROBE", answered=True, selected=["A"]))
         wrong = MeasurementFlowHarness(question(qid, role_hint="PROBE", answered=True, selected=["B"]))
+        correct.questions.append(question(self._train_ids(1)[0], role_hint="TRAIN"))
+        wrong.questions.append(question(self._train_ids(1)[0], role_hint="TRAIN"))
         QuestionFlowMixin.maybe_auto_next_after_answer(correct, correct.current_question())
         QuestionFlowMixin.maybe_auto_next_after_answer(wrong, wrong.current_question())
         self.assertEqual(0, len(correct.root.after_calls))
@@ -517,7 +519,7 @@ class Cand01R3MeasurementIntegrityTests(unittest.TestCase):
                 question(self._probe_ids(2)[0], role_hint="PROBE"), selected=["A"], correct=True
             )
         self.assertEqual(2, result.payload["scheduled_day"])
-        self.assertEqual("2026-09-15", result.payload["calendar_local_date"])
+        self.assertEqual("2026-09-15", result.payload.get("calendar_local_date"))
 
     def test_r2_027_day1_calendar_anchor_survives_restart(self):
         from cand01r3_protocol import set_measurement_day
