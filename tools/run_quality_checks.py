@@ -17,6 +17,7 @@ QUALITY_TARGETS = [
     "render_cache.py",
     "session_models.py",
     "session_store.py",
+    "builder_identity.py",
     "smart_practice_profile.py",
     "smart_practice_cache.py",
     "cand01r3_partition.py",

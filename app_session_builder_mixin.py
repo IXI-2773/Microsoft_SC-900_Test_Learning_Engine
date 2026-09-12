@@ -619,7 +619,7 @@ class SessionBuilderMixin:
         builder_context = builder_context or self.current_builder_context(
             mode=MODE_SMART_PRACTICE,
             count=count,
-            randomize=False,
+            randomize=randomize,
             source_label=self.current_builder_source_label(MODE_SMART_PRACTICE),
         )
         try:
@@ -745,14 +745,12 @@ class SessionBuilderMixin:
         mode = mode or self.session_mode_var.get()
         source_label = str(source_label or self.current_builder_source_label(mode))
         count_value = count if count is not None else self.session_count_var.get()
-        if count_value == "All visible":
-            count_value = str(len(self.get_session_builder_pool()) or len(self.master_questions) or "")
         return {
             "mode": str(mode),
             "count": str(count_value or ""),
             "source_label": source_label,
             "session_source": self.normalize_session_source(self.session_source_var.get()),
-            "randomize": bool(self.session_random_var.get() if randomize is None else randomize),
+            "randomize": bool(self.session_random_var.get()) if randomize is None else bool(randomize),
             "domain_filter": self.domain_filter_var.get(),
             "topic_filter": self.topic_filter_var.get(),
             "status_filter": self.normalize_status_filter(self.status_filter_var.get()),
@@ -820,7 +818,7 @@ class SessionBuilderMixin:
             builder_context = self.current_builder_context(
                 mode=MODE_SMART_PRACTICE,
                 count=self.session_count_var.get(),
-                randomize=False,
+                randomize=bool(self.session_random_var.get()),
                 source_label=self.current_builder_source_label(MODE_SMART_PRACTICE),
             )
             resume_choice = self._resume_existing_session_choice(builder_context)

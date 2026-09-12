@@ -4,6 +4,9 @@ from pathlib import Path
 from typing import Any, cast
 
 from app_constants import MODE_EXAM, MODE_PRACTICE, MODE_SMART_PRACTICE
+from builder_identity import canonical_builder_identity as canonical_builder_identity
+from builder_identity import normalize_builder_context as normalize_builder_context
+from builder_identity import resolve_builder_identity_from_snapshot as resolve_builder_identity_from_snapshot
 from session_identity import (
     SESSION_IDENTITY_KIND,
     SESSION_IDENTITY_VERSION,
@@ -53,17 +56,24 @@ def session_file_path(
     *,
     bank_fingerprint: str | None = None,
     question_ids: list[str] | None = None,
+    builder_context_fingerprint: str | None = None,
 ) -> Path:
     safe_mode = str(mode or "").lower().replace(" ", "_").replace("/", "_")
     if bank_fingerprint is None and question_ids is None:
         count = len(question_numbers)
         signature = session_signature(mode, question_numbers)
-    elif bank_fingerprint and question_ids:
+        return user_data_dir / f"{runtime_bank_stem(bank_path)}_{safe_mode}_session_{count}_{signature}.json"
+    if bank_fingerprint and question_ids:
         count = len(question_ids)
         signature = canonical_session_signature(mode, bank_fingerprint, question_ids)
-    else:
-        raise ValueError("Canonical session file identity requires fingerprint and question IDs together.")
-    return user_data_dir / f"{runtime_bank_stem(bank_path)}_{safe_mode}_session_{count}_{signature}.json"
+        name = f"{runtime_bank_stem(bank_path)}_{safe_mode}_session_{count}_{signature}"
+        if builder_context_fingerprint is not None:
+            fingerprint = str(builder_context_fingerprint).strip()
+            if not fingerprint:
+                raise ValueError("Builder context fingerprint cannot be blank when provided.")
+            name = f"{name}_{fingerprint[:12]}"
+        return user_data_dir / f"{name}.json"
+    raise ValueError("Canonical session file identity requires fingerprint and question IDs together.")
 
 
 def checkpoint_file_path(checkpoint_dir: Path, bank_path: Path, mode: str, answered_count: int) -> Path:
@@ -88,20 +98,30 @@ def serialize_answer_state(question: Mapping[str, Any]) -> AnswerState:
     return answer_state_from_question(question)
 
 
-def normalize_builder_context(
-    raw: Mapping[str, Any] | None, *, mode: str = "", source_label: str = "", question_count: int = 0
-) -> BuilderContext:
-    payload = dict(raw or {})
-    return {
-        "mode": str(payload.get("mode") or mode or ""),
-        "count": str(payload.get("count") or question_count or ""),
-        "source_label": str(payload.get("source_label") or source_label or ""),
-        "session_source": str(payload.get("session_source") or ""),
-        "randomize": bool(payload.get("randomize")),
-        "domain_filter": str(payload.get("domain_filter") or "All domains"),
-        "topic_filter": str(payload.get("topic_filter") or "All topics"),
-        "status_filter": str(payload.get("status_filter") or "All questions"),
-    }
+def _snapshot_builder_identity(
+    payload: Mapping[str, Any] | None,
+    *,
+    saved_mode: str,
+    source_label: str,
+    question_count: Any,
+    builder_context: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    if builder_context is not None:
+        raw = dict(builder_context)
+        if not raw.get("mode"):
+            raw["mode"] = saved_mode
+        if not raw.get("source_label"):
+            raw["source_label"] = source_label
+        identity = canonical_builder_identity(raw)
+        return dict(identity)
+    return dict(
+        resolve_builder_identity_from_snapshot(
+            payload,
+            saved_mode=saved_mode,
+            source_label=source_label,
+            question_count=question_count,
+        )
+    )
 
 
 def _coerce_int(value: Any, *, field: str, default: int = 0, minimum: int | None = None) -> int:
@@ -368,19 +388,13 @@ def migrate_session_snapshot(
             raise ValueError("Session quest row must be a mapping.")
         quests.append(cast(QuestProgressState, dict(quest)))
 
-    raw_builder_context = payload.get("builder_context")
-    if raw_builder_context in (None, ""):
-        builder_context_payload: Mapping[str, Any] | None = None
-    elif isinstance(raw_builder_context, Mapping):
-        builder_context_payload = cast(Mapping[str, Any], raw_builder_context)
-    else:
-        raise ValueError("Session builder_context must be a mapping.")
-    builder_context = normalize_builder_context(
-        builder_context_payload,
-        mode=saved_mode,
+    builder_identity = _snapshot_builder_identity(
+        payload,
+        saved_mode=saved_mode,
         source_label=str(payload.get("source_label") or ""),
         question_count=base_count,
     )
+    builder_context = builder_identity["builder_context"]
     current_index = _coerce_int(payload.get("current_index", 0), field="current_index", minimum=0)
     identity_count = len(saved_ids) if canonical_snapshot else len(saved_qnums or current_qnums)
     max_index = max(0, identity_count - 1)
@@ -394,6 +408,10 @@ def migrate_session_snapshot(
         "bank_file": str(payload.get("bank_file") or ""),
         "mode": saved_mode,
         "builder_context": builder_context,
+        "builder_identity": str(builder_identity["builder_identity"]),
+        "builder_identity_version": int(builder_identity["builder_identity_version"]),
+        "builder_context_fingerprint": str(builder_identity["builder_context_fingerprint"]),
+        "builder_identity_status": str(builder_identity["builder_identity_status"]),
         "source_label": str(payload.get("source_label") or ""),
         "question_count": _coerce_int(
             payload.get("question_count") or identity_count,
@@ -469,6 +487,14 @@ def build_session_snapshot(
     if canonical_requested and not (bank_fingerprint and question_ids and restore_question_ids):
         raise ValueError("Canonical session snapshot requires fingerprint and question IDs together.")
 
+    identity = _snapshot_builder_identity(
+        None,
+        saved_mode=mode,
+        source_label=source_label,
+        question_count=session_base_question_count,
+        builder_context=builder_context,
+    )
+
     if canonical_requested:
         canonical_ids = _coerce_canonical_id_list(question_ids, field="question_ids", required=True)
         canonical_restore_ids = _coerce_canonical_id_list(
@@ -497,12 +523,11 @@ def build_session_snapshot(
             "question_ids": canonical_ids,
             "restore_question_ids": canonical_restore_ids,
             "mode": mode,
-            "builder_context": normalize_builder_context(
-                builder_context,
-                mode=mode,
-                source_label=source_label,
-                question_count=session_base_question_count,
-            ),
+            "builder_context": identity["builder_context"],
+            "builder_identity": identity["builder_identity"],
+            "builder_identity_version": identity["builder_identity_version"],
+            "builder_context_fingerprint": identity["builder_context_fingerprint"],
+            "builder_identity_status": identity["builder_identity_status"],
             "source_label": source_label,
             "question_count": len(canonical_ids),
             "question_numbers": list(question_numbers),
@@ -533,12 +558,11 @@ def build_session_snapshot(
         "app_version": app_version,
         "bank_file": bank_file,
         "mode": mode,
-        "builder_context": normalize_builder_context(
-            builder_context,
-            mode=mode,
-            source_label=source_label,
-            question_count=session_base_question_count,
-        ),
+        "builder_context": identity["builder_context"],
+        "builder_identity": identity["builder_identity"],
+        "builder_identity_version": identity["builder_identity_version"],
+        "builder_context_fingerprint": identity["builder_context_fingerprint"],
+        "builder_identity_status": identity["builder_identity_status"],
         "source_label": source_label,
         "question_count": len(question_numbers),
         "question_numbers": list(question_numbers),
