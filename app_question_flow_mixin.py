@@ -20,6 +20,19 @@ from cand01r3_runtime import (
     revalidate_training_question,
     training_source_questions,
 )
+from confidence_epistemics import (
+    MissingAnswerEventId,
+    infer_miss_reason_from_confidence,
+    new_answer_event_id,
+    rebuild_confidence_counts,
+    rebuild_learner_memory_from_history,
+    rebuild_miss_reason_counts,
+    require_observed_confidence,
+    unobserved_feedback,
+)
+from confidence_epistemics import (
+    classify_recall_failure as classify_recall_failure_from_evidence,
+)
 from progress_store import (
     is_active_weak,
     is_review_due,
@@ -30,11 +43,11 @@ from progress_store import (
 from question_identity import (
     canonical_question_history_map,
     canonical_question_id,
-    history_event_matches_question,
     question_content_fingerprint,
 )
 from session_models import QuestionRuntimeState, SessionAnswerEvent, clear_runtime_answer_state
 from smart_practice_concept_graph import concept_key_for_question
+from ui_theme import BLUE, CARD
 
 
 class QuestionFlowMixin:
@@ -45,14 +58,7 @@ class QuestionFlowMixin:
         return {canonical_question_id(item) for item in self.questions if canonical_question_id(item)}
 
     def _infer_miss_reason_from_confidence(self, confidence, is_correct):
-        if is_correct:
-            return ""
-        confidence = str(confidence or "").strip()
-        if confidence == "Guessed":
-            return "Did not know"
-        if confidence == "Unsure":
-            return "Narrowed to two"
-        return "Misread"
+        return infer_miss_reason_from_confidence(confidence, is_correct)
 
     def classify_recall_failure(
         self, q: QuestionRuntimeState, is_correct: bool, feedback: dict[str, Any] | None = None
@@ -60,19 +66,7 @@ class QuestionFlowMixin:
         feedback = feedback or {}
         confidence = str(feedback.get("confidence") or q.get("last_confidence") or "").strip()
         miss_reason = str(feedback.get("miss_reason") or q.get("last_miss_reason") or "").strip()
-        if is_correct:
-            if confidence == "Guessed":
-                return "Recognition without recall"
-            if confidence == "Unsure":
-                return "Fragile retrieval"
-            return ""
-        if miss_reason == "Did not know" or confidence == "Guessed":
-            return "Blank recall"
-        if miss_reason in ("Narrowed to two", "Changed answer") or confidence == "Unsure":
-            return "Concept interference"
-        if miss_reason == "Misread" or confidence == "Sure":
-            return "Cue / wording miss"
-        return "Unclassified miss"
+        return classify_recall_failure_from_evidence(is_correct, confidence, miss_reason)
 
     def deciding_clue_for_question(self, q: QuestionRuntimeState) -> str:
         correct_texts = [
@@ -155,20 +149,29 @@ class QuestionFlowMixin:
         self._destroy_feedback_popover()
         if not request:
             return
-        qnum = request.get("question_number")
-        q = next((item for item in self.questions if item.get("question_number") == qnum), None)
+        qid = str(request.get("question_id") or "")
+        q = next((item for item in self.questions if canonical_question_id(item) == qid), None)
+        if q is None:
+            qnum = request.get("question_number")
+            q = next((item for item in self.questions if item.get("question_number") == qnum), None)
         if q is None:
             return
+        observed = require_observed_confidence(confidence)
+        selected = list(request.get("selected", []))
+        is_correct = set(selected) == set(q.get("correct") or [])
         feedback = {
-            "confidence": confidence,
-            "miss_reason": self._infer_miss_reason_from_confidence(confidence, request.get("is_correct")),
+            "confidence": observed,
+            "miss_reason": infer_miss_reason_from_confidence(observed, is_correct),
         }
-        self._record_answer(q, request.get("selected", []), anchor_widget=None, feedback_override=feedback)
+        self._record_answer(q, selected, anchor_widget=None, feedback_override=feedback)
 
     def handle_return_key(self):
         if self._feedback_popover_active():
-            self._destroy_feedback_popover()
-            self.pending_feedback_request = None
+            focused = self.root.focus_get()
+            for button in getattr(self, "answer_feedback_buttons", []) or []:
+                if button == focused:
+                    button.invoke()
+                    return "break"
             return "break"
         self.submit_answer()
         return "break"
@@ -327,7 +330,72 @@ class QuestionFlowMixin:
         self._render_current_view(save_session=False)
 
     def _collect_answer_feedback(self, q, is_correct):
-        return {"confidence": "Sure", "miss_reason": self._infer_miss_reason_from_confidence("Sure", is_correct)}
+        return unobserved_feedback(is_correct)
+
+    def _should_suppress_confidence_capture(self, q: QuestionRuntimeState) -> bool:
+        if getattr(self, "active_session_mode", "") == MODE_EXAM and not getattr(self, "exam_reveal", False):
+            return True
+        if is_cand01r3_active():
+            decision = revalidate_training_question(q, action="ANSWER")
+            if decision.role != "TRAIN":
+                return True
+        return False
+
+    def _show_feedback_popover(self, q, selected, anchor_widget=None):
+        self._destroy_feedback_popover()
+        self.pending_feedback_request = {
+            "question_id": canonical_question_id(q),
+            "question_number": int(q.get("question_number") or 0),
+            "selected": list(selected),
+        }
+        host = getattr(self, "content_frame", None)
+        if host is None:
+            return
+        popover = tk.Frame(host, bg=CARD, bd=1, relief="solid", padx=10, pady=8)
+        tk.Label(
+            popover,
+            text="How sure are you?",
+            bg=CARD,
+            fg=BLUE,
+            font=("Segoe UI", 9, "bold"),
+            anchor="w",
+        ).pack(fill="x", pady=(0, 6))
+        button_row = tk.Frame(popover, bg=CARD)
+        button_row.pack(fill="x")
+        buttons = []
+        for option in ("Sure", "Unsure", "Guessed"):
+            button = tk.Button(
+                button_row,
+                text=option,
+                font=("Segoe UI", 8, "bold"),
+                bd=1,
+                relief="solid",
+                bg="#f7f9fc",
+                fg=BLUE,
+                padx=8,
+                pady=3,
+                command=lambda value=option: self._complete_feedback_choice(value),
+            )
+            button.pack(side="left", padx=(0, 6))
+            buttons.append(button)
+        self.answer_feedback_popover = popover
+        self.answer_feedback_buttons = buttons
+        try:
+            x, y = self._position_feedback_popover(popover, anchor_widget)
+            popover.place(x=x, y=y)
+        except tk.TclError:
+            pass
+
+    def _begin_confidence_capture(self, q: QuestionRuntimeState, selected: list[str], anchor_widget=None):
+        selected = list(selected)
+        q["pending"] = selected
+        if self._should_suppress_confidence_capture(q):
+            is_correct = set(selected) == set(q.get("correct") or [])
+            self._record_answer(
+                q, selected, anchor_widget=anchor_widget, feedback_override=unobserved_feedback(is_correct)
+            )
+            return
+        self._show_feedback_popover(q, selected, anchor_widget=anchor_widget)
 
     def complete_explanation_recall(self):
         if not self.questions:
@@ -948,7 +1016,9 @@ class QuestionFlowMixin:
                 if not candidates:
                     candidates = self.find_question_twins(q, limit=1)
                     tag = QUESTION_TAG_TRANSFER_CHECK
-                inserted = self._insert_delayed_followup_questions(q, candidates, tag or QUESTION_TAG_TRANSFER_CHECK, delay_slots=3)
+                inserted = self._insert_delayed_followup_questions(
+                    q, candidates, tag or QUESTION_TAG_TRANSFER_CHECK, delay_slots=3
+                )
                 if inserted:
                     for item in inserted:
                         item["repair_stage"] = "transfer"
@@ -1031,6 +1101,9 @@ class QuestionFlowMixin:
         feedback["response_seconds"] = timing["effective_response_seconds"]
         feedback["was_due"] = was_due
         feedback["was_active_weak"] = was_active_weak
+        answer_event_id = str(feedback.get("answer_event_id") or new_answer_event_id())
+        feedback["answer_event_id"] = answer_event_id
+        q["answer_event_id"] = answer_event_id
         q["last_confidence"] = feedback.get("confidence", "")
         q["last_miss_reason"] = feedback.get("miss_reason", "")
         is_correct = self._question_correct(q)
@@ -1038,8 +1111,10 @@ class QuestionFlowMixin:
         deciding_clue = self.deciding_clue_for_question(q)
         feedback["recall_failure"] = recall_failure
         feedback["deciding_clue"] = deciding_clue
+        q["last_recall_failure"] = recall_failure
         self.update_progress_for_answer(q, feedback=feedback)
         event: SessionAnswerEvent = {
+            "answer_event_id": answer_event_id,
             "question_id": canonical_question_id(q),
             "question_number": int(q.get("question_number") or 0),
             "question_content_fingerprint": question_content_fingerprint(q),
@@ -1160,7 +1235,7 @@ class QuestionFlowMixin:
         else:
             q["pending"] = [letter]
             anchor_widget = anchor_widget or self.choice_rows.get(letter).outer
-            self._record_answer(q, [letter], anchor_widget=anchor_widget)
+            self._begin_confidence_capture(q, [letter], anchor_widget=anchor_widget)
 
     def submit_answer(self):
         if not self.questions:
@@ -1172,7 +1247,75 @@ class QuestionFlowMixin:
         if not pending:
             messagebox.showinfo("No selection", "Pick at least one answer before submitting.")
             return
-        self._record_answer(q, pending, anchor_widget=self.submit_btn)
+        self._begin_confidence_capture(q, pending, anchor_widget=getattr(self, "submit_btn", None))
+
+    def _locate_answer_event(self, answer_event_id: str):
+        event_id = str(answer_event_id or "")
+        session_event = next(
+            (event for event in self.session_answer_history if str(event.get("answer_event_id") or "") == event_id),
+            None,
+        )
+        history_event = next(
+            (event for event in self._progress_history() if str(event.get("answer_event_id") or "") == event_id),
+            None,
+        )
+        runtime_question = next(
+            (item for item in self.questions if str(item.get("answer_event_id") or "") == event_id),
+            None,
+        )
+        return session_event, history_event, runtime_question
+
+    def correct_answer_event_confidence(self, answer_event_id, confidence):
+        event_id = str(answer_event_id or "")
+        if not event_id:
+            raise MissingAnswerEventId("MISSING_ANSWER_EVENT_ID")
+        new_conf = require_observed_confidence(confidence)
+        session_event, history_event, runtime_question = self._locate_answer_event(event_id)
+        if session_event is None and history_event is None:
+            raise MissingAnswerEventId("MISSING_ANSWER_EVENT_ID")
+        is_correct = bool((session_event or history_event or {}).get("correct"))
+        if runtime_question is not None:
+            is_correct = self._question_correct(runtime_question)
+        new_reason = infer_miss_reason_from_confidence(new_conf, is_correct)
+        new_recall = classify_recall_failure_from_evidence(is_correct, new_conf, new_reason)
+        for event in (session_event, history_event):
+            if event is None:
+                continue
+            event["confidence"] = new_conf
+            event["miss_reason"] = new_reason
+            event["recall_failure"] = new_recall
+        if runtime_question is not None:
+            runtime_question["last_confidence"] = new_conf
+            runtime_question["last_miss_reason"] = new_reason
+            runtime_question["last_recall_failure"] = new_recall
+        question_id = str(
+            (session_event or history_event or {}).get("question_id")
+            or (self._question_key(runtime_question) if runtime_question is not None else "")
+        )
+        if question_id:
+            rec = self._progress_questions().get(question_id)
+            if rec is None and runtime_question is not None:
+                rec = self._progress_record(runtime_question, create=True)
+            if rec is not None:
+                question_events = [
+                    event for event in self._progress_history() if str(event.get("question_id") or "") == question_id
+                ]
+                rec["confidence_counts"] = rebuild_confidence_counts(question_events)
+                rec["miss_reason_counts"] = rebuild_miss_reason_counts(question_events)
+                rec["learner_memory"] = rebuild_learner_memory_from_history(question_events)
+                rec["next_review"] = str(rec["learner_memory"].get("next_review_at") or rec.get("next_review") or "")
+                if question_events:
+                    latest = sorted(question_events, key=lambda event: str(event.get("at") or ""))[-1]
+                    rec["last_confidence"] = str(latest.get("confidence") or "")
+                    rec["last_miss_reason"] = str(latest.get("miss_reason") or "")
+                    rec["last_answer_event_id"] = str(latest.get("answer_event_id") or "")
+                self._progress_questions()[question_id] = rec
+        self.invalidate_learning_state(prewarm=True, prewarm_delay_ms=350)
+        self.refresh_session_quests()
+        self.mark_question_list_dirty()
+        self.schedule_progress_save()
+        self.schedule_session_save(delay_ms=125)
+        return event_id
 
     def retag_current_answer_confidence(self, confidence):
         if not self.questions:
@@ -1181,36 +1324,19 @@ class QuestionFlowMixin:
         if not q.get("answered"):
             return
         self.cancel_auto_next_after_answer()
-        rec = self._progress_record(q, create=True)
-        old_conf = str(rec.get("last_confidence") or q.get("last_confidence") or "Sure")
-        new_conf = str(confidence or "Sure")
-        if old_conf != new_conf:
-            conf_counts = dict(rec.get("confidence_counts") or {})
-            if old_conf:
-                conf_counts[old_conf] = max(0, int(conf_counts.get(old_conf, 0)) - 1)
-            conf_counts[new_conf] = int(conf_counts.get(new_conf, 0)) + 1
-            rec["confidence_counts"] = conf_counts
-            old_reason = str(rec.get("last_miss_reason") or "")
-            new_reason = self._infer_miss_reason_from_confidence(new_conf, self._question_correct(q))
-            miss_counts = dict(rec.get("miss_reason_counts") or {})
-            if old_reason:
-                miss_counts[old_reason] = max(0, int(miss_counts.get(old_reason, 0)) - 1)
-            if new_reason:
-                miss_counts[new_reason] = int(miss_counts.get(new_reason, 0)) + 1
-            rec["miss_reason_counts"] = miss_counts
-            rec["last_confidence"] = new_conf
-            rec["last_miss_reason"] = new_reason
-            q["last_confidence"] = new_conf
-            q["last_miss_reason"] = new_reason
-            for event in reversed(self._progress_history()):
-                if history_event_matches_question(event, q):
-                    event["confidence"] = new_conf
-                    event["miss_reason"] = new_reason
-                    break
-            self._progress_questions()[self._question_key(q)] = rec
-            self.mark_question_list_dirty()
-            self.schedule_progress_save()
-            self.schedule_session_save(delay_ms=125)
+        event_id = str(q.get("answer_event_id") or "")
+        if not event_id:
+            matches = [
+                event
+                for event in self.session_answer_history
+                if str(event.get("question_id") or "") == canonical_question_id(q)
+            ]
+            if len(matches) == 1 and str(matches[0].get("answer_event_id") or ""):
+                event_id = str(matches[0]["answer_event_id"])
+                q["answer_event_id"] = event_id
+            else:
+                return
+        self.correct_answer_event_confidence(event_id, confidence)
         if self._go_to_next_unanswered_silent():
             return
         self.render_question()
@@ -1222,14 +1348,12 @@ class QuestionFlowMixin:
         if not q.get("answered") or not self._question_correct(q):
             return
         self.cancel_auto_next_after_answer()
+        event_id = str(q.get("answer_event_id") or "")
+        if event_id:
+            self.correct_answer_event_confidence(event_id, "Sure")
         rec = set_progress_super_confident(self._progress_record(q, create=True))
-        q["last_confidence"] = str(rec.get("last_confidence") or "Sure")
+        q["last_confidence"] = "Sure"
         q["last_miss_reason"] = ""
-        for event in reversed(self._progress_history()):
-            if history_event_matches_question(event, q):
-                event["confidence"] = "Sure"
-                event["miss_reason"] = ""
-                break
         self._progress_questions()[self._question_key(q)] = rec
         self.mark_question_list_dirty()
         self.invalidate_learning_state(prewarm=True, prewarm_delay_ms=350)

@@ -142,6 +142,7 @@ class SessionBuilderMixin:
         )
         session_answer_key = tuple(
             (
+                str(event.get("answer_event_id") or ""),
                 str(event.get("question_id") or ""),
                 int(event.get("question_number") or 0),
                 bool(event.get("correct")),
@@ -350,9 +351,7 @@ class SessionBuilderMixin:
         _decision_latency_rows, decision_latency_map = self._build_decision_latency_rows(
             recent_history, signal_questions
         )
-        _error_boundary_rows, error_boundary_map = self._build_error_boundary_rows(
-            recent_history, signal_questions
-        )
+        _error_boundary_rows, error_boundary_map = self._build_error_boundary_rows(recent_history, signal_questions)
         counterfactual_distractor_rows, counterfactual_pressure_map = self._build_counterfactual_distractor_rows(
             recent_history, signal_questions
         )
@@ -1279,7 +1278,9 @@ class SessionBuilderMixin:
         current_session_questions = list(getattr(self, "questions", []))
         session_context = {
             "seen_question_numbers": [int(q.get("question_number") or 0) for q in current_session_questions],
-            "seen_question_ids": [canonical_question_id(q) for q in current_session_questions if canonical_question_id(q)],
+            "seen_question_ids": [
+                canonical_question_id(q) for q in current_session_questions if canonical_question_id(q)
+            ],
             "seen_concepts": [str(q.get("smart_concept_key") or "") for q in current_session_questions],
             "seen_stem_styles": [str(q.get("stem_style") or "") for q in current_session_questions],
             "seen_objectives": [str(q.get("objective_code") or "") for q in current_session_questions],

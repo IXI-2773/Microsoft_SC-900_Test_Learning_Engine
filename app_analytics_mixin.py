@@ -243,7 +243,8 @@ class AnalyticsMixin:
             "Sure": 1.0,
             "Unsure": 0.8,
             "Guessed": 0.55,
-        }.get(str(confidence or "").strip(), 0.85)
+            "Unknown": 0.0,
+        }.get(str(confidence or "").strip(), 0.0)
 
     def _history_cutoff(self, days):
         return datetime.now() - timedelta(days=days)
