@@ -66,9 +66,10 @@ jobs:
       - name: Commit bounded repair and remove this temporary workflow
         run: |
           git rm .github/workflows/format-cand01r3-black-artifact.yml
+          git add cand01r3_protocol.py cand01r3_runtime.py
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          test "$(git diff --name-only | sort)" = $'.github/workflows/format-cand01r3-black-artifact.yml\ncand01r3_protocol.py\ncand01r3_runtime.py'
-          git add cand01r3_protocol.py cand01r3_runtime.py
+          test "$(git diff --cached --name-only | sort)" = $'.github/workflows/format-cand01r3-black-artifact.yml\ncand01r3_protocol.py\ncand01r3_runtime.py'
+          git diff --cached --check
           git commit -m 'style: format CAND-01R3 runtime and satisfy mypy'
           git push origin HEAD:research/sc900-cand01r3-measurement-001
