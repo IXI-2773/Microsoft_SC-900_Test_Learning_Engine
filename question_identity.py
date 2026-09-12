@@ -56,6 +56,17 @@ def validate_canonical_question_ids(questions: Iterable[Mapping[str, Any]]) -> N
         seen_ids.add(question_id)
 
 
+def validate_available_canonical_question_ids(questions: Iterable[Mapping[str, Any]]) -> None:
+    seen_ids: set[str] = set()
+    for question in questions:
+        question_id = canonical_question_id(question)
+        if not question_id:
+            continue
+        if question_id in seen_ids:
+            raise ProgressIdentityError(DUPLICATE_CANONICAL_QUESTION_ID, question_id)
+        seen_ids.add(question_id)
+
+
 def build_number_to_question_id_index(questions: Iterable[Mapping[str, Any]]) -> dict[str, str]:
     materialized = tuple(questions)
     validate_canonical_question_ids(materialized)
@@ -127,7 +138,7 @@ _registered_bank_questions: tuple[Mapping[str, Any], ...] = ()
 def register_progress_identity_bank(questions: Iterable[Mapping[str, Any]]) -> None:
     global _registered_bank_questions
     materialized = tuple(questions)
-    validate_canonical_question_ids(materialized)
+    validate_available_canonical_question_ids(materialized)
     _registered_bank_questions = materialized
 
 
