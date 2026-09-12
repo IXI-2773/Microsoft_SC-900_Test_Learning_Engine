@@ -46,6 +46,7 @@ class QuestionHistoryEvent(TypedDict):
     day: str
     question_id: str
     question_number: int
+    question_content_fingerprint: NotRequired[str]
     correct: bool
     confidence: str
     miss_reason: str
@@ -81,7 +82,9 @@ class QuestionHistoryEvent(TypedDict):
 
 
 class SessionAnswerEvent(TypedDict):
+    question_id: str
     question_number: int
+    question_content_fingerprint: NotRequired[str]
     domain: str
     correct: bool
     confidence: str

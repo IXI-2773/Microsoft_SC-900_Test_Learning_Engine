@@ -95,8 +95,9 @@ class Backlog1Segment1AdversarialReviewTests(unittest.TestCase):
 
     def test_b1r_06_legacy_history_without_id_can_still_match_by_number(self):
         legacy_event = {"question_number": 27}
-        self.assertTrue(question_identity.history_event_matches_question(legacy_event, question("sc900-a", 27)))
-        self.assertFalse(question_identity.history_event_matches_question(legacy_event, question("sc900-a", 93)))
+        self.assertTrue(question_identity.legacy_history_event_matches_question(legacy_event, question("sc900-a", 27)))
+        self.assertFalse(question_identity.legacy_history_event_matches_question(legacy_event, question("sc900-a", 93)))
+        self.assertFalse(question_identity.history_event_matches_question(legacy_event, question("sc900-a", 27)))
 
     def test_b1r_07_backup_failure_is_reported_without_rewriting_source(self):
         with tempfile.TemporaryDirectory() as directory:

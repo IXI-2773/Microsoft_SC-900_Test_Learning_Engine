@@ -11,6 +11,7 @@ from typing import Any
 from question_identity import (
     ProgressIdentityError,
     migrate_legacy_progress_keys,
+    migrate_progress_content_epoch,
     registered_progress_identity_bank,
 )
 from storage_utils import backup_bad_json_file, load_json_or_backup, safe_write_json
@@ -36,6 +37,9 @@ class RuntimePersistence:
         authority = tuple(questions) if questions is not None else registered_progress_identity_bank()
         try:
             migrated, changed = migrate_legacy_progress_keys(data, authority)
+            epoch_migrated, epoch_changed = migrate_progress_content_epoch(migrated, authority)
+            migrated = epoch_migrated
+            changed = bool(changed or epoch_changed)
         except ProgressIdentityError as exc:
             logging.warning("Progress identity migration rejected: %s", exc)
             return None, None, exc
@@ -78,6 +82,7 @@ class RuntimePersistence:
         authority = tuple(questions) if questions is not None else registered_progress_identity_bank()
         try:
             migrated, _changed = migrate_legacy_progress_keys(data, authority)
+            migrated, _epoch_changed = migrate_progress_content_epoch(migrated, authority)
         except ProgressIdentityError as exc:
             return None, None, exc
 

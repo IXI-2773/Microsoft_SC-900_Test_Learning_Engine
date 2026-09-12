@@ -16,8 +16,12 @@ from app_constants import (
 )
 from cand01r3_runtime import training_source_questions
 from progress_models import ProgressMeta, QuestStat, SessionHistoryEntry, session_history_entry_from_summary
-from question_identity import history_event_matches_question
 from progress_store import is_active_weak, is_review_due, is_suspended, now_iso
+from question_identity import (
+    canonical_question_history_map,
+    canonical_question_id,
+    history_events_for_question,
+)
 from session_models import QuestProgressState
 from ui_theme import AMBER, BG, BLUE, CARD, GREEN, MUTED, RED, TEXT
 from widget_models import RewardHistoryWidgetRegistry
@@ -670,10 +674,9 @@ class GameRewardsMixin:
             return []
         rec = self._progress_record(current_q, create=False) or {}
         qnum = int(current_q.get("question_number") or 0)
-        question_history_map = {
-            qnum: [event for event in self._recent_history(28) if history_event_matches_question(event, current_q)]
-        }
-        question_stability = {qnum: self._question_stability_score(current_q, rec, question_history_map.get(qnum, []))}
+        question_history_map = canonical_question_history_map(self._recent_history(28))
+        history_events = history_events_for_question(question_history_map, current_q)
+        question_stability = {qnum: self._question_stability_score(current_q, rec, history_events)}
         source_rows, source_map = self._build_source_agreement_rows(training_source_questions(self.master_questions))
         _source_trust_rows, source_trust_map = self._build_source_trust_rows(
             training_source_questions(self.master_questions), source_rows
@@ -712,14 +715,16 @@ class GameRewardsMixin:
         if trigger < 6.0:
             return []
         records = self._progress_questions()
-        current_qnums = {item.get("question_number") for item in self.questions}
+        current_ids = self._session_question_ids()
+        current_id = canonical_question_id(current_q)
         current_topic = self._primary_topic_label(current_q)
         current_source = str(current_q.get("source_name") or "")
         current_stem = self._stem_style_for_question(current_q)
         ranked = []
         for candidate in training_source_questions(self.master_questions):
+            candidate_id = canonical_question_id(candidate)
             candidate_qnum = candidate.get("question_number")
-            if candidate_qnum == current_q.get("question_number") or candidate_qnum in current_qnums:
+            if not candidate_id or candidate_id == current_id or candidate_id in current_ids:
                 continue
             candidate_rec = records.get(self._question_key(candidate), {})
             if is_suspended(candidate_rec):
