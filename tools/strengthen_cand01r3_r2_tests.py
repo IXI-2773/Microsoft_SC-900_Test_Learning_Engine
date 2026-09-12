@@ -40,6 +40,28 @@ if old in text:
 elif new not in text:
     raise SystemExit("R2-012 callback anchor not found")
 
+old = '''    def _auto_next_after_answer(self):
+        self.auto_next_calls += 1
+
+
+class Cand01R3MeasurementIntegrityTests(unittest.TestCase):
+'''
+new = '''    def _auto_next_after_answer(self):
+        self.auto_next_calls += 1
+
+    def _record_measurement_probe_answer(self, q, selected):
+        from app_question_flow_mixin import QuestionFlowMixin
+
+        return QuestionFlowMixin._record_measurement_probe_answer(self, q, selected)
+
+
+class Cand01R3MeasurementIntegrityTests(unittest.TestCase):
+'''
+if old in text:
+    text = text.replace(old, new, 1)
+elif new not in text:
+    raise SystemExit("measurement boundary harness anchor not found")
+
 old = '        self.assertEqual("2026-09-15", result.payload["calendar_local_date"])\n'
 new = '        self.assertEqual("2026-09-15", result.payload.get("calendar_local_date"))\n'
 if old in text:
