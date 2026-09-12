@@ -1,12 +1,15 @@
-name: Verify BACKLOG-1 Segment 1
+name: Verify BACKLOG-1 Segment 1 (read-only)
 
 on:
   push:
     branches:
       - implementation/sc900-backlog1-identity-migration
+  pull_request:
+    branches:
+      - implementation/sc900-backlog1-identity-migration
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   verify-backlog1-segment1:
@@ -17,12 +20,24 @@ jobs:
       - name: Checkout exact revision
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.sha }}
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
+      - name: Verify exact clean source tree before tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "GITHUB_SHA=$GITHUB_SHA"
+          echo "CHECKED_OUT_SHA=$(git rev-parse HEAD)"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain=v1)"
+          git diff --exit-code
 
       - name: Install verification tools
         shell: bash
@@ -30,19 +45,6 @@ jobs:
           set -euo pipefail
           python -m pip install --upgrade pip
           python -m pip install black ruff mypy pyinstaller -r requirements-extract.txt
-
-      - name: Apply bounded review repair package when staged
-        shell: bash
-        run: |
-          set -euo pipefail
-          if [ -f tools/backlog1_apply_review_fixes.py ]; then
-            python tools/backlog1_apply_review_fixes.py
-            rm tools/backlog1_apply_review_fixes.py
-          fi
-          if [ -f tools/backlog1_apply_review_test_fixes.py ]; then
-            python tools/backlog1_apply_review_test_fixes.py
-            rm tools/backlog1_apply_review_test_fixes.py
-          fi
 
       - name: Run focused Segment-1 tests
         shell: bash
@@ -64,20 +66,19 @@ jobs:
           set -euo pipefail
           python -m ruff check .
           python -m black --check --exclude 'SC-900-FREE-STUDY-GUIDE\.md|SC-900-Free-Study-Guide\.md|SC-900 Study Guide\.md' .
-          python -m mypy --ignore-missing-imports --follow-imports=skip --check-untyped-defs --exclude '^tools/scrape_markdown_bank\.py$' --exclude '^tools/recover_free_study_guide\.py$' --exclude '^tools/build_free_study_guide\.py$' --exclude '^tests/' --exclude '^implementation/' --exclude '^reference/' --exclude '^public_sources/' --exclude '^user_data/' --exclude '^build/' --exclude '^dist/' $(git ls-files '*.py')
+          python -m mypy --ignore-missing-imports --follow-imports=skip --check-untyped-defs --exclude '^tools/scrape_markdown_bank\.py$' --exclude '^tools/recover_free_study_guide\.py$' --exclude '^tools/build_free_study_guide\.py$' --exclude '^tools/build_reviewed_bank\.py$' --exclude '^tests/' --exclude '^implementation/' --exclude '^reference/' --exclude '^public_sources/' --exclude '^user_data/' --exclude '^build/' --exclude '^dist/' $(git ls-files '*.py')
 
-      - name: Verify frozen scope and commit repaired tree
+      - name: Verify frozen CAND scope untouched
         shell: bash
-        env:
-          TARGET_BRANCH: implementation/sc900-backlog1-identity-migration
         run: |
           set -euo pipefail
-          git diff -- cand01r3_partition.py cand01r3_runtime.py content/sc900/phase3 || true
           test -z "$(git status --porcelain -- cand01r3_partition.py cand01r3_runtime.py content/sc900/phase3)"
-          if [ -n "$(git status --porcelain)" ]; then
-            git config user.name 'BACKLOG-1 verification bot'
-            git config user.email 'actions@users.noreply.github.com'
-            git add -A
-            git commit -m 'fix: close segment-1 adversarial review gaps'
-            git push origin "HEAD:${TARGET_BRANCH}"
-          fi
+
+      - name: Verify exact clean source tree after all checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "FINAL_CHECKED_OUT_SHA=$(git rev-parse HEAD)"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git diff --exit-code
+          test -z "$(git status --porcelain=v1)"

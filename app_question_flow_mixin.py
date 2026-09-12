@@ -21,6 +21,7 @@ from cand01r3_runtime import (
     revalidate_training_question,
     training_source_questions,
 )
+from question_identity import history_event_matches_question, question_for_history_event
 from progress_store import (
     is_active_weak,
     is_review_due,
@@ -605,10 +606,12 @@ class QuestionFlowMixin:
         concept_qnums = {int(candidate.get("question_number") or 0) for candidate in concept_questions}
         history_map: dict[int, list[dict[str, Any]]] = {}
         for event in self._progress_history():
-            qnum = int(event.get("question_number") or 0)
-            if qnum not in concept_qnums:
+            matched = question_for_history_event(event, concept_questions)
+            if matched is None:
                 continue
-            history_map.setdefault(qnum, []).append(event)
+            qnum = int(matched.get("question_number") or 0)
+            if qnum in concept_qnums:
+                history_map.setdefault(qnum, []).append(event)
         _rows, memory_map = self._build_concept_memory_state_rows(history_map, concept_questions)
         return memory_map.get(f"{kind}::{unit}", {"state": "new", "evidence_count": 0, "next_ramp": "recognition"})
 
@@ -1226,7 +1229,7 @@ class QuestionFlowMixin:
             q["last_confidence"] = new_conf
             q["last_miss_reason"] = new_reason
             for event in reversed(self._progress_history()):
-                if int(event.get("question_number") or 0) == int(q.get("question_number") or 0):
+                if history_event_matches_question(event, q):
                     event["confidence"] = new_conf
                     event["miss_reason"] = new_reason
                     break
@@ -1251,7 +1254,7 @@ class QuestionFlowMixin:
         q["last_confidence"] = str(rec.get("last_confidence") or "Sure")
         q["last_miss_reason"] = ""
         for event in reversed(self._progress_history()):
-            if int(event.get("question_number") or 0) == int(q.get("question_number") or 0):
+            if history_event_matches_question(event, q):
                 event["confidence"] = "Sure"
                 event["miss_reason"] = ""
                 break

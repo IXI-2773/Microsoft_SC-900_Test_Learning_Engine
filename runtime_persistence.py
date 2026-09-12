@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import logging
 import shutil
 from dataclasses import dataclass
@@ -42,11 +43,15 @@ class RuntimePersistence:
         if not changed:
             return migrated, None, None
 
-        migration_backup = self.backup_progress_file(target, suffix="before_identity_migration_v1")
-        if migration_backup is None:
-            exc = OSError("Could not create pre-migration progress backup.")
-            logging.warning("Progress identity migration aborted: %s", exc)
+        try:
+            migration_backup = self.backup_progress_file(target, suffix="before_identity_migration_v1")
+        except OSError as exc:
+            logging.warning("Progress identity migration backup failed: %s", exc)
             return None, None, exc
+        if migration_backup is None:
+            backup_error = OSError("Could not create pre-migration progress backup.")
+            logging.warning("Progress identity migration aborted: %s", backup_error)
+            return None, None, backup_error
 
         try:
             self.write_json(target, migrated)
@@ -56,6 +61,39 @@ class RuntimePersistence:
 
         logging.info("Migrated progress identity to canonical question IDs: %s", target)
         return migrated, migration_backup, None
+
+    def restore_progress_from_source(self, source_path: Path, destination_path: Path, questions=None):
+        source = Path(source_path)
+        target = Path(destination_path)
+        try:
+            data = json.loads(source.read_text(encoding="utf-8"))
+        except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+            return None, None, exc
+        if not isinstance(data, dict):
+            return None, None, ValueError("Restore source must be a progress JSON object.")
+        if "history" in data and not isinstance(data.get("history"), list):
+            return None, None, ValueError("Progress.history must be a list.")
+        if "meta" in data and not isinstance(data.get("meta"), dict):
+            return None, None, ValueError("Progress.meta must be a mapping.")
+        authority = tuple(questions) if questions is not None else registered_progress_identity_bank()
+        try:
+            migrated, _changed = migrate_legacy_progress_keys(data, authority)
+        except ProgressIdentityError as exc:
+            return None, None, exc
+
+        backup = None
+        if target.exists():
+            try:
+                backup = self.backup_progress_file(target, suffix="before_restore")
+            except OSError as exc:
+                return None, None, exc
+            if backup is None:
+                return None, None, OSError("Could not create pre-restore progress backup.")
+        try:
+            self.write_json(target, migrated)
+        except OSError as exc:
+            return None, backup, exc
+        return migrated, backup, None
 
     def write_json(self, path: Path, payload: Any, *, indent: int = 2) -> None:
         safe_write_json(path, payload, indent=indent)

@@ -1,12 +1,15 @@
-name: Verify BACKLOG-1 Segment 2
+name: Verify BACKLOG-1 Segment 2 (read-only)
 
 on:
   push:
     branches:
       - implementation/sc900-backlog1-session-identity
+  pull_request:
+    branches:
+      - implementation/sc900-backlog1-session-identity
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   verify-backlog1-segment2:
@@ -17,12 +20,24 @@ jobs:
       - name: Checkout exact revision
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.sha }}
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
+      - name: Verify exact clean source tree before tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "GITHUB_SHA=$GITHUB_SHA"
+          echo "CHECKED_OUT_SHA=$(git rev-parse HEAD)"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain=v1)"
+          git diff --exit-code
 
       - name: Install verification tools
         shell: bash
@@ -30,19 +45,6 @@ jobs:
           set -euo pipefail
           python -m pip install --upgrade pip
           python -m pip install black ruff mypy -r requirements-extract.txt
-
-      - name: Apply staged Segment-2 repair if present
-        shell: bash
-        run: |
-          set -euo pipefail
-          if [ -f tools/backlog1_segment2_apply_core.py ]; then
-            python tools/backlog1_segment2_apply_core.py
-            rm tools/backlog1_segment2_apply_core.py
-          fi
-          if [ -f tools/backlog1_segment2_apply_integration.py ]; then
-            python tools/backlog1_segment2_apply_integration.py
-            rm tools/backlog1_segment2_apply_integration.py
-          fi
 
       - name: Run focused Segment-2 tests
         shell: bash
@@ -52,98 +54,39 @@ jobs:
             tests.test_backlog1_segment2_session_identity \
             tests.test_backlog1_segment2_session_app_integration
 
-      - name: Commit focused-green Segment-2 repair if staged
+      - name: Run focused Segment-1 identity regressions
         shell: bash
-        env:
-          TARGET_BRANCH: implementation/sc900-backlog1-session-identity
         run: |
           set -euo pipefail
-          if [ -n "$(git status --porcelain -- session_models.py session_store.py app_session_persistence_mixin.py tools/)" ]; then
-            git config user.name 'BACKLOG-1 Segment-2 verification bot'
-            git config user.email 'actions@users.noreply.github.com'
-            git add -A -- session_models.py session_store.py app_session_persistence_mixin.py tools/
-            git commit -m 'feat: bind ordinary session restore to canonical identity'
-            git push origin "HEAD:${TARGET_BRANCH}"
-          fi
-
-      - name: Record Segment-1 identity regression status
-        id: segment1
-        shell: bash
-        run: |
-          set +e
           python -m unittest -v \
             tests.test_backlog1_progress_identity_migration \
             tests.test_backlog1_segment1_adversarial_review
-          code=$?
-          set -e
-          echo "exit_code=${code}" >> "$GITHUB_OUTPUT"
-          exit 0
 
-      - name: Record full regression suite status
-        id: fullsuite
+      - name: Run full regression suite
         shell: bash
         run: |
-          set +e
+          set -euo pipefail
           python -m unittest discover -s tests -v
-          code=$?
-          set -e
-          echo "exit_code=${code}" >> "$GITHUB_OUTPUT"
-          exit 0
 
-      - name: Record ruff status
-        id: ruff
+      - name: Run quality gates
         shell: bash
         run: |
-          set +e
+          set -euo pipefail
           python -m ruff check .
-          code=$?
-          set -e
-          echo "exit_code=${code}" >> "$GITHUB_OUTPUT"
-          exit 0
-
-      - name: Record black status
-        id: black
-        shell: bash
-        run: |
-          set +e
           python -m black --check --exclude 'SC-900-FREE-STUDY-GUIDE\.md|SC-900-Free-Study-Guide\.md|SC-900 Study Guide\.md' .
-          code=$?
-          set -e
-          echo "exit_code=${code}" >> "$GITHUB_OUTPUT"
-          exit 0
-
-      - name: Record mypy status
-        id: mypy
-        shell: bash
-        run: |
-          set +e
           python -m mypy --ignore-missing-imports --follow-imports=skip --check-untyped-defs --exclude '^tools/scrape_markdown_bank\.py$' --exclude '^tools/recover_free_study_guide\.py$' --exclude '^tools/build_free_study_guide\.py$' --exclude '^tools/build_reviewed_bank\.py$' --exclude '^tests/' --exclude '^implementation/' --exclude '^reference/' --exclude '^public_sources/' --exclude '^user_data/' --exclude '^build/' --exclude '^dist/' $(git ls-files '*.py')
-          code=$?
-          set -e
-          echo "exit_code=${code}" >> "$GITHUB_OUTPUT"
-          exit 0
 
       - name: Verify frozen CAND scope untouched
         shell: bash
         run: |
           set -euo pipefail
-          git diff b19d5215dc1d79b02f4e805a510dcd9d901db259 -- cand01r3_partition.py cand01r3_runtime.py content/sc900/phase3
           test -z "$(git diff --name-only b19d5215dc1d79b02f4e805a510dcd9d901db259 -- cand01r3_partition.py cand01r3_runtime.py content/sc900/phase3)"
 
-      - name: Enforce recorded verification gates
+      - name: Verify exact clean source tree after all checks
         shell: bash
-        env:
-          SEGMENT1_EXIT: ${{ steps.segment1.outputs.exit_code }}
-          FULLSUITE_EXIT: ${{ steps.fullsuite.outputs.exit_code }}
-          RUFF_EXIT: ${{ steps.ruff.outputs.exit_code }}
-          BLACK_EXIT: ${{ steps.black.outputs.exit_code }}
-          MYPY_EXIT: ${{ steps.mypy.outputs.exit_code }}
         run: |
           set -euo pipefail
-          printf 'segment1=%s fullsuite=%s ruff=%s black=%s mypy=%s\n' \
-            "$SEGMENT1_EXIT" "$FULLSUITE_EXIT" "$RUFF_EXIT" "$BLACK_EXIT" "$MYPY_EXIT"
-          test "$SEGMENT1_EXIT" = "0"
-          test "$FULLSUITE_EXIT" = "0"
-          test "$RUFF_EXIT" = "0"
-          test "$BLACK_EXIT" = "0"
-          test "$MYPY_EXIT" = "0"
+          echo "FINAL_CHECKED_OUT_SHA=$(git rev-parse HEAD)"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git diff --exit-code
+          test -z "$(git status --porcelain=v1)"

@@ -67,7 +67,7 @@ class SessionPersistenceMixin:
     def _questions_for_canonical_ids(self, question_ids):
         source = self._session_bank_questions()
         source_ids = ordered_question_ids(source)
-        lookup = dict(zip(source_ids, source))
+        lookup = dict(zip(source_ids, source, strict=True))
         resolved = []
         for question_id in question_ids:
             canonical_id = str(question_id or '').strip()

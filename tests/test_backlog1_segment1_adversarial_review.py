@@ -105,7 +105,7 @@ class Backlog1Segment1AdversarialReviewTests(unittest.TestCase):
             write_progress(path, legacy_payload({"27": {"attempts": 1}}))
             before = path.read_bytes()
             store = persistence(root)
-            with mock.patch.object(store, "backup_progress_file", side_effect=OSError("disk full")):
+            with mock.patch.object(RuntimePersistence, "backup_progress_file", side_effect=OSError("disk full")):
                 loaded, backup, err = store.load_progress_with_identity_migration(path, [question("sc900-a", 27)])
             self.assertIsNone(loaded)
             self.assertIsNone(backup)

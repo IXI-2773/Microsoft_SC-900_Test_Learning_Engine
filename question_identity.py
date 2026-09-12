@@ -13,6 +13,8 @@ LEGACY_PROGRESS_AMBIGUOUS = "LEGACY_PROGRESS_AMBIGUOUS"
 LEGACY_PROGRESS_UNMAPPED = "LEGACY_PROGRESS_UNMAPPED"
 LEGACY_PROGRESS_COLLISION = "LEGACY_PROGRESS_COLLISION"
 PROGRESS_IDENTITY_SCHEMA_AMBIGUOUS = "PROGRESS_IDENTITY_SCHEMA_AMBIGUOUS"
+PROGRESS_IDENTITY_SCHEMA_UNSUPPORTED = "PROGRESS_IDENTITY_SCHEMA_UNSUPPORTED"
+INVALID_PROGRESS_RECORD = "INVALID_PROGRESS_RECORD"
 
 
 class ProgressIdentityError(ValueError):
@@ -44,8 +46,6 @@ def require_canonical_question_id(question: Mapping[str, Any] | str | None) -> s
     value = canonical_question_id(question)
     if value:
         return value
-    if isinstance(question, Mapping) and set(question) == {"question_number"}:
-        return resolve_registered_question_id_from_number(question.get("question_number"))
     raise ProgressIdentityError(MISSING_CANONICAL_QUESTION_ID)
 
 
@@ -91,10 +91,17 @@ def build_number_to_question_id_index(questions: Iterable[Mapping[str, Any]]) ->
 
 
 def classify_progress_identity_schema(payload: Mapping[str, Any]) -> str:
+    version_present = "progress_identity_version" in payload
+    kind_present = "question_identity" in payload
     version = payload.get("progress_identity_version")
     kind = str(payload.get("question_identity") or "").strip()
     if version == PROGRESS_IDENTITY_VERSION and kind == PROGRESS_IDENTITY_KIND:
         return "canonical"
+    if version_present or kind_present:
+        raise ProgressIdentityError(
+            PROGRESS_IDENTITY_SCHEMA_UNSUPPORTED,
+            f"version={version!r}, kind={kind!r}",
+        )
     questions = payload.get("questions")
     if not isinstance(questions, Mapping):
         raise ProgressIdentityError(PROGRESS_IDENTITY_SCHEMA_AMBIGUOUS, "questions must be a mapping")
@@ -104,15 +111,25 @@ def classify_progress_identity_schema(payload: Mapping[str, Any]) -> str:
     raise ProgressIdentityError(PROGRESS_IDENTITY_SCHEMA_AMBIGUOUS, "unversioned non-numeric progress keys")
 
 
+def _validate_progress_records(records: Mapping[Any, Any]) -> None:
+    for key, record in records.items():
+        if not isinstance(record, Mapping):
+            raise ProgressIdentityError(INVALID_PROGRESS_RECORD, str(key))
+
+
 def migrate_legacy_progress_keys(
     payload: Mapping[str, Any],
     questions: Iterable[Mapping[str, Any]],
 ) -> tuple[dict[str, Any], bool]:
     schema = classify_progress_identity_schema(payload)
+    payload_questions = payload.get("questions")
+    if not isinstance(payload_questions, Mapping):
+        raise ProgressIdentityError(PROGRESS_IDENTITY_SCHEMA_AMBIGUOUS, "questions must be a mapping")
+    _validate_progress_records(payload_questions)
     if schema == "canonical":
         return copy.deepcopy(dict(payload)), False
 
-    legacy_questions = payload.get("questions")
+    legacy_questions = payload_questions
     assert isinstance(legacy_questions, Mapping)
     if not legacy_questions:
         migrated = copy.deepcopy(dict(payload))
@@ -140,6 +157,38 @@ def migrate_legacy_progress_keys(
     migrated["progress_identity_version"] = PROGRESS_IDENTITY_VERSION
     migrated["question_identity"] = PROGRESS_IDENTITY_KIND
     return migrated, True
+
+
+def history_event_question_id(event: Mapping[str, Any] | None) -> str:
+    if not isinstance(event, Mapping):
+        return ""
+    for key in ("question_id", "canonical_question_id"):
+        value = str(event.get(key) or "").strip()
+        if value:
+            return value
+    return ""
+
+
+def history_event_matches_question(
+    event: Mapping[str, Any] | None, question: Mapping[str, Any] | None
+) -> bool:
+    if not isinstance(event, Mapping) or not isinstance(question, Mapping):
+        return False
+    event_id = history_event_question_id(event)
+    question_id = canonical_question_id(question)
+    if event_id:
+        return bool(question_id) and event_id == question_id
+    try:
+        return int(event.get("question_number")) == int(question.get("question_number"))
+    except (TypeError, ValueError):
+        return False
+
+
+def question_for_history_event(
+    event: Mapping[str, Any] | None, questions: Iterable[Mapping[str, Any]]
+) -> Mapping[str, Any] | None:
+    matches = [question for question in questions if history_event_matches_question(event, question)]
+    return matches[0] if len(matches) == 1 else None
 
 
 _registered_bank_questions: tuple[Mapping[str, Any], ...] = ()

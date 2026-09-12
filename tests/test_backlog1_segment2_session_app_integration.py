@@ -1,10 +1,13 @@
 import copy
+import json
 import tempfile
 import unittest
 from pathlib import Path
 
 from app_constants import MODE_PRACTICE
 from app_session_persistence_mixin import SessionPersistenceMixin
+from question_identity import canonical_question_id
+from runtime_persistence import RuntimePersistence
 from session_identity import bank_content_fingerprint, ordered_question_ids
 from session_store import build_session_snapshot
 
@@ -64,8 +67,44 @@ def blank_answer():
     }
 
 
+class LabelStub:
+    def configure(self, **kwargs):
+        self.kwargs = kwargs
+
+
 class FakeSessionApp(SessionPersistenceMixin):
-    pass
+    def _clone_questions(self, source):
+        return copy.deepcopy(list(source or []))
+
+    def _show_bad_json_warning(self, *args, **kwargs):
+        self.warnings.append(args)
+
+    def _progress_record(self, q, create=False):
+        return None
+
+    def _progress_questions(self):
+        return {}
+
+    def _question_key(self, q):
+        return canonical_question_id(q)
+
+    def _question_correct(self, q):
+        return list(q.get("correct") or [])
+
+    def save_progress(self):
+        return None
+
+    def refresh_session_quests(self):
+        return None
+
+    def refresh_reward_badges(self):
+        return None
+
+    def set_flag_by_question_number(self, *args, **kwargs):
+        return None
+
+    def set_suspended_by_question_number(self, *args, **kwargs):
+        return None
 
 
 class Segment2SessionAppIntegrationTests(unittest.TestCase):
@@ -82,10 +121,37 @@ class Segment2SessionAppIntegrationTests(unittest.TestCase):
         app.user_data_dir = self.root
         app.bank_path = self.bank_path
         app.active_session_mode = MODE_PRACTICE
+        app.active_source_label = "Full bank"
         app.questions = copy.deepcopy(questions or self.questions)
         app.master_questions = copy.deepcopy(questions or self.questions)
         app.session_restore_question_numbers = [q["question_number"] for q in app.questions]
         app.session_restore_question_ids = ordered_question_ids(app.questions)
+        app.persistence = RuntimePersistence(
+            checkpoint_dir=self.root / "checkpoints",
+            backup_dir=self.root / "backups",
+        )
+        app.persistence.checkpoint_dir.mkdir(parents=True, exist_ok=True)
+        app.persistence.backup_dir.mkdir(parents=True, exist_ok=True)
+        app.session_label = LabelStub()
+        app.warnings = []
+        app.index = 0
+        app.elapsed_base = 0
+        app.clock_started_at = 0
+        app.checkpoints_saved = set()
+        app.exam_reveal = True
+        app.session_rewards = []
+        app.unlocked_rewards = set()
+        app.session_answer_history = []
+        app.current_quests = []
+        app.quest_completion_keys = set()
+        app.session_boss_markers = set()
+        app.session_stealth_markers = set()
+        app.session_xp_gained = 0
+        app.current_builder_context_data = {}
+        app.session_base_question_count = len(app.questions)
+        app.session_question_limit = len(app.questions)
+        app.last_session_snapshot = None
+        app.session_path = self.root / "session.json"
         return app
 
     def snapshot_for(self, questions=None):
@@ -160,6 +226,63 @@ class Segment2SessionAppIntegrationTests(unittest.TestCase):
             questions=changed.questions,
         )
         self.assertNotEqual(original_path.name, changed_path.name)
+
+    def test_restore_applies_answers_by_canonical_id_after_reorder(self):
+        snapshot = self.snapshot_for(self.questions)
+        by_id = {row["question_id"]: row for row in snapshot["answers"]}
+        by_id["Q-A"]["selected"] = ["A"]
+        by_id["Q-A"]["pending"] = ["A"]
+        by_id["Q-A"]["answered"] = True
+        snapshot["answers"] = [copy.deepcopy(by_id["Q-B"]), copy.deepcopy(by_id["Q-A"])]
+        reordered = [copy.deepcopy(self.questions[1]), copy.deepcopy(self.questions[0])]
+        app = self.make_app(reordered)
+        app.session_path.write_text(json.dumps(snapshot), encoding="utf-8")
+        app.load_session_if_present(skip_identity_check=True)
+        restored = {canonical_question_id(question): question for question in app.questions}
+        self.assertEqual(["A"], restored["Q-A"]["selected"])
+        self.assertTrue(restored["Q-A"]["answered"])
+        self.assertEqual([], restored["Q-B"]["selected"])
+        self.assertFalse(restored["Q-B"]["answered"])
+
+    def test_legacy_ordinary_session_does_not_resume(self):
+        app = self.make_app(self.questions)
+        before = [copy.deepcopy(question) for question in app.questions]
+        legacy = {
+            "schema_version": 3,
+            "mode": MODE_PRACTICE,
+            "question_numbers": [1, 2],
+            "restore_question_numbers": [1, 2],
+            "answers": [blank_answer(), blank_answer()],
+        }
+        legacy["answers"][0]["selected"] = ["A"]
+        legacy["answers"][0]["answered"] = True
+        app.session_path.write_text(json.dumps(legacy), encoding="utf-8")
+        app.load_session_if_present()
+        self.assertEqual(before[0]["id"], app.questions[0]["id"])
+        self.assertEqual([], app.questions[0].get("selected", []))
+        self.assertFalse(bool(app.questions[0].get("answered")))
+        self.assertEqual(0, app.index)
+
+    def test_unverifiable_legacy_session_is_quarantined_when_forced_to_migrate(self):
+        app = self.make_app(self.questions)
+        legacy = {
+            "schema_version": 3,
+            "mode": MODE_PRACTICE,
+            "question_numbers": [1, 2],
+            "restore_question_numbers": [1, 2],
+            "answers": [blank_answer(), blank_answer()],
+        }
+        app.session_path.write_text(json.dumps(legacy), encoding="utf-8")
+        app.load_session_if_present(skip_identity_check=True)
+        self.assertFalse(app.session_path.exists())
+        self.assertTrue(app.warnings)
+
+    def test_duplicate_current_canonical_ids_fail_closed(self):
+        app = self.make_app(self.questions)
+        app.master_questions = [copy.deepcopy(self.questions[0]), copy.deepcopy(self.questions[0])]
+        app.questions = copy.deepcopy(app.master_questions)
+        with self.assertRaises(ValueError):
+            app.current_bank_fingerprint()
 
 
 if __name__ == "__main__":
