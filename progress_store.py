@@ -2,6 +2,13 @@ from collections.abc import Mapping
 from datetime import date, datetime, timedelta
 from typing import Any, TypedDict, cast
 
+from question_identity import (
+    PROGRESS_IDENTITY_KIND,
+    PROGRESS_IDENTITY_VERSION,
+    migrate_legacy_progress_keys as _migrate_legacy_progress_keys,
+    require_canonical_question_id,
+)
+
 PROGRESS_VERSION = 3
 REVIEW_INTERVAL_DAYS = [1, 3, 7, 14, 30]
 LEARNER_MEMORY_DEFAULT = {
@@ -64,6 +71,8 @@ def blank_progress(bank_name="", app_version=""):
         "bank_file": bank_name,
         "created_at": stamp,
         "updated_at": stamp,
+        "progress_identity_version": PROGRESS_IDENTITY_VERSION,
+        "question_identity": PROGRESS_IDENTITY_KIND,
         "questions": {},
         "history": [],
     }
@@ -499,12 +508,12 @@ def is_review_due(record: Mapping[str, Any] | None, on_date=None) -> bool:
 def aggregate_concept_memory(records: Mapping[str, Mapping[str, Any]], questions) -> dict[str, dict[str, Any]]:
     aggregates: dict[str, dict[str, Any]] = {}
     for question in questions:
-        qnum = str(question.get("question_number"))
+        progress_key = question_key(question)
         objective = str(question.get("objective_code") or "").strip()
         topics = [str(topic).strip() for topic in question.get("topics", []) if str(topic).strip()]
         domain = str(question.get("domain") or "Unsorted").strip()
         key = f"Objective::{objective}" if objective else f"Topic::{topics[0]}" if topics else f"Domain::{domain}"
-        rec = normalize_progress_record(records.get(qnum, {}))
+        rec = normalize_progress_record(records.get(progress_key, {}))
         memory = normalize_learner_memory(rec.get("learner_memory"))
         row = aggregates.setdefault(
             key,
@@ -536,7 +545,12 @@ def aggregate_concept_memory(records: Mapping[str, Mapping[str, Any]], questions
 
 
 def question_key(q):
-    return str(q.get("question_number"))
+    return require_canonical_question_id(q)
+
+
+def migrate_legacy_progress_keys(progress_payload, questions):
+    migrated, _changed = _migrate_legacy_progress_keys(progress_payload, questions)
+    return migrated
 
 
 def select_due_review_questions(questions, records: Mapping[str, Mapping[str, Any]], on_date=None):
