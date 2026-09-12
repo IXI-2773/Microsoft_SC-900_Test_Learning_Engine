@@ -13,6 +13,7 @@ from question_identity import (
     PROGRESS_IDENTITY_VERSION,
     ProgressIdentityError,
     canonical_question_id,
+    register_progress_identity_bank,
 )
 from runtime_persistence import RuntimePersistence
 
@@ -139,9 +140,15 @@ class Backlog1ProgressIdentityMigrationTests(unittest.TestCase):
     def test_b1_12_new_progress_writes_use_canonical_question_id(self):
         self.assertEqual(question_key(question("sc900-a", 27)), "sc900-a")
 
-    def test_b1_13_missing_canonical_id_never_falls_back_to_question_number(self):
+    def test_b1_13_real_question_missing_canonical_id_never_falls_back_to_number(self):
+        missing_id_question = {
+            "question_number": 27,
+            "prompt": "missing identity",
+            "choices": {"A": "a"},
+            "correct": ["A"],
+        }
         with self.assertRaisesRegex(ValueError, "MISSING_CANONICAL_QUESTION_ID"):
-            question_key({"question_number": 27})
+            question_key(missing_id_question)
 
     def test_b1_14_renumbering_does_not_orphan_canonical_progress(self):
         record = {"attempts": 9}
@@ -209,6 +216,12 @@ class Backlog1ProgressIdentityMigrationTests(unittest.TestCase):
         payload = legacy_payload({"unknown-id": {"attempts": 1}})
         with self.assertRaisesRegex(ProgressIdentityError, "PROGRESS_IDENTITY_SCHEMA_AMBIGUOUS"):
             progress_store.migrate_legacy_progress_keys(payload, [question("sc900-a", 27)])
+
+    def test_b1_21_identifier_only_ui_reference_resolves_through_loaded_bank(self):
+        register_progress_identity_bank([question("sc900-a", 27)])
+        self.assertEqual(question_key({"question_number": 27}), "sc900-a")
+        with self.assertRaisesRegex(ValueError, "MISSING_CANONICAL_QUESTION_ID"):
+            question_key({"question_number": 999})
 
 
 if __name__ == "__main__":
