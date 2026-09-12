@@ -7,6 +7,7 @@ from session_identity import (
     canonical_session_signature,
     ordered_question_ids,
 )
+import session_store
 from session_store import build_session_snapshot, migrate_session_snapshot, saved_session_matches_current
 
 
@@ -263,6 +264,41 @@ class Segment2SessionIdentityTests(unittest.TestCase):
                 restore_question_ids=["Q-A", "Q-B"],
                 available_question_ids=["Q-A", "Q-B"],
             )
+
+    def test_cand_v3_question_ids_metadata_remains_legacy_when_explicitly_allowed(self):
+        legacy_cand = {
+            "schema_version": 3,
+            "mode": MODE_PRACTICE,
+            "question_numbers": [1, 2],
+            "restore_question_numbers": [1, 2],
+            "question_ids": ["Q-A", "Q-B"],
+            "answers": [_blank_answer(), _blank_answer()],
+        }
+        migrated = migrate_session_snapshot(
+            legacy_cand,
+            MODE_PRACTICE,
+            [1, 2],
+            available_question_numbers=[1, 2],
+            allow_legacy=True,
+        )
+        self.assertEqual(3, migrated["schema_version"])
+        self.assertTrue(
+            saved_session_matches_current(
+                legacy_cand,
+                MODE_PRACTICE,
+                [1, 2],
+                [1, 2],
+                allow_legacy=True,
+            )
+        )
+
+    def test_answer_rows_are_bound_by_question_id_not_position(self):
+        snapshot = self._snapshot()
+        reversed_rows = [copy.deepcopy(snapshot["answers"][1]), copy.deepcopy(snapshot["answers"][0])]
+        by_id = session_store.answer_states_by_question_id(reversed_rows)
+        self.assertEqual([], by_id["Q-B"]["selected"])
+        self.assertEqual(["A"], by_id["Q-A"]["selected"])
+        self.assertTrue(by_id["Q-A"]["answered"])
 
 
 if __name__ == "__main__":
