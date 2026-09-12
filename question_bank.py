@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import cast
 
 from bank_models import BankQuestion, QuestionBankData, as_bank_question
+from question_identity import register_progress_identity_bank
 
 EMBEDDED_QUESTION_RE = re.compile(r"\bQUESTION\s+\d+\b")
 INLINE_WHITESPACE_RE = re.compile(r"[ \t]+")
@@ -174,6 +175,7 @@ def load_bank(path: Path) -> QuestionBankData:
 
         typed_questions.append(q)
     data["questions"] = typed_questions
+    register_progress_identity_bank(typed_questions)
     return cast(QuestionBankData, data)
 
 
