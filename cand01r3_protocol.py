@@ -850,7 +850,11 @@ def _restore_ledger_from_events(ledger: MeasurementLedger, events: Sequence[Mapp
                 "evaluation_identity": identity,
             }
         elif status == STATUS_UNOBSERVED:
-            if question_id in ledger._observations or ledger.is_contaminated(question_id) or question_id in ledger._unobserved:
+            if (
+                question_id in ledger._observations
+                or ledger.is_contaminated(question_id)
+                or question_id in ledger._unobserved
+            ):
                 continue
             ledger._unobserved[question_id] = {
                 "status": STATUS_UNOBSERVED,
@@ -871,8 +875,9 @@ def _restore_session_from_events(events: Sequence[Mapping[str, Any]]) -> None:
         event_day1 = str(event.get("day1_local_date") or "")
         if event_day1 and not day1_local_date:
             day1_local_date = event_day1
-        if event.get("calendar_utc_offset_minutes") is not None and calendar_utc_offset_minutes is None:
-            calendar_utc_offset_minutes = int(event.get("calendar_utc_offset_minutes"))
+        event_utc_offset = event.get("calendar_utc_offset_minutes")
+        if event_utc_offset is not None and calendar_utc_offset_minutes is None:
+            calendar_utc_offset_minutes = int(event_utc_offset)
         event_local_date = str(event.get("calendar_local_date") or "")
         if event_local_date and (not last_local_date or event_local_date > last_local_date):
             last_local_date = event_local_date
@@ -1907,9 +1912,7 @@ def begin_todays_probe_measurement() -> dict[str, Any]:
 
 
 def _frozen_compiled_answer_key(question_id: str) -> tuple[str, ...]:
-    actual_sha256 = hashlib.sha256(
-        COMPILED_PATH.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
-    ).hexdigest()
+    actual_sha256 = hashlib.sha256(COMPILED_PATH.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")).hexdigest()
     if actual_sha256 != EXPECTED_COMPILED_SHA256:
         raise Cand01R3AuthorityError("COMPILED_BANK_HASH_MISMATCH")
     raw = json.loads(COMPILED_PATH.read_text(encoding="utf-8"))

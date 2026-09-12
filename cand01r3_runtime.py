@@ -291,7 +291,9 @@ def is_measurement_probe_question(question: Mapping[str, Any] | str) -> bool:
 
 
 def _redacted_probe_row(row: Mapping[str, Any], question_id: str) -> dict[str, Any]:
-    status = str(row.get("measurement_status") or row.get("status") or ("RECORDED" if row.get("answered") else "PENDING"))
+    status = str(
+        row.get("measurement_status") or row.get("status") or ("RECORDED" if row.get("answered") else "PENDING")
+    )
     return {
         "question_id": question_id,
         "scheduled_day": row.get("scheduled_day"),
@@ -343,7 +345,9 @@ def sanitize_measurement_answer_state(question: Mapping[str, Any], state: Mappin
         "suspended": bool(payload.get("suspended")),
         "last_confidence": "",
         "last_miss_reason": "",
-        "measurement_status": str(question.get("measurement_status") or ("RECORDED" if payload.get("answered") else "PENDING")),
+        "measurement_status": str(
+            question.get("measurement_status") or ("RECORDED" if payload.get("answered") else "PENDING")
+        ),
         "redacted": True,
     }
 
