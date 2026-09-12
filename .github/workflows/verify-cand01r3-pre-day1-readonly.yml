@@ -118,12 +118,12 @@ jobs:
           protocol = build_protocol()
           print(f"PROTOCOL_VERSION={protocol['protocol_version']}")
           print(f"PROTOCOL_SHA256={protocol['protocol_sha256']}")
-          print(f"TRAIN_QUESTIONS={protocol['train_count']}")
-          print(f"PROBE_QUESTIONS={protocol['probe_count']}")
+          print(f"TRAIN_QUESTIONS={protocol['train_question_count']}")
+          print(f"PROBE_QUESTIONS={protocol['probe_question_count']}")
           assert protocol["protocol_version"] == "cand01r3-measurement-001-v2"
           assert protocol["protocol_sha256"] == "51dbee61e2a7d0c23ad48e7f37799812bd67918e37aacd1b60e3600787365c72"
-          assert int(protocol["train_count"]) == 171
-          assert int(protocol["probe_count"]) == 29
+          assert int(protocol["train_question_count"]) == 171
+          assert int(protocol["probe_question_count"]) == 29
 
           committed = json.loads(Path("content/sc900/measurement/cand01r3_protocol.json").read_text(encoding="utf-8"))
           print(f"COMMITTED_REAL_OBSERVATIONS={int(committed.get('real_observations') or 0)}")
