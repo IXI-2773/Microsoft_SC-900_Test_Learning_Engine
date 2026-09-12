@@ -14,6 +14,12 @@ from progress_store import (
     select_due_review_questions,
     select_questions_by_history,
 )
+from question_identity import (
+    canonical_question_history_map,
+    canonical_question_id,
+    history_event_question_id,
+    history_events_for_question,
+)
 from session_models import QuestionRuntimeState, reset_runtime_question_state
 from smart_practice_concept_graph import (
     audit_graph,
@@ -136,6 +142,7 @@ class SessionBuilderMixin:
         )
         session_answer_key = tuple(
             (
+                str(event.get("question_id") or ""),
                 int(event.get("question_number") or 0),
                 bool(event.get("correct")),
                 str(event.get("confidence") or ""),
@@ -157,7 +164,7 @@ class SessionBuilderMixin:
         )
 
     def _build_near_miss_pressure_maps(self, history, questions):
-        question_lookup = {int(q.get("question_number") or 0): q for q in questions}
+        question_lookup = {canonical_question_id(q): q for q in questions if canonical_question_id(q)}
         unit_pressure: dict[str, float] = {}
         label_pressure: dict[str, float] = {}
         near_miss_families = {"Near-synonym / look-alike distractor", "Plausible distractor"}
@@ -174,7 +181,7 @@ class SessionBuilderMixin:
             )
             if not is_near_miss:
                 continue
-            question = question_lookup.get(int(event.get("question_number") or 0))
+            question = question_lookup.get(history_event_question_id(event))
             if not question:
                 continue
             kind, unit = self._coverage_unit_for_question(question)
@@ -294,10 +301,7 @@ class SessionBuilderMixin:
         coverage_gaps = self._build_coverage_gap_rows(records, signal_questions)
         gap_map = self._coverage_gap_priority_map(coverage_gaps)
         interference_rows = self._build_interference_map_rows(recent_history)
-        question_history_map = {}
-        for event in recent_history:
-            qnum = int(event.get("question_number") or 0)
-            question_history_map.setdefault(qnum, []).append(event)
+        question_history_map = canonical_question_history_map(recent_history)
         question_stability = {}
         for question in signal_questions:
             rec = records.get(self._question_key(question), {})
@@ -307,7 +311,7 @@ class SessionBuilderMixin:
             question_stability[qnum] = self._question_stability_score(
                 question,
                 rec,
-                question_history_map.get(qnum, []),
+                history_events_for_question(question_history_map, question),
             )
         _objective_rows, objective_map = self._build_objective_mastery_rows(
             records, question_stability, question_history_map, source_map, signal_questions
@@ -983,9 +987,9 @@ class SessionBuilderMixin:
         seen = set()
         out = []
         for q in base:
-            qn = q.get("question_number")
-            if qn not in seen:
-                seen.add(qn)
+            qid = self._question_key(q)
+            if qid not in seen:
+                seen.add(qid)
                 out.append(q)
         return out
 
@@ -1124,6 +1128,7 @@ class SessionBuilderMixin:
         unseen_by_unit = {}
         unseen_by_objective = {}
         outcomes_by_qnum = {}
+        outcomes_by_question_id = {}
         for question in pool:
             qnum = int(question.get("question_number") or 0)
             kind, unit = coverage_unit_for_question(question)
@@ -1163,6 +1168,10 @@ class SessionBuilderMixin:
                 exposure["sources"].add(source_name)
                 exposure["styles"].add(stem_style)
         for event in progress_history:
+            event_id = history_event_question_id(event)
+            if event_id:
+                outcomes_by_question_id.setdefault(event_id, []).append(event)
+                continue
             qnum = int(event.get("question_number") or 0)
             outcomes_by_qnum.setdefault(qnum, []).append(event)
         interference_priority_map = {
@@ -1270,6 +1279,7 @@ class SessionBuilderMixin:
         current_session_questions = list(getattr(self, "questions", []))
         session_context = {
             "seen_question_numbers": [int(q.get("question_number") or 0) for q in current_session_questions],
+            "seen_question_ids": [canonical_question_id(q) for q in current_session_questions if canonical_question_id(q)],
             "seen_concepts": [str(q.get("smart_concept_key") or "") for q in current_session_questions],
             "seen_stem_styles": [str(q.get("stem_style") or "") for q in current_session_questions],
             "seen_objectives": [str(q.get("objective_code") or "") for q in current_session_questions],
@@ -1307,6 +1317,7 @@ class SessionBuilderMixin:
             "active_smart_policy": active_smart_policy,
             "graph_max_utility": graph_max_utility,
             "outcomes_by_qnum": outcomes_by_qnum,
+            "outcomes_by_question_id": outcomes_by_question_id,
             "quality_min_samples": quality_min_samples,
             "bad_key_min_samples": bad_key_min_samples,
             "quality_enabled": quality_enabled,

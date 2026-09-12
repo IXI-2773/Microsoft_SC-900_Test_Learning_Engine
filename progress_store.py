@@ -516,6 +516,9 @@ def progress_record_for_question(
         canonical_record = records.get(question_id)
         if isinstance(canonical_record, Mapping):
             return canonical_record
+    keys = [str(key) for key in records]
+    if not keys or not all(key.lstrip("-").isdigit() for key in keys):
+        return None
     try:
         raw_number = question.get("question_number")
         if raw_number is None:

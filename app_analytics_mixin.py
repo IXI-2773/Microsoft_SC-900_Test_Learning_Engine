@@ -81,6 +81,7 @@ from progress_store import (
     study_status_name,
 )
 from question_bank import sanitize_text
+from question_identity import canonical_question_history_map, history_events_for_question
 from session_models import QuestionHistoryEvent
 from smart_practice_measurement import build_measurement_report, normalize_measurement_store
 from smart_practice_policy import (
@@ -532,7 +533,7 @@ class AnalyticsMixin:
         self,
         records,
         question_stability: dict[int, float],
-        question_history_map: dict[int, list[QuestionHistoryEvent]],
+        question_history_map: dict[str, list[QuestionHistoryEvent]],
         source_agreement_map: dict[int, SourceAgreementRow],
         source_trust_map: dict[str, SourceTrustRow],
         questions=None,
@@ -547,7 +548,7 @@ class AnalyticsMixin:
             if attempts <= 0 or is_active_weak(rec):
                 continue
             qnum = int(q.get("question_number") or 0)
-            history_events = question_history_map.get(qnum, [])
+            history_events = history_events_for_question(question_history_map, q)
             if not history_events:
                 continue
             guessed_correct = sum(
@@ -709,7 +710,7 @@ class AnalyticsMixin:
         self,
         records,
         question_stability: dict[int, float],
-        question_history_map: dict[int, list[QuestionHistoryEvent]],
+        question_history_map: dict[str, list[QuestionHistoryEvent]],
         source_agreement_map: dict[int, SourceAgreementRow],
         questions=None,
     ) -> tuple[list[ObjectiveMasteryRow], dict[str, ObjectiveMasteryRow]]:
@@ -757,7 +758,7 @@ class AnalyticsMixin:
                 bucket["active_weak"] += 1
             if is_review_due(rec):
                 bucket["due"] += 1
-            bucket["trend_events"].extend(question_history_map.get(qnum, []))
+            bucket["trend_events"].extend(history_events_for_question(question_history_map, q))
 
         rows: list[ObjectiveMasteryRow] = []
         row_map: dict[str, ObjectiveMasteryRow] = {}
@@ -862,7 +863,7 @@ class AnalyticsMixin:
         self,
         records,
         question_stability: dict[int, float],
-        question_history_map: dict[int, list[QuestionHistoryEvent]],
+        question_history_map: dict[str, list[QuestionHistoryEvent]],
         questions=None,
     ) -> tuple[list[ConfidenceCompressionRow], dict[str, ConfidenceCompressionRow]]:
         grouped: dict[str, dict[str, Any]] = {}
@@ -888,7 +889,7 @@ class AnalyticsMixin:
                 },
             )
             qnum = int(q.get("question_number") or 0)
-            for event in question_history_map.get(qnum, []):
+            for event in history_events_for_question(question_history_map, q):
                 if not event.get("correct"):
                     continue
                 bucket["correct_total"] += 1
@@ -931,7 +932,7 @@ class AnalyticsMixin:
         self,
         records,
         question_stability: dict[int, float],
-        question_history_map: dict[int, list[QuestionHistoryEvent]],
+        question_history_map: dict[str, list[QuestionHistoryEvent]],
         questions=None,
     ) -> tuple[list[AbstractionLadderRow], dict[str, AbstractionLadderRow]]:
         grouped: dict[str, dict[str, Any]] = {}
@@ -963,7 +964,7 @@ class AnalyticsMixin:
             bucket["source_count"].add(str(q.get("source_name") or "Unknown source"))
             bucket["stability_total"] += float(question_stability.get(int(q.get("question_number") or 0), 0.0))
             bucket["stability_seen"] += 1
-            history_events = question_history_map.get(int(q.get("question_number") or 0), [])
+            history_events = history_events_for_question(question_history_map, q)
             if history_events:
                 if any(event.get("correct") for event in history_events):
                     bucket["seen_styles"].add(style)
@@ -1165,16 +1166,12 @@ class AnalyticsMixin:
         self, history: list[QuestionHistoryEvent], records, questions=None
     ) -> dict[int, float]:
         now = datetime.now()
-        recent_events: dict[int, list[QuestionHistoryEvent]] = {}
-        for event in history:
-            qnum = int(event.get("question_number") or 0)
-            if qnum:
-                recent_events.setdefault(qnum, []).append(event)
+        recent_events = canonical_question_history_map(history)
         freshness_map: dict[int, float] = {}
         for q in list(questions or self.master_questions):
             rec = records.get(self._question_key(q), {})
             qnum = int(q.get("question_number") or 0)
-            events = recent_events.get(qnum, [])
+            events = history_events_for_question(recent_events, q)
             penalty = 0.0
             if events:
                 last_seen = max(self._parse_event_time(event) for event in events)
@@ -1205,7 +1202,7 @@ class AnalyticsMixin:
         self,
         records,
         question_stability: dict[int, float],
-        question_history_map: dict[int, list[QuestionHistoryEvent]],
+        question_history_map: dict[str, list[QuestionHistoryEvent]],
         source_agreement_map: dict[int, SourceAgreementRow],
         questions=None,
     ) -> tuple[list[DifficultyCalibrationRow], dict[int, DifficultyCalibrationRow]]:
@@ -1483,7 +1480,7 @@ class AnalyticsMixin:
         self,
         records,
         question_stability: dict[int, float],
-        question_history_map: dict[int, list[QuestionHistoryEvent]],
+        question_history_map: dict[str, list[QuestionHistoryEvent]],
         questions=None,
     ) -> tuple[list[ConceptHalfLifeRow], dict[str, ConceptHalfLifeRow]]:
         grouped: dict[str, dict[str, Any]] = {}
@@ -1513,7 +1510,7 @@ class AnalyticsMixin:
             qnum = int(q.get("question_number") or 0)
             bucket["stability_total"] += float(question_stability.get(qnum, 0.0))
             bucket["volatility_total"] += float(self.question_volatility(q).get("score", 0.0))
-            history_events = question_history_map.get(qnum, [])
+            history_events = history_events_for_question(question_history_map, q)
             correct_events = [event for event in history_events if event.get("correct")]
             if correct_events:
                 bucket["confidence_total"] += sum(
@@ -1967,7 +1964,7 @@ class AnalyticsMixin:
 
     def _build_knowledge_trace_rows(
         self,
-        question_history_map: dict[int, list[QuestionHistoryEvent]],
+        question_history_map: dict[str, list[QuestionHistoryEvent]],
         questions=None,
     ) -> tuple[list[KnowledgeTraceRow], dict[str, KnowledgeTraceRow]]:
         grouped: dict[str, dict[str, Any]] = {}
@@ -1982,7 +1979,7 @@ class AnalyticsMixin:
                     "events": [],
                     "canonical_concept_id": self._canonical_concept_id(q),
                 },
-            )["events"].extend(question_history_map.get(int(q.get("question_number") or 0), []))
+            )["events"].extend(history_events_for_question(question_history_map, q))
 
         rows: list[KnowledgeTraceRow] = []
         row_map: dict[str, KnowledgeTraceRow] = {}
@@ -2045,7 +2042,7 @@ class AnalyticsMixin:
 
     def _build_recognition_retrieval_rows(
         self,
-        question_history_map: dict[int, list[QuestionHistoryEvent]],
+        question_history_map: dict[str, list[QuestionHistoryEvent]],
         questions=None,
     ) -> tuple[list[RecognitionRetrievalRow], dict[str, RecognitionRetrievalRow]]:
         grouped: dict[str, dict[str, Any]] = {}
@@ -2064,7 +2061,7 @@ class AnalyticsMixin:
                     "retrieval_correct": 0,
                 },
             )
-            events = question_history_map.get(int(q.get("question_number") or 0), [])
+            events = history_events_for_question(question_history_map, q)
             for event in events:
                 if style in ("Definition", "General"):
                     bucket["recognition_total"] += 1
@@ -2313,7 +2310,7 @@ class AnalyticsMixin:
 
     def _build_cue_dependence_rows(
         self,
-        question_history_map: dict[int, list[QuestionHistoryEvent]],
+        question_history_map: dict[str, list[QuestionHistoryEvent]],
         recognition_retrieval_map: dict[str, RecognitionRetrievalRow],
         phrasing_map: dict[int, PhrasingNormalizationRow],
         questions=None,
@@ -2862,7 +2859,7 @@ class AnalyticsMixin:
 
     def _build_concept_memory_state_rows(
         self,
-        question_history_map: dict[int, list[QuestionHistoryEvent]],
+        question_history_map: dict[str, list[QuestionHistoryEvent]],
         questions=None,
     ) -> tuple[list[ConceptMemoryStateRow], dict[str, ConceptMemoryStateRow]]:
         grouped: dict[str, dict[str, Any]] = {}
@@ -2890,7 +2887,7 @@ class AnalyticsMixin:
             source_name = str(q.get("source_name") or "Unknown source")
             bucket["styles"].add(style)
             bucket["sources"].add(source_name)
-            events = question_history_map.get(int(q.get("question_number") or 0), [])
+            events = history_events_for_question(question_history_map, q)
             bucket["events"].extend(events)
             for event in events:
                 if event.get("correct"):
@@ -3583,12 +3580,10 @@ class AnalyticsMixin:
 
         domain_history_map = {}
         topic_history_map = {}
-        question_history_map: dict[int, list[QuestionHistoryEvent]] = {}
+        question_history_map = canonical_question_history_map(history)
         for event in history:
             domain = str(event.get("domain") or "Unsorted")
             domain_history_map.setdefault(domain, []).append(event)
-            qnum = int(event.get("question_number") or 0)
-            question_history_map.setdefault(qnum, []).append(event)
             for topic in event.get("topics") or []:
                 topic = str(topic).strip()
                 if topic:
@@ -3600,7 +3595,9 @@ class AnalyticsMixin:
             if not rec or is_suspended(rec):
                 continue
             qnum = int(q.get("question_number") or 0)
-            question_stability[qnum] = self._question_stability_score(q, rec, question_history_map.get(qnum, []))
+            question_stability[qnum] = self._question_stability_score(
+                q, rec, history_events_for_question(question_history_map, q)
+            )
         source_agreement_rows, source_agreement_map = self._build_source_agreement_rows(self.master_questions)
         source_trust_rows, source_trust_map = self._build_source_trust_rows(
             self.master_questions, source_agreement_rows

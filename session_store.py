@@ -340,11 +340,28 @@ def migrate_session_snapshot(
         if set(answer_ids) != set(saved_ids):
             raise ValueError("Session answer question IDs do not match canonical session question IDs.")
 
-    answer_history = []
+    answer_history: list[SessionAnswerEvent] = []
+    number_to_id: dict[int, str] = {}
+    if canonical_snapshot:
+        for qnum, question_id in zip(saved_qnums, saved_ids, strict=False):
+            number_to_id[int(qnum)] = str(question_id)
     for event in raw_answer_history if isinstance(raw_answer_history, list) else []:
         if not isinstance(event, Mapping):
             raise ValueError("Session answer history row must be a mapping.")
-        answer_history.append(cast(SessionAnswerEvent, dict(event)))
+        history_row = dict(event)
+        if canonical_snapshot:
+            event_id = str(history_row.get("question_id") or "").strip()
+            if not event_id:
+                raw_number = history_row.get("question_number")
+                try:
+                    event_id = str(number_to_id.get(int(str(raw_number))) or "").strip()
+                except (TypeError, ValueError):
+                    event_id = ""
+                if event_id:
+                    history_row["question_id"] = event_id
+            if not str(history_row.get("question_id") or "").strip() and history_row:
+                raise ValueError("Canonical session answer history row is missing question_id.")
+        answer_history.append(cast(SessionAnswerEvent, history_row))
     quests = []
     for quest in raw_quests if isinstance(raw_quests, list) else []:
         if not isinstance(quest, Mapping):

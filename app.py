@@ -72,6 +72,7 @@ from question_bank import adaptive_shuffle_question, load_bank, stable_shuffle_q
 from question_identity import (
     canonical_question_id,
     history_event_matches_question,
+    question_content_fingerprint,
     resolve_registered_question_id_from_number,
 )
 from question_widgets import ChoiceRow
@@ -2534,6 +2535,7 @@ class TestingEngineApp(
             "day": str(rec.get("last_seen") or ""),
             "question_id": self._question_key(q),
             "question_number": int(q.get("question_number") or 0),
+            "question_content_fingerprint": question_content_fingerprint(q),
             "correct": bool(is_correct),
             "confidence": str((feedback or {}).get("confidence") or ""),
             "miss_reason": str((feedback or {}).get("miss_reason") or ""),

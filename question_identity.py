@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import copy
+import hashlib
+import json
 from collections.abc import Iterable, Mapping
 from typing import Any
 
 PROGRESS_IDENTITY_VERSION = 1
 PROGRESS_IDENTITY_KIND = "canonical_question_id"
+PROGRESS_CONTENT_EPOCH_VERSION = 1
 
 MISSING_CANONICAL_QUESTION_ID = "MISSING_CANONICAL_QUESTION_ID"
 DUPLICATE_CANONICAL_QUESTION_ID = "DUPLICATE_CANONICAL_QUESTION_ID"
@@ -15,6 +18,25 @@ LEGACY_PROGRESS_COLLISION = "LEGACY_PROGRESS_COLLISION"
 PROGRESS_IDENTITY_SCHEMA_AMBIGUOUS = "PROGRESS_IDENTITY_SCHEMA_AMBIGUOUS"
 PROGRESS_IDENTITY_SCHEMA_UNSUPPORTED = "PROGRESS_IDENTITY_SCHEMA_UNSUPPORTED"
 INVALID_PROGRESS_RECORD = "INVALID_PROGRESS_RECORD"
+CHANGED_CONTENT = "CHANGED_CONTENT"
+REMOVED_QUESTION = "REMOVED_QUESTION"
+UNMAPPED_QUESTION_NUMBER = "UNMAPPED_QUESTION_NUMBER"
+
+# Durable question content that can change meaning or answer authority.
+# Mutable learner/runtime state, provenance bookkeeping, question_number, and
+# presentation-only choice-letter order are excluded. Choice identity is the
+# answer texts themselves so runtime letter shuffles keep the same fingerprint.
+_BANK_CONTENT_FIELDS = (
+    "prompt",
+    "general_explanation",
+    "domain",
+    "chapter",
+    "subtitle",
+    "question_type",
+    "topics",
+    "objective_code",
+    "study_focus",
+)
 
 
 class ProgressIdentityError(ValueError):
@@ -69,6 +91,86 @@ def validate_available_canonical_question_ids(questions: Iterable[Mapping[str, A
         if question_id in seen_ids:
             raise ProgressIdentityError(DUPLICATE_CANONICAL_QUESTION_ID, question_id)
         seen_ids.add(question_id)
+
+
+def _canonicalize_json_value(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return {
+            str(key): _canonicalize_json_value(item)
+            for key, item in sorted(value.items(), key=lambda pair: str(pair[0]))
+        }
+    if isinstance(value, (list, tuple)):
+        return [_canonicalize_json_value(item) for item in value]
+    if isinstance(value, (str, int, float, bool)) or value is None:
+        return value
+    return str(value)
+
+
+def _choice_text_projection(question: Mapping[str, Any]) -> dict[str, Any]:
+    choices = question.get("choices")
+    if not isinstance(choices, Mapping):
+        projection: dict[str, Any] = {}
+        if "choices" in question:
+            projection["choices"] = _canonicalize_json_value(choices)
+        if "correct" in question:
+            projection["correct"] = _canonicalize_json_value(question.get("correct"))
+        if "choice_explanations" in question:
+            projection["choice_explanations"] = _canonicalize_json_value(question.get("choice_explanations"))
+        return projection
+    texts = [str(text) for text in choices.values()]
+    projection = {"choice_texts": _canonicalize_json_value(sorted(texts))}
+    correct_letters = question.get("correct") or []
+    projection["correct_texts"] = _canonicalize_json_value(
+        sorted(str(choices.get(letter, letter)) for letter in correct_letters)
+    )
+    explanations = question.get("choice_explanations")
+    if isinstance(explanations, Mapping) and explanations:
+        explained = [
+            {
+                "choice_text": str(choices.get(letter, letter)),
+                "explanation": explanation,
+            }
+            for letter, explanation in explanations.items()
+        ]
+        explained.sort(key=lambda row: str(row["choice_text"]))
+        projection["choice_explanation_texts"] = _canonicalize_json_value(explained)
+    return projection
+
+
+def question_content_projection(question: Mapping[str, Any]) -> dict[str, Any]:
+    question_id = canonical_question_id(question)
+    if not question_id:
+        raise ProgressIdentityError(MISSING_CANONICAL_QUESTION_ID)
+    projection: dict[str, Any] = {"question_id": question_id}
+    for field in _BANK_CONTENT_FIELDS:
+        if field in question:
+            projection[field] = _canonicalize_json_value(question.get(field))
+    projection.update(_choice_text_projection(question))
+    return projection
+
+
+def question_content_fingerprint(question: Mapping[str, Any]) -> str:
+    serialized = json.dumps(
+        question_content_projection(question),
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
+
+
+def bank_content_fingerprint(questions: Iterable[Mapping[str, Any]]) -> str:
+    materialized = tuple(questions)
+    validate_canonical_question_ids(materialized)
+    projections = [question_content_projection(question) for question in materialized]
+    projections.sort(key=lambda item: str(item["question_id"]))
+    serialized = json.dumps(
+        projections,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
 
 
 def build_number_to_question_id_index(questions: Iterable[Mapping[str, Any]]) -> dict[str, str]:
@@ -176,8 +278,23 @@ def history_event_matches_question(
         return False
     event_id = history_event_question_id(event)
     question_id = canonical_question_id(question)
-    if event_id:
-        return bool(question_id) and event_id == question_id
+    if not event_id or not question_id or event_id != question_id:
+        return False
+    event_fp = str(event.get("question_content_fingerprint") or "").strip()
+    if not event_fp:
+        return True
+    return event_fp == question_content_fingerprint(question)
+
+
+def legacy_history_event_matches_question(
+    event: Mapping[str, Any] | None, question: Mapping[str, Any] | None
+) -> bool:
+    if history_event_matches_question(event, question):
+        return True
+    if not isinstance(event, Mapping) or not isinstance(question, Mapping):
+        return False
+    if history_event_question_id(event):
+        return False
     try:
         return int(event.get("question_number")) == int(question.get("question_number"))
     except (TypeError, ValueError):
@@ -203,6 +320,178 @@ def register_progress_identity_bank(questions: Iterable[Mapping[str, Any]]) -> N
 
 def registered_progress_identity_bank() -> tuple[Mapping[str, Any], ...]:
     return _registered_bank_questions
+
+
+def canonical_question_history_map(events: Iterable[Mapping[str, Any] | None]) -> dict[str, list[Mapping[str, Any]]]:
+    history_map: dict[str, list[Mapping[str, Any]]] = {}
+    for event in events:
+        question_id = history_event_question_id(event)
+        if not question_id or not isinstance(event, Mapping):
+            continue
+        history_map.setdefault(question_id, []).append(event)
+    return history_map
+
+
+def history_events_for_question(
+    history_map: Mapping[str, list[Mapping[str, Any]]],
+    question: Mapping[str, Any] | None,
+) -> list[Mapping[str, Any]]:
+    question_id = canonical_question_id(question)
+    if not question_id:
+        return []
+    return [
+        event
+        for event in history_map.get(question_id, [])
+        if history_event_matches_question(event, question)
+    ]
+
+
+def migrate_legacy_history_events(
+    history: Iterable[Mapping[str, Any] | None],
+    questions: Iterable[Mapping[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    materialized = tuple(questions)
+    validate_canonical_question_ids(materialized)
+    number_only = [
+        event
+        for event in history
+        if isinstance(event, Mapping) and not history_event_question_id(event) and event.get("question_number") not in (None, "")
+    ]
+    index = build_number_to_question_id_index(materialized) if number_only else {}
+    fingerprints = {canonical_question_id(question): question_content_fingerprint(question) for question in materialized}
+    migrated: list[dict[str, Any]] = []
+    quarantined: list[dict[str, Any]] = []
+    for event in history:
+        if not isinstance(event, Mapping):
+            continue
+        row = copy.deepcopy(dict(event))
+        question_id = history_event_question_id(row)
+        if question_id:
+            migrated.append(row)
+            continue
+        raw_number = row.get("question_number")
+        try:
+            normalized = str(int(raw_number))
+        except (TypeError, ValueError):
+            migrated.append(row)
+            continue
+        mapped_id = index.get(normalized)
+        if not mapped_id:
+            quarantined.append({"reason": UNMAPPED_QUESTION_NUMBER, "question_number": normalized, "event": copy.deepcopy(row)})
+            migrated.append(row)
+            continue
+        row["question_id"] = mapped_id
+        row["question_content_fingerprint"] = fingerprints[mapped_id]
+        migrated.append(row)
+    return migrated, quarantined
+
+
+def _epoch_payload_matches_bank(
+    payload: Mapping[str, Any],
+    current_fingerprints: Mapping[str, str],
+    current_bank_fingerprint: str,
+) -> bool:
+    if payload.get("progress_content_epoch_version") != PROGRESS_CONTENT_EPOCH_VERSION:
+        return False
+    if str(payload.get("bank_fingerprint") or "").strip() != current_bank_fingerprint:
+        return False
+    stored = payload.get("question_content_fingerprints")
+    records = payload.get("questions")
+    if not isinstance(stored, Mapping) or not isinstance(records, Mapping):
+        return False
+    for question_id in records:
+        qid = str(question_id)
+        if qid not in current_fingerprints:
+            return False
+        if str(stored.get(qid) or "").strip() != current_fingerprints[qid]:
+            return False
+    history = payload.get("history") or []
+    if not isinstance(history, list):
+        return False
+    for event in history:
+        if not isinstance(event, Mapping):
+            return False
+        if history_event_question_id(event):
+            continue
+        if event.get("question_number") not in (None, ""):
+            return False
+    return True
+
+
+def migrate_progress_content_epoch(
+    payload: Mapping[str, Any],
+    questions: Iterable[Mapping[str, Any]],
+) -> tuple[dict[str, Any], bool]:
+    schema = classify_progress_identity_schema(payload)
+    if schema != "canonical":
+        raise ProgressIdentityError(
+            PROGRESS_IDENTITY_SCHEMA_UNSUPPORTED,
+            f"content epoch requires canonical progress, schema={schema!r}",
+        )
+    materialized = tuple(questions)
+    if not materialized:
+        return copy.deepcopy(dict(payload)), False
+    validate_canonical_question_ids(materialized)
+    current_fingerprints = {
+        canonical_question_id(question): question_content_fingerprint(question) for question in materialized
+    }
+    current_bank_fingerprint = bank_content_fingerprint(materialized)
+    migrated = copy.deepcopy(dict(payload))
+    if _epoch_payload_matches_bank(migrated, current_fingerprints, current_bank_fingerprint):
+        return migrated, False
+
+    records = migrated.get("questions")
+    if not isinstance(records, Mapping):
+        raise ProgressIdentityError(PROGRESS_IDENTITY_SCHEMA_AMBIGUOUS, "questions must be a mapping")
+    _validate_progress_records(records)
+    stored_fingerprints = dict(migrated.get("question_content_fingerprints") or {})
+    first_bind = migrated.get("progress_content_epoch_version") != PROGRESS_CONTENT_EPOCH_VERSION
+    quarantined = dict(migrated.get("quarantined_questions") or {})
+    bound_records: dict[str, Any] = {}
+    bound_fingerprints: dict[str, str] = {}
+    for raw_id, record in records.items():
+        question_id = str(raw_id)
+        stored_fp = str(stored_fingerprints.get(question_id) or "").strip()
+        if question_id not in current_fingerprints:
+            quarantined[question_id] = {
+                "reason": REMOVED_QUESTION,
+                "record": copy.deepcopy(record),
+                "fingerprint": stored_fp,
+            }
+            continue
+        current_fp = current_fingerprints[question_id]
+        if stored_fp and stored_fp != current_fp:
+            quarantined[question_id] = {
+                "reason": CHANGED_CONTENT,
+                "record": copy.deepcopy(record),
+                "fingerprint": stored_fp,
+            }
+            continue
+        bound_records[question_id] = copy.deepcopy(record)
+        bound_fingerprints[question_id] = current_fp
+
+    history, history_quarantine = migrate_legacy_history_events(list(migrated.get("history") or []), materialized)
+    stamped_history: list[dict[str, Any]] = []
+    for event in history:
+        row = copy.deepcopy(event)
+        question_id = history_event_question_id(row)
+        event_fp = str(row.get("question_content_fingerprint") or "").strip()
+        if question_id and question_id in current_fingerprints and not event_fp and (
+            first_bind or question_id in bound_fingerprints
+        ):
+            row["question_content_fingerprint"] = current_fingerprints[question_id]
+        stamped_history.append(row)
+
+    migrated["questions"] = bound_records
+    migrated["history"] = stamped_history
+    migrated["progress_content_epoch_version"] = PROGRESS_CONTENT_EPOCH_VERSION
+    migrated["bank_fingerprint"] = current_bank_fingerprint
+    migrated["question_content_fingerprints"] = bound_fingerprints
+    if quarantined:
+        migrated["quarantined_questions"] = quarantined
+    if history_quarantine:
+        migrated["quarantined_history"] = history_quarantine
+    return migrated, True
 
 
 def resolve_registered_question_id_from_number(question_number: Any) -> str:

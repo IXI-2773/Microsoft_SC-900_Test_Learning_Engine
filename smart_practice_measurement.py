@@ -232,11 +232,15 @@ def _legacy_repair_key_match(prediction: Mapping[str, Any], raw_repair_key: str)
 def same_concept(prediction: Mapping[str, Any], event: Mapping[str, Any]) -> tuple[bool, str]:
     prediction_id = canonical_question_id(prediction)
     event_id = history_event_question_id(event)
-    if prediction_id and event_id:
-        if prediction_id == event_id:
+    if prediction_id or event_id:
+        if prediction_id and event_id and prediction_id == event_id:
             return True, "same_question"
-    elif int(prediction.get("question_number") or 0) == int(event.get("question_number") or 0):
-        return True, "same_question"
+    else:
+        try:
+            if int(prediction.get("question_number") or 0) == int(event.get("question_number") or 0):
+                return True, "same_question"
+        except (TypeError, ValueError):
+            pass
     raw_repair_key = str(event.get("repair_concept_key") or "").strip()
     legacy_match, legacy_basis = _legacy_repair_key_match(prediction, raw_repair_key)
     if legacy_match:
