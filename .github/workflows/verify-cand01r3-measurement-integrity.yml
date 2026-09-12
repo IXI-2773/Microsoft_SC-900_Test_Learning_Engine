@@ -62,3 +62,14 @@ jobs:
 
       - name: Run R2 measurement-integrity tests
         run: python -m unittest discover -s tests -p 'test_cand01r3_measurement_integrity.py' -v
+
+      - name: Adversarial source inventory
+        run: |
+          echo '=== measurement scoring/recording callers ==='
+          grep -RInE 'record_measurement_event\(|record_measurement_probe_answer\(|notify_scored_attempt\(' --include='*.py' . || true
+          echo '=== measurement transition callers ==='
+          grep -RInE 'begin_todays_probe_measurement\(' --include='*.py' . || true
+          echo '=== reveal / redo / auto-next / export / restore surfaces ==='
+          grep -RInE 'redo_question|maybe_auto_next_after_answer|format_choice_explanations|serialize_answer_state|restore_experimental_session|sanitize_learner_export|exam_reveal|choice_explan' --include='*.py' . || true
+          echo '=== direct correctness/history mutation sites ==='
+          grep -RInE 'update_progress_for_answer|session_answer_history|progress_data.*history|\["correct"\]|\.get\("correct"\)' --include='*.py' app*.py cand01r3_*.py session_*.py || true
