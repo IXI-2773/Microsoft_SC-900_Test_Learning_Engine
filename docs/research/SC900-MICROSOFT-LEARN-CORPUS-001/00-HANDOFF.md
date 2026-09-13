@@ -2,7 +2,9 @@
 
 ## Decision
 
-Microsoft Learn is the primary current corpus for the large reviewed SC-900 candidate bank. The public/free book is deferred to `SC900-BOOK-SUPPLEMENT-001`.
+Microsoft Learn is the primary current corpus for the large reviewed SC-900 candidate bank.
+
+Superseded 2026-09-12: `BOOK_SUPPLEMENT_REQUIRED = NO`. The parked `SC900-BOOK-SUPPLEMENT-001` handoff is deleted. Do not process the book.
 
 ## Branch
 
@@ -33,4 +35,4 @@ Microsoft Learn is the primary current corpus for the large reviewed SC-900 cand
 
 ## Next authorized package
 
-`SC900-BOOK-SUPPLEMENT-001` may add genuinely distinct book-derived items after current Microsoft verification. Do not start it on this branch.
+Book supplementation is cancelled. Later work is final-bank quality audit and defect-only engine stabilization, not book ingestion.

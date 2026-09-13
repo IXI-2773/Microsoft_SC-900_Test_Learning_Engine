@@ -33,3 +33,6 @@ logs/
 *.candidate.json
 *_candidate.json
 *_ocr_draft_verify_bank.json
+
+# Operator-local materials (book PDFs, scratch). Never source authority.
+local/

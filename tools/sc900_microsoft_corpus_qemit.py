@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from collections.abc import Mapping, Sequence
 from pathlib import Path
@@ -100,8 +101,8 @@ def redistribute_single_select(records: Sequence[Mapping[str, Any]]) -> list[dic
         choices = list(updated["choices"])
         correct = updated["correct_answer"]
         correct_id = correct[0] if isinstance(correct, list) else correct
-        serial = int(str(updated["id"]).rsplit("q", 1)[-1])
-        target = (serial - 1) % 4
+        digest = hashlib.sha256(str(updated["id"]).encode("utf-8")).hexdigest()
+        target = int(digest[:8], 16) % 4
         correct_choice = next(choice for choice in choices if choice["id"] == correct_id)
         others = [choice for choice in choices if choice["id"] != correct_id]
         reordered = others[:target] + [correct_choice] + others[target:]
