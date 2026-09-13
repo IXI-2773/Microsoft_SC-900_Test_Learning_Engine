@@ -26,6 +26,8 @@ LEARNER_MEMORY_DEFAULT = {
 MAX_HISTORY_EVENTS = 4000
 SUPER_CONFIDENT_COOLDOWN_DAYS = 120
 CONFIDENCE_OPTIONS = ["Sure", "Unsure", "Guessed"]
+CONFIDENCE_UNKNOWN = "Unknown"
+CANONICAL_CONFIDENCE_STATES = ["Sure", "Unsure", "Guessed", CONFIDENCE_UNKNOWN]
 MISS_REASON_OPTIONS = ["Did not know", "Misread", "Narrowed to two", "Changed answer"]
 SESSION_SOURCE_ALIASES = {
     "All visible": "All",
@@ -93,7 +95,7 @@ def default_progress_record() -> ProgressRecord:
         "last_correct": None,
         "last_confidence": "",
         "last_miss_reason": "",
-        "confidence_counts": {option: 0 for option in CONFIDENCE_OPTIONS},
+        "confidence_counts": {option: 0 for option in CANONICAL_CONFIDENCE_STATES},
         "miss_reason_counts": {option: 0 for option in MISS_REASON_OPTIONS},
         "flagged": False,
         "suspended": False,
@@ -167,6 +169,8 @@ def infer_review_grade(
         return "recognition"
     if confidence == "Unsure" or miss_reason:
         return "partial"
+    if confidence == CONFIDENCE_UNKNOWN:
+        return "unobserved"
     if "transfer" in session_tag:
         return "transfer"
     if "retrieval" in session_tag or "delayed" in session_tag:
@@ -321,8 +325,9 @@ def is_active_weak(record: Mapping[str, Any] | None) -> bool:
 
 
 def normalize_confidence(value):
-    value = str(value or "").strip().title()
-    return value if value in CONFIDENCE_OPTIONS else "Sure"
+    from confidence_epistemics import normalize_confidence as _normalize_confidence
+
+    return _normalize_confidence(value)
 
 
 def normalize_miss_reason(value):
@@ -466,7 +471,7 @@ def set_progress_super_confident(
     record = normalize_progress_record(record)
     day = date.fromisoformat(seen_on) if isinstance(seen_on, str) else (seen_on or date.today())
     until = day + timedelta(days=max(1, int(cooldown_days or SUPER_CONFIDENT_COOLDOWN_DAYS)))
-    confidence = normalize_confidence(record.get("last_confidence") or "Sure")
+    confidence = normalize_confidence(record.get("last_confidence"))
     if confidence != "Sure":
         counts = dict(record.get("confidence_counts") or {})
         counts[confidence] = max(0, int(counts.get(confidence, 0)) - 1)

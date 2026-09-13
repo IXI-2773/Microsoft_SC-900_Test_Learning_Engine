@@ -554,7 +554,7 @@ class GameRewardsMixin:
         meta: ProgressMeta = self._progress_meta()
         stats = meta["stats"]
         gained = 3
-        confidence = str((feedback or {}).get("confidence") or "Sure")
+        confidence = str((feedback or {}).get("confidence") or "")
         stats["total_answered"] += 1
         stats["domains_seen"] = sorted(set(stats.get("domains_seen", [])) | {str(q.get("domain") or "Unsorted")})
         if is_correct:
@@ -564,7 +564,7 @@ class GameRewardsMixin:
                 gained += 5
             elif confidence == "Unsure":
                 gained += 3
-            else:
+            elif confidence == "Guessed":
                 gained += 1
             if was_due:
                 gained += 4
@@ -795,17 +795,16 @@ class GameRewardsMixin:
             if not entry.get("correct")
         ][:8]
         topics = {
-            str(topic).strip()
-            for entry in history
-            for topic in list(entry.get("topics") or [])
-            if str(topic).strip()
+            str(topic).strip() for entry in history for topic in list(entry.get("topics") or []) if str(topic).strip()
         }
         domains = {str(entry.get("domain") or "").strip() for entry in history if entry.get("domain")}
         source_labels = {str(entry.get("source_label") or "").strip() for entry in history if entry.get("source_label")}
         weak_attempts = sum(1 for entry in history if entry.get("was_active_weak"))
         due_reviews = sum(1 for entry in history if entry.get("was_due"))
         new_learning = max(0, answered - weak_attempts - due_reviews)
-        missed_domains = Counter(str(entry.get("domain") or "Unsorted") for entry in history if not entry.get("correct"))
+        missed_domains = Counter(
+            str(entry.get("domain") or "Unsorted") for entry in history if not entry.get("correct")
+        )
         if wrong and missed_domains:
             focus = missed_domains.most_common(1)[0][0]
             diagnosis = f"Focus next: replay misses in {focus}."

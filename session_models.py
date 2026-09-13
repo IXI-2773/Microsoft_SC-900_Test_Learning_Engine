@@ -12,6 +12,8 @@ class AnswerState(TypedDict):
     suspended: bool
     last_confidence: str
     last_miss_reason: str
+    last_recall_failure: NotRequired[str]
+    answer_event_id: NotRequired[str]
     recall_ready: bool
     session_tag: str
     smart_primary_role: str
@@ -47,6 +49,7 @@ class QuestionHistoryEvent(TypedDict):
     question_id: str
     question_number: int
     question_content_fingerprint: NotRequired[str]
+    answer_event_id: NotRequired[str]
     correct: bool
     confidence: str
     miss_reason: str
@@ -85,6 +88,7 @@ class SessionAnswerEvent(TypedDict):
     question_id: str
     question_number: int
     question_content_fingerprint: NotRequired[str]
+    answer_event_id: NotRequired[str]
     domain: str
     correct: bool
     confidence: str
@@ -168,6 +172,8 @@ class QuestionRuntimeState(BankQuestion, total=False):
     suspended: bool
     last_confidence: str
     last_miss_reason: str
+    last_recall_failure: str
+    answer_event_id: str
     recall_ready: bool
     session_tag: str
     smart_primary_role: str
@@ -211,6 +217,8 @@ def answer_state_from_question(question: Mapping[str, Any]) -> AnswerState:
         "suspended": bool(runtime.get("suspended")),
         "last_confidence": str(runtime.get("last_confidence", "") or ""),
         "last_miss_reason": str(runtime.get("last_miss_reason", "") or ""),
+        "last_recall_failure": str(runtime.get("last_recall_failure", "") or ""),
+        "answer_event_id": str(runtime.get("answer_event_id", "") or ""),
         "recall_ready": bool(runtime.get("recall_ready")),
         "session_tag": str(runtime.get("session_tag", "") or ""),
         "smart_primary_role": str(runtime.get("smart_primary_role", "") or ""),
@@ -248,6 +256,8 @@ def apply_answer_state(question: RuntimeQuestionMapping, state: Mapping[str, Any
     runtime["suspended"] = bool(answer_state.get("suspended"))
     runtime["last_confidence"] = str(answer_state.get("last_confidence", "") or "")
     runtime["last_miss_reason"] = str(answer_state.get("last_miss_reason", "") or "")
+    runtime["last_recall_failure"] = str(answer_state.get("last_recall_failure", "") or "")
+    runtime["answer_event_id"] = str(answer_state.get("answer_event_id", "") or "")
     runtime["recall_ready"] = bool(answer_state.get("recall_ready"))
     runtime["session_tag"] = str(answer_state.get("session_tag", "") or "")
     runtime["smart_primary_role"] = str(answer_state.get("smart_primary_role", "") or "")
@@ -285,6 +295,8 @@ def reset_runtime_question_state(question: RuntimeQuestionMapping) -> QuestionRu
     runtime["suspended"] = bool(runtime.get("suspended", False))
     runtime["last_confidence"] = str(runtime.get("last_confidence", "") or "")
     runtime["last_miss_reason"] = str(runtime.get("last_miss_reason", "") or "")
+    runtime["last_recall_failure"] = str(runtime.get("last_recall_failure", "") or "")
+    runtime["answer_event_id"] = str(runtime.get("answer_event_id", "") or "")
     runtime["recall_ready"] = bool(runtime.get("recall_ready", False))
     runtime["session_tag"] = str(runtime.get("session_tag", "") or "")
     runtime["smart_primary_role"] = str(runtime.get("smart_primary_role", "") or "")
@@ -320,6 +332,8 @@ def clear_runtime_answer_state(
     runtime["answered"] = False
     runtime["last_confidence"] = ""
     runtime["last_miss_reason"] = ""
+    runtime["last_recall_failure"] = ""
+    runtime["answer_event_id"] = ""
     runtime["recall_ready"] = False
     if clear_flagged:
         runtime["flagged"] = False

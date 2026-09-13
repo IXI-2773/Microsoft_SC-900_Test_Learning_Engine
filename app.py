@@ -1560,20 +1560,14 @@ class TestingEngineApp(
         return out
 
     def question_has_open_issue_report(self, q):
-        return bool(
-            self._open_issue_reports_for_question(
-                q.get("question_number"), canonical_question_id(q)
-            )
-        )
+        return bool(self._open_issue_reports_for_question(q.get("question_number"), canonical_question_id(q)))
 
     def question_has_any_issue(self, q):
         return bool(q.get("flagged_issues")) or self.question_has_open_issue_report(q)
 
     def question_issue_notes(self, q):
         notes = list(q.get("flagged_issues", []))
-        for report in self._open_issue_reports_for_question(
-            q.get("question_number"), canonical_question_id(q)
-        ):
+        for report in self._open_issue_reports_for_question(q.get("question_number"), canonical_question_id(q)):
             stamp = str(report.get("reported_at") or "").replace("T", " ")[:16]
             if report.get("exclude_from_scoring"):
                 notes.append(
@@ -2139,11 +2133,7 @@ class TestingEngineApp(
         if create:
             key = self._question_key(q)
             if key not in records:
-                records[key] = (
-                    default_progress_record()
-                    if existing is None
-                    else cast(ProgressRecord, dict(existing))
-                )
+                records[key] = default_progress_record() if existing is None else cast(ProgressRecord, dict(existing))
             return cast(ProgressRecord, records[key])
         return cast(ProgressRecord, existing) if existing is not None else None
 
@@ -2197,9 +2187,7 @@ class TestingEngineApp(
             return
         restore_path = Path(path)
         questions = self.data["questions"] if self.data else None
-        _data, _backup, err = self.persistence.restore_progress_from_source(
-            restore_path, self.progress_path, questions
-        )
+        _data, _backup, err = self.persistence.restore_progress_from_source(restore_path, self.progress_path, questions)
         if err:
             logging.warning("Restore progress rejected without modifying source: %s", restore_path)
             messagebox.showerror("Restore progress", f"Could not restore progress safely:\n{err}")
@@ -2336,6 +2324,7 @@ class TestingEngineApp(
             "question_id": self._question_key(q),
             "question_number": int(q.get("question_number") or 0),
             "question_content_fingerprint": question_content_fingerprint(q),
+            "answer_event_id": str((feedback or {}).get("answer_event_id") or q.get("answer_event_id") or ""),
             "correct": bool(is_correct),
             "confidence": str((feedback or {}).get("confidence") or ""),
             "miss_reason": str((feedback or {}).get("miss_reason") or ""),
@@ -2582,9 +2571,7 @@ class TestingEngineApp(
         return f"Coaching note: restate why {correct} wins and why {selected} misses. That contrast is where retention usually sticks."
 
     def question_volatility(self, q):
-        events = [
-            event for event in self._progress_history() if history_event_matches_question(event, q)
-        ]
+        events = [event for event in self._progress_history() if history_event_matches_question(event, q)]
         attempts = len(events)
         if attempts < 3:
             return {"score": 0.0, "attempts": attempts, "flips": 0, "label": "", "last_outcome": ""}
