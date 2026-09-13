@@ -2,9 +2,12 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from cert_config import QUESTION_BANK_FILENAME
+
 ROOT = Path(__file__).resolve().parent
 REQUIRED_RUNTIME_RESOURCES = (
     Path("cert_profile_sc900.json"),
+    Path(QUESTION_BANK_FILENAME),
     Path("sc900_bank_v8_baseline.json"),
     Path("config/certifications/sc900-2026.json"),
 )

@@ -8,7 +8,8 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from cert_config import QUESTION_BANK_FILENAME  # noqa: E402
+from cert_config import QUESTION_BANK_FILENAME, RUNTIME_BANK_QUESTION_COUNT  # noqa: E402
+from tools.bank_warning_policy import evaluate_production_warnings  # noqa: E402
 from tools.validate_bank import validate_bank  # noqa: E402
 
 
@@ -25,16 +26,30 @@ def lint_bank(
     if expected_count is not None and actual != expected_count:
         failures.append(f"expected {expected_count} questions, got {actual}")
     failures.extend(f"{title}: {body}" for title, body in result["issues"])
-    warning_lines = [f"warning {title}: {body}" for title, body in result.get("warnings", [])]
+    warnings = list(result.get("warnings", []))
+    warning_lines = [f"warning {title}: {body}" for title, body in warnings]
+    decision = None
     if fail_on_warnings:
-        failures.extend(warning_lines)
+        decision = evaluate_production_warnings(bank_path, warnings)
+        failures.extend(decision.failures)
     if failures:
         for failure in failures:
             print(f"{label} failed: {failure}", file=sys.stderr)
         return 1
-    extra = f" ({len(warning_lines)} warnings reported, not failing)" if warning_lines else ""
-    print(f"{label} passed: {actual} questions.{extra}")
-    if warning_lines and not fail_on_warnings:
+    if decision is not None and decision.governed:
+        print(
+            f"{label} passed: {actual} questions. "
+            f"KNOWN_FROZEN_WARNING_COUNT = {decision.known_frozen_warning_count} "
+            f"UNEXPECTED_WARNING_COUNT = {decision.unexpected_warning_count}"
+        )
+    elif warning_lines and not fail_on_warnings:
+        print(
+            f"{label} passed: {actual} questions. "
+            f"({len(warning_lines)} warnings reported, diagnostic --allow-warnings)"
+        )
+    else:
+        print(f"{label} passed: {actual} questions.")
+    if warning_lines:
         for line in warning_lines[:20]:
             print(line, file=sys.stderr)
         if len(warning_lines) > 20:
@@ -54,12 +69,15 @@ def main() -> int:
         "--expected-count",
         type=int,
         default=None,
-        help="Required question count. Default 8 for the launch bank; omit to skip the count gate.",
+        help="Required question count. Defaults to the active runtime bank count for the configured launch bank.",
     )
     parser.add_argument(
         "--allow-warnings",
         action="store_true",
-        help="Report validator warnings without failing. Used for the large candidate bank.",
+        help=(
+            "Diagnostic override: report validator warnings without failing. "
+            "Not a production acceptance gate."
+        ),
     )
     parser.add_argument(
         "--label",
@@ -69,7 +87,11 @@ def main() -> int:
     args = parser.parse_args()
     bank_path = args.bank if args.bank.is_absolute() else ROOT / args.bank
     is_default = bank_path.resolve() == (ROOT / QUESTION_BANK_FILENAME).resolve()
-    expected = args.expected_count if args.expected_count is not None else (8 if is_default else None)
+    expected = (
+        args.expected_count
+        if args.expected_count is not None
+        else (RUNTIME_BANK_QUESTION_COUNT if is_default else None)
+    )
     fail_on_warnings = not args.allow_warnings
     label = args.label or ("SC-900 default-bank lint" if is_default else "SC-900 bank lint")
     return lint_bank(bank_path, expected_count=expected, fail_on_warnings=fail_on_warnings, label=label)
