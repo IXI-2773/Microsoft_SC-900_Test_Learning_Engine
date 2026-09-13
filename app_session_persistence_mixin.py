@@ -18,6 +18,7 @@ from cand01r3_runtime import (
     restore_experimental_session,
 )
 from confidence_epistemics import bind_legacy_answer_event_ids, normalize_confidence
+from exam_runtime_eligibility import filter_new_exam_pool
 from progress_store import set_progress_flag, set_progress_suspended, update_progress_record
 from question_identity import canonical_question_id
 from session_identity import bank_content_fingerprint, canonical_session_signature, ordered_question_ids
@@ -426,6 +427,8 @@ class SessionPersistenceMixin:
             pool = filter_training_questions(pool)
             if not pool:
                 return
+        if mode == MODE_EXAM:
+            pool = filter_new_exam_pool(pool)
         if count != "All visible":
             try:
                 limit = max(0, int(count))
