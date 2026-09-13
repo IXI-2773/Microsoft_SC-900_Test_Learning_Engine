@@ -11,6 +11,12 @@ from typing import Any
 from ingestion.importer import promotion_counts
 from ingestion.models import canonicalize_record, load_taxonomy, normalize_text
 from tools.build_sc900_phase2 import review_content_sha256
+from tools.sc900_exam_calibration import (
+    CALIBRATION_VERSION,
+    PRECALIBRATION_BANK_SHA256,
+    apply_calibration,
+    calibration_errors,
+)
 from tools.sc900_final_predecessor_overlay import overlay_row, validate_overlay
 from tools.validate_sc900_microsoft_corpus import (
     CORPUS_ROOT,
@@ -45,8 +51,8 @@ ACCEPTANCE_PATH = CORPUS_ROOT / "acceptance_report.json"
 ANALYTICS_PATH = CORPUS_ROOT / "analytics.json"
 SEMANTIC_AUDIT_PATH = CORPUS_ROOT / "semantic_family_audit.json"
 
-WORK_ID = "SC900-FINAL-BANK-AUDIT-001"
-BUILD_EPOCH = "final-bank-audit-deterministic-build"
+WORK_ID = "SC900-EXAM-STYLE-CALIBRATION-001"
+BUILD_EPOCH = "exam-style-calibration-2026-09-12-v1"
 DETERMINISTIC_IMPORT_AT = "2026-09-12T18:30:00+00:00"
 REVIEWER = "cursor-grok-4.6-microsoft-corpus-separate-review"
 REVIEW_METHOD = "separate adversarial review pass after authoring; independent answer verification against frozen Microsoft inventory"
@@ -293,6 +299,7 @@ def analytics_for(records: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     leaves: Counter[str] = Counter()
     difficulties: Counter[str] = Counter()
     styles: Counter[str] = Counter()
+    tiers: Counter[str] = Counter()
     types: Counter[str] = Counter()
     sources: Counter[str] = Counter()
     families: Counter[str] = Counter()
@@ -305,6 +312,7 @@ def analytics_for(records: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
         leaves[normalize_text(metadata.get("blueprint_leaf_id"))] += 1
         difficulties[normalize_text(row.get("difficulty"))] += 1
         styles[normalize_text(metadata.get("stem_style") or "direct_concept")] += 1
+        tiers[normalize_text(metadata.get("exam_calibration_tier") or "uncalibrated")] += 1
         types["multi" if len(row.get("correct_answer") or []) > 1 else "single"] += 1
         sources[normalize_text(metadata.get("provenance_category") or "MICROSOFT_LEARN_PRIMARY")] += 1
         families[normalize_text(metadata.get("semantic_family_id"))] += 1
@@ -329,6 +337,7 @@ def analytics_for(records: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
         "approved_by_leaf_skill": dict(sorted(leaves.items())),
         "difficulty_distribution": dict(sorted(difficulties.items())),
         "stem_style_distribution": dict(sorted(styles.items())),
+        "exam_calibration_tier_distribution": dict(sorted(tiers.items())),
         "single_multi_distribution": dict(sorted(types.items())),
         "source_distribution": dict(sorted(sources.items())),
         "answer_position_distribution": dict(sorted(answer_pos.items())),
@@ -385,6 +394,11 @@ def compile_records(records: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
                 "provenance_category": metadata.get("provenance_category", ""),
                 "currentness_status": metadata.get("currentness_status", ""),
                 "semantic_independence": metadata.get("semantic_independence", ""),
+                "exam_calibration_tier": metadata.get("exam_calibration_tier", ""),
+                "reasoning_steps": metadata.get("reasoning_steps", 0),
+                "exam_simulation_eligible": bool(metadata.get("exam_simulation_eligible", False)),
+                "calibration_version": metadata.get("calibration_version", ""),
+                "difficulty": record.get("difficulty", ""),
                 "references": list(record.get("references") or []),
             }
         )
@@ -429,6 +443,8 @@ def build_corpus(*, write: bool = True) -> dict[str, Any]:
         errors.extend(review_custody_errors(approved_new, reviews))
     errors.extend(promotion_currentness_errors(records))
     errors.extend(semantic_duplicate_errors([row for row in records if row.get("promotion_status") == "approved"]))
+    records = apply_calibration(records)
+    errors.extend(calibration_errors(records))
     errors.extend(default_bank_errors())
     errors.extend(pr13_isolation_errors())
     if sha256_file(DEFAULT_BANK) != EXPECTED_DEFAULT_BANK_SHA256:
@@ -450,6 +466,8 @@ def build_corpus(*, write: bool = True) -> dict[str, Any]:
         "withheld": counts["withheld"],
         "compiled_count": len(compiled_bank["questions"]),
         "compiled_sha256": compiled_sha256,
+        "precalibration_bank_sha256": PRECALIBRATION_BANK_SHA256,
+        "calibration_version": CALIBRATION_VERSION,
         "compiled_bank": compiled_bank,
         "analytics": analytics,
         "errors": errors,

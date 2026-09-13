@@ -1,0 +1,2370 @@
+{
+  "calibration_version": "sc900-exam-calibration-2026-09-12-v1",
+  "precalibration_bank_sha256": "8fe229a51d850d6656a1dcd54bb6b10f556116f0ef992a18f5145fcf6ec1a254",
+  "source_bank_sha256": "8fe229a51d850d6656a1dcd54bb6b10f556116f0ef992a18f5145fcf6ec1a254",
+  "item_count": 190,
+  "items": [
+    {
+      "question_id": "sc900_p1_q005",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "access_reviews_recertify_stale_access",
+      "choices": {
+        "A": "Access reviews",
+        "B": "Privileged Identity Management eligible-role activation",
+        "C": "Password protection",
+        "D": "Entitlement management access packages"
+      }
+    },
+    {
+      "question_id": "sc900_p1_q010",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "dlp_prevents_inappropriate_sharing",
+      "choices": {
+        "A": "Sensitivity labels",
+        "B": "Data Loss Prevention",
+        "C": "Retention policies",
+        "D": "Insider Risk Management"
+      }
+    },
+    {
+      "question_id": "sc900_p1_q014",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "ca_if_then_signal_policies",
+      "choices": {
+        "A": "Privileged Identity Management",
+        "B": "Conditional Access",
+        "C": "Microsoft Entra ID Protection",
+        "D": "Access reviews"
+      }
+    },
+    {
+      "question_id": "sc900_p1_q019",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "compliance_manager_customer_controls",
+      "choices": {
+        "A": "Service Trust Portal",
+        "B": "Compliance score",
+        "C": "Compliance Manager",
+        "D": "Microsoft Purview Audit"
+      }
+    },
+    {
+      "question_id": "sc900_p1_q024",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "pim_eligible_assignment_not_permanent_active",
+      "choices": {
+        "A": "Access reviews",
+        "B": "Entitlement management",
+        "C": "Microsoft Entra ID Protection",
+        "D": "Privileged Identity Management"
+      }
+    },
+    {
+      "question_id": "sc900_p1_q029",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "classification_finds_data_before_protection",
+      "choices": {
+        "A": "Data classification",
+        "B": "Sensitivity labels",
+        "C": "Data loss prevention",
+        "D": "Retention labels"
+      }
+    },
+    {
+      "question_id": "sc900_p1_q030",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "ediscovery_search_hold_export",
+      "choices": {
+        "A": "Data Loss Prevention",
+        "B": "eDiscovery",
+        "C": "Microsoft Purview Audit",
+        "D": "Insider Risk Management"
+      }
+    },
+    {
+      "question_id": "sc900_p1_q032",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "entra_identity_type_set",
+      "choices": {
+        "A": "User identities",
+        "B": "Workload identities",
+        "C": "Managed identities",
+        "D": "Microsoft Entra ID identity types"
+      }
+    },
+    {
+      "question_id": "sc900_p1_q040",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "audit_who_what_when",
+      "choices": {
+        "A": "Data loss prevention",
+        "B": "Sensitivity labels",
+        "C": "eDiscovery content collection",
+        "D": "Audit"
+      }
+    },
+    {
+      "question_id": "sc900_p1_q045",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "cwp_threats_vs_cspm_config",
+      "choices": {
+        "A": "Threat protection for running cloud workloads",
+        "B": "Cloud security posture management",
+        "C": "Microsoft Defender for Endpoint",
+        "D": "Microsoft Sentinel"
+      }
+    },
+    {
+      "question_id": "sc900_p1_q048",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "compliance_score_tracks_improvement_actions",
+      "choices": {
+        "A": "Compliance Manager improvement actions",
+        "B": "A guaranteed certification that the organization is legally compliant",
+        "C": "Service Trust Portal audit reports",
+        "D": "A measure that helps track progress in completing recommended compliance improvement actions"
+      }
+    },
+    {
+      "question_id": "sc900_p1_q049",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "retention_keep_or_delete_period",
+      "choices": {
+        "A": "Retention policies and retention labels",
+        "B": "Data loss prevention",
+        "C": "Records management",
+        "D": "Sensitivity labels"
+      }
+    },
+    {
+      "question_id": "sc900_p1_q050",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "irm_internal_risky_activity",
+      "choices": {
+        "A": "Data loss prevention",
+        "B": "Insider Risk Management",
+        "C": "eDiscovery",
+        "D": "Microsoft Purview Audit"
+      }
+    },
+    {
+      "question_id": "sc900_p2_q001",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "encryption_reversible_hashing_one_way",
+      "choices": {
+        "A": "Hashing",
+        "B": "Encryption",
+        "C": "Hashing for integrity",
+        "D": "Encryption for confidentiality"
+      }
+    },
+    {
+      "question_id": "sc900_p2_q010",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "windows_hello_passwordless",
+      "choices": {
+        "A": "A Microsoft Entra directory role",
+        "B": "Windows Hello for Business",
+        "C": "Temporary Access Pass",
+        "D": "Microsoft Authenticator passwordless sign-in"
+      }
+    },
+    {
+      "question_id": "sc900_p2_q014",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "ca_evaluates_device_compliance",
+      "choices": {
+        "A": "Conditional Access",
+        "B": "Privileged Identity Management",
+        "C": "Microsoft Entra ID Protection",
+        "D": "Access reviews"
+      }
+    },
+    {
+      "question_id": "sc900_p2_q017",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "reviews_for_guest_group_cleanup",
+      "choices": {
+        "A": "Access reviews",
+        "B": "Privileged Identity Management eligible-role activation",
+        "C": "Entitlement management access packages",
+        "D": "Microsoft Entra ID Protection risk detection"
+      }
+    },
+    {
+      "question_id": "sc900_p2_q018",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "pim_approval_and_duration",
+      "choices": {
+        "A": "Access reviews",
+        "B": "Privileged Identity Management",
+        "C": "Entitlement management",
+        "D": "Microsoft Entra ID Protection"
+      }
+    },
+    {
+      "question_id": "sc900_p2_q021",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "vnet_subnets_segment_workloads",
+      "choices": {
+        "A": "Network security groups",
+        "B": "Virtual networks and subnets",
+        "C": "Azure Firewall",
+        "D": "Azure Bastion"
+      }
+    },
+    {
+      "question_id": "sc900_p2_q024",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "waf_inspects_http_injection",
+      "choices": {
+        "A": "Azure Web Application Firewall",
+        "B": "Azure Bastion",
+        "C": "Azure Firewall",
+        "D": "Azure DDoS Protection"
+      }
+    },
+    {
+      "question_id": "sc900_p2_q033",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "soar_for_repeatable_incident_steps",
+      "choices": {
+        "A": "Microsoft Defender XDR",
+        "B": "Microsoft Defender for Cloud",
+        "C": "Microsoft Entra directory roles",
+        "D": "Automation and playbooks"
+      }
+    },
+    {
+      "question_id": "sc900_p2_q035",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "defender_ti_actor_infrastructure_intel",
+      "choices": {
+        "A": "Microsoft Defender for Office 365 Safe Links",
+        "B": "Microsoft Defender Threat Intelligence",
+        "C": "Microsoft Sentinel analytics rules",
+        "D": "Microsoft Defender for Endpoint"
+      }
+    },
+    {
+      "question_id": "sc900_p2_q045",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "records_restrict_edit_delete",
+      "choices": {
+        "A": "Retention labels",
+        "B": "Records Management",
+        "C": "Retention policies",
+        "D": "Data loss prevention"
+      }
+    },
+    {
+      "question_id": "sc900_p2_q046",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "retention_labels_item_level_vs_policy",
+      "choices": {
+        "A": "One site-wide retention policy only",
+        "B": "Retention labels",
+        "C": "Data loss prevention",
+        "D": "Records management"
+      }
+    },
+    {
+      "question_id": "sc900_p2_q048",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "irm_behavior_pattern_not_single_dlp_match",
+      "choices": {
+        "A": "Data loss prevention",
+        "B": "eDiscovery",
+        "C": "Insider Risk Management",
+        "D": "Microsoft Purview Audit"
+      }
+    },
+    {
+      "question_id": "sc900_p3_q007",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "dfc_recommendations_and_secure_score",
+      "choices": {
+        "A": "Microsoft Defender XDR",
+        "B": "Microsoft Defender for Endpoint",
+        "C": "Microsoft Defender for Cloud",
+        "D": "Microsoft Entra Verified ID"
+      }
+    },
+    {
+      "question_id": "sc900_p3_q020",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "irm_behavior_vs_ediscovery_legal",
+      "choices": {
+        "A": "It is the Microsoft service that issues FIDO2 security keys",
+        "B": "Data loss prevention",
+        "C": "eDiscovery",
+        "D": "It focuses on potentially risky activity by people inside the organization, using privacy-aware investigation workflows"
+      }
+    },
+    {
+      "question_id": "sc900_p3_q025",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "hub_firewall_fqdn_rules",
+      "choices": {
+        "A": "Azure Firewall",
+        "B": "Network security groups",
+        "C": "Azure Web Application Firewall",
+        "D": "Azure DDoS Protection"
+      }
+    },
+    {
+      "question_id": "sc900_p3_q028",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "content_explorer_labeled_file_inventory",
+      "choices": {
+        "A": "Data loss prevention policies",
+        "B": "Sensitivity labels",
+        "C": "Retention policies",
+        "D": "Content explorer"
+      }
+    },
+    {
+      "question_id": "sc900_p3_q030",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "legal_hold_is_ediscovery",
+      "choices": {
+        "A": "Microsoft Purview Audit",
+        "B": "Microsoft Purview eDiscovery",
+        "C": "Insider Risk Management",
+        "D": "Data loss prevention"
+      }
+    },
+    {
+      "question_id": "sc900_p3_q037",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "cspm_finds_exposed_ports_and_missing_encryption",
+      "choices": {
+        "A": "Cloud security posture management",
+        "B": "Cloud workload protection",
+        "C": "Microsoft Defender for Endpoint",
+        "D": "Microsoft Sentinel"
+      }
+    },
+    {
+      "question_id": "sc900_p3_q038",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "content_where_activity_what",
+      "choices": {
+        "A": "Data loss prevention policies",
+        "B": "Because one tool locates where sensitive content currently exists and the other shows historical actions on labeled content",
+        "C": "Sensitivity labels",
+        "D": "Because both tools assign privileged Entra roles"
+      }
+    },
+    {
+      "question_id": "sc900_p3_q043",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "ad_ds_onprem_entra_cloud",
+      "choices": {
+        "A": "Active Directory Domain Services",
+        "B": "Microsoft Entra Domain Services",
+        "C": "Microsoft Entra ID is the cloud identity service, while Active Directory Domain Services is an on-premises directory service",
+        "D": "Microsoft Entra External ID"
+      }
+    },
+    {
+      "question_id": "sc900_p3_q055",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "waf_complements_ddos_in_defense_in_depth",
+      "choices": {
+        "A": "Azure Firewall",
+        "B": "Azure DDoS Protection",
+        "C": "It inspects HTTP and HTTPS requests for application-layer attacks, complementing network-layer controls such as DDoS Protection",
+        "D": "It provides browser-based RDP into virtual machines"
+      }
+    },
+    {
+      "question_id": "sc900_p3_q056",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "mde_device_isolation_response_action",
+      "choices": {
+        "A": "Microsoft Defender for Identity",
+        "B": "Microsoft Defender for Office 365",
+        "C": "Microsoft Defender Vulnerability Management",
+        "D": "Microsoft Defender for Endpoint"
+      }
+    },
+    {
+      "question_id": "sc900_p3_q060",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "stp_privacy_trust_documents",
+      "choices": {
+        "A": "Compliance Manager",
+        "B": "Microsoft Purview portal",
+        "C": "Microsoft Defender portal",
+        "D": "Privacy and related trust documents published in the Service Trust Portal"
+      }
+    },
+    {
+      "question_id": "sc900_p3_q068",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "sentinel_ingests_many_log_sources",
+      "choices": {
+        "A": "Assigning Microsoft Entra built-in roles",
+        "B": "Microsoft Defender XDR",
+        "C": "Microsoft Defender for Cloud",
+        "D": "Data connectors"
+      }
+    },
+    {
+      "question_id": "sc900_p3_q071",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "hashing_for_integrity_not_confidentiality",
+      "choices": {
+        "A": "Hashing for integrity",
+        "B": "Encryption for confidentiality",
+        "C": "Hashing",
+        "D": "Role assignment"
+      }
+    },
+    {
+      "question_id": "sc900_p3_q072",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "external_guest_identities_for_partners",
+      "choices": {
+        "A": "User identities",
+        "B": "Workload identities",
+        "C": "Managed identities",
+        "D": "An external or guest identity in Microsoft Entra ID"
+      }
+    },
+    {
+      "question_id": "sc900_p3_q076",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "mcas_session_control_after_ca_grant",
+      "choices": {
+        "A": "Microsoft Defender for Office 365",
+        "B": "Microsoft Defender for Endpoint",
+        "C": "Microsoft Entra Domain Services",
+        "D": "Microsoft Defender for Cloud Apps"
+      }
+    },
+    {
+      "question_id": "sc900_p3_q079",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "audit_answers_who_changed_policy_not_mailbox_export",
+      "choices": {
+        "A": "Data loss prevention",
+        "B": "Microsoft Entra Verified ID",
+        "C": "Microsoft Purview Audit",
+        "D": "eDiscovery content collection"
+      }
+    },
+    {
+      "question_id": "sc900_p3_q084",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "password_reset_role_not_ga",
+      "choices": {
+        "A": "Azure role-based access control",
+        "B": "Publish the technician's password in a team site",
+        "C": "Turn off multifactor authentication for administrators",
+        "D": "Assign a least-privilege built-in role that matches the password-reset job, rather than Global Administrator"
+      }
+    },
+    {
+      "question_id": "sc900_p3_q088",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "mdvm_not_siem_timeline",
+      "choices": {
+        "A": "Microsoft Defender for Endpoint",
+        "B": "It is used only to create Entra access packages",
+        "C": "Microsoft Defender for Office 365",
+        "D": "It helps discover, assess, and prioritize software vulnerabilities and exposures so they can be remediated"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q011",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "federation_for_partner_access",
+      "choices": {
+        "A": "Authentication",
+        "B": "Federation",
+        "C": "Authorization",
+        "D": "Microsoft Entra ID"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q023",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "hybrid_identity_one_account_both_worlds",
+      "choices": {
+        "A": "Microsoft Entra Connect",
+        "B": "Password hash synchronization",
+        "C": "Pass-through authentication",
+        "D": "Hybrid identity with Microsoft Entra ID"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q027",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "sspr_reduces_helpdesk_resets",
+      "choices": {
+        "A": "Multifactor authentication",
+        "B": "Self-service password reset",
+        "C": "Custom banned password list",
+        "D": "Conditional Access"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q029",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "ca_requires_mfa_from_untrusted_location",
+      "choices": {
+        "A": "Privileged Identity Management",
+        "B": "Microsoft Entra ID Protection",
+        "C": "Conditional Access",
+        "D": "Access reviews"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q033",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "lifecycle_workflows_mover_automation",
+      "choices": {
+        "A": "Lifecycle Workflows",
+        "B": "Access reviews",
+        "C": "Entitlement management",
+        "D": "Defender TI articles"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q035",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "pim_replaces_standing_privilege",
+      "choices": {
+        "A": "Access reviews",
+        "B": "Privileged Identity Management",
+        "C": "Entitlement management",
+        "D": "Microsoft Entra ID Protection"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q039",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "tap_bootstrap_new_hire_registration",
+      "choices": {
+        "A": "Windows Hello for Business",
+        "B": "Microsoft Authenticator passwordless sign-in",
+        "C": "Temporary Access Pass",
+        "D": "A Defender TI indicator"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q040",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "mfa_two_factor_categories",
+      "choices": {
+        "A": "Because the fingerprint replaces authorization",
+        "B": "Self-service password reset",
+        "C": "Because two different factor categories are combined",
+        "D": "Password protection"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q041",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "ca_grant_controls_not_siem",
+      "choices": {
+        "A": "Privileged Identity Management",
+        "B": "It declares items as records",
+        "C": "It can require a compliant device or MFA when sign-in conditions match",
+        "D": "Microsoft Entra ID Protection"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q043",
+      "reason": "Ask the Conditional Access response to ID Protection risk instead of a two-product pairing with joke distractors.",
+      "preserve_identity": true,
+      "tested_decision": "id_protection_feeds_conditional_access",
+      "stem": "Identity Protection flags impossible-travel sign-ins as high risk. Which Entra capability can require extra controls or block those sign-ins?",
+      "choices": {
+        "A": "Conditional Access",
+        "B": "Privileged Identity Management",
+        "C": "Access reviews",
+        "D": "Entitlement management"
+      },
+      "stem_style": "capability_selection",
+      "exam_calibration_tier": "FUNDAMENTALS_CORE",
+      "reasoning_steps": 1
+    },
+    {
+      "question_id": "sc900_mlc_q045",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "entra_replaces_local_app_directories",
+      "choices": {
+        "A": "Active Directory Domain Services",
+        "B": "Microsoft Entra ID",
+        "C": "Microsoft Entra Domain Services",
+        "D": "Microsoft Entra External ID"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q048",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "mfa_stops_password_replay_without_second_factor",
+      "choices": {
+        "A": "Self-service password reset",
+        "B": "Password protection",
+        "C": "Conditional Access",
+        "D": "Multifactor authentication"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q051",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "entra_id_not_network_or_ddos",
+      "choices": {
+        "A": "Active Directory Domain Services",
+        "B": "It is Microsoft's cloud identity and access management service",
+        "C": "Microsoft Entra Domain Services",
+        "D": "Microsoft Entra External ID"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q053",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "windows_hello_passwordless",
+      "choices": {
+        "A": "Temporary Access Pass",
+        "B": "Microsoft Authenticator passwordless sign-in",
+        "C": "Windows Hello for Business",
+        "D": "Defender TI articles"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q054",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "custom_banned_password_list",
+      "choices": {
+        "A": "Self-service password reset",
+        "B": "It is a SIEM connector",
+        "C": "It can block passwords that appear on banned lists, including custom terms",
+        "D": "It declares SharePoint records"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q058",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "reviews_for_guest_group_cleanup",
+      "choices": {
+        "A": "Privileged Identity Management eligible-role activation",
+        "B": "Entitlement management access packages",
+        "C": "Access reviews",
+        "D": "Microsoft Entra ID Protection risk detection"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q062",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "password_hash_sync_is_hybrid",
+      "choices": {
+        "A": "Microsoft Entra Connect",
+        "B": "Hybrid identity",
+        "C": "Password hash synchronization",
+        "D": "Pass-through authentication"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q064",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "mfa_scoped_with_conditional_access",
+      "choices": {
+        "A": "Conditional Access targeting directory roles",
+        "B": "Self-service password reset",
+        "C": "Password protection",
+        "D": "Conditional Access"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q065",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "custom_banned_terms_company_name",
+      "choices": {
+        "A": "Microsoft Entra Password Protection custom banned password list",
+        "B": "Self-service password reset",
+        "C": "Defender TI WHOIS lookup",
+        "D": "Multifactor authentication"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q066",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "ca_blocks_legacy_auth",
+      "choices": {
+        "A": "Privileged Identity Management",
+        "B": "Microsoft Entra ID Protection",
+        "C": "Access reviews",
+        "D": "Conditional Access"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q068",
+      "reason": "Keep the governance pairing decision; replace cross-product joke options with neighboring wrong pairings.",
+      "preserve_identity": true,
+      "tested_decision": "workflows_vs_reviews_pairing",
+      "choices": {
+        "A": "Lifecycle Workflows recertify standing access; access reviews automate joiner and leaver tasks",
+        "B": "Lifecycle Workflows automate joiner/mover/leaver tasks; access reviews recertify whether access is still needed",
+        "C": "Lifecycle Workflows replace Privileged Identity Management; access reviews replace Conditional Access",
+        "D": "Both capabilities are Microsoft Entra ID Protection risk policies"
+      },
+      "exam_calibration_tier": "FUNDAMENTALS_APPLIED",
+      "reasoning_steps": 1
+    },
+    {
+      "question_id": "sc900_mlc_q070",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "id_protection_vs_defender_for_identity",
+      "choices": {
+        "A": "ID Protection focuses on Entra sign-in and identity risk; Defender for Identity focuses on Active Directory identity threats such as lateral movement",
+        "B": "Conditional Access",
+        "C": "Privileged Identity Management",
+        "D": "Defender for Identity issues FIDO2 keys"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q071",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "apps_trust_entra_for_work_accounts",
+      "choices": {
+        "A": "Active Directory Domain Services",
+        "B": "Microsoft Entra Domain Services",
+        "C": "Microsoft Entra External ID",
+        "D": "Microsoft Entra ID"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q073",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "reviews_can_remove_unjustified_access",
+      "choices": {
+        "A": "They patch guest operating systems in IaaS",
+        "B": "Privileged Identity Management eligible-role activation",
+        "C": "Entitlement management access packages",
+        "D": "They can remove access that is no longer justified after reviewers decide"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q078",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "waf_inspects_http_injection",
+      "choices": {
+        "A": "Azure DDoS Protection",
+        "B": "Azure Firewall",
+        "C": "Azure Web Application Firewall",
+        "D": "Network security groups"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q081",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "bastion_rdp_without_public_ip",
+      "choices": {
+        "A": "Network security groups",
+        "B": "Azure Bastion",
+        "C": "Azure Firewall",
+        "D": "Azure DDoS Protection"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q085",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "cwp_threats_vs_cspm_config",
+      "choices": {
+        "A": "Cloud security posture management",
+        "B": "CSPM replaces encryption",
+        "C": "Workload protection adds threat detection and plans for running workloads; CSPM emphasizes configuration posture",
+        "D": "Microsoft Defender for Endpoint"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q091",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "mde_for_laptop_edr",
+      "choices": {
+        "A": "Microsoft Defender for Identity",
+        "B": "Microsoft Defender for Office 365",
+        "C": "Microsoft Defender for Endpoint",
+        "D": "Microsoft Defender Vulnerability Management"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q092",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "mcas_casb_shadow_it",
+      "choices": {
+        "A": "Microsoft Defender for Cloud Apps",
+        "B": "Microsoft Defender for Office 365",
+        "C": "Temporary Access Pass",
+        "D": "Microsoft Defender for Endpoint"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q100",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "sentinel_rules_and_playbooks",
+      "choices": {
+        "A": "Microsoft Defender XDR",
+        "B": "Temporary Access Pass",
+        "C": "Microsoft Defender for Cloud",
+        "D": "Microsoft Sentinel"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q101",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "ddos_not_waf_for_udp_flood",
+      "choices": {
+        "A": "Azure Web Application Firewall",
+        "B": "Azure Firewall",
+        "C": "Network security groups",
+        "D": "Azure DDoS Protection"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q103",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "nsg_allow_443_deny_rest",
+      "choices": {
+        "A": "Azure Firewall",
+        "B": "Azure Web Application Firewall",
+        "C": "Defender TI",
+        "D": "A network security group"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q105",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "bastion_not_siem_or_idp",
+      "choices": {
+        "A": "Network security groups",
+        "B": "Azure Firewall",
+        "C": "Azure DDoS Protection",
+        "D": "It provides secure VM management without opening public RDP/SSH ports on the target VMs"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q107",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "dfc_multicloud_posture",
+      "choices": {
+        "A": "Microsoft Entra Temporary Access Pass",
+        "B": "Microsoft Defender XDR",
+        "C": "Microsoft Defender for Cloud",
+        "D": "Microsoft Sentinel"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q108",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "public_storage_is_cspm_finding",
+      "choices": {
+        "A": "Cloud workload protection",
+        "B": "Mailbox safe links",
+        "C": "Cloud Security Posture Management",
+        "D": "Microsoft Defender for Endpoint"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q109",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "assigned_standard_creates_recommendations",
+      "choices": {
+        "A": "Recommendations generated from the assigned standard",
+        "B": "A FIDO2 registration",
+        "C": "Regulations",
+        "D": "Industry standards"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q110",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "cwp_plan_for_server_threats",
+      "choices": {
+        "A": "Cloud workload protection",
+        "B": "Cloud security posture management",
+        "C": "Microsoft Defender for Endpoint",
+        "D": "Temporary Access Pass"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q111",
+      "reason": "Keep the SIEM/SOAR pairing; replace unrelated-product distractors.",
+      "preserve_identity": true,
+      "tested_decision": "siem_detect_soar_respond",
+      "choices": {
+        "A": "SIEM automates containment; SOAR only stores logs",
+        "B": "SIEM detects and investigates; SOAR automates response",
+        "C": "SIEM is Microsoft Defender for Cloud Apps; SOAR is Azure Web Application Firewall",
+        "D": "SIEM replaces Microsoft Entra ID as the identity provider"
+      },
+      "exam_calibration_tier": "FUNDAMENTALS_APPLIED",
+      "reasoning_steps": 1
+    },
+    {
+      "question_id": "sc900_mlc_q113",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "xdr_spans_email_endpoint_identity",
+      "choices": {
+        "A": "It correlates those workload signals into a unified incident",
+        "B": "Microsoft Defender for Endpoint",
+        "C": "Microsoft Defender for Office 365",
+        "D": "Microsoft Defender for Identity"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q114",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "safe_links_attachments_are_mdo",
+      "choices": {
+        "A": "Microsoft Defender for Endpoint",
+        "B": "Microsoft Defender for Office 365",
+        "C": "Microsoft Entra PIM",
+        "D": "Microsoft Defender for Cloud Apps"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q117",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "mdi_for_ad_ticket_attacks",
+      "choices": {
+        "A": "Microsoft Defender for Identity",
+        "B": "Microsoft Defender for Endpoint",
+        "C": "Microsoft Entra ID Protection",
+        "D": "Microsoft Defender for Cloud Apps"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q118",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "mdvm_not_siem_timeline",
+      "choices": {
+        "A": "Microsoft Sentinel hunting",
+        "B": "Microsoft Defender for Endpoint",
+        "C": "Microsoft Defender for Office 365",
+        "D": "Microsoft Defender Vulnerability Management"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q119",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "ti_lookup_suspicious_domain",
+      "choices": {
+        "A": "Temporary Access Pass",
+        "B": "Microsoft Defender for Office 365 Safe Links",
+        "C": "Microsoft Sentinel analytics rules",
+        "D": "Microsoft Defender Threat Intelligence"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q120",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "one_queue_in_defender_portal",
+      "choices": {
+        "A": "Microsoft Defender XDR",
+        "B": "Microsoft Sentinel",
+        "C": "Microsoft Defender portal",
+        "D": "Microsoft Purview portal"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q121",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "firewall_central_outbound_filter",
+      "choices": {
+        "A": "Azure Firewall",
+        "B": "Network security groups",
+        "C": "Azure Web Application Firewall",
+        "D": "Azure DDoS Protection"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q122",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "ddos_not_safe_attachments",
+      "choices": {
+        "A": "It is an email Safe Attachments feature",
+        "B": "It helps protect public Azure resources from volumetric denial-of-service attacks",
+        "C": "It recertifies privileged roles",
+        "D": "Azure Web Application Firewall"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q125",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "dfc_posture_plus_optional_cwp",
+      "choices": {
+        "A": "Microsoft Defender XDR",
+        "B": "It helps improve cloud security posture and can add workload threat protection",
+        "C": "It is only a records repository",
+        "D": "Microsoft Sentinel"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q126",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "cwp_not_identity_provider",
+      "choices": {
+        "A": "It is Microsoft's only identity provider",
+        "B": "It adds threat protection for running cloud workloads beyond configuration scoring",
+        "C": "Cloud security posture management",
+        "D": "Microsoft Defender for Endpoint"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q128",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "soar_for_repeatable_incident_steps",
+      "choices": {
+        "A": "Microsoft Sentinel",
+        "B": "Microsoft Defender XDR",
+        "C": "SOAR",
+        "D": "Records declaration"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q129",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "xdr_not_an_idp",
+      "choices": {
+        "A": "Microsoft Defender for Endpoint",
+        "B": "Microsoft Defender for Office 365",
+        "C": "It is a TAP authentication method",
+        "D": "It is an extended detection and response suite, not a replacement for Entra ID as an identity provider"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q130",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "mdo_not_azure_firewall",
+      "choices": {
+        "A": "It is Azure's stateful network firewall",
+        "B": "Microsoft Defender for Endpoint",
+        "C": "It protects email and collaboration from phishing and malware",
+        "D": "Microsoft Defender for Cloud Apps"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q131",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "mde_not_ddos_or_pim",
+      "choices": {
+        "A": "Microsoft Defender for Identity",
+        "B": "It recertifies Entra groups",
+        "C": "It provides endpoint detection and response for devices",
+        "D": "It stores app secrets as its primary purpose"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q132",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "defender_portal_not_stp",
+      "choices": {
+        "A": "Microsoft Defender XDR",
+        "B": "It is the unified operations experience for Defender XDR",
+        "C": "Microsoft Sentinel",
+        "D": "Service Trust Portal"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q133",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "ti_not_nsg",
+      "choices": {
+        "A": "Microsoft Defender for Office 365 Safe Links",
+        "B": "Microsoft Sentinel analytics rules",
+        "C": "Microsoft Defender for Endpoint",
+        "D": "It supplies threat-actor and indicator intelligence for investigations"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q134",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "waf_not_mfa",
+      "choices": {
+        "A": "Azure Firewall",
+        "B": "It helps protect web apps from HTTP attacks such as injection and XSS",
+        "C": "Azure DDoS Protection",
+        "D": "It is Azure Bastion"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q135",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "vnet_not_siem",
+      "choices": {
+        "A": "It isolates private address spaces so traffic between workloads can be controlled",
+        "B": "Network security groups",
+        "C": "Azure Firewall",
+        "D": "Azure Bastion"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q137",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "recommendations_are_posture_gaps",
+      "choices": {
+        "A": "They are Entra access packages",
+        "B": "They are Safe Attachments policies",
+        "C": "Regulations",
+        "D": "They identify resources that do not meet the assigned security standard"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q140",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "mdi_not_waf",
+      "choices": {
+        "A": "Microsoft Defender for Endpoint",
+        "B": "Microsoft Entra ID Protection",
+        "C": "It detects identity-based attacks using Active Directory signals",
+        "D": "Microsoft Defender for Cloud Apps"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q141",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "mdvm_not_conditional_access",
+      "choices": {
+        "A": "Microsoft Defender for Endpoint",
+        "B": "Microsoft Defender for Office 365",
+        "C": "It helps find and prioritize vulnerabilities so they can be remediated",
+        "D": "Microsoft Defender for Cloud"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q144",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "ddos_for_public_lb_availability",
+      "choices": {
+        "A": "Azure Web Application Firewall",
+        "B": "Azure Firewall",
+        "C": "Network security groups",
+        "D": "Azure DDoS Protection"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q146",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "secure_score_not_compliance_score",
+      "choices": {
+        "A": "Microsoft Defender XDR",
+        "B": "Mailbox phishing catch rate only",
+        "C": "Cloud resource security posture against recommendations",
+        "D": "Microsoft Sentinel"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q147",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "sentinel_ingests_many_log_sources",
+      "choices": {
+        "A": "Microsoft Defender XDR",
+        "B": "Microsoft Sentinel",
+        "C": "Temporary Access Pass",
+        "D": "Microsoft Defender for Cloud"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q150",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "users_request_access_packages",
+      "choices": {
+        "A": "Access reviews",
+        "B": "Entitlement management access packages",
+        "C": "Entitlement management",
+        "D": "Privileged Identity Management"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q157",
+      "reason": "Keep the explorer pairing; replace network-security joke distractors.",
+      "preserve_identity": true,
+      "tested_decision": "content_where_activity_what",
+      "choices": {
+        "A": "Content explorer shows where classified items are; Activity explorer shows what is happening to labeled or classified content",
+        "B": "Content explorer creates DLP policies; Activity explorer creates retention labels",
+        "C": "Content explorer issues Entra roles; Activity explorer activates PIM",
+        "D": "Both explorers replace sensitivity labels"
+      },
+      "exam_calibration_tier": "FUNDAMENTALS_APPLIED",
+      "reasoning_steps": 1
+    },
+    {
+      "question_id": "sc900_mlc_q159",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "dlp_blocks_outbound_pci",
+      "choices": {
+        "A": "Sensitivity labels",
+        "B": "Retention policies",
+        "C": "Insider Risk Management",
+        "D": "Data loss prevention"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q163",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "ediscovery_legal_hold_collection",
+      "choices": {
+        "A": "eDiscovery",
+        "B": "Microsoft Purview Audit",
+        "C": "Insider Risk Management",
+        "D": "Defender TI"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q165",
+      "reason": "Keep the STP versus Compliance Manager pairing; replace unrelated-product distractors.",
+      "preserve_identity": true,
+      "tested_decision": "stp_microsoft_evidence_cm_customer_actions",
+      "choices": {
+        "A": "Service Trust Portal configures tenant DLP; Compliance Manager publishes Microsoft's ISO reports",
+        "B": "Compliance Manager is a DDoS mitigation service; Service Trust Portal is Defender XDR",
+        "C": "Both replace Microsoft Entra ID",
+        "D": "Service Trust Portal publishes Microsoft's audit evidence; Compliance Manager tracks the customer's implemented controls"
+      },
+      "exam_calibration_tier": "FUNDAMENTALS_APPLIED",
+      "reasoning_steps": 1
+    },
+    {
+      "question_id": "sc900_mlc_q166",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "purview_portal_not_defender_portal",
+      "choices": {
+        "A": "Microsoft Entra admin center",
+        "B": "The Microsoft Purview portal",
+        "C": "Microsoft Defender portal",
+        "D": "Service Trust Portal"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q167",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "cm_gdpr_improvement_actions",
+      "choices": {
+        "A": "Service Trust Portal",
+        "B": "Compliance Manager",
+        "C": "Compliance score",
+        "D": "Microsoft Purview Audit"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q168",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "label_policies_publish_to_users",
+      "choices": {
+        "A": "Data loss prevention",
+        "B": "Retention labels",
+        "C": "Data classification",
+        "D": "Sensitivity label policies"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q169",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "labels_protect_dlp_prevents_sharing",
+      "choices": {
+        "A": "DLP is only a directory role",
+        "B": "Labels classify and can protect content; DLP detects and helps prevent risky sharing of sensitive information",
+        "C": "Sensitivity labels",
+        "D": "Retention policies"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q170",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "policy_location_label_item",
+      "choices": {
+        "A": "Data loss prevention",
+        "B": "They both assign Entra roles",
+        "C": "A policy applies broadly to a location; a label can be applied to individual items",
+        "D": "Records management"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q171",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "record_locks_vs_ordinary_retention",
+      "choices": {
+        "A": "Records cannot be stored in Microsoft 365",
+        "B": "Record status restricts editing and deletion during the retention period",
+        "C": "Retention labels",
+        "D": "Retention policies"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q172",
+      "reason": "Keep the IRM versus eDiscovery pairing; replace joke distractors with swapped or neighboring wrong options.",
+      "preserve_identity": true,
+      "tested_decision": "irm_behavior_vs_ediscovery_legal",
+      "choices": {
+        "A": "Insider Risk Management holds mailboxes for lawsuits; eDiscovery scores internal behavior",
+        "B": "Insider Risk Management is Azure DDoS Protection; eDiscovery is Azure Firewall",
+        "C": "eDiscovery issues Temporary Access Pass codes; Insider Risk Management issues FIDO2 keys",
+        "D": "Insider Risk Management looks for internal risky behavior; eDiscovery collects content for legal matters"
+      },
+      "exam_calibration_tier": "FUNDAMENTALS_APPLIED",
+      "reasoning_steps": 1
+    },
+    {
+      "question_id": "sc900_mlc_q174",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "legal_hold_is_ediscovery",
+      "choices": {
+        "A": "Placing a legal hold on a custodian's mailbox and exporting results for counsel",
+        "B": "Scoring whether an employee is exfiltrating files to a personal cloud",
+        "C": "Microsoft Purview Audit",
+        "D": "Insider Risk Management"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q175",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "classify_before_dlp_to_know_what_exists",
+      "choices": {
+        "A": "Sensitivity labels",
+        "B": "Privileged Identity Management",
+        "C": "Data loss prevention",
+        "D": "Data classification"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q178",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "idp_enables_sso",
+      "choices": {
+        "A": "Single sign-on",
+        "B": "Microsoft Entra ID",
+        "C": "Records declaration",
+        "D": "Federation"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q179",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "ad_ds_onprem_entra_cloud",
+      "choices": {
+        "A": "Microsoft Entra ID",
+        "B": "Microsoft Entra Domain Services",
+        "C": "AD DS is the traditional on-premises directory; Entra ID is Microsoft's cloud identity service",
+        "D": "Entra ID is only DDoS Protection"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q181",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "privacy_transparency_and_protection",
+      "choices": {
+        "A": "Compliance Manager",
+        "B": "Service Trust Portal",
+        "C": "Data loss prevention",
+        "D": "They include commitments such as transparency and protection of customer data"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q182",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "purview_portal_not_key_vault",
+      "choices": {
+        "A": "Microsoft Entra admin center",
+        "B": "It is the workspace for Purview compliance and data-governance tools",
+        "C": "It is Temporary Access Pass",
+        "D": "Microsoft Defender portal"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q183",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "cm_not_ddos",
+      "choices": {
+        "A": "It helps the customer manage their own compliance assessments and improvement actions",
+        "B": "Service Trust Portal",
+        "C": "Compliance score",
+        "D": "Microsoft Purview Audit"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q184",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "classification_not_vpn",
+      "choices": {
+        "A": "It helps the organization understand what sensitive data it has and where it lives",
+        "B": "It is a VPN replacement",
+        "C": "It issues Entra roles",
+        "D": "Sensitivity labels"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q185",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "content_explorer_labeled_file_inventory",
+      "choices": {
+        "A": "Data loss prevention policies",
+        "B": "Content explorer",
+        "C": "Sensitivity labels",
+        "D": "Retention policies"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q186",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "activity_explorer_label_and_dlp_events",
+      "choices": {
+        "A": "Data loss prevention policies",
+        "B": "Activity explorer",
+        "C": "Sensitivity labels",
+        "D": "Retention policies"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q187",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "labels_persist_with_content",
+      "choices": {
+        "A": "They can persist with content and apply protection such as encryption or markings",
+        "B": "They are NSG 5-tuple rules",
+        "C": "Data loss prevention",
+        "D": "They are TAP codes"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q189",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "retention_policy_for_all_mailboxes",
+      "choices": {
+        "A": "Data loss prevention",
+        "B": "Records management",
+        "C": "A FIDO2 key",
+        "D": "A retention policy"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q191",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "irm_not_firewall",
+      "choices": {
+        "A": "Data loss prevention",
+        "B": "eDiscovery",
+        "C": "Microsoft Purview Audit",
+        "D": "It is designed to identify potentially risky internal user activities with privacy-aware investigation"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q192",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "ediscovery_not_conditional_access",
+      "choices": {
+        "A": "Microsoft Purview Audit",
+        "B": "It helps find, hold, and export content for investigations and legal matters",
+        "C": "Insider Risk Management",
+        "D": "Data loss prevention"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q193",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "audit_admin_activity_trail",
+      "choices": {
+        "A": "Data loss prevention",
+        "B": "Audit",
+        "C": "eDiscovery content collection",
+        "D": "Insider Risk Management"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q194",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "stp_not_defender_endpoint",
+      "choices": {
+        "A": "Compliance Manager",
+        "B": "Microsoft Purview portal",
+        "C": "Microsoft Defender portal",
+        "D": "Customers use it to review Microsoft trust and compliance documentation"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q195",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "score_prioritizes_remaining_actions",
+      "choices": {
+        "A": "Compliance Manager improvement actions",
+        "B": "It helps prioritize remaining Compliance Manager improvement actions",
+        "C": "Service Trust Portal audit reports",
+        "D": "Defender for Cloud secure score"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q196",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "dlp_in_teams_chat",
+      "choices": {
+        "A": "Sensitivity labels",
+        "B": "Retention policies",
+        "C": "Data loss prevention",
+        "D": "Insider Risk Management"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q198",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "departing_employee_exfil_irm",
+      "choices": {
+        "A": "Data loss prevention",
+        "B": "eDiscovery",
+        "C": "Insider Risk Management",
+        "D": "Temporary Access Pass"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q200",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "audit_tracks_dlp_policy_changes",
+      "choices": {
+        "A": "Data loss prevention",
+        "B": "eDiscovery content collection",
+        "C": "Microsoft Purview audit",
+        "D": "Insider Risk Management"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q201",
+      "reason": "Reduce two-step missing-principle diagnosis to one least-privilege recognition item.",
+      "preserve_identity": true,
+      "tested_decision": "least_privilege_not_standing_full_access",
+      "stem": "An organization wants users to receive only the permissions required for their work. Which Zero Trust principle addresses this requirement?",
+      "choices": {
+        "A": "Use least-privilege access",
+        "B": "Verify explicitly",
+        "C": "Assume breach",
+        "D": "Trust the corporate network by default"
+      },
+      "stem_style": "direct_concept",
+      "exam_calibration_tier": "FUNDAMENTALS_CORE",
+      "reasoning_steps": 0
+    },
+    {
+      "question_id": "sc900_mlc_q203",
+      "reason": "Ask for authorization after authentication instead of a two-sentence sequencing puzzle.",
+      "preserve_identity": true,
+      "tested_decision": "authn_precedes_authorization",
+      "stem": "A user completes password and MFA challenges. The app then decides whether that account may open a finance report. Which process is the app performing?",
+      "choices": {
+        "A": "Authentication",
+        "B": "Federation",
+        "C": "Hashing",
+        "D": "Authorization"
+      },
+      "stem_style": "distinction_comparison",
+      "exam_calibration_tier": "FUNDAMENTALS_CORE",
+      "reasoning_steps": 1
+    },
+    {
+      "question_id": "sc900_mlc_q205",
+      "reason": "Remove claim-diagnosis; test authorization directly after a successful sign-in.",
+      "preserve_identity": true,
+      "tested_decision": "signin_success_is_not_blanket_authorization",
+      "stem": "A contractor signs in successfully with MFA but cannot open a payroll app. Which process determines what the contractor may access?",
+      "choices": {
+        "A": "Authentication, which already granted every app permission",
+        "B": "Authorization, which still evaluates roles and policies after sign-in",
+        "C": "Federation, which always grants Global Administrator rights after sign-in",
+        "D": "Conditional Access named locations, which replace role assignments"
+      },
+      "stem_style": "distinction_comparison",
+      "exam_calibration_tier": "FUNDAMENTALS_CORE",
+      "reasoning_steps": 1
+    },
+    {
+      "question_id": "sc900_mlc_q206",
+      "reason": "Ask the identity-perimeter idea directly.",
+      "preserve_identity": true,
+      "tested_decision": "identity_perimeter_replaces_castle_and_moat",
+      "stem": "Users connect to Microsoft 365 from home networks and coffee shops. Which model treats identity, not the corporate firewall, as a primary security perimeter?",
+      "choices": {
+        "A": "Zero Trust, with identity as a primary security perimeter",
+        "B": "Castle-and-moat network trust for any HTTPS request",
+        "C": "Defense in depth that treats the firewall as the only control",
+        "D": "Shared responsibility that assigns all access decisions to the cloud provider"
+      },
+      "stem_style": "direct_concept",
+      "exam_calibration_tier": "FUNDAMENTALS_CORE",
+      "reasoning_steps": 1
+    },
+    {
+      "question_id": "sc900_mlc_q207",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "idp_issues_tokens_instead_of_app_passwords",
+      "choices": {
+        "A": "Microsoft Entra ID",
+        "B": "An identity provider that authenticates users and issues trusted tokens or claims",
+        "C": "Federation",
+        "D": "A records-management service that declares contracts as records"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q209",
+      "reason": "Ask the AD DS versus Entra distinction without a learner-claim wrapper.",
+      "preserve_identity": true,
+      "tested_decision": "ad_ds_is_not_another_name_for_entra",
+      "stem": "Which statement correctly distinguishes Active Directory Domain Services from Microsoft Entra ID?",
+      "choices": {
+        "A": "AD DS is only a Conditional Access grant control, and Entra ID is only a firewall",
+        "B": "Entra ID exists only to host Azure Firewall policies",
+        "C": "AD DS is the traditional on-premises directory service; Entra ID is Microsoft's cloud identity service and they are not the same thing",
+        "D": "AD DS and Entra ID are both names for Microsoft Defender for Identity"
+      },
+      "stem_style": "concept_distinction",
+      "exam_calibration_tier": "FUNDAMENTALS_CORE",
+      "reasoning_steps": 1
+    },
+    {
+      "question_id": "sc900_mlc_q212",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "grc_governance_risk_compliance_roles",
+      "choices": {
+        "A": "Governance sets direction, risk assesses uncertainty, and compliance checks adherence",
+        "B": "Policies",
+        "C": "Risk management replaces the need for any compliance evidence",
+        "D": "Standards"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q216",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "compliance_demonstrates_policy_adherence",
+      "choices": {
+        "A": "Compliance: demonstrating that required policies and controls were actually followed",
+        "B": "Policies",
+        "C": "Only issuing a Temporary Access Pass",
+        "D": "Standards"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q218",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "external_guest_identities_for_partners",
+      "choices": {
+        "A": "User identities",
+        "B": "Workload identities",
+        "C": "External or guest identities for partner and customer collaboration",
+        "D": "Managed identities"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q222",
+      "reason": "Keep the SSPR versus password-protection pairing; replace cross-product joke distractors.",
+      "preserve_identity": true,
+      "tested_decision": "sspr_recovery_vs_banned_password_protection",
+      "choices": {
+        "A": "Self-service password reset is the banned-password dictionary, and password protection is eDiscovery hold",
+        "B": "Self-service password reset addresses forgotten-password recovery; password protection bans weak or custom banned terms",
+        "C": "Self-service password reset recertifies guest groups; password protection activates privileged roles",
+        "D": "Password protection issues Temporary Access Pass codes; self-service password reset is Conditional Access"
+      },
+      "exam_calibration_tier": "FUNDAMENTALS_APPLIED",
+      "reasoning_steps": 1
+    },
+    {
+      "question_id": "sc900_mlc_q223",
+      "reason": "Keep one location-based Conditional Access decision.",
+      "preserve_identity": true,
+      "tested_decision": "ca_named_location_as_condition_signal",
+      "stem": "Finance users must complete MFA from any network other than headquarters. Which Conditional Access signal supports that requirement?",
+      "choices": {
+        "A": "User risk from Identity Protection only, with no location condition",
+        "B": "Device compliance as the only possible signal",
+        "C": "Access reviews of the payroll group",
+        "D": "Named or trusted network locations used as a condition in the policy"
+      },
+      "stem_style": "short_scenario",
+      "exam_calibration_tier": "FUNDAMENTALS_APPLIED",
+      "reasoning_steps": 1
+    },
+    {
+      "question_id": "sc900_mlc_q224",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "user_risk_vs_signin_risk",
+      "choices": {
+        "A": "Conditional Access",
+        "B": "Privileged Identity Management",
+        "C": "User risk replaces Conditional Access and cannot be used as a policy condition",
+        "D": "User risk describes the user/account, while sign-in risk describes a specific authentication attempt"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q225",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "pim_activation_requires_mfa_and_justification",
+      "choices": {
+        "A": "Access reviews",
+        "B": "Entitlement management",
+        "C": "Microsoft Entra ID Protection",
+        "D": "Activation settings that can require multifactor authentication and justification"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q226",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "azure_resource_rbac_not_entra_directory_role",
+      "choices": {
+        "A": "Global Administrator, because Azure VM power-state is a directory setting",
+        "B": "Azure role-based access control",
+        "C": "Privileged Identity Management",
+        "D": "Azure resource RBAC for the subscription or resource group, not an Entra directory role"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q227",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "lifecycle_workflows_joiner_automation",
+      "choices": {
+        "A": "Lifecycle workflows that automate joiner, mover, and leaver identity tasks",
+        "B": "Access reviews",
+        "C": "Entitlement management",
+        "D": "Privileged Identity Management"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q230",
+      "reason": "Ask the Conditional Access response to user risk without a two-product pairing stem.",
+      "preserve_identity": true,
+      "tested_decision": "id_protection_risk_remediation_via_ca",
+      "stem": "Identity Protection marks a user high risk because leaked credentials were found. Which Entra capability can block that sign-in or require a secure password reset?",
+      "choices": {
+        "A": "Privileged Identity Management",
+        "B": "Conditional Access",
+        "C": "Access reviews",
+        "D": "Entitlement management"
+      },
+      "stem_style": "capability_selection",
+      "exam_calibration_tier": "FUNDAMENTALS_APPLIED",
+      "reasoning_steps": 1
+    },
+    {
+      "question_id": "sc900_mlc_q234",
+      "reason": "Ask for Conditional Access directly instead of correcting a classification/DLP claim.",
+      "preserve_identity": true,
+      "tested_decision": "ca_is_not_purview_classification_or_dlp",
+      "stem": "Which Microsoft capability evaluates sign-in conditions such as user, device, location, and risk before granting access?",
+      "choices": {
+        "A": "Conditional Access",
+        "B": "Sensitivity labels",
+        "C": "Data loss prevention",
+        "D": "Records management"
+      },
+      "stem_style": "capability_selection",
+      "exam_calibration_tier": "FUNDAMENTALS_CORE",
+      "reasoning_steps": 0
+    },
+    {
+      "question_id": "sc900_mlc_q235",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "entra_replaces_per_app_password_stores",
+      "choices": {
+        "A": "Active Directory Domain Services",
+        "B": "Microsoft Entra Domain Services",
+        "C": "Microsoft Entra External ID",
+        "D": "Microsoft Entra ID as the cloud identity and access management directory"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q238",
+      "reason": "Test authorization after MFA without diagnosing a helpdesk claim.",
+      "preserve_identity": true,
+      "tested_decision": "mfa_success_is_not_sharepoint_authorization",
+      "stem": "A user completes MFA and is then denied access to a finance SharePoint site. Which process denied the access?",
+      "choices": {
+        "A": "Authentication",
+        "B": "Data loss prevention",
+        "C": "Federation",
+        "D": "Authorization"
+      },
+      "stem_style": "distinction_comparison",
+      "exam_calibration_tier": "FUNDAMENTALS_CORE",
+      "reasoning_steps": 1
+    },
+    {
+      "question_id": "sc900_mlc_q239",
+      "reason": "Ask for access reviews without extra temporary-group story.",
+      "preserve_identity": true,
+      "tested_decision": "reviews_recertify_temporary_project_group",
+      "stem": "After a six-week project, owners should confirm whether remaining members still need a SharePoint group. Which Entra governance control is that recertification?",
+      "choices": {
+        "A": "Access reviews",
+        "B": "Privileged Identity Management",
+        "C": "Conditional Access",
+        "D": "Temporary Access Pass"
+      },
+      "stem_style": "capability_selection",
+      "exam_calibration_tier": "FUNDAMENTALS_CORE",
+      "reasoning_steps": 1
+    },
+    {
+      "question_id": "sc900_mlc_q241",
+      "reason": "Ask eligible versus standing assignment directly.",
+      "preserve_identity": true,
+      "tested_decision": "pim_eligible_assignment_not_permanent_active",
+      "stem": "Security wants Privileged Role Administrator to stay eligible until a person activates it. Which PIM idea is that?",
+      "choices": {
+        "A": "Permanent active assignments for all privileged roles",
+        "B": "Access reviews as the only way to activate a role",
+        "C": "Eligible assignments instead of standing active privileged assignments",
+        "D": "Entitlement management as a replacement for role activation"
+      },
+      "stem_style": "direct_concept",
+      "exam_calibration_tier": "FUNDAMENTALS_CORE",
+      "reasoning_steps": 1
+    },
+    {
+      "question_id": "sc900_mlc_q242",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "ca_device_platform_as_condition",
+      "choices": {
+        "A": "Privileged Identity Management",
+        "B": "Microsoft Entra ID Protection",
+        "C": "Device platform conditions that include or exclude operating systems",
+        "D": "Access reviews"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q243",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "relying_party_trusts_partner_idp_claims",
+      "choices": {
+        "A": "Hashing, in which the app decrypts partner passwords",
+        "B": "Authentication",
+        "C": "Federation, in which a relying party trusts claims from an external identity provider",
+        "D": "Authorization"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q244",
+      "reason": "Ask for identity-provider trust instead of correcting a passwords-in-each-app claim.",
+      "preserve_identity": true,
+      "tested_decision": "apps_need_not_store_local_passwords",
+      "stem": "Developers want a custom app to sign users in without storing passwords in the app. Which approach should they use?",
+      "choices": {
+        "A": "Store and validate passwords inside each application",
+        "B": "Disable TLS because an identity provider replaces encryption",
+        "C": "Trust an identity provider such as Microsoft Entra ID",
+        "D": "Require Azure DDoS Protection before any sign-in can succeed"
+      },
+      "stem_style": "short_scenario",
+      "exam_calibration_tier": "FUNDAMENTALS_CORE",
+      "reasoning_steps": 1
+    },
+    {
+      "question_id": "sc900_mlc_q249",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "separate_vnets_or_subnets_isolate_workloads",
+      "choices": {
+        "A": "A Temporary Access Pass issued to the payment subnet",
+        "B": "Network security groups",
+        "C": "Azure Firewall",
+        "D": "Separate virtual networks or subnets that segment the workloads"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q253",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "posture_finding_vs_runtime_process_detection",
+      "choices": {
+        "A": "The public-exposure finding is posture/misconfiguration; the malicious process is runtime threat detection",
+        "B": "Cloud workload protection",
+        "C": "Microsoft Defender for Endpoint",
+        "D": "CSPM is the only Microsoft EDR sensor"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q255",
+      "reason": "Ask what Defender for Cloud recommendations are instead of diagnosing a Purview mix-up.",
+      "preserve_identity": true,
+      "tested_decision": "dfc_recommendations_not_compliance_manager_actions",
+      "stem": "Defender for Cloud created recommendations after a security standard was assigned. What do those recommendations represent?",
+      "choices": {
+        "A": "Azure or multicloud resources that do not meet the assigned security standard",
+        "B": "Purview Compliance Manager improvement actions",
+        "C": "Entra access reviews of guest groups",
+        "D": "Azure Bastion session logs"
+      },
+      "stem_style": "direct_concept",
+      "exam_calibration_tier": "FUNDAMENTALS_CORE",
+      "reasoning_steps": 1
+    },
+    {
+      "question_id": "sc900_mlc_q261",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "mde_device_edr_vs_mdi_directory_attacks",
+      "choices": {
+        "A": "Defender for Identity is the laptop EDR agent",
+        "B": "Defender for Endpoint analyzes Kerberos ticket attacks on domain controllers as its primary job",
+        "C": "Microsoft Defender for Identity",
+        "D": "Defender for Endpoint for the workstation EDR; Defender for Identity for Active Directory identity attacks"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q262",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "mcas_casb_not_mdo_email_protection",
+      "choices": {
+        "A": "Defender for Office 365 is the CASB that inventories unsanctioned SaaS",
+        "B": "Defender for Cloud Apps detonates mailbox attachments as Safe Attachments",
+        "C": "Defender for Cloud Apps for the CASB/SaaS problem; Defender for Office 365 for email and collaboration threats",
+        "D": "Microsoft Defender for Office 365"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q263",
+      "reason": "Ask for Entra Connect instead of correcting a Defender for Identity mix-up.",
+      "preserve_identity": true,
+      "tested_decision": "mdi_is_not_entra_connect_sync",
+      "stem": "Which Microsoft capability synchronizes on-premises users into Microsoft Entra ID?",
+      "choices": {
+        "A": "Microsoft Defender for Identity",
+        "B": "Microsoft Defender for Endpoint",
+        "C": "Microsoft Entra Connect or related hybrid sync",
+        "D": "Privileged Identity Management"
+      },
+      "stem_style": "capability_selection",
+      "exam_calibration_tier": "FUNDAMENTALS_CORE",
+      "reasoning_steps": 0
+    },
+    {
+      "question_id": "sc900_mlc_q264",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "mdvm_cve_not_mdo_email_malware",
+      "choices": {
+        "A": "Vulnerability Management detonates mailbox attachments",
+        "B": "Safe Attachments closes CVEs on endpoints",
+        "C": "Defender Vulnerability Management ranks the software weakness; Defender for Office 365 handles the email malware",
+        "D": "Microsoft Defender for Endpoint"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q267",
+      "reason": "Ask CSPM versus EDR directly.",
+      "preserve_identity": true,
+      "tested_decision": "cspm_is_not_runtime_edr",
+      "stem": "Which statement correctly describes cloud security posture management compared with endpoint detection and response?",
+      "stem_style": "concept_distinction",
+      "exam_calibration_tier": "FUNDAMENTALS_APPLIED",
+      "reasoning_steps": 1
+    },
+    {
+      "question_id": "sc900_mlc_q271",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "mde_device_isolation_response_action",
+      "choices": {
+        "A": "Microsoft Defender for Endpoint",
+        "B": "Microsoft Defender for Identity",
+        "C": "Microsoft Defender for Office 365",
+        "D": "Microsoft Defender Vulnerability Management"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q272",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "mcas_session_control_after_ca_grant",
+      "choices": {
+        "A": "Replacement of Entra ID as the identity provider",
+        "B": "Microsoft Defender for Office 365",
+        "C": "Replacement of Defender for Endpoint sensors",
+        "D": "App and session visibility or control inside cloud apps, beyond the initial access decision"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q273",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "mdi_uses_ad_environment_signals",
+      "choices": {
+        "A": "Microsoft Defender for Endpoint",
+        "B": "From Active Directory environment signals, commonly via sensors aligned to domain controllers or AD FS",
+        "C": "Microsoft Entra ID Protection",
+        "D": "Microsoft Defender for Cloud Apps"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q274",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "defender_portal_ops_vs_stp_microsoft_evidence",
+      "choices": {
+        "A": "Service Trust Portal is the XDR incident queue",
+        "B": "The Defender portal publishes Microsoft's ISO audit PDFs as its primary job",
+        "C": "Microsoft Defender XDR",
+        "D": "Microsoft Defender portal for XDR operations; Service Trust Portal for Microsoft's audit and trust documents"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q275",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "dfc_azure_regulatory_view_not_compliance_manager",
+      "choices": {
+        "A": "Compliance Manager remediates NSG rules as its primary job",
+        "B": "Azure/multicloud regulatory posture lives in Defender for Cloud; customer compliance assessments live in Purview Compliance Manager",
+        "C": "Defender for Cloud is the only place to complete GDPR improvement actions for Microsoft 365",
+        "D": "Microsoft Defender XDR"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q276",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "defender_ti_intel_not_mdo_safe_links",
+      "choices": {
+        "A": "Defender TI detonates mailbox attachments as Safe Attachments",
+        "B": "Safe Links is Microsoft's actor encyclopedia",
+        "C": "Microsoft Defender for Office 365 Safe Links",
+        "D": "Defender Threat Intelligence provides actor and infrastructure context; Safe Links is the email time-of-click control"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q278",
+      "reason": "Ask the privacy-principles versus Compliance Manager distinction without a sameness claim.",
+      "preserve_identity": true,
+      "tested_decision": "privacy_principles_not_compliance_manager_tool",
+      "stem": "Which statement correctly distinguishes Microsoft privacy principles from Purview Compliance Manager?",
+      "stem_style": "concept_distinction",
+      "exam_calibration_tier": "FUNDAMENTALS_APPLIED",
+      "reasoning_steps": 1
+    },
+    {
+      "question_id": "sc900_mlc_q279",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "stp_microsoft_reports_vs_purview_tenant_config",
+      "choices": {
+        "A": "The Service Trust Portal is where you create tenant DLP policies",
+        "B": "The Purview portal publishes Microsoft's SOC reports as its primary job",
+        "C": "Compliance Manager",
+        "D": "Service Trust Portal for Microsoft's audit reports; Microsoft Purview portal for the tenant's DLP configuration"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q282",
+      "reason": "Ask what compliance score is instead of correcting a certification misconception wrapper.",
+      "preserve_identity": true,
+      "tested_decision": "compliance_score_is_not_a_certification",
+      "stem": "What does a Microsoft Purview compliance score represent?",
+      "choices": {
+        "A": "An official Microsoft ISO certification for the customer",
+        "B": "A replacement for the Service Trust Portal",
+        "C": "Defender for Cloud secure score for Azure resources",
+        "D": "Estimated remaining Compliance Manager improvement-action progress, not a certification"
+      },
+      "stem_style": "direct_concept",
+      "exam_calibration_tier": "FUNDAMENTALS_CORE",
+      "reasoning_steps": 0
+    },
+    {
+      "question_id": "sc900_mlc_q283",
+      "reason": "Ask the follow-on protection control without a learner-claim wrapper.",
+      "preserve_identity": true,
+      "tested_decision": "classification_finds_data_it_does_not_encrypt",
+      "stem": "Classification identified credit-card numbers in files. What is still required if those files must be encrypted?",
+      "choices": {
+        "A": "Nothing further; classification always encrypts matching files",
+        "B": "Azure DDoS Protection",
+        "C": "Protection controls such as sensitivity labels that act on the classified items",
+        "D": "Deleting every file that contains a match"
+      },
+      "stem_style": "capability_selection",
+      "exam_calibration_tier": "FUNDAMENTALS_APPLIED",
+      "reasoning_steps": 1
+    },
+    {
+      "question_id": "sc900_mlc_q286",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "labeled_file_encryption_does_not_replace_teams_dlp",
+      "choices": {
+        "A": "Sensitivity labels",
+        "B": "Data loss prevention policies that detect and restrict sensitive sharing in locations such as Teams",
+        "C": "Retention policies",
+        "D": "Insider Risk Management"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q288",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "records_disposition_review_before_destruction",
+      "choices": {
+        "A": "Disposition review, which can require approval before a record is destroyed",
+        "B": "Retention labels",
+        "C": "Retention policies",
+        "D": "Safe Links time-of-click URL checks"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q290",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "irm_behavior_pattern_not_single_dlp_match",
+      "choices": {
+        "A": "Data loss prevention",
+        "B": "Insider Risk Management, which looks for risky user behavior patterns, not only a single DLP match",
+        "C": "eDiscovery",
+        "D": "Microsoft Entra Temporary Access Pass"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q292",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "audit_answers_who_changed_policy_not_mailbox_export",
+      "choices": {
+        "A": "Data loss prevention",
+        "B": "eDiscovery content collection",
+        "C": "Audit logging of user and admin activities",
+        "D": "Insider Risk Management"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q293",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "cm_tracks_customer_iso_actions_not_microsoft_pdf",
+      "choices": {
+        "A": "Microsoft Purview Compliance Manager",
+        "B": "The Service Trust Portal only",
+        "C": "Service Trust Portal",
+        "D": "Compliance score"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q294",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "activity_explorer_timeline_for_label_and_share",
+      "choices": {
+        "A": "Data loss prevention policies",
+        "B": "Sensitivity labels",
+        "C": "Activity explorer",
+        "D": "Retention policies"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q295",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "unpublished_labels_are_not_visible_to_users",
+      "choices": {
+        "A": "A label policy publishes selected labels to those users; unused labels can remain unpublished",
+        "B": "Every label in the tenant is always visible in Word",
+        "C": "Data loss prevention",
+        "D": "Retention labels"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q296",
+      "reason": "Keep the retention versus DLP pairing; replace Azure Bastion joke distractor with a neighboring wrong pairing.",
+      "preserve_identity": true,
+      "tested_decision": "retention_keep_is_not_dlp_prevention",
+      "choices": {
+        "A": "Retention blocks outbound credit-card numbers as its primary job",
+        "B": "DLP is the keep-or-delete lifecycle engine",
+        "C": "Retention keeps content for the required period; DLP prevents risky sharing of sensitive information",
+        "D": "Retention replaces eDiscovery; DLP replaces audit"
+      },
+      "exam_calibration_tier": "FUNDAMENTALS_APPLIED",
+      "reasoning_steps": 1
+    },
+    {
+      "question_id": "sc900_mlc_q297",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "ediscovery_search_review_export_after_hold",
+      "choices": {
+        "A": "Microsoft Purview Audit",
+        "B": "eDiscovery",
+        "C": "Insider Risk Management",
+        "D": "Data loss prevention"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q298",
+      "reason": "Replace cross-product or absurd distractors with neighboring SC-900 alternatives.",
+      "preserve_identity": true,
+      "tested_decision": "audit_detective_ediscovery_legal_dlp_preventive",
+      "choices": {
+        "A": "Audit blocks sharing, eDiscovery is a firewall, and DLP exports mailboxes",
+        "B": "Audit is detective history, eDiscovery is legal preservation and production, and DLP is preventive control",
+        "C": "Data loss prevention",
+        "D": "eDiscovery content collection"
+      }
+    },
+    {
+      "question_id": "sc900_mlc_q299",
+      "reason": "Ask the IRM versus Conditional Access distinction without a replacement-claim wrapper.",
+      "preserve_identity": true,
+      "tested_decision": "irm_does_not_replace_conditional_access",
+      "stem": "Which statement correctly describes Insider Risk Management compared with Conditional Access?",
+      "choices": {
+        "A": "Insider Risk Management is Microsoft's only MFA grant control",
+        "B": "Conditional Access is a subset of Insider Risk Management file plans",
+        "C": "Insider Risk Management analyzes internal user activity patterns; Conditional Access still evaluates sign-in conditions",
+        "D": "Insider Risk Management issues FIDO2 keys and replaces Conditional Access"
+      },
+      "stem_style": "concept_distinction",
+      "exam_calibration_tier": "FUNDAMENTALS_APPLIED",
+      "reasoning_steps": 1
+    }
+  ]
+}
