@@ -18,6 +18,7 @@ QUALITY_TARGETS = [
     "session_models.py",
     "session_store.py",
     "builder_identity.py",
+    "exam_runtime_eligibility.py",
     "smart_practice_profile.py",
     "smart_practice_cache.py",
     "cand01r3_partition.py",

@@ -3,8 +3,9 @@ import random
 import threading
 from tkinter import messagebox
 
-from app_constants import MODE_PRACTICE, MODE_SMART_PRACTICE
+from app_constants import MODE_EXAM, MODE_PRACTICE, MODE_SMART_PRACTICE
 from cand01r3_runtime import partition_cache_identity, training_source_questions
+from exam_runtime_eligibility import filter_new_exam_pool
 from progress_store import (
     is_active_weak,
     is_ever_wrong,
@@ -945,7 +946,10 @@ class SessionBuilderMixin:
         return select_questions_by_history(pool, self._progress_questions(), self.session_source_var.get())
 
     def get_session_builder_pool(self):
-        return self.filter_pool_by_session_source(self.get_filtered_master_pool())
+        pool = self.filter_pool_by_session_source(self.get_filtered_master_pool())
+        if self.session_mode_var.get() == MODE_EXAM:
+            pool = filter_new_exam_pool(pool)
+        return pool
 
     def build_weak_retest_pool(self) -> list[QuestionRuntimeState]:
         if not self.master_questions:
