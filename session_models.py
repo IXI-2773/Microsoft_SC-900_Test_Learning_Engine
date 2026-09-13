@@ -141,6 +141,10 @@ class SessionSnapshot(TypedDict):
     restore_question_ids: NotRequired[list[str]]
     mode: str
     builder_context: BuilderContext
+    builder_identity: NotRequired[str]
+    builder_identity_version: NotRequired[int]
+    builder_context_fingerprint: NotRequired[str]
+    builder_identity_status: NotRequired[str]
     source_label: str
     question_count: int
     question_numbers: list[int]
