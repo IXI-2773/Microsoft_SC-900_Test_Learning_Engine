@@ -9,6 +9,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from cert_config import QUESTION_BANK_FILENAME, RUNTIME_BANK_QUESTION_COUNT  # noqa: E402
+from tools.bank_warning_policy import evaluate_production_warnings  # noqa: E402
 from tools.validate_bank import validate_bank  # noqa: E402
 
 
@@ -25,16 +26,30 @@ def lint_bank(
     if expected_count is not None and actual != expected_count:
         failures.append(f"expected {expected_count} questions, got {actual}")
     failures.extend(f"{title}: {body}" for title, body in result["issues"])
-    warning_lines = [f"warning {title}: {body}" for title, body in result.get("warnings", [])]
+    warnings = list(result.get("warnings", []))
+    warning_lines = [f"warning {title}: {body}" for title, body in warnings]
+    decision = None
     if fail_on_warnings:
-        failures.extend(warning_lines)
+        decision = evaluate_production_warnings(bank_path, warnings)
+        failures.extend(decision.failures)
     if failures:
         for failure in failures:
             print(f"{label} failed: {failure}", file=sys.stderr)
         return 1
-    extra = f" ({len(warning_lines)} warnings reported, not failing)" if warning_lines else ""
-    print(f"{label} passed: {actual} questions.{extra}")
-    if warning_lines and not fail_on_warnings:
+    if decision is not None and decision.governed:
+        print(
+            f"{label} passed: {actual} questions. "
+            f"KNOWN_FROZEN_WARNING_COUNT = {decision.known_frozen_warning_count} "
+            f"UNEXPECTED_WARNING_COUNT = {decision.unexpected_warning_count}"
+        )
+    elif warning_lines and not fail_on_warnings:
+        print(
+            f"{label} passed: {actual} questions. "
+            f"({len(warning_lines)} warnings reported, diagnostic --allow-warnings)"
+        )
+    else:
+        print(f"{label} passed: {actual} questions.")
+    if warning_lines:
         for line in warning_lines[:20]:
             print(line, file=sys.stderr)
         if len(warning_lines) > 20:
@@ -59,7 +74,10 @@ def main() -> int:
     parser.add_argument(
         "--allow-warnings",
         action="store_true",
-        help="Report validator warnings without failing. Used for the large candidate bank.",
+        help=(
+            "Diagnostic override: report validator warnings without failing. "
+            "Not a production acceptance gate."
+        ),
     )
     parser.add_argument(
         "--label",

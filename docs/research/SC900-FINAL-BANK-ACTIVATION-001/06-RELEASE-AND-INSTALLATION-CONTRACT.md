@@ -11,7 +11,7 @@
 | `tools/build_release.py` `EXPECTED_QUESTION_COUNT` | literal `8` | `RUNTIME_BANK_QUESTION_COUNT` |
 | `tools/verify_installation.py` | literal `8` | `RUNTIME_BANK_QUESTION_COUNT` |
 | `tools/lint_bank.py` default expected count | literal `8` | `RUNTIME_BANK_QUESTION_COUNT` |
-| `tools/smoke_test.py` | 8-question zero-warning gate | `RUNTIME_BANK_QUESTION_COUNT`; issues still fail; the known frozen warning is not a release blocker |
+| `tools/smoke_test.py` | 8-question zero-warning gate | `RUNTIME_BANK_QUESTION_COUNT`; structural issues fail; production warning policy allows only the exact frozen warning bound to SHA `177a4fb5f8a874ffe4dda6b69e3d1c03dbdad1f5db5a174a990eb8b5a0e5927c` |
 
 ## Release manifest fields
 
