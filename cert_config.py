@@ -12,6 +12,7 @@ EXAM_NAME = str(PROFILE["exam_name"])
 APP_NAME = "Microsoft SC-900 Test Learning Engine"
 APP_VERSION = str(PROFILE["engine_version"])
 QUESTION_BANK_FILENAME = str(PROFILE["runtime_bank"])
+RUNTIME_BANK_QUESTION_COUNT = int(PROFILE["runtime_bank_question_count"])
 USER_DATA_DIRNAME = "SC900TestLearningEngine"
 OFFICIAL_SCALED_PASS_SCORE = int(PROFILE["official_scaled_pass_score"])
 INTERNAL_READINESS_THRESHOLD_PCT = float(PROFILE["internal_readiness_threshold_pct"])

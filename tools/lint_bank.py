@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from cert_config import QUESTION_BANK_FILENAME  # noqa: E402
+from cert_config import QUESTION_BANK_FILENAME, RUNTIME_BANK_QUESTION_COUNT  # noqa: E402
 from tools.validate_bank import validate_bank  # noqa: E402
 
 
@@ -54,7 +54,7 @@ def main() -> int:
         "--expected-count",
         type=int,
         default=None,
-        help="Required question count. Default 8 for the launch bank; omit to skip the count gate.",
+        help="Required question count. Defaults to the active runtime bank count for the configured launch bank.",
     )
     parser.add_argument(
         "--allow-warnings",
@@ -69,7 +69,11 @@ def main() -> int:
     args = parser.parse_args()
     bank_path = args.bank if args.bank.is_absolute() else ROOT / args.bank
     is_default = bank_path.resolve() == (ROOT / QUESTION_BANK_FILENAME).resolve()
-    expected = args.expected_count if args.expected_count is not None else (8 if is_default else None)
+    expected = (
+        args.expected_count
+        if args.expected_count is not None
+        else (RUNTIME_BANK_QUESTION_COUNT if is_default else None)
+    )
     fail_on_warnings = not args.allow_warnings
     label = args.label or ("SC-900 default-bank lint" if is_default else "SC-900 bank lint")
     return lint_bank(bank_path, expected_count=expected, fail_on_warnings=fail_on_warnings, label=label)

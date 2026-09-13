@@ -30,23 +30,25 @@ class ReleaseWorkflowTests(unittest.TestCase):
         self.assertNotIn("bootstrap_sc900", workflow)
         self.assertNotIn("migration/bootstrap", workflow.lower())
 
-    def test_required_runtime_resources_include_profile_bank_and_taxonomy(self):
+    def test_required_runtime_resources_include_profile_banks_and_taxonomy(self):
         self.assertEqual(
             (
                 Path("cert_profile_sc900.json"),
+                Path("sc900_bank_v8_final.json"),
                 Path("sc900_bank_v8_baseline.json"),
                 Path("config/certifications/sc900-2026.json"),
             ),
             REQUIRED_RUNTIME_RESOURCES,
         )
         args = pyinstaller_resource_args(os.pathsep)
-        self.assertEqual(6, len(args))
+        self.assertEqual(8, len(args))
         self.assertIn(f"{ROOT / 'config/certifications/sc900-2026.json'}{os.pathsep}config/certifications", args)
-        self.assertEqual("config/certifications", args[5].split(os.pathsep, 1)[1])
+        self.assertEqual("config/certifications", args[7].split(os.pathsep, 1)[1])
 
     def test_packaged_resource_verifier_rejects_a_missing_taxonomy(self):
         members = {
             "cert_profile_sc900.json",
+            "sc900_bank_v8_final.json",
             "sc900_bank_v8_baseline.json",
         }
 
@@ -58,11 +60,13 @@ class ReleaseWorkflowTests(unittest.TestCase):
     def test_packaged_resource_verifier_accepts_posix_and_windows_taxonomy_spelling(self):
         posix_members = {
             "cert_profile_sc900.json",
+            "sc900_bank_v8_final.json",
             "sc900_bank_v8_baseline.json",
             "config/certifications/sc900-2026.json",
         }
         windows_members = {
             "cert_profile_sc900.json",
+            "sc900_bank_v8_final.json",
             "sc900_bank_v8_baseline.json",
             "config\\certifications\\sc900-2026.json",
         }
@@ -73,6 +77,7 @@ class ReleaseWorkflowTests(unittest.TestCase):
     def test_packaged_resource_verifier_rejects_unrelated_similarly_named_taxonomy(self):
         members = {
             "cert_profile_sc900.json",
+            "sc900_bank_v8_final.json",
             "sc900_bank_v8_baseline.json",
             "sc900-2026.json",
             "config/certifications/sc900-2026.json.bak",
@@ -103,6 +108,7 @@ Contents of 'SC900TestLearningEngine' (PKG/CArchive):
         listing = (
             "Contents of 'SC900TestLearningEngine.exe' (PKG/CArchive):\n"
             " cert_profile_sc900.json\n"
+            " sc900_bank_v8_final.json\n"
             " sc900_bank_v8_baseline.json\n"
             " config\\certifications\\sc900-2026.json\n"
         )
@@ -110,6 +116,7 @@ Contents of 'SC900TestLearningEngine' (PKG/CArchive):
         self.assertEqual(
             {
                 "cert_profile_sc900.json",
+                "sc900_bank_v8_final.json",
                 "sc900_bank_v8_baseline.json",
                 "config/certifications/sc900-2026.json",
             },
@@ -123,6 +130,7 @@ Contents of 'SC900TestLearningEngine' (PKG/CArchive):
             """\
 Contents of 'SC900TestLearningEngine' (PKG/CArchive):
  cert_profile_sc900.json
+ sc900_bank_v8_final.json
  sc900_bank_v8_baseline.json
  config/certifications/sc900-2026.json
 """
@@ -146,6 +154,7 @@ Contents of 'SC900TestLearningEngine' (PKG/CArchive):
         run.return_value = subprocess_result(
             "Contents of 'SC900TestLearningEngine.exe' (PKG/CArchive):\n"
             " cert_profile_sc900.json\n"
+            " sc900_bank_v8_final.json\n"
             " sc900_bank_v8_baseline.json\n"
             " config\\certifications\\sc900-2026.json\n"
         )

@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 import json
@@ -16,9 +15,10 @@ from question_bank import load_bank
 REQUIRED = (
     "app.py",
     "cert_config.py",
-            "cert_profile_sc900.json",
-            "sc900_bank_v8_baseline.json",
-            "config/certifications/sc900-2026.json",
+    "cert_profile_sc900.json",
+    "sc900_bank_v8_baseline.json",
+    cert_config.QUESTION_BANK_FILENAME,
+    "config/certifications/sc900-2026.json",
     "question_bank.py",
 )
 BANNED = ("sy0-701", "comptia", "security+", "public_sy0701")
@@ -26,21 +26,29 @@ BANNED = ("sy0-701", "comptia", "security+", "public_sy0701")
 
 def main() -> int:
     failures = []
-    for name in REQUIRED:
+    for name in dict.fromkeys(REQUIRED):
         if not (ROOT / name).exists():
             failures.append(f"missing required file: {name}")
     profile = json.loads((ROOT / "cert_profile_sc900.json").read_text(encoding="utf-8"))
     if profile.get("exam_code") != "SC-900":
         failures.append("profile exam_code is not SC-900")
+    expected_count = cert_config.RUNTIME_BANK_QUESTION_COUNT
     bank = load_bank(ROOT / cert_config.QUESTION_BANK_FILENAME)
-    if len(bank["questions"]) != 8:
-        failures.append(f"runtime bank contains {len(bank['questions'])} questions instead of 8")
+    if len(bank["questions"]) != expected_count:
+        failures.append(f"runtime bank contains {len(bank['questions'])} questions instead of {expected_count}")
     if app.DEFAULT_BANK.name != cert_config.QUESTION_BANK_FILENAME:
         failures.append("app default bank does not use SC-900 config")
-    runtime_paths = [ROOT / name for name in (
-        "app.py", "app_info.py", "question_bank.py", "cert_config.py",
-        "app_analytics_mixin.py", "app_session_builder_mixin.py",
-    )]
+    runtime_paths = [
+        ROOT / name
+        for name in (
+            "app.py",
+            "app_info.py",
+            "question_bank.py",
+            "cert_config.py",
+            "app_analytics_mixin.py",
+            "app_session_builder_mixin.py",
+        )
+    ]
     for path in runtime_paths:
         text = path.read_text(encoding="utf-8").lower()
         for term in BANNED:

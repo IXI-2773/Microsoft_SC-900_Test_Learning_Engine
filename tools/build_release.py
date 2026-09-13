@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 import hashlib
@@ -13,7 +12,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from app_info import APP_NAME, APP_VERSION  # noqa: E402
-from cert_config import QUESTION_BANK_FILENAME  # noqa: E402
+from cert_config import QUESTION_BANK_FILENAME, RUNTIME_BANK_QUESTION_COUNT  # noqa: E402
 from pe_validation import pe_file_metadata, validate_pe_file  # noqa: E402
 
 DIST_EXE = ROOT / "dist" / "SC900TestLearningEngine.exe"
@@ -22,7 +21,7 @@ RELEASE_EXE = RELEASE_DIR / "SC900TestLearningEngine.exe"
 RELEASE_README = RELEASE_DIR / "README - Start Here.txt"
 RELEASE_MANIFEST = RELEASE_DIR / "release_manifest.json"
 BANK_FILE = ROOT / QUESTION_BANK_FILENAME
-EXPECTED_QUESTION_COUNT = 8
+EXPECTED_QUESTION_COUNT = RUNTIME_BANK_QUESTION_COUNT
 
 
 def _sha256(path: Path) -> str:

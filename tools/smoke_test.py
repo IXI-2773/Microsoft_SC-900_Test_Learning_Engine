@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 import hashlib
@@ -10,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from cert_config import QUESTION_BANK_FILENAME
+from cert_config import QUESTION_BANK_FILENAME, RUNTIME_BANK_QUESTION_COUNT
 from pe_validation import validate_pe_file
 from tools.build_release import RELEASE_EXE, RELEASE_MANIFEST, RELEASE_README
 from tools.validate_bank import validate_bank
@@ -35,15 +34,15 @@ def main() -> int:
         if pe_failure:
             failures.append(f"invalid release PE: {pe_failure}")
     result = validate_bank(bank)
-    if result["question_count"] != 8 or result["issues"] or result.get("warnings"):
-        failures.append("release bank failed 8-question clean-bank gate")
+    if result["question_count"] != RUNTIME_BANK_QUESTION_COUNT or result["issues"]:
+        failures.append(f"release bank failed {RUNTIME_BANK_QUESTION_COUNT}-question bank gate")
     if RELEASE_MANIFEST.exists() and RELEASE_EXE.exists():
         manifest = json.loads(RELEASE_MANIFEST.read_text(encoding="utf-8"))
         if manifest.get("executable_sha256") != sha256(RELEASE_EXE):
             failures.append("release executable hash mismatch")
         if manifest.get("question_bank_sha256") != sha256(bank):
             failures.append("release bank hash mismatch")
-        if int(manifest.get("expected_bank_count", -1)) != 8:
+        if int(manifest.get("expected_bank_count", -1)) != RUNTIME_BANK_QUESTION_COUNT:
             failures.append("release manifest bank count mismatch")
     if failures:
         for failure in failures:

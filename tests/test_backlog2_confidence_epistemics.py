@@ -15,6 +15,9 @@ from progress_store import (
 )
 from session_models import apply_answer_state, clear_runtime_answer_state
 
+ROOT = Path(__file__).resolve().parents[1]
+HISTORICAL_BASELINE_BANK = ROOT / "sc900_bank_v8_baseline.json"
+
 
 def _question(qid="engine-q1", number=1, question_type="single", correct=None):
     correct = list(correct or ["A"])
@@ -240,7 +243,7 @@ class Backlog2AppLifecycleTests(unittest.TestCase):
         checkpoints = tmpdir / "checkpoints"
         backups = tmpdir / "backups"
         bank_path = tmpdir / "bank.json"
-        source_bank = Path(app_module.DEFAULT_BANK)
+        source_bank = HISTORICAL_BASELINE_BANK
         if source_bank.exists():
             bank_path.write_bytes(source_bank.read_bytes())
         else:
