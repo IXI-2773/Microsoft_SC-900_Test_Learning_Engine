@@ -1,0 +1,406 @@
+{
+  "$comment": "DESIGN-ONLY Phase-3 TRAIN/PROBE partition contract. Item role, eligibility, receipt, and family-split semantics inherit sc900.train-probe-manifest/v1. No runtime selector, scheduler, renderer, history path, analytics path, restore path, importer, exporter, or Smart Practice path is authorized to consume this schema.",
+  "$id": "sc900.phase3.train-probe-manifest.schema/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "all_path_leakage_handoff": {
+      "additionalProperties": false,
+      "properties": {
+        "contract": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "design_time_only": {
+          "const": true
+        },
+        "invariants": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "paths_requiring_future_guards": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "protected_roles": {
+          "items": {
+            "enum": [
+              "PROBE",
+              "TRAIN",
+              "UNASSIGNED"
+            ]
+          },
+          "type": "array"
+        },
+        "runtime_consumer_authorized": {
+          "const": false
+        }
+      },
+      "required": [
+        "contract",
+        "design_time_only",
+        "invariants",
+        "paths_requiring_future_guards",
+        "runtime_consumer_authorized"
+      ],
+      "type": "object"
+    },
+    "allocation_report": {
+      "type": "object"
+    },
+    "blueprint_version": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "cand01_gate2_status": {
+      "const": "GATE_2_BLOCKED_INSUFFICIENT_BANK_STRUCTURE"
+    },
+    "compiled_sha256": {
+      "minLength": 64,
+      "type": "string"
+    },
+    "design_time_only": {
+      "const": true
+    },
+    "family_assignments": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "approved_state_checked": {
+            "type": "boolean"
+          },
+          "assignment_method": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "assignment_reason": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "family_isolation_checked": {
+            "type": "boolean"
+          },
+          "family_resolved_checked": {
+            "type": "boolean"
+          },
+          "family_state": {
+            "enum": [
+              "disputed",
+              "needs_review",
+              "resolved",
+              "unknown"
+            ]
+          },
+          "member_count": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "member_ids": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "partition_epoch": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "probe_suitability_checked": {
+            "type": "boolean"
+          },
+          "role": {
+            "enum": [
+              "PROBE",
+              "TRAIN",
+              "UNASSIGNED"
+            ]
+          },
+          "semantic_family_id": {
+            "minLength": 1,
+            "pattern": "^[a-z][a-z0-9_]*$",
+            "type": "string"
+          },
+          "source_task4_audit_hash": {
+            "minLength": 64,
+            "type": "string"
+          },
+          "source_task5_store_hash": {
+            "minLength": 64,
+            "type": "string"
+          },
+          "transfer_edge_isolation_checked": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "approved_state_checked",
+          "assignment_method",
+          "assignment_reason",
+          "family_isolation_checked",
+          "family_resolved_checked",
+          "family_state",
+          "member_count",
+          "member_ids",
+          "partition_epoch",
+          "probe_suitability_checked",
+          "role",
+          "semantic_family_id",
+          "source_task4_audit_hash",
+          "source_task5_store_hash",
+          "transfer_edge_isolation_checked"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "implementation_authorized": {
+      "const": false
+    },
+    "inherited_item_schema": {
+      "const": "sc900.train-probe-manifest/v1"
+    },
+    "items": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "assignment_evidence": {
+            "additionalProperties": false,
+            "properties": {
+              "approved_state_checked": {
+                "type": "boolean"
+              },
+              "assigned_at": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "assignment_method": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "assignment_reason": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "family_isolation_checked": {
+                "type": "boolean"
+              },
+              "family_resolved_checked": {
+                "type": "boolean"
+              },
+              "partition_epoch": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "probe_suitability_checked": {
+                "type": "boolean"
+              },
+              "question_id": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "role": {
+                "enum": [
+                  "PROBE",
+                  "TRAIN",
+                  "UNASSIGNED"
+                ]
+              },
+              "semantic_family_id": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "source_task4_audit_hash": {
+                "minLength": 64,
+                "type": "string"
+              },
+              "source_task5_store_hash": {
+                "minLength": 64,
+                "type": "string"
+              }
+            },
+            "required": [
+              "approved_state_checked",
+              "assigned_at",
+              "assignment_method",
+              "assignment_reason",
+              "family_isolation_checked",
+              "family_resolved_checked",
+              "partition_epoch",
+              "probe_suitability_checked",
+              "question_id",
+              "role",
+              "semantic_family_id",
+              "source_task4_audit_hash",
+              "source_task5_store_hash"
+            ],
+            "type": "object"
+          },
+          "assignment_rationale": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "assignment_receipt": {
+            "additionalProperties": false,
+            "properties": {
+              "override_type": {
+                "enum": [
+                  "family_merge",
+                  "family_split",
+                  "none",
+                  "role_change"
+                ]
+              },
+              "prior_family_ids": {
+                "items": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": "array",
+                "uniqueItems": true
+              },
+              "reviewed_at": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "reviewer": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "reviewed_at",
+              "reviewer"
+            ],
+            "type": "object"
+          },
+          "blueprint_version": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "family_state": {
+            "enum": [
+              "disputed",
+              "needs_review",
+              "resolved",
+              "unknown"
+            ]
+          },
+          "future_probe_suitability": {
+            "enum": [
+              "eligible",
+              "needs_review",
+              "train_only"
+            ]
+          },
+          "promotion_status": {
+            "enum": [
+              "approved",
+              "pending",
+              "withheld"
+            ]
+          },
+          "question_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "PROBE",
+              "TRAIN",
+              "UNASSIGNED"
+            ]
+          },
+          "semantic_family_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "source_family_id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "assignment_evidence",
+          "assignment_rationale",
+          "assignment_receipt",
+          "blueprint_version",
+          "family_state",
+          "future_probe_suitability",
+          "promotion_status",
+          "question_id",
+          "role",
+          "semantic_family_id",
+          "source_family_id"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "manifest_version": {
+      "const": "sc900.phase3.train-probe-manifest/v1"
+    },
+    "partition_epoch": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "phase_3_structurally_accepted": {
+      "const": false
+    },
+    "question_count": {
+      "type": "integer"
+    },
+    "runtime_consumer_authorized": {
+      "const": false
+    },
+    "schema_version": {
+      "const": "sc900.phase3.train-probe-manifest/v1"
+    },
+    "semantic_audit_sha256": {
+      "minLength": 64,
+      "type": "string"
+    },
+    "semantic_family_count": {
+      "type": "integer"
+    },
+    "store_sha256": {
+      "minLength": 64,
+      "type": "string"
+    },
+    "work_id": {
+      "const": "SC900-BANK-PHASE3-001"
+    }
+  },
+  "required": [
+    "all_path_leakage_handoff",
+    "allocation_report",
+    "blueprint_version",
+    "cand01_gate2_status",
+    "compiled_sha256",
+    "design_time_only",
+    "family_assignments",
+    "implementation_authorized",
+    "inherited_item_schema",
+    "items",
+    "manifest_version",
+    "partition_epoch",
+    "phase_3_structurally_accepted",
+    "question_count",
+    "runtime_consumer_authorized",
+    "schema_version",
+    "semantic_audit_sha256",
+    "semantic_family_count",
+    "store_sha256",
+    "work_id"
+  ],
+  "title": "SC-900 Phase-3 TRAIN/PROBE manifest design contract",
+  "type": "object"
+}
