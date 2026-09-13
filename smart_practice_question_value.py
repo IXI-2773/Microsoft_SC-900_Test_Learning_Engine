@@ -1,8 +1,10 @@
 import hashlib
 from collections import Counter
-from typing import Any, Mapping
+from collections.abc import Mapping
+from typing import Any
 
 from progress_store import now_iso
+from question_identity import canonical_question_id, history_event_question_id
 
 CALIBRATION_SCHEMA_VERSION = 1
 QUALITY_STATUSES = {
@@ -75,11 +77,23 @@ def question_quality_record(
 ) -> dict[str, Any]:
     evaluated_at = evaluated_at or now_iso()
     qnum = int(question.get("question_number") or 0)
-    eligible = [row for row in outcomes if int(row.get("question_number") or 0) == qnum]
+    question_id = canonical_question_id(question)
+
+    def outcome_question_id(row: Mapping[str, Any]) -> str:
+        return history_event_question_id(row) or str(row.get("id") or "").strip()
+
+    eligible = []
+    for row in outcomes:
+        row_id = outcome_question_id(row)
+        if question_id:
+            if row_id == question_id:
+                eligible.append(row)
+            continue
+        if int(row.get("question_number") or 0) == qnum:
+            eligible.append(row)
     groups = {str(row.get("session_id") or row.get("group_id") or row.get("at") or idx) for idx, row in enumerate(eligible)}
     sample_count = len(groups)
     correct = sum(1 for row in eligible if row.get("correct"))
-    wrong = sum(1 for row in eligible if row.get("correct") is False)
     high_conf_wrong = sum(1 for row in eligible if row.get("correct") is False and str(row.get("confidence") or "") == "Sure")
     misread = sum(1 for row in eligible if str(row.get("miss_reason") or "").casefold() == "misread")
     stronger = [row for row in eligible if float(row.get("concept_retrievability", 0.0) or 0.0) >= 0.7]
@@ -148,7 +162,12 @@ def information_value(
     uncertainty = float(1.0 if uncertainty_raw is None else uncertainty_raw) * 18.0
     transfer = 12.0 if question.get("is_transfer_item") or question.get("stem_style") not in set(session_context.get("seen_stem_styles", []) or []) else 1.0
     coverage = 12.0 if question.get("objective_code") not in set(session_context.get("seen_objectives", []) or []) else 3.0
-    same_q = int(question.get("question_number") or 0) in set(session_context.get("seen_question_numbers", []) or [])
+    seen_ids = {str(item).strip() for item in session_context.get("seen_question_ids", []) or [] if str(item).strip()}
+    question_id = canonical_question_id(question)
+    if question_id and seen_ids:
+        same_q = question_id in seen_ids
+    else:
+        same_q = int(question.get("question_number") or 0) in set(session_context.get("seen_question_numbers", []) or [])
     same_concept = question.get("smart_concept_key") in set(session_context.get("seen_concepts", []) or [])
     redundancy = (8.0 if same_q else 0.0) + (4.0 if same_concept else 0.0)
     item_risk = float(quality.get("source_risk", 0.0) or 0.0) * 15.0

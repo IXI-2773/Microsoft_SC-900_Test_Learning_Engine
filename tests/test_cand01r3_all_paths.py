@@ -78,8 +78,8 @@ class Cand01R3AllPathTests(unittest.TestCase):
 
     def test_g3_006_probe_rejected_from_due_review_path(self):
         records = {
-            "1": progress_record(attempts=1, next_review="2020-01-01", learner_memory={"next_review_at": "2020-01-01"}),
-            "9": progress_record(attempts=1, next_review="2020-01-01", learner_memory={"next_review_at": "2020-01-01"}),
+            "train_a": progress_record(attempts=1, next_review="2020-01-01", learner_memory={"next_review_at": "2020-01-01"}),
+            "probe_a": progress_record(attempts=1, next_review="2020-01-01", learner_memory={"next_review_at": "2020-01-01"}),
         }
         self.activate()
         harness = SessionBuilderHarness(self.pool, records)
@@ -88,8 +88,8 @@ class Cand01R3AllPathTests(unittest.TestCase):
 
     def test_g3_007_probe_rejected_from_weak_retest_path(self):
         records = {
-            "1": progress_record(attempts=3, wrong_count=3, last_correct=False),
-            "9": progress_record(attempts=3, wrong_count=3, last_correct=False),
+            "train_a": progress_record(attempts=3, wrong_count=3, last_correct=False),
+            "probe_a": progress_record(attempts=3, wrong_count=3, last_correct=False),
         }
         self.activate()
         harness = SessionBuilderHarness(self.pool, records)

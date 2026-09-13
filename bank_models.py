@@ -2,6 +2,10 @@ from typing import Any, TypedDict, cast
 
 
 class BankQuestion(TypedDict, total=False):
+    id: str
+    question_id: str
+    canonical_question_id: str
+    metadata: dict[str, Any]
     question_number: int
     prompt: str
     choices: dict[str, str]
