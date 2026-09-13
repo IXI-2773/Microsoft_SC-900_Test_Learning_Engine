@@ -14,6 +14,12 @@ from app_constants import (
     QUESTION_TAG_TWIN,
     QUESTION_TAG_WRONG_ANSWER_MEMORY,
 )
+from cand01r3_runtime import (
+    is_cand01r3_active,
+    partition_cache_identity,
+    revalidate_training_question,
+    training_source_questions,
+)
 from progress_store import (
     is_active_weak,
     is_review_due,
@@ -326,6 +332,14 @@ class QuestionFlowMixin:
     ) -> list[QuestionRuntimeState]:
         if not candidates:
             return []
+        if is_cand01r3_active():
+            candidates = [
+                candidate
+                for candidate in candidates
+                if revalidate_training_question(candidate, action=tag).role == "TRAIN"
+            ]
+            if not candidates:
+                return []
         existing_qnums = {q.get("question_number") for q in self.questions}
         unique_candidates = [q for q in candidates if q.get("question_number") not in existing_qnums]
         if not unique_candidates:
@@ -348,6 +362,14 @@ class QuestionFlowMixin:
     ) -> list[QuestionRuntimeState]:
         if not candidates:
             return []
+        if is_cand01r3_active():
+            candidates = [
+                candidate
+                for candidate in candidates
+                if revalidate_training_question(candidate, action=tag).role == "TRAIN"
+            ]
+            if not candidates:
+                return []
         existing_qnums = {q.get("question_number") for q in self.questions}
         unique_candidates = [q for q in candidates if q.get("question_number") not in existing_qnums]
         if not unique_candidates:
@@ -414,7 +436,7 @@ class QuestionFlowMixin:
         records = self._progress_questions()
         current_qnums = {item.get("question_number") for item in self.questions}
         ranked = []
-        for candidate in self.master_questions:
+        for candidate in training_source_questions(self.master_questions):
             qnum = candidate.get("question_number")
             if qnum == q.get("question_number") or qnum in current_qnums:
                 continue
@@ -444,7 +466,7 @@ class QuestionFlowMixin:
         by_number = {}
         search_text = {}
         metadata = {}
-        for question in self.master_questions:
+        for question in training_source_questions(self.master_questions):
             qnum = int(question.get("question_number") or 0)
             if not qnum:
                 continue
@@ -482,11 +504,13 @@ class QuestionFlowMixin:
         self.followup_candidate_index_signature = self._followup_index_signature()
 
     def _followup_index_signature(self):
+        source = training_source_questions(self.master_questions)
         return (
             id(self.master_questions),
-            len(self.master_questions),
-            int(self.master_questions[0].get("question_number") or 0) if self.master_questions else 0,
-            int(self.master_questions[-1].get("question_number") or 0) if self.master_questions else 0,
+            len(source),
+            int(source[0].get("question_number") or 0) if source else 0,
+            int(source[-1].get("question_number") or 0) if source else 0,
+            partition_cache_identity(),
         )
 
     def _followup_index(self):
@@ -668,7 +692,7 @@ class QuestionFlowMixin:
         records = self._progress_questions()
         topics = {str(topic).strip() for topic in q.get("topics", []) if str(topic).strip()}
         ranked = []
-        for candidate in self.master_questions:
+        for candidate in training_source_questions(self.master_questions):
             qnum = candidate.get("question_number")
             if qnum == q.get("question_number") or qnum in current_qnums:
                 continue
@@ -722,7 +746,7 @@ class QuestionFlowMixin:
         topics = {str(topic).strip() for topic in q.get("topics", []) if str(topic).strip()}
         domain = q.get("domain")
         ranked = []
-        for candidate in self.master_questions:
+        for candidate in training_source_questions(self.master_questions):
             qnum = candidate.get("question_number")
             if qnum == q.get("question_number") or qnum in current_qnums:
                 continue
@@ -778,7 +802,7 @@ class QuestionFlowMixin:
         records = self._progress_questions()
         current_qnums = {item.get("question_number") for item in self.questions}
         ranked = []
-        for candidate in self.master_questions:
+        for candidate in training_source_questions(self.master_questions):
             qnum = candidate.get("question_number")
             if qnum == q.get("question_number") or qnum in current_qnums:
                 continue
@@ -865,7 +889,7 @@ class QuestionFlowMixin:
         if not is_correct and root_cause == "missing_prerequisite" and supporting:
             candidates = [
                 candidate
-                for candidate in self.master_questions
+                for candidate in training_source_questions(self.master_questions)
                 if concept_key_for_question(candidate)[0] in set(supporting)
                 and int(candidate.get("question_number") or 0) != int(q.get("question_number") or 0)
             ]
@@ -1085,6 +1109,9 @@ class QuestionFlowMixin:
             return
         for idx, q in enumerate(self.questions):
             if q.get("question_number") == qnum:
+                if is_cand01r3_active() and revalidate_training_question(q, action="JUMP").role == "NOT_ELIGIBLE":
+                    messagebox.showinfo("Not eligible", f"Question {qnum} is not eligible in the active experiment.")
+                    return
                 self._set_current_index(idx)
                 return
         messagebox.showinfo("Not found", f"Question {qnum} was not found in this session.")

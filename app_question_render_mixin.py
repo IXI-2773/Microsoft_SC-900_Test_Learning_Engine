@@ -2,6 +2,7 @@ import time
 import tkinter as tk
 
 from app_constants import MODE_EXAM
+from cand01r3_runtime import get_context, is_cand01r3_active, revalidate_training_question
 from progress_store import is_super_confident_active, recovery_ladder_stage, study_status_name
 from render_cache import ChoiceRenderSnapshot, QuestionRenderSnapshot
 from source_trust import derive_source_trust_warning
@@ -283,6 +284,15 @@ class QuestionRenderMixin:
                 self.scroll_to_top_on_render = False
             return
         q = self.current_question()
+        if is_cand01r3_active():
+            decision = revalidate_training_question(q, action="RENDER")
+            intended = get_context().intended_use
+            if intended == "TRAINING" and decision.role != "TRAIN":
+                self._render_empty_question_state()
+                return
+            if intended == "MEASUREMENT" and decision.role != "PROBE":
+                self._render_empty_question_state()
+                return
         if not q.get('answered'):
             qnum = q.get('question_number')
             if self.active_question_started_qnum != qnum:

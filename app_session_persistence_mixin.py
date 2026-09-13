@@ -6,6 +6,12 @@ from datetime import datetime
 
 from app_constants import MODE_EXAM, MODE_PRACTICE
 from app_info import APP_VERSION
+from cand01r3_runtime import (
+    filter_training_questions,
+    is_cand01r3_active,
+    persistable_authority_metadata,
+    restore_experimental_session,
+)
 from progress_store import set_progress_flag, set_progress_suspended, update_progress_record
 from session_models import QuestionRuntimeState, apply_answer_state
 from session_store import (
@@ -182,6 +188,10 @@ class SessionPersistenceMixin:
         self.flush_scheduled_session_save()
         self.flush_scheduled_progress_save()
         pool = list(pool)
+        if is_cand01r3_active():
+            pool = filter_training_questions(pool)
+            if not pool:
+                return
         if count != 'All visible':
             try:
                 limit = max(0, int(count))
@@ -271,6 +281,12 @@ class SessionPersistenceMixin:
             logging.warning('Session file reset after read failure: %s', self.session_path)
             self._show_bad_json_warning('Session', self.session_path, backup, err)
             return
+        if isinstance(saved, dict) and (saved.get("cand01r3") or is_cand01r3_active()):
+            restored = restore_experimental_session(self.questions, saved)
+            if not restored.accepted:
+                return
+            if restored.questions:
+                self.questions = restored.questions
         if not skip_identity_check and not self._saved_session_matches_current(saved):
             return
         try:
@@ -454,6 +470,13 @@ class SessionPersistenceMixin:
             answers=[serialize_answer_state(q) for q in self.questions],
         )
         payload = dict(snapshot)
+        if is_cand01r3_active():
+            payload["cand01r3"] = persistable_authority_metadata()
+            payload["question_ids"] = [
+                str(question.get("id") or question.get("question_id") or "")
+                for question in self.questions
+                if str(question.get("id") or question.get("question_id") or "")
+            ]
         serialized = json.dumps(payload, sort_keys=True, separators=(',', ':'))
         if serialized != self.last_session_snapshot:
             self.persistence.write_json(self.session_path, payload)

@@ -14,6 +14,7 @@ from app_constants import (
     QUESTION_TAG_STEALTH_CHECKPOINT,
     REWARD_INTENSITY_OPTIONS,
 )
+from cand01r3_runtime import training_source_questions
 from progress_models import ProgressMeta, QuestStat, SessionHistoryEntry, session_history_entry_from_summary
 from progress_store import is_active_weak, is_review_due, is_suspended, now_iso
 from session_models import QuestProgressState
@@ -634,7 +635,7 @@ class GameRewardsMixin:
         records = self._progress_questions()
         current_qnums = {item.get("question_number") for item in self.questions}
         ranked = []
-        for candidate in self.master_questions:
+        for candidate in training_source_questions(self.master_questions):
             qnum = candidate.get("question_number")
             if qnum in current_qnums:
                 continue
@@ -672,8 +673,10 @@ class GameRewardsMixin:
             qnum: [event for event in self._recent_history(28) if int(event.get("question_number") or 0) == qnum]
         }
         question_stability = {qnum: self._question_stability_score(current_q, rec, question_history_map.get(qnum, []))}
-        source_rows, source_map = self._build_source_agreement_rows(self.master_questions)
-        _source_trust_rows, source_trust_map = self._build_source_trust_rows(self.master_questions, source_rows)
+        source_rows, source_map = self._build_source_agreement_rows(training_source_questions(self.master_questions))
+        _source_trust_rows, source_trust_map = self._build_source_trust_rows(
+            training_source_questions(self.master_questions), source_rows
+        )
         latent_rows = self._build_latent_weakness_rows(
             self._progress_questions(),
             question_stability,
@@ -685,7 +688,7 @@ class GameRewardsMixin:
         latent_score = float(latent_rows[0]["score"]) if latent_rows else 0.0
         kind, unit = self._coverage_unit_for_question(current_q)
         transfer_rows, transfer_map = self._build_transfer_strength_rows(
-            self._progress_questions(), question_stability, self.master_questions
+            self._progress_questions(), question_stability, training_source_questions(self.master_questions)
         )
         del transfer_rows
         transfer_score = float((transfer_map.get(f"{kind}::{unit}") or {}).get("score", 72.0))
@@ -713,7 +716,7 @@ class GameRewardsMixin:
         current_source = str(current_q.get("source_name") or "")
         current_stem = self._stem_style_for_question(current_q)
         ranked = []
-        for candidate in self.master_questions:
+        for candidate in training_source_questions(self.master_questions):
             candidate_qnum = candidate.get("question_number")
             if candidate_qnum == current_q.get("question_number") or candidate_qnum in current_qnums:
                 continue

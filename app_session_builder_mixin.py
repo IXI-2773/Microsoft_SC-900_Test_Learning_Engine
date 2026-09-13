@@ -4,6 +4,7 @@ import threading
 from tkinter import messagebox
 
 from app_constants import MODE_PRACTICE, MODE_SMART_PRACTICE
+from cand01r3_runtime import partition_cache_identity, training_source_questions
 from progress_store import (
     is_active_weak,
     is_ever_wrong,
@@ -61,8 +62,10 @@ class SessionBuilderMixin:
 
     def _smart_practice_worker_snapshot(self, *, base_pool=None):
         meta = self.progress_data.setdefault("meta", {})
+        master = training_source_questions(self.master_questions)
+        scoped_base = training_source_questions(base_pool) if base_pool is not None else None
         return SmartPracticeWorkerSnapshot(
-            master_questions=copy.deepcopy(self.master_questions),
+            master_questions=copy.deepcopy(master),
             questions=copy.deepcopy(self.questions),
             progress_data=copy.deepcopy(self.progress_data),
             session_answer_history=copy.deepcopy(list(self.session_answer_history or [])),
@@ -74,7 +77,7 @@ class SessionBuilderMixin:
             smart_practice_pool_cache=copy.deepcopy(getattr(self, "smart_practice_pool_cache", {})),
             progress_meta_cache_raw=copy.deepcopy(meta if isinstance(meta, dict) else {}),
             progress_meta_cache_value=None,
-            base_pool=copy.deepcopy(list(base_pool) if base_pool is not None else None),
+            base_pool=copy.deepcopy(list(scoped_base) if scoped_base is not None else None),
         )
 
     def _normalized_study_label(self, value: str) -> str:
@@ -150,6 +153,7 @@ class SessionBuilderMixin:
             records_key,
             repair_key,
             session_answer_key,
+            partition_cache_identity(),
         )
 
     def _build_near_miss_pressure_maps(self, history, questions):
@@ -277,9 +281,10 @@ class SessionBuilderMixin:
 
     def _build_smart_practice_signal_payload(self):
         records = self._progress_questions()
+        signal_source = training_source_questions(self.master_questions)
         signal_questions = [
             question
-            for question in self.master_questions
+            for question in signal_source
             if not question.get("suspended") and not is_suspended(records.get(self._question_key(question), {}))
         ]
         recent_history = self._recent_history(28)
@@ -339,13 +344,13 @@ class SessionBuilderMixin:
             recognition_retrieval_map, abstraction_ladder_map
         )
         _decision_latency_rows, decision_latency_map = self._build_decision_latency_rows(
-            recent_history, self.master_questions
+            recent_history, signal_questions
         )
         _error_boundary_rows, error_boundary_map = self._build_error_boundary_rows(
-            recent_history, self.master_questions
+            recent_history, signal_questions
         )
         counterfactual_distractor_rows, counterfactual_pressure_map = self._build_counterfactual_distractor_rows(
-            recent_history, self.master_questions
+            recent_history, signal_questions
         )
         _contrast_rule_rows, contrast_pressure_map = self._build_contrast_rule_rows(
             counterfactual_distractor_rows,
@@ -920,7 +925,7 @@ class SessionBuilderMixin:
         records = self._progress_questions()
         pool = [
             q
-            for q in self.master_questions
+            for q in training_source_questions(self.master_questions)
             if not q.get("suspended") and not is_suspended(records.get(self._question_key(q), {}))
         ]
         if domain and domain != "All domains":
@@ -972,7 +977,7 @@ class SessionBuilderMixin:
         if progress_weak:
             base = sorted(progress_weak, key=weak_score, reverse=True)
         else:
-            analytics = self.compute_analytics(source=self.master_questions)
+            analytics = self.compute_analytics(source=training_source_questions(self.master_questions))
             weak_domains = [r["domain"] for r in analytics["domains"][:2]]
             base = [q for q in domain_pool if q.get("domain") in weak_domains]
         seen = set()

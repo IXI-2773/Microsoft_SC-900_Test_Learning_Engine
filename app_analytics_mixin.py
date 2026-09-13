@@ -68,6 +68,7 @@ from analytics_models import (
 from analytics_recommendations import AnalyticsRecommendationInputs, build_analytics_recommendations
 from analytics_summary import AnalyticsSummaryCard, build_analytics_summary
 from app_constants import MODE_EXAM
+from cand01r3_runtime import sanitize_learner_export
 from config_store import DEFAULT_CONFIG
 from progress_models import ProgressSummary
 from progress_store import (
@@ -4309,7 +4310,7 @@ class AnalyticsMixin:
                 self.analytics_source_cache_payload = self._build_analytics_payload(source=source_list)
             analytics = copy.deepcopy(self.analytics_source_cache_payload)
             analytics["overall"]["elapsed_seconds"] = self.current_elapsed_seconds()
-            return analytics
+            return sanitize_learner_export(analytics)
 
         signature = self._analytics_signature()
         if signature != self.analytics_cache_key or self.analytics_cache_payload is None:
@@ -4317,7 +4318,7 @@ class AnalyticsMixin:
             self.analytics_cache_payload = self._build_analytics_payload()
         analytics = copy.deepcopy(self.analytics_cache_payload)
         analytics["overall"]["elapsed_seconds"] = self.current_elapsed_seconds()
-        return analytics
+        return sanitize_learner_export(analytics)
 
     def export_analytics_json(self):
         analytics = self.compute_analytics()
@@ -4335,7 +4336,7 @@ class AnalyticsMixin:
         )
         if not path:
             return
-        safe_write_json(Path(path), analytics)
+        safe_write_json(Path(path), sanitize_learner_export(analytics))
         messagebox.showinfo("Analytics exported", f"Saved analytics to:\n{path}")
 
     def open_analytics_window(self):
