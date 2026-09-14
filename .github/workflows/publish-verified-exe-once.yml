@@ -35,8 +35,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          encoded="$(base64 -w0 /tmp/SC900TestLearningEngine.exe)"
-          gh api --method PUT "repos/${GITHUB_REPOSITORY}/contents/SC900TestLearningEngine.exe" \
-            -f message='release: add verified SC-900 Windows executable' \
-            -f content="$encoded" \
-            -f branch='release/sc900-exe-001'
+          python - <<'PY'
+          import base64, json
+          from pathlib import Path
+          raw = Path('/tmp/SC900TestLearningEngine.exe').read_bytes()
+          payload = {
+              'message': 'release: add verified SC-900 Windows executable',
+              'content': base64.b64encode(raw).decode('ascii'),
+              'branch': 'release/sc900-exe-001',
+          }
+          Path('/tmp/payload.json').write_text(json.dumps(payload), encoding='utf-8')
+          PY
+          gh api --method PUT "repos/${GITHUB_REPOSITORY}/contents/SC900TestLearningEngine.exe" --input /tmp/payload.json
