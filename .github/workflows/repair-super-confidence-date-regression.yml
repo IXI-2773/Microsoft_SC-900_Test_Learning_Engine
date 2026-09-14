@@ -43,6 +43,7 @@ jobs:
           Get-Content red.log
           if ($status -eq 0) { throw 'Expected RED failure did not reproduce' }
           if (-not (Select-String -Path red.log -Pattern 'test_smart_practice_super_confident_questions_are_skipped_when_other_choices_exist')) { throw 'Expected failing test not present' }
+          exit 0
 
       - name: Patch drifting fixed dates
         shell: pwsh
