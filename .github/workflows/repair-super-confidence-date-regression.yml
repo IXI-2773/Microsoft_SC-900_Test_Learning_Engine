@@ -20,12 +20,17 @@ jobs:
           ref: fix/sc900-super-confidence-date-regression-001
           fetch-depth: 0
 
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - name: Verify base and frozen refs
         shell: bash
         run: |
           set -euo pipefail
           git fetch origin main
-          test "$(git rev-parse HEAD^)" = 'e02d1a4d761c97951c232a21a2306390aee77718'
+          test "$(git merge-base HEAD origin/main)" = 'e02d1a4d761c97951c232a21a2306390aee77718'
           test "$(git ls-remote origin 'refs/heads/research/sc900-cand01r3-measurement-001' | cut -f1)" = 'fc7d32f976c0b4c75658ff67d8d47ebe53d854bb'
           test "$(git ls-remote origin 'refs/heads/implementation/sc900-cand01r3-gate3' | cut -f1)" = 'f742dcc085d46f1999eb8782f709730323e9d7f0'
 
@@ -39,50 +44,41 @@ jobs:
           if ($status -eq 0) { throw 'Expected RED failure did not reproduce' }
           if (-not (Select-String -Path red.log -Pattern 'test_smart_practice_super_confident_questions_are_skipped_when_other_choices_exist')) { throw 'Expected failing test not present' }
 
-      - name: Patch test to use the same runtime date authority as production
-        shell: python
+      - name: Patch drifting fixed dates
+        shell: pwsh
         run: |
-          from pathlib import Path
-          path = Path('tests/test_sc900_engine_regression.py')
-          text = path.read_text(encoding='utf-8')
-          old = """        rec = update_progress_record({}, ['A'], True, seen_on='2026-05-17', confidence='Sure')
-          rec = set_progress_super_confident(rec, seen_on='2026-05-17', cooldown_days=120)
-          app._progress_questions()['engine-q1'] = rec
-          pool = app.build_smart_practice_pool('2', randomize=False)
-          self.assertTrue(is_super_confident_active(app._progress_questions()['engine-q1'], on_date='2026-05-17'))
-          self.assertNotIn(1, [q['question_number'] for q in pool])
-"""
-          new = """        rec = update_progress_record({}, ['A'], True, confidence='Sure')
-          rec = set_progress_super_confident(rec, cooldown_days=120)
-          app._progress_questions()['engine-q1'] = rec
-          pool = app.build_smart_practice_pool('2', randomize=False)
-          self.assertTrue(is_super_confident_active(app._progress_questions()['engine-q1']))
-          self.assertFalse(is_review_due(app._progress_questions()['engine-q1']))
-          self.assertNotIn(1, [q['question_number'] for q in pool])
-"""
-          if text.count(old) != 1:
-              raise SystemExit(f'Expected exact test block once; found {text.count(old)}')
-          path.write_text(text.replace(old, new), encoding='utf-8')
+          $path = 'tests/test_sc900_engine_regression.py'
+          $text = Get-Content -Raw -Path $path
+          $old1 = "        rec = update_progress_record({}, ['A'], True, seen_on='2026-05-17', confidence='Sure')"
+          $new1 = "        rec = update_progress_record({}, ['A'], True, confidence='Sure')"
+          $old2 = "        rec = set_progress_super_confident(rec, seen_on='2026-05-17', cooldown_days=120)"
+          $new2 = "        rec = set_progress_super_confident(rec, cooldown_days=120)"
+          $old3 = "        self.assertTrue(is_super_confident_active(app._progress_questions()['engine-q1'], on_date='2026-05-17'))"
+          $new3 = "        self.assertTrue(is_super_confident_active(app._progress_questions()['engine-q1']))`r`n        self.assertFalse(is_review_due(app._progress_questions()['engine-q1']))"
+          foreach ($old in @($old1, $old2, $old3)) {
+            if (($text.Split($old)).Count -ne 2) { throw "Expected exact repair target once: $old" }
+          }
+          $text = $text.Replace($old1, $new1).Replace($old2, $new2).Replace($old3, $new3)
+          Set-Content -Path $path -Value $text -Encoding utf8
 
       - name: GREEN - focused regression
-        shell: bash
+        shell: pwsh
         run: |
-          set -euo pipefail
           python -m unittest tests.test_sc900_engine_regression -v -k super_confident_questions_are_skipped_when_other_choices_exist
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-      - name: Regression suite
-        shell: bash
+      - name: Engine regression suite
+        shell: pwsh
         run: |
-          set -euo pipefail
           python -m unittest tests.test_sc900_engine_regression -v
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-      - name: Commit only the deterministic test repair
+      - name: Commit only deterministic test repair
         shell: bash
         run: |
           set -euo pipefail
           git rm .github/workflows/repair-super-confidence-date-regression.yml
           test "$(git status --short | wc -l)" -eq 1
-          git diff -- tests/test_sc900_engine_regression.py
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add tests/test_sc900_engine_regression.py
