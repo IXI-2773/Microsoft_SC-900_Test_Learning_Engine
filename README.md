@@ -20,7 +20,7 @@ The project combines a calibrated SC-900 question bank with practice, exam simul
 | Ordinary Exam-eligible pool | **431** |
 | Windows executable | `SC900TestLearningEngine.exe` |
 | Active bank SHA-256 | `177a4fb5f8a874ffe4dda6b69e3d1c03dbdad1f5db5a174a990eb8b5a0e5927c` |
-| Windows executable SHA-256 | `7155577732d488711092c9145fff93895b1ae206391112c06cc41e135cbbd399` |
+| Windows executable SHA-256 | `9c5d6cdfa46e4b6a49dd5ff1760f1f1d1640b4e1e889009547b682ecd54f7558` |
 
 The historical eight-question v8 placeholder bank is retained only as a baseline/recovery artifact. It is **not** the active production question bank.
 
