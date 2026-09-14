@@ -1,0 +1,34 @@
+name: Synchronize executable hash in README
+
+on:
+  push:
+    branches:
+      - release/sc900-refresh-exe-editable-count
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update only documented executable hash
+        shell: bash
+        run: |
+          set -euo pipefail
+          old='7155577732d488711092c9145fff93895b1ae206391112c06cc41e135cbbd399'
+          new='9c5d6cdfa46e4b6a49dd5ff1760f1f1d1640b4e1e889009547b682ecd54f7558'
+          test "$(grep -o "$old" README.md | wc -l)" -eq 1
+          sed -i "s/$old/$new/" README.md
+          test "$(grep -o "$new" README.md | wc -l)" -eq 1
+          git rm .github/workflows/update-exe-hash.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add README.md
+          changed="$(git diff --cached --name-only | sort)"
+          expected="$(printf '%s\n%s' '.github/workflows/update-exe-hash.yml' 'README.md' | sort)"
+          test "$changed" = "$expected"
+          git commit -m 'docs: update verified executable hash'
+          git push origin HEAD:release/sc900-refresh-exe-editable-count
