@@ -1,0 +1,64 @@
+name: Refresh verified SC-900 executable
+
+on:
+  push:
+    branches:
+      - release/sc900-refresh-exe-editable-count
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  refresh:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    env:
+      REPO: IXI-2773/Microsoft_SC-900_Test_Learning_Engine
+      SOURCE_MAIN_SHA: 862d224594b4420eaf4ce25cc3e214986bbc86bb
+      SOURCE_RUN: '34876047872'
+      ARTIFACT_NAME: SC900TestLearningEngine-consolidated-main
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Verify source run and protected refs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "$SOURCE_MAIN_SHA"
+          test "$(gh api repos/$REPO/actions/runs/$SOURCE_RUN --jq .head_sha)" = "$SOURCE_MAIN_SHA"
+          test "$(gh api repos/$REPO/actions/runs/$SOURCE_RUN --jq .status)" = "completed"
+          test "$(gh api repos/$REPO/actions/runs/$SOURCE_RUN --jq .conclusion)" = "success"
+          test "$(git ls-remote origin refs/heads/research/sc900-cand01r3-measurement-001 | cut -f1)" = "fc7d32f976c0b4c75658ff67d8d47ebe53d854bb"
+          test "$(git ls-remote origin refs/heads/implementation/sc900-cand01r3-gate3 | cut -f1)" = "f742dcc085d46f1999eb8782f709730323e9d7f0"
+          test "$(git ls-remote origin refs/heads/recovery/publish-exact-history/sc900-v8-20260910 | cut -f1)" = "b567d4b74a2f99e50022dd0dafd81ffa75dff0a2"
+          test "$(git ls-remote origin refs/heads/recovery/publish-sc900-v8-exact-history | cut -f1)" = "bbc3bd900b73bde89151dc51706ad62fc69e8196"
+
+      - name: Download exact verified artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/sc900-release
+          mkdir -p /tmp/sc900-release
+          gh run download "$SOURCE_RUN" -R "$REPO" -n "$ARTIFACT_NAME" -D /tmp/sc900-release
+          mapfile -t exes < <(find /tmp/sc900-release -type f -name 'SC900TestLearningEngine.exe')
+          test "${#exes[@]}" -eq 1
+          file "${exes[0]}" | grep -q 'PE32+'
+          sha256sum "${exes[0]}" | tee /tmp/exe.sha256
+          cp "${exes[0]}" SC900TestLearningEngine.exe
+
+      - name: Commit only refreshed executable
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/refresh-exe-editable-count.yml
+          git add -f SC900TestLearningEngine.exe
+          changed="$(git diff --cached --name-only | sort)"
+          test "$changed" = "SC900TestLearningEngine.exe"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'release: refresh Windows executable for editable session counts'
+          git push origin HEAD:release/sc900-refresh-exe-editable-count
