@@ -829,7 +829,7 @@ class TestingEngineApp(
         self.mode_combo.bind("<<ComboboxSelected>>", self.on_session_mode_change)
         tk.Label(sess, text="Question amount", bg=LIGHT_BLUE, fg=TEXT, font=("Segoe UI", 8, "bold")).pack(anchor="w")
         self.count_combo = ttk.Combobox(
-            sess, textvariable=self.session_count_var, state="readonly", values=["25", "50", "90", "All visible"]
+            sess, textvariable=self.session_count_var, state="normal", values=["25", "50", "90", "All visible"]
         )
         self.count_combo.pack(fill="x", pady=(3, 6))
         self.count_combo.bind("<<ComboboxSelected>>", lambda e: self.save_app_config())
