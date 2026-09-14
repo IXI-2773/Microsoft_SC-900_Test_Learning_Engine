@@ -1703,11 +1703,12 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         app = self.make_app(start_session=False)
         app.master_questions = [{'id': 'engine-q1', 'question_number': 1, 'prompt': 'Question 1', 'choices': {'A': 'Correct 1', 'B': 'Wrong 1'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic 1'], 'source_name': 'Source One', 'objective_code': '1.1'}, {'id': 'engine-q2', 'question_number': 2, 'prompt': 'Question 2', 'choices': {'A': 'Correct 2', 'B': 'Wrong 2'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic 1'], 'source_name': 'Source One', 'objective_code': '1.1'}, {'id': 'engine-q3', 'question_number': 3, 'prompt': 'Question 3', 'choices': {'A': 'Correct 3', 'B': 'Wrong 3'}, 'correct': ['A'], 'domain': 'Domain A', 'topics': ['Topic 1'], 'source_name': 'Source Two', 'objective_code': '1.1'}, {'id': 'engine-q4', 'question_number': 4, 'prompt': 'Question 4', 'choices': {'A': 'Correct 4', 'B': 'Wrong 4'}, 'correct': ['A'], 'domain': 'Domain B', 'topics': ['Topic 2'], 'source_name': 'Source Three', 'objective_code': '2.1'}]
         app._reset_runtime_question_state(app.master_questions)
-        rec = update_progress_record({}, ['A'], True, seen_on='2026-05-17', confidence='Sure')
-        rec = set_progress_super_confident(rec, seen_on='2026-05-17', cooldown_days=120)
+        rec = update_progress_record({}, ['A'], True, confidence='Sure')
+        rec = set_progress_super_confident(rec, cooldown_days=120)
         app._progress_questions()['engine-q1'] = rec
         pool = app.build_smart_practice_pool('2', randomize=False)
-        self.assertTrue(is_super_confident_active(app._progress_questions()['engine-q1'], on_date='2026-05-17'))
+        self.assertTrue(is_super_confident_active(app._progress_questions()['engine-q1']))
+        self.assertFalse(is_review_due(app._progress_questions()['engine-q1']))
         self.assertNotIn(1, [q['question_number'] for q in pool])
 
     def test_wrong_answer_queues_confusion_pair_drill_before_generic_twins(self):
@@ -4351,3 +4352,4 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         self.assertNotEqual(before, app._smart_practice_signal_key())
 if __name__ == '__main__':
     unittest.main()
+
