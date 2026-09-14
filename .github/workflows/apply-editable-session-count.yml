@@ -23,11 +23,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD^)" = "d8f32c2d37eadf6a92c3c5b28939db21759ccaa1"
+          test "$(git rev-parse HEAD^)" = "16eced5147c9b18d632463897e8bf015ef998627"
           test "$(git ls-remote origin refs/heads/research/sc900-cand01r3-measurement-001 | cut -f1)" = "fc7d32f976c0b4c75658ff67d8d47ebe53d854bb"
           test "$(git ls-remote origin refs/heads/implementation/sc900-cand01r3-gate3 | cut -f1)" = "f742dcc085d46f1999eb8782f709730323e9d7f0"
           test "$(git ls-remote origin refs/heads/recovery/publish-exact-history/sc900-v8-20260910 | cut -f1)" = "b567d4b74a2f99e50022dd0dafd81ffa75dff0a2"
           test "$(git ls-remote origin refs/heads/recovery/publish-sc900-v8-exact-history | cut -f1)" = "bbc3bd900b73bde89151dc51706ad62fc69e8196"
+      - name: Install full-test extraction dependency
+        run: python -m pip install -r requirements-extract.txt
       - name: Apply one-line UI change
         shell: python
         run: |
