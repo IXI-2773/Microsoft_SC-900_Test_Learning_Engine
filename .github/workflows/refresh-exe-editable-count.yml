@@ -22,13 +22,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
       - name: Verify source run and protected refs
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD^)" = "$SOURCE_MAIN_SHA"
+          test "$(git merge-base HEAD "$SOURCE_MAIN_SHA")" = "$SOURCE_MAIN_SHA"
           test "$(gh api repos/$REPO/actions/runs/$SOURCE_RUN --jq .head_sha)" = "$SOURCE_MAIN_SHA"
           test "$(gh api repos/$REPO/actions/runs/$SOURCE_RUN --jq .status)" = "completed"
           test "$(gh api repos/$REPO/actions/runs/$SOURCE_RUN --jq .conclusion)" = "success"
@@ -50,14 +50,15 @@ jobs:
           sha256sum "${exes[0]}" | tee /tmp/exe.sha256
           cp "${exes[0]}" SC900TestLearningEngine.exe
 
-      - name: Commit only refreshed executable
+      - name: Commit refreshed executable and retire temporary workflow
         shell: bash
         run: |
           set -euo pipefail
           git rm .github/workflows/refresh-exe-editable-count.yml
           git add -f SC900TestLearningEngine.exe
           changed="$(git diff --cached --name-only | sort)"
-          test "$changed" = "SC900TestLearningEngine.exe"
+          expected="$(printf '%s\n%s' '.github/workflows/refresh-exe-editable-count.yml' 'SC900TestLearningEngine.exe' | sort)"
+          test "$changed" = "$expected"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -m 'release: refresh Windows executable for editable session counts'
