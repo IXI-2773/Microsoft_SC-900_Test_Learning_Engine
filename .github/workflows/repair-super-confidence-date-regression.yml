@@ -79,9 +79,9 @@ jobs:
         run: |
           set -euo pipefail
           git rm .github/workflows/repair-super-confidence-date-regression.yml
-          test "$(git status --short | wc -l)" -eq 1
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add tests/test_sc900_engine_regression.py
           git commit -m 'test: remove date drift from super-confidence regression'
+          test "$(git diff --name-only origin/main...HEAD)" = 'tests/test_sc900_engine_regression.py'
           git push origin HEAD:fix/sc900-super-confidence-date-regression-001
