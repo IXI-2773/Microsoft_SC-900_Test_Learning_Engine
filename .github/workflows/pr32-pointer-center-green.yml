@@ -13,7 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      PRE_MUTATION_HEAD: 05a482ea7a1512cc2dde57c566e374d3b1ee64fa
+      PRE_RUN_HEAD: e9f80ffd6a7f5cb6e2b6ac86989d93db943fbb3b
+      CLEAN_FUNCTIONAL_HEAD: 6d6078a9a879707df2bba617ba94cb087cff8499
     steps:
       - uses: actions/checkout@v4
         with:
@@ -23,7 +24,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD^)" = "$PRE_MUTATION_HEAD"
+          test "$(git rev-parse HEAD^)" = "$PRE_RUN_HEAD"
           test "$(git diff --name-only HEAD^ HEAD)" = ".github/workflows/pr32-pointer-center-green.yml"
           test -f .github/workflows/pr32-pointer-center-red.yml
       - name: Install Tk runtime for UI tests
@@ -64,12 +65,12 @@ jobs:
         run: |
           set -euo pipefail
           python -m unittest tests.test_ui_confidence_controls -v
-      - name: Remove temporary workflows and verify bounded diff
+      - name: Remove temporary workflows and verify clean functional diff
         shell: bash
         run: |
           set -euo pipefail
           git rm .github/workflows/pr32-pointer-center-red.yml .github/workflows/pr32-pointer-center-green.yml
-          changed="$(git diff --name-only "$PRE_MUTATION_HEAD" | sort)"
+          changed="$(git diff --name-only "$CLEAN_FUNCTIONAL_HEAD" | sort)"
           expected="$(printf '%s\n' app_question_flow_mixin.py tests/test_ui_confidence_controls.py | sort)"
           test "$changed" = "$expected"
       - name: Commit and push refinement
