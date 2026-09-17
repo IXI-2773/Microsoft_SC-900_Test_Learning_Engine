@@ -65,11 +65,19 @@ class _CanvasGeometry(_GeometryWidget):
 
 
 class _Root:
-    def __init__(self):
+    def __init__(self, *, pointer_x=0, pointer_y=0):
         self.saved_geometry = None
+        self.pointer_x = pointer_x
+        self.pointer_y = pointer_y
 
     def geometry(self, value):
         self.saved_geometry = value
+
+    def winfo_pointerx(self):
+        return self.pointer_x
+
+    def winfo_pointery(self):
+        return self.pointer_y
 
 
 class _FlowHarness(QuestionFlowMixin):
@@ -102,8 +110,30 @@ class _FlowHarness(QuestionFlowMixin):
 
 
 class ConfidenceControlRegressionTests(unittest.TestCase):
+    def test_confidence_prompt_prefers_pointer_location_inside_clicked_answer(self):
+        app = object.__new__(QuestionFlowMixin)
+        app.root = _Root(pointer_x=360, pointer_y=520)
+        app.content_frame = _GeometryWidget(x=100, y=100, width=700, height=900)
+        app.content_canvas = _CanvasGeometry(
+            x=100,
+            y=100,
+            width=700,
+            height=260,
+            visible_top=400,
+        )
+        answer_row = _GeometryWidget(x=120, y=500, width=650, height=50)
+        prompt = _GeometryWidget(width=1, height=1, requested_width=240, requested_height=90)
+
+        x, y = app._position_feedback_popover(prompt, answer_row)
+
+        self.assertGreaterEqual(x, 250)
+        self.assertLessEqual(x, 300)
+        self.assertGreaterEqual(y, 410)
+        self.assertLessEqual(y, 450)
+
     def test_d_anchored_confidence_prompt_is_bounded_to_visible_canvas(self):
         app = object.__new__(QuestionFlowMixin)
+        app.root = _Root(pointer_x=0, pointer_y=0)
         app.content_frame = _GeometryWidget(x=100, y=100, width=700, height=900)
         app.content_canvas = _CanvasGeometry(
             x=100,
