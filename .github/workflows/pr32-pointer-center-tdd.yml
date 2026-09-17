@@ -1,0 +1,92 @@
+name: PR32 pointer-center TDD refinement
+
+on:
+  push:
+    branches:
+      - fix/sc900-answer-d-confidence-ui-001
+
+permissions:
+  contents: write
+
+jobs:
+  pointer-center-tdd:
+    if: github.event.head_commit.message == 'test: require confidence popover centered on click'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PRE_REFINEMENT_HEAD: 6d6078a9a879707df2bba617ba94cb087cff8499
+      WORKFLOW_PATH: .github/workflows/pr32-pointer-center-tdd.yml
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/sc900-answer-d-confidence-ui-001
+          fetch-depth: 0
+      - name: Verify bounded starting state
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "$PRE_REFINEMENT_HEAD"
+          test "$(git diff --name-only HEAD^ HEAD)" = "$WORKFLOW_PATH"
+          test -z "$(git status --porcelain=v1)"
+      - name: Add regression expectation only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('tests/test_ui_confidence_controls.py')
+          text = path.read_text(encoding='utf-8')
+          old = '''        self.assertGreaterEqual(x, 250)\n        self.assertLessEqual(x, 300)\n        self.assertGreaterEqual(y, 410)\n        self.assertLessEqual(y, 450)\n'''
+          new = '''        pointer_x_in_host = app.root.pointer_x - app.content_frame.x\n        self.assertEqual(pointer_x_in_host, x + prompt.requested_width // 2)\n        self.assertGreaterEqual(y, 410)\n        self.assertLessEqual(y, 450)\n'''
+          if text.count(old) != 1:
+              raise SystemExit('expected pointer-location assertion block not found exactly once')
+          path.write_text(text.replace(old, new), encoding='utf-8')
+          PY
+      - name: RED - existing placement must fail centered-click requirement
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          python -m unittest tests.test_ui_confidence_controls.ConfidenceControlRegressionTests.test_confidence_prompt_prefers_pointer_location_inside_clicked_answer -v 2>&1 | tee red.log
+          status=${PIPESTATUS[0]}
+          set -e
+          test "$status" -ne 0
+          grep -q 'AssertionError' red.log
+      - name: Apply minimal pointer-centering fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('app_question_flow_mixin.py')
+          text = path.read_text(encoding='utf-8')
+          old = '''                    pointer_candidates = [\n                        (pointer_x + 12, pointer_y + 12),\n                        (pointer_x - pop_w - 12, pointer_y + 12),\n                        (pointer_x + 12, pointer_y - pop_h - 12),\n                        (pointer_x - pop_w - 12, pointer_y - pop_h - 12),\n                    ]\n'''
+          new = '''                    centered_x = pointer_x - int(pop_w / 2)\n                    pointer_candidates = [\n                        (centered_x, pointer_y + 12),\n                        (centered_x, pointer_y - pop_h - 12),\n                        (pointer_x + 12, pointer_y + 12),\n                        (pointer_x - pop_w - 12, pointer_y + 12),\n                        (pointer_x + 12, pointer_y - pop_h - 12),\n                        (pointer_x - pop_w - 12, pointer_y - pop_h - 12),\n                    ]\n'''
+          if text.count(old) != 1:
+              raise SystemExit('expected pointer candidate block not found exactly once')
+          path.write_text(text.replace(old, new), encoding='utf-8')
+          PY
+      - name: GREEN - focused confidence regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest tests.test_ui_confidence_controls -v
+      - name: Verify only intended source and test changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm "$WORKFLOW_PATH"
+          rm -f red.log
+          changed="$(git status --short | awk '{print $2}' | sort)"
+          expected="$(printf '%s\n' app_question_flow_mixin.py tests/test_ui_confidence_controls.py | sort)"
+          test "$changed" = "$expected"
+      - name: Commit bounded refinement
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add app_question_flow_mixin.py tests/test_ui_confidence_controls.py "$WORKFLOW_PATH"
+          git commit -m 'fix: center confidence prompt on clicked pointer'
+          git push origin HEAD:fix/sc900-answer-d-confidence-ui-001
