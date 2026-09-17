@@ -53,6 +53,8 @@ The original review identified and the reconciled documents now directly cover:
 
 No separate interpretation layer is required. If this historical record conflicts with the final reconciled spec or plan, the final reconciled spec and plan control.
 
+Final document verification confirmed the design branch contains only the reconciled spec, reconciled Package-A plan, and this resolved historical review record relative to the exact implementation base.
+
 ```text
 ARCHITECTURE_REOPENED = NO
 PACKAGE_A_SCOPE_CHANGED = NO
@@ -65,5 +67,6 @@ RECOVERY_REFS_MODIFIED = NO
 MERGE_AUTHORIZED = NO
 
 ERRATA_OVERRIDE_ACTIVE = NO
-CURSOR_HANDOFF_STATUS = READY_AFTER_FINAL_DOCUMENT_VERIFICATION
+FINAL_DOCUMENT_VERIFICATION = PASS
+CURSOR_HANDOFF_STATUS = READY
 ```
