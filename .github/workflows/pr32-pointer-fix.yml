@@ -1,15 +1,14 @@
-name: Apply PR32 pointer-local confidence placement
+name: Apply PR32 pointer fix
 
 on:
   push:
-    branches:
-      - fix/sc900-answer-d-confidence-ui-001
+    branches: [fix/sc900-answer-d-confidence-ui-001]
 
 permissions:
   contents: write
 
 jobs:
-  apply-pointer-placement:
+  fix:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -19,132 +18,20 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Patch confidence placement near active pointer
+      - name: Patch source
         shell: bash
+        env:
+          METHOD_B64: "ICAgIGRlZiBfcG9zaXRpb25fZmVlZGJhY2tfcG9wb3ZlcihzZWxmLCBwb3BvdmVyLCBhbmNob3IpOgogICAgICAgIHBvcG92ZXIudXBkYXRlX2lkbGV0YXNrcygpCiAgICAgICAgaG9zdCA9IHNlbGYuY29udGVudF9mcmFtZQogICAgICAgIGNhbnZhcyA9IHNlbGYuY29udGVudF9jYW52YXMKICAgICAgICBwb3BfdyA9IG1heChwb3BvdmVyLndpbmZvX3dpZHRoKCksIHBvcG92ZXIud2luZm9fcmVxd2lkdGgoKSkKICAgICAgICBwb3BfaCA9IG1heChwb3BvdmVyLndpbmZvX2hlaWdodCgpLCBwb3BvdmVyLndpbmZvX3JlcWhlaWdodCgpKQogICAgICAgIHZpZXdwb3J0X2xlZnQgPSBtYXgoMCwgY2FudmFzLndpbmZvX3Jvb3R4KCkgLSBob3N0LndpbmZvX3Jvb3R4KCkpCiAgICAgICAgdmlld3BvcnRfcmlnaHQgPSB2aWV3cG9ydF9sZWZ0ICsgY2FudmFzLndpbmZvX3dpZHRoKCkKICAgICAgICB2aWV3cG9ydF90b3AgPSBpbnQoY2FudmFzLmNhbnZhc3koMCkpCiAgICAgICAgdmlld3BvcnRfYm90dG9tID0gdmlld3BvcnRfdG9wICsgY2FudmFzLndpbmZvX2hlaWdodCgpCiAgICAgICAgbWluX3ggPSB2aWV3cG9ydF9sZWZ0ICsgMTIKICAgICAgICBtYXhfeCA9IG1heChtaW5feCwgdmlld3BvcnRfcmlnaHQgLSBwb3BfdyAtIDEyKQogICAgICAgIG1pbl95ID0gdmlld3BvcnRfdG9wICsgMTIKICAgICAgICBtYXhfeSA9IG1heChtaW5feSwgdmlld3BvcnRfYm90dG9tIC0gcG9wX2ggLSAxMikKCiAgICAgICAgZGVmIGZpdHMoeCwgeSk6CiAgICAgICAgICAgIHJldHVybiBtaW5feCA8PSB4IDw9IG1heF94IGFuZCBtaW5feSA8PSB5IDw9IG1heF95CgogICAgICAgIGFuY2hvcl9leGlzdHMgPSBhbmNob3IgaXMgbm90IE5vbmUgYW5kIGdldGF0dHIoYW5jaG9yLCAid2luZm9fZXhpc3RzIiwgbGFtYmRhOiBGYWxzZSkoKQogICAgICAgIGlmIG5vdCBhbmNob3JfZXhpc3RzOgogICAgICAgICAgICByZXR1cm4gKAogICAgICAgICAgICAgICAgbWluKG1heChtaW5feCwgaW50KCh2aWV3cG9ydF9sZWZ0ICsgdmlld3BvcnRfcmlnaHQgLSBwb3BfdykgLyAyKSksIG1heF94KSwKICAgICAgICAgICAgICAgIG1pbihtYXgobWluX3ksIGludCh2aWV3cG9ydF90b3AgKyAoY2FudmFzLndpbmZvX2hlaWdodCgpIC0gcG9wX2gpIC8gNSkpLCBtYXhfeSksCiAgICAgICAgICAgICkKCiAgICAgICAgYXhfcm9vdCA9IGFuY2hvci53aW5mb19yb290eCgpCiAgICAgICAgYXlfcm9vdCA9IGFuY2hvci53aW5mb19yb290eSgpCiAgICAgICAgYXcgPSBhbmNob3Iud2luZm9fd2lkdGgoKQogICAgICAgIGFoID0gYW5jaG9yLndpbmZvX2hlaWdodCgpCiAgICAgICAgYXggPSBheF9yb290IC0gaG9zdC53aW5mb19yb290eCgpCiAgICAgICAgYXkgPSBheV9yb290IC0gaG9zdC53aW5mb19yb290eSgpCgogICAgICAgIHBvaW50ZXJfY2FuZGlkYXRlcyA9IFtdCiAgICAgICAgcm9vdCA9IGdldGF0dHIoc2VsZiwgInJvb3QiLCBOb25lKQogICAgICAgIGlmIHJvb3QgaXMgbm90IE5vbmU6CiAgICAgICAgICAgIHRyeToKICAgICAgICAgICAgICAgIHBvaW50ZXJfcm9vdF94ID0gcm9vdC53aW5mb19wb2ludGVyeCgpCiAgICAgICAgICAgICAgICBwb2ludGVyX3Jvb3RfeSA9IHJvb3Qud2luZm9fcG9pbnRlcnkoKQogICAgICAgICAgICAgICAgaWYgYXhfcm9vdCA8PSBwb2ludGVyX3Jvb3RfeCA8PSBheF9yb290ICsgYXcgYW5kIGF5X3Jvb3QgPD0gcG9pbnRlcl9yb290X3kgPD0gYXlfcm9vdCArIGFoOgogICAgICAgICAgICAgICAgICAgIHBvaW50ZXJfeCA9IHBvaW50ZXJfcm9vdF94IC0gaG9zdC53aW5mb19yb290eCgpCiAgICAgICAgICAgICAgICAgICAgcG9pbnRlcl95ID0gcG9pbnRlcl9yb290X3kgLSBob3N0LndpbmZvX3Jvb3R5KCkKICAgICAgICAgICAgICAgICAgICBwb2ludGVyX2NhbmRpZGF0ZXMgPSBbCiAgICAgICAgICAgICAgICAgICAgICAgIChwb2ludGVyX3ggKyAxMiwgcG9pbnRlcl95ICsgMTIpLAogICAgICAgICAgICAgICAgICAgICAgICAocG9pbnRlcl94IC0gcG9wX3cgLSAxMiwgcG9pbnRlcl95ICsgMTIpLAogICAgICAgICAgICAgICAgICAgICAgICAocG9pbnRlcl94ICsgMTIsIHBvaW50ZXJfeSAtIHBvcF9oIC0gMTIpLAogICAgICAgICAgICAgICAgICAgICAgICAocG9pbnRlcl94IC0gcG9wX3cgLSAxMiwgcG9pbnRlcl95IC0gcG9wX2ggLSAxMiksCiAgICAgICAgICAgICAgICAgICAgXQogICAgICAgICAgICBleGNlcHQgKEF0dHJpYnV0ZUVycm9yLCB0ay5UY2xFcnJvcik6CiAgICAgICAgICAgICAgICBwb2ludGVyX2NhbmRpZGF0ZXMgPSBbXQoKICAgICAgICBhbmNob3JfY2FuZGlkYXRlcyA9IFsKICAgICAgICAgICAgKGF4LCBheSArIGFoICsgMTApLAogICAgICAgICAgICAoYXggKyBhdyArIDEwLCBheSArIG1heCgwLCBpbnQoKGFoIC0gcG9wX2gpIC8gMikpKSwKICAgICAgICAgICAgKGF4IC0gcG9wX3cgLSAxMCwgYXkgKyBtYXgoMCwgaW50KChhaCAtIHBvcF9oKSAvIDIpKSksCiAgICAgICAgICAgIChheCwgYXkgLSBwb3BfaCAtIDEwKSwKICAgICAgICBdCiAgICAgICAgY2FuZGlkYXRlcyA9IHBvaW50ZXJfY2FuZGlkYXRlcyArIGFuY2hvcl9jYW5kaWRhdGVzCiAgICAgICAgZm9yIHgsIHkgaW4gY2FuZGlkYXRlczoKICAgICAgICAgICAgaWYgZml0cyh4LCB5KToKICAgICAgICAgICAgICAgIHJldHVybiB4LCB5CgogICAgICAgIHgsIHkgPSBjYW5kaWRhdGVzWzBdCiAgICAgICAgcmV0dXJuIG1pbihtYXgobWluX3gsIHgpLCBtYXhfeCksIG1pbihtYXgobWluX3ksIHkpLCBtYXhfeSkKCg=="
         run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          path = Path('app_question_flow_mixin.py')
-          text = path.read_text(encoding='utf-8')
-          old = '''    def _position_feedback_popover(self, popover, anchor):
-        popover.update_idletasks()
-        host = self.content_frame
-        pop_w = max(popover.winfo_width(), popover.winfo_reqwidth())
-        pop_h = max(popover.winfo_height(), popover.winfo_reqheight())
-        host_w = max(host.winfo_width(), self.content_canvas.winfo_width())
-        viewport_top = int(self.content_canvas.canvasy(0))
-        viewport_bottom = viewport_top + self.content_canvas.winfo_height()
-        if anchor is None or not getattr(anchor, "winfo_exists", lambda: False)():
-            return (
-                max(20, int((host_w - pop_w) / 2)),
-                max(viewport_top + 20, int(viewport_top + (self.content_canvas.winfo_height() - pop_h) / 5)),
-            )
-
-        ax = anchor.winfo_rootx() - host.winfo_rootx()
-        ay = anchor.winfo_rooty() - host.winfo_rooty()
-        aw = anchor.winfo_width()
-        ah = anchor.winfo_height()
-        candidates = [
-            (ax + aw + 10, ay + max(0, int((ah - pop_h) / 2))),
-            (ax, ay + ah + 10),
-            (ax - pop_w - 10, ay + max(0, int((ah - pop_h) / 2))),
-            (ax, ay - pop_h - 10),
-        ]
-        for x, y in candidates:
-            if (
-                12 <= x <= host_w - pop_w - 12
-                and viewport_top + 12 <= y <= viewport_bottom - pop_h - 12
-            ):
-                return x, y
-        x = min(max(12, candidates[0][0]), max(12, host_w - pop_w - 12))
-        y = min(
-            max(viewport_top + 12, candidates[0][1]),
-            max(viewport_top + 12, viewport_bottom - pop_h - 12),
-        )
-        return x, y
-'''
-          new = '''    def _position_feedback_popover(self, popover, anchor):
-        popover.update_idletasks()
-        host = self.content_frame
-        canvas = self.content_canvas
-        pop_w = max(popover.winfo_width(), popover.winfo_reqwidth())
-        pop_h = max(popover.winfo_height(), popover.winfo_reqheight())
-        viewport_left = max(0, canvas.winfo_rootx() - host.winfo_rootx())
-        viewport_right = viewport_left + canvas.winfo_width()
-        viewport_top = int(canvas.canvasy(0))
-        viewport_bottom = viewport_top + canvas.winfo_height()
-        min_x = viewport_left + 12
-        max_x = max(min_x, viewport_right - pop_w - 12)
-        min_y = viewport_top + 12
-        max_y = max(min_y, viewport_bottom - pop_h - 12)
-
-        def fits(x, y):
-            return min_x <= x <= max_x and min_y <= y <= max_y
-
-        anchor_exists = anchor is not None and getattr(anchor, "winfo_exists", lambda: False)()
-        if not anchor_exists:
-            return (
-                min(max(min_x, int((viewport_left + viewport_right - pop_w) / 2)), max_x),
-                min(max(min_y, int(viewport_top + (canvas.winfo_height() - pop_h) / 5)), max_y),
-            )
-
-        ax_root = anchor.winfo_rootx()
-        ay_root = anchor.winfo_rooty()
-        aw = anchor.winfo_width()
-        ah = anchor.winfo_height()
-        ax = ax_root - host.winfo_rootx()
-        ay = ay_root - host.winfo_rooty()
-
-        pointer_candidates = []
-        root = getattr(self, "root", None)
-        if root is not None:
-            try:
-                pointer_root_x = root.winfo_pointerx()
-                pointer_root_y = root.winfo_pointery()
-                if ax_root <= pointer_root_x <= ax_root + aw and ay_root <= pointer_root_y <= ay_root + ah:
-                    pointer_x = pointer_root_x - host.winfo_rootx()
-                    pointer_y = pointer_root_y - host.winfo_rooty()
-                    pointer_candidates = [
-                        (pointer_x + 12, pointer_y + 12),
-                        (pointer_x - pop_w - 12, pointer_y + 12),
-                        (pointer_x + 12, pointer_y - pop_h - 12),
-                        (pointer_x - pop_w - 12, pointer_y - pop_h - 12),
-                    ]
-            except (AttributeError, tk.TclError):
-                pointer_candidates = []
-
-        anchor_candidates = [
-            (ax, ay + ah + 10),
-            (ax + aw + 10, ay + max(0, int((ah - pop_h) / 2))),
-            (ax - pop_w - 10, ay + max(0, int((ah - pop_h) / 2))),
-            (ax, ay - pop_h - 10),
-        ]
-        candidates = pointer_candidates + anchor_candidates
-        for x, y in candidates:
-            if fits(x, y):
-                return x, y
-
-        x, y = candidates[0]
-        return min(max(min_x, x), max_x), min(max(min_y, y), max_y)
-'''
-          if new in text:
-              raise SystemExit(0)
-          if old not in text:
-              raise SystemExit('Expected placement method not found; fail closed')
-          path.write_text(text.replace(old, new, 1), encoding='utf-8')
-          PY
-      - name: Run focused regression
+          python -c 'import base64, os; from pathlib import Path; p=Path("app_question_flow_mixin.py"); s=p.read_text(); a=s.index("    def _position_feedback_popover"); b=s.index("    def _confidence_controls_enabled", a); n=base64.b64decode(os.environ["METHOD_B64"]).decode(); p.write_text(s[:a]+n+s[b:])'
+      - name: Test
         run: python -m unittest tests.test_ui_confidence_controls -v
-      - name: Commit bounded source repair
+      - name: Commit
         shell: bash
         run: |
-          set -euo pipefail
-          if git diff --quiet -- app_question_flow_mixin.py; then
-            exit 0
-          fi
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add app_question_flow_mixin.py
+          if git diff --cached --quiet; then exit 0; fi
           git commit -m "fix: place confidence prompt near active pointer"
           git push origin HEAD:fix/sc900-answer-d-confidence-ui-001
