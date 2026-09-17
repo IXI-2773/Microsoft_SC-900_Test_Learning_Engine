@@ -19,7 +19,6 @@ from question_identity import (
     canonical_question_history_map,
     canonical_question_id,
     history_event_question_id,
-    history_events_for_question,
 )
 from session_models import QuestionRuntimeState, reset_runtime_question_state
 from smart_practice_concept_graph import (
@@ -313,7 +312,7 @@ class SessionBuilderMixin:
             question_stability[qnum] = self._question_stability_score(
                 question,
                 rec,
-                history_events_for_question(question_history_map, question),
+                self.revision_aware_history_events(question_history_map, question),
             )
         _objective_rows, objective_map = self._build_objective_mastery_rows(
             records, question_stability, question_history_map, source_map, signal_questions

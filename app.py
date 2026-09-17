@@ -39,6 +39,12 @@ from bank_models import QuestionBankData
 from cand01r3_runtime import sanitize_history_event
 from cert_config import QUESTION_BANK_FILENAME, USER_DATA_DIRNAME
 from config_store import DEFAULT_CONFIG, load_config, save_config
+from content_revision_authority import AdmissionResult, AdmissionStatus, AdmittedRevision
+from content_revision_migration import (
+    history_event_matches_approved_revision,
+    history_events_for_question_revision_aware,
+)
+from content_revision_registry import resolve_registered_revision_for_target
 from legacy_source_layout import BASE_DIR
 from progress_models import (
     IssueReport,
@@ -71,7 +77,6 @@ from progress_store import (
 from question_bank import adaptive_shuffle_question, load_bank, stable_shuffle_question
 from question_identity import (
     canonical_question_id,
-    history_event_matches_question,
     question_content_fingerprint,
     resolve_registered_question_id_from_number,
 )
@@ -293,6 +298,7 @@ class TestingEngineApp(
         self.progress_path = None
         self.progress_data = blank_progress(app_version=APP_VERSION)
         self.progress_write_blocked = False
+        self.content_revision_authority: AdmittedRevision | None = None
         self.data: QuestionBankData | None = None
         self.master_questions: list[QuestionRuntimeState] = []
         self.questions: list[QuestionRuntimeState] = []
@@ -2571,7 +2577,11 @@ class TestingEngineApp(
         return f"Coaching note: restate why {correct} wins and why {selected} misses. That contrast is where retention usually sticks."
 
     def question_volatility(self, q):
-        events = [event for event in self._progress_history() if history_event_matches_question(event, q)]
+        events = [
+            event
+            for event in self._progress_history()
+            if history_event_matches_approved_revision(event, q, getattr(self, "content_revision_authority", None))
+        ]
         attempts = len(events)
         if attempts < 3:
             return {"score": 0.0, "attempts": attempts, "flips": 0, "label": "", "last_outcome": ""}
@@ -2614,6 +2624,62 @@ class TestingEngineApp(
         self.apply_progress_to_questions(questions)
         return questions
 
+    def revision_aware_history_events(self, history_map, question):
+        return history_events_for_question_revision_aware(
+            history_map,
+            question,
+            getattr(self, "content_revision_authority", None),
+        )
+
+    def _bind_content_revision_authority(self, result: AdmissionResult | None) -> AdmittedRevision | None:
+        self.content_revision_authority = None
+        if result is None:
+            return None
+        if result.status != AdmissionStatus.PASS or result.admitted is None:
+            self.progress_write_blocked = True
+            logging.warning("Registered content revision was not admitted: %s", result.reasons)
+            return None
+        self.content_revision_authority = result.admitted
+        return result.admitted
+
+    def _fail_closed_content_revision_progress(self, error: Exception) -> bool:
+        self.progress_write_blocked = True
+        logging.warning("Approved content revision progress migration failed: %s", error)
+        return True
+
+    def _migrate_progress_for_admitted_revision(self, revision: AdmittedRevision) -> bool:
+        if not self.bank_path or not self.progress_path:
+            return False
+        source_bank_path = Path(self.bank_path).parent / revision.source_bank_filename
+        source_progress = self.progress_file_for_bank(source_bank_path)
+        target_progress = Path(self.progress_path)
+        target_exists = target_progress.exists()
+        source_exists = source_progress.exists()
+        if not target_exists and not source_exists:
+            return False
+        questions = list((self.data or {}).get("questions") or [])
+        migrated_at = now_iso()
+        migrate_from = source_progress if source_exists else target_progress
+        _payload, _archive, error = self.persistence.migrate_progress_across_approved_revision(
+            migrate_from,
+            target_progress,
+            questions,
+            revision,
+            migrated_at,
+        )
+        if error is not None:
+            return self._fail_closed_content_revision_progress(error)
+        return False
+
+    def _apply_registered_content_revision(self, target_bank_path: Path) -> bool:
+        result = resolve_registered_revision_for_target(Path(target_bank_path))
+        revision = self._bind_content_revision_authority(result)
+        if result is None:
+            return False
+        if revision is None:
+            return True
+        return self._migrate_progress_for_admitted_revision(revision)
+
     def load_from_path(self, path: Path):
         try:
             self.data = load_bank(path)
@@ -2623,7 +2689,14 @@ class TestingEngineApp(
             return
         self.bank_path = path
         self.progress_path = self.progress_file_for_bank(path)
-        self.load_progress_if_present()
+        skip_ordinary_progress = self._apply_registered_content_revision(path)
+        if skip_ordinary_progress:
+            self.progress_data = blank_progress(path.name, app_version=APP_VERSION)
+            self.last_progress_snapshot = json.dumps(
+                self._progress_snapshot_payload(), sort_keys=True, separators=(",", ":")
+            )
+        else:
+            self.load_progress_if_present()
         self.master_questions = self._clone_questions(self.data["questions"])
         self._reset_runtime_question_state(self.master_questions)
         self._rebuild_followup_candidate_index()
