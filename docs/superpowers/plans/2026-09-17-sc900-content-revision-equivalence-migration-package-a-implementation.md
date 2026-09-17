@@ -1,102 +1,120 @@
-# SC-900 Content-Revision Equivalence Migration — Package A Implementation Plan
+# SC-900 Content-Revision Equivalence Migration — Package A Reconciled Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **Execution target:** Cursor or another repository-capable coding agent.
+>
+> **Method:** Execute task-by-task with TDD: RED -> verify failure -> minimal GREEN -> verify -> commit. Review each task before advancing.
 
-**Goal:** Build the Package-A migration infrastructure that admits only an exact governed content revision, preserves learner progress/history/session state across that admitted revision, and leaves current fail-closed behavior unchanged when no authority is present.
+**Work ID:** `SC900-CONTENT-REVISION-EQUIVALENCE-MIGRATION-001 / PACKAGE-A`
 
-**Architecture:** Keep `question_identity.py` and ordinary `session_store.py` semantics strict. Add a pure authority layer (`content_revision_authority.py`), a pure transform/history layer (`content_revision_migration.py`), and an initially empty release registry (`content_revision_registry.py`). `RuntimePersistence` owns transactional file I/O. `TestingEngineApp` and session/history mixins only orchestrate an already-admitted revision. Package A uses synthetic revisions only and does not change production question wording, activate a new bank, register a production manifest, rebuild the EXE, or merge anything.
+**Goal:** Implement only the migration infrastructure that admits an exact governed wording-only revision, preserves approved learner continuity, and otherwise retains the current fail-closed identity/session behavior unchanged.
 
-**Tech Stack:** Python 3.11, stdlib `dataclasses`, `enum.StrEnum`, `hashlib`, `json`, `pathlib`, `unittest`, existing SC-900 identity/session/persistence modules, Ruff, Black, mypy.
+**Design authority:** `docs/superpowers/specs/2026-09-17-sc900-content-revision-equivalence-migration-design.md`
 
-**Spec:** `docs/superpowers/specs/2026-09-17-sc900-content-revision-equivalence-migration-design.md`
+**Implementation base:** exact `main` SHA `23d440b6976b9f6bbb3b77285bf0d11effc2513f`.
 
-## Global Constraints
+Cursor must read this plan and the design spec from the exact design-review head supplied in the handoff message, then create the implementation worktree/branch from the exact implementation base above. The design documents are authority inputs; they are not implementation-branch changes.
 
-- Authorized scope is **Package A — migration infrastructure only**.
-- Execution must start from exact `main` SHA `23d440b6976b9f6bbb3b77285bf0d11effc2513f`; if `main` differs, stop and reconcile before editing.
-- Use an isolated worktree/branch at execution time via `superpowers:using-git-worktrees`; branch name: `implementation/sc900-content-revision-equivalence-migration-A-001`.
-- Do not use the user's desktop or local terminal. Use the authorized repository/cloud execution environment.
+---
+
+# Global constraints
+
+- Package A only.
+- Cursor may use its repository-local terminal, normal Git commands, worktrees, and test runners.
+- Recommended implementation branch: `implementation/sc900-content-revision-equivalence-migration-A-001`.
+- If current `main` is not exactly `23d440b6976b9f6bbb3b77285bf0d11effc2513f`, stop and reconcile before editing.
 - Python target remains 3.11.
-- `question_identity.py` strict content fingerprinting and `CHANGED_CONTENT` behavior remain authoritative when no admitted revision is supplied.
-- Do not add a generic bypass such as `allow_changed_content=True`.
-- Ordinary `migrate_session_snapshot(...)` bank-fingerprint mismatch behavior remains strict.
-- Live-state migration version 1 supports one direct source-bank -> target-bank edge per execution.
-- Historical events are immutable: do not rewrite old `question_content_fingerprint`, `selected_texts`, `correct_texts`, correctness, confidence, timing, or timestamps.
+- `question_identity.py` strict `CHANGED_CONTENT` behavior remains the default and must not be weakened.
+- Do not add generic `allow_changed_content=True` or equivalent bypasses.
+- `session_store.py` ordinary bank-fingerprint mismatch behavior remains strict.
+- `self.content_revision_authority` is strictly `AdmittedRevision | None`, never `AdmissionResult`.
+- Historical events are immutable.
 - Existing quarantined progress is never automatically resurrected.
-- Package A production question wording changes = **0**.
-- Package A production bank activation = **NO**.
-- `AUTHORIZED_CONTENT_REVISION_MANIFESTS` remains empty in Package A.
-- No production manifest/review file is added under `content_revision_evidence/` in Package A.
-- No production EXE change or rebuild is authorized in Package A.
+- Live-state migration v1 handles one direct source-bank -> target-bank edge per execution.
+- Registered runtime v1 requires distinct source and target bank filenames.
+- Production registry remains empty in Package A.
+- Production question wording changes = 0.
+- Production bank activation = NO.
+- No production manifest/review evidence is added.
+- No EXE rebuild/change is authorized.
 - Do not modify or merge PR #13.
 - Do not modify protected recovery refs/tags.
 - No merge is authorized by this plan.
-- TDD order is mandatory for each behavior: failing test -> verify RED -> minimal implementation -> verify GREEN -> commit.
-- Existing identity/session/adversarial tests remain regression authority and must not be weakened.
-- Final verification must include focused Package-A tests, existing canonical identity/session tests, full unittest discovery, `python -m tools.run_quality_checks`, `python -m tools.lint_bank --allow-warnings sc900_bank_v8_final.json`, and `python -m tools.verify_installation`.
-- The existing production bank SHA-256 must remain `177a4fb5f8a874ffe4dda6b69e3d1c03dbdad1f5db5a174a990eb8b5a0e5927c`.
+- Existing identity/session/adversarial tests must not be weakened.
+- Explicit migration reads must be non-mutating on parse/read failure.
+- The production bank SHA-256 must remain `177a4fb5f8a874ffe4dda6b69e3d1c03dbdad1f5db5a174a990eb8b5a0e5927c`.
 
 ---
 
-## File Map
+# File map
 
-### New source files
+## New source files
 
-- `content_revision_authority.py` — exact manifest/review parsing, canonical manifest hashing, finite rejection reasons, source/target bank admission, mechanical invariants, semantic-review validation, exact directed edges/lineage.
-- `content_revision_migration.py` — pure progress transform, pure session transform, deterministic migration ID, idempotence, revision-aware history matching/filtering.
-- `content_revision_registry.py` — code-controlled registry of bundled manifests and registered-manifest resolver; module-level registry stays empty in Package A.
+- `content_revision_authority.py`
+  - duplicate-safe JSON parsing;
+  - canonical manifest hashing;
+  - exact schema/type validation;
+  - bank/review admission;
+  - global non-choice/letter-map invariants;
+  - finite failure reasons;
+  - immutable admitted edges/lineage.
 
-### New tests
+- `content_revision_migration.py`
+  - deterministic migration ID;
+  - pure progress transform;
+  - pure session transform;
+  - revision-aware history matching/filtering;
+  - idempotence verification.
 
-- `tests/test_content_revision_authority.py` — schema/hash/admission/closed-world/mechanical/semantic/registry/lineage adversarial tests.
-- `tests/test_content_revision_migration.py` — progress/history/session/pending-selection/idempotence/quarantine-non-resurrection tests.
-- `tests/test_content_revision_app_integration.py` — persistence atomicity, progress-load integration, cross-filename session discovery/restore, history consumers, no-authority regression behavior.
+- `content_revision_registry.py`
+  - empty production registry;
+  - contained evidence-path resolution;
+  - exact registered-target admission;
+  - target progress-identity registration restoration.
 
-### Existing source files to modify
+## New tests
 
-- `runtime_persistence.py` — explicit transactional progress/session migration operations; ordinary loading remains strict.
-- `app.py` — resolve an optional registered revision after loading a bank, migrate progress before ordinary content-epoch handling, and otherwise preserve current progress-load behavior.
-- `app_session_persistence_mixin.py` — include admitted source-bank session filename patterns and attempt explicit session migration before ordinary bank-mismatch quarantine.
-- `app_analytics_mixin.py` — route question-history lookups through the common revision-aware resolver.
-- `app_game_mixin.py` — route question-history lookups through the common revision-aware resolver.
-- `app_session_builder_mixin.py` — route question-history lookups through the common revision-aware resolver.
-- `pyproject.toml` — register new first-party modules and mypy targets.
-- `tools/run_quality_checks.py` — add new maintained modules to `QUALITY_TARGETS`.
+- `tests/test_content_revision_authority.py`
+- `tests/test_content_revision_migration.py`
+- `tests/test_content_revision_app_integration.py`
 
-### Existing source files intentionally not modified
+## Existing source files to modify
 
-- `question_identity.py` — strict baseline fingerprint/history/content-epoch behavior stays unchanged.
-- `session_store.py` — ordinary canonical session validation stays unchanged; explicit migration calls it before and after transformation.
-- `session_identity.py` — reuse existing `canonical_session_signature(...)` and `ordered_question_ids(...)`.
-- `session_models.py` — no historical event schema rewrite; progress migration provenance is stored in progress top-level metadata.
-- `sc900_bank_v8_final.json` — byte-for-byte unchanged.
+- `runtime_persistence.py`
+- `app.py`
+- `app_session_persistence_mixin.py`
+- `app_analytics_mixin.py`
+- `app_game_mixin.py`
+- `app_session_builder_mixin.py`
+- `pyproject.toml`
+- `tools/run_quality_checks.py`
 
-### Implementation evidence
+## Existing source files intentionally not modified
 
-- Create at final verification: `docs/research/SC900-CONTENT-REVISION-EQUIVALENCE-MIGRATION-001/01-PACKAGE-A-VERIFICATION.md`.
+- `question_identity.py`
+- `session_store.py`
+- `session_identity.py`
+- `session_models.py`
+- `sc900_bank_v8_final.json`
+
+## Final verification evidence
+
+Create only at closure:
+
+`docs/research/SC900-CONTENT-REVISION-EQUIVALENCE-MIGRATION-001/01-PACKAGE-A-VERIFICATION.md`
 
 ---
 
-### Task 1: Define authority types, duplicate-safe JSON parsing, and canonical manifest hashing
+# Task 0 — Establish exact execution authority
 
-**Files:**
-- Create: `content_revision_authority.py`
-- Create: `tests/test_content_revision_authority.py`
+## Files
 
-**Interfaces:**
-- Define `AdmissionStatus(StrEnum)` with exact values `PASS` and `FAIL`.
-- Define `RevisionFailureReason(StrEnum)` with the finite reasons listed in the approved spec plus `UNREGISTERED_MANIFEST`, `REGISTRY_HASH_MISMATCH`, `LINEAGE_INCOMPLETE`, and `LINEAGE_CONFLICT`.
-- Define `ContentRevisionManifestError(ValueError)` exposing `.reason` and `.detail`.
-- Define frozen dataclass `RevisionEdge` with `question_id`, `from_content_fingerprint`, `to_content_fingerprint`, `review_artifact`, `review_artifact_sha256`.
-- Define frozen dataclass `AdmittedRevision` with manifest/source/target hashes/fingerprints/filenames and `edges: tuple[RevisionEdge, ...]`.
-- Define frozen dataclass `AdmissionResult` with `status: AdmissionStatus`, `reasons: tuple[RevisionFailureReason, ...]`, `admitted: AdmittedRevision | None`.
-- Define `parse_manifest_json(raw: str) -> dict[str, Any]`.
-- Define `canonical_manifest_sha256(payload: Mapping[str, Any]) -> str`.
-- Define `sha256_file(path: Path) -> str` using raw file bytes.
+No repository changes.
 
-- [ ] **Step 1: Establish exact execution baseline before the first code edit**
+## Steps
 
-Run:
+1. Read the design spec and this plan from the exact design-review head supplied in the handoff.
+2. Create/switch to an isolated implementation worktree/branch based on exact main SHA.
+3. Run:
 
 ```bash
 git rev-parse HEAD
@@ -108,130 +126,36 @@ python -m unittest \
   -v
 ```
 
-Expected:
+Required:
 
 ```text
 HEAD = 23d440b6976b9f6bbb3b77285bf0d11effc2513f
 origin/main = 23d440b6976b9f6bbb3b77285bf0d11effc2513f
-focused identity/session regression set passes
+focused baseline tests = PASS
 ```
 
-If either SHA differs, stop without implementation.
+If either SHA differs or baseline tests fail unexpectedly, stop.
 
-- [ ] **Step 2: Write RED tests for canonical hashing and duplicate-key rejection**
+---
 
-Add tests equivalent to:
+# Task 1 — Authority primitives, duplicate-safe parsing, canonical hashes
+
+## Files
+
+Create:
+
+- `content_revision_authority.py`
+- `tests/test_content_revision_authority.py`
+
+## Required interfaces
 
 ```python
-import unittest
-
-from content_revision_authority import (
-    ContentRevisionManifestError,
-    RevisionFailureReason,
-    canonical_manifest_sha256,
-    parse_manifest_json,
-)
-
-
-class ContentRevisionAuthorityParsingTests(unittest.TestCase):
-    def test_manifest_hash_ignores_key_order_whitespace_and_stored_digest(self):
-        first = {
-            "schema_version": 1,
-            "manifest_kind": "sc900_content_revision_equivalence",
-            "payload_sha256": "first",
-        }
-        second = {
-            "payload_sha256": "second",
-            "manifest_kind": "sc900_content_revision_equivalence",
-            "schema_version": 1,
-        }
-        self.assertEqual(canonical_manifest_sha256(first), canonical_manifest_sha256(second))
-
-    def test_duplicate_json_key_fails_closed(self):
-        raw = '{"schema_version":1,"schema_version":1}'
-        with self.assertRaises(ContentRevisionManifestError) as ctx:
-            parse_manifest_json(raw)
-        self.assertEqual(RevisionFailureReason.DUPLICATE_JSON_KEY, ctx.exception.reason)
-```
-
-Also add tests for malformed JSON and non-object top-level JSON. Both must fail with `SCHEMA_UNSUPPORTED`.
-
-- [ ] **Step 3: Run the new tests and verify RED**
-
-```bash
-python -m unittest tests.test_content_revision_authority.ContentRevisionAuthorityParsingTests -v
-```
-
-Expected: import failure because `content_revision_authority.py` does not exist.
-
-- [ ] **Step 4: Implement the minimal authority primitives**
-
-Implement this exact shape:
-
-```python
-from __future__ import annotations
-
-import hashlib
-import json
-from collections.abc import Mapping
-from dataclasses import dataclass
-from enum import StrEnum
-from pathlib import Path
-from typing import Any
-
-
 class AdmissionStatus(StrEnum):
     PASS = "PASS"
     FAIL = "FAIL"
 
-
-class RevisionFailureReason(StrEnum):
-    SCHEMA_UNSUPPORTED = "SCHEMA_UNSUPPORTED"
-    UNKNOWN_FIELD = "UNKNOWN_FIELD"
-    MISSING_FIELD = "MISSING_FIELD"
-    DUPLICATE_JSON_KEY = "DUPLICATE_JSON_KEY"
-    MANIFEST_HASH_MISMATCH = "MANIFEST_HASH_MISMATCH"
-    SOURCE_BANK_FILE_HASH_MISMATCH = "SOURCE_BANK_FILE_HASH_MISMATCH"
-    TARGET_BANK_FILE_HASH_MISMATCH = "TARGET_BANK_FILE_HASH_MISMATCH"
-    SOURCE_BANK_FINGERPRINT_MISMATCH = "SOURCE_BANK_FINGERPRINT_MISMATCH"
-    TARGET_BANK_FINGERPRINT_MISMATCH = "TARGET_BANK_FINGERPRINT_MISMATCH"
-    QUESTION_COUNT_MISMATCH = "QUESTION_COUNT_MISMATCH"
-    QUESTION_ID_SET_MISMATCH = "QUESTION_ID_SET_MISMATCH"
-    DUPLICATE_QUESTION_ID = "DUPLICATE_QUESTION_ID"
-    UNDECLARED_CONTENT_CHANGE = "UNDECLARED_CONTENT_CHANGE"
-    EXTRA_EQUIVALENCE_EDGE = "EXTRA_EQUIVALENCE_EDGE"
-    DUPLICATE_EQUIVALENCE_EDGE = "DUPLICATE_EQUIVALENCE_EDGE"
-    FROM_FINGERPRINT_MISMATCH = "FROM_FINGERPRINT_MISMATCH"
-    TO_FINGERPRINT_MISMATCH = "TO_FINGERPRINT_MISMATCH"
-    CORRECT_KEY_CHANGED = "CORRECT_KEY_CHANGED"
-    CHOICE_LABEL_SET_CHANGED = "CHOICE_LABEL_SET_CHANGED"
-    CHOICE_LETTER_MAPPING_CHANGED = "CHOICE_LETTER_MAPPING_CHANGED"
-    PROMPT_CHANGED = "PROMPT_CHANGED"
-    OBJECTIVE_CHANGED = "OBJECTIVE_CHANGED"
-    DOMAIN_CHANGED = "DOMAIN_CHANGED"
-    TOPICS_CHANGED = "TOPICS_CHANGED"
-    TIER_CHANGED = "TIER_CHANGED"
-    EXAM_ELIGIBILITY_CHANGED = "EXAM_ELIGIBILITY_CHANGED"
-    QUESTION_TYPE_CHANGED = "QUESTION_TYPE_CHANGED"
-    NONPERMITTED_FIELD_CHANGED = "NONPERMITTED_FIELD_CHANGED"
-    SEMANTIC_REVIEW_MISSING = "SEMANTIC_REVIEW_MISSING"
-    SEMANTIC_REVIEW_HASH_MISMATCH = "SEMANTIC_REVIEW_HASH_MISMATCH"
-    SEMANTIC_EQUIVALENCE_NOT_APPROVED = "SEMANTIC_EQUIVALENCE_NOT_APPROVED"
-    CHOICE_SEMANTICS_CHANGED = "CHOICE_SEMANTICS_CHANGED"
-    AUTHORITY_EVIDENCE_MISSING = "AUTHORITY_EVIDENCE_MISSING"
-    UNREGISTERED_MANIFEST = "UNREGISTERED_MANIFEST"
-    REGISTRY_HASH_MISMATCH = "REGISTRY_HASH_MISMATCH"
-    LINEAGE_INCOMPLETE = "LINEAGE_INCOMPLETE"
-    LINEAGE_CONFLICT = "LINEAGE_CONFLICT"
-
-
-class ContentRevisionManifestError(ValueError):
-    def __init__(self, reason: RevisionFailureReason, detail: str = "") -> None:
-        self.reason = reason
-        self.detail = detail
-        message = reason.value if not detail else f"{reason.value}: {detail}"
-        super().__init__(message)
-
+class RevisionFailureReason(StrEnum): ...
+class ContentRevisionManifestError(ValueError): ...
 
 @dataclass(frozen=True, slots=True)
 class RevisionEdge:
@@ -240,7 +164,6 @@ class RevisionEdge:
     to_content_fingerprint: str
     review_artifact: str
     review_artifact_sha256: str
-
 
 @dataclass(frozen=True, slots=True)
 class AdmittedRevision:
@@ -253,1009 +176,780 @@ class AdmittedRevision:
     target_bank_content_fingerprint: str
     edges: tuple[RevisionEdge, ...]
 
-    def edge_for(self, question_id: str) -> RevisionEdge | None:
-        qid = str(question_id or "").strip()
-        return next((edge for edge in self.edges if edge.question_id == qid), None)
-
-    def changed_question_ids(self) -> frozenset[str]:
-        return frozenset(edge.question_id for edge in self.edges)
-
-
 @dataclass(frozen=True, slots=True)
 class AdmissionResult:
     status: AdmissionStatus
     reasons: tuple[RevisionFailureReason, ...]
     admitted: AdmittedRevision | None
-
-
-def _duplicate_safe_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
-    result: dict[str, Any] = {}
-    for key, value in pairs:
-        if key in result:
-            raise ContentRevisionManifestError(RevisionFailureReason.DUPLICATE_JSON_KEY, key)
-        result[key] = value
-    return result
-
-
-def parse_manifest_json(raw: str) -> dict[str, Any]:
-    try:
-        payload = json.loads(raw, object_pairs_hook=_duplicate_safe_object)
-    except ContentRevisionManifestError:
-        raise
-    except json.JSONDecodeError as exc:
-        raise ContentRevisionManifestError(RevisionFailureReason.SCHEMA_UNSUPPORTED, str(exc)) from exc
-    if not isinstance(payload, dict):
-        raise ContentRevisionManifestError(RevisionFailureReason.SCHEMA_UNSUPPORTED, "manifest must be a JSON object")
-    return payload
-
-
-def canonical_manifest_sha256(payload: Mapping[str, Any]) -> str:
-    materialized = dict(payload)
-    materialized.pop("payload_sha256", None)
-    raw = json.dumps(materialized, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
-
-
-def sha256_file(path: Path) -> str:
-    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 ```
 
-- [ ] **Step 5: Run parsing tests and verify GREEN**
+Add:
 
-```bash
-python -m unittest tests.test_content_revision_authority.ContentRevisionAuthorityParsingTests -v
+```python
+parse_json_duplicate_safe(raw: str) -> dict[str, Any]
+canonical_manifest_sha256(payload: Mapping[str, Any]) -> str
+sha256_file(path: Path) -> str
 ```
 
-Expected: PASS.
+Use the duplicate-safe parser for manifests, review artifacts, and bank JSON used as admission authority.
 
-- [ ] **Step 6: Commit Task 1**
+## RED tests
 
-```bash
-git add content_revision_authority.py tests/test_content_revision_authority.py
-git commit -m "feat: add content revision manifest primitives"
+Write tests for:
+
+- equivalent JSON key order/whitespace gives identical canonical manifest hash;
+- stored `payload_sha256` is excluded from self-hash;
+- duplicate manifest key -> `DUPLICATE_JSON_KEY`;
+- duplicate review authority key -> `DUPLICATE_JSON_KEY`;
+- duplicate bank authority key -> `DUPLICATE_JSON_KEY`;
+- malformed JSON -> `SCHEMA_UNSUPPORTED`;
+- non-object top-level manifest/review/bank authority object -> `SCHEMA_UNSUPPORTED`.
+
+Run and verify RED before creating implementation.
+
+## GREEN implementation
+
+- `sha256_file` uses raw file bytes.
+- canonical manifest hash uses UTF-8 compact sorted JSON excluding `payload_sha256`.
+- no admission behavior yet.
+
+Run focused tests, verify GREEN, then commit:
+
+```text
+feat: add content revision authority primitives
 ```
 
 ---
 
-### Task 2: Implement exact 454-question bank admission, mechanical invariants, and semantic-review validation
+# Task 2 — Exact 454-question bank admission and semantic evidence
 
-**Files:**
-- Modify: `content_revision_authority.py`
-- Modify: `tests/test_content_revision_authority.py`
+## Files
 
-**Interfaces:**
-- Add `admit_content_revision(manifest, source_questions, target_questions, source_bank_path, target_bank_path, review_root) -> AdmissionResult` using keyword-only source/target/path arguments.
-- Reuse existing `canonical_question_id`, `question_content_fingerprint`, `bank_content_fingerprint`, and canonical-ID validation from `question_identity.py`.
-- Manifest/review schemas are closed-world.
-- Manifest digest uses canonical JSON excluding its own `payload_sha256`; bank/review file digests use raw bytes.
+Modify:
 
-- [ ] **Step 1: Add a 454-question synthetic fixture and RED positive-admission test**
+- `content_revision_authority.py`
+- `tests/test_content_revision_authority.py`
 
-Use this helper pattern:
+## Required interface
 
 ```python
-def synthetic_question(index: int, choices: dict[str, str] | None = None, **overrides):
-    qid = f"Q{index:04d}"
-    row = {
-        "id": qid,
-        "question_number": index,
-        "prompt": f"Prompt {index}",
-        "choices": choices or {
-            "A": f"Alpha long wording {index}",
-            "B": f"Beta {index}",
-            "C": f"Gamma {index}",
-            "D": f"Delta {index}",
-        },
-        "correct": ["A"],
-        "general_explanation": f"Explanation {index}",
-        "choice_explanations": {"A": "A", "B": "B", "C": "C", "D": "D"},
-        "domain": "Identity",
-        "chapter": "1",
-        "subtitle": "Basics",
-        "question_type": "multiple_choice",
-        "topics": ["Entra"],
-        "objective_code": "1.1",
-        "study_focus": "Core",
-        "exam_eligible": True,
-    }
-    row.update(overrides)
-    return row
-
-
-def synthetic_bank():
-    return [synthetic_question(index) for index in range(1, 455)]
+def admit_content_revision(
+    manifest: Mapping[str, Any],
+    *,
+    source_questions: Sequence[Mapping[str, Any]],
+    target_questions: Sequence[Mapping[str, Any]],
+    source_bank_path: Path,
+    target_bank_path: Path,
+    review_root: Path,
+) -> AdmissionResult:
+    ...
 ```
 
-Change only `Q0001` target choice `A` from `"Alpha long wording 1"` to `"Alpha 1"`. Write source/target JSON bank files in a `TemporaryDirectory`. Build a review JSON directly from computed source/target choice maps and computed fingerprints. Give all A-D semantic statuses `EQUIVALENT`, both correct keys `['A']`, one nonempty Microsoft Learn URL, and disposition `APPROVED_FOR_FULL_CONTINUITY`.
+## Exact schema/constants
 
-Build the manifest from actual computed raw file hashes, actual bank content fingerprints, actual review file hash, and a computed canonical `payload_sha256`. Assert PASS and exact edge from/to fingerprints.
+Manifest top-level fields:
 
-- [ ] **Step 2: Add RED schema/hash/bank-population tests**
+```text
+schema_version
+manifest_kind
+work_id
+continuity_policy
+source_bank
+target_bank
+permitted_change_class
+edges
+payload_sha256
+```
+
+Bank binding fields:
+
+```text
+filename
+file_sha256
+content_fingerprint
+question_count
+```
+
+Edge fields:
+
+```text
+question_id
+from_content_fingerprint
+to_content_fingerprint
+correct_key_unchanged
+choice_letter_mapping_unchanged
+prompt_unchanged
+objective_unchanged
+tier_unchanged
+exam_eligibility_unchanged
+choice_semantics
+review_status
+review_artifact
+review_artifact_sha256
+authority_refs
+```
+
+Review fields:
+
+```text
+question_id
+from_content_fingerprint
+to_content_fingerprint
+before
+after
+semantic_review
+correct_key_before
+correct_key_after
+authority_refs
+disposition
+```
+
+Choice labels are exactly A-D for this contract.
+
+## Synthetic fixture requirements
+
+Use exactly 454 synthetic canonical questions.
+
+Use repository-real fields:
+
+```text
+exam_calibration_tier
+exam_simulation_eligible
+study_focus
+reasoning_steps
+calibration_version
+```
+
+Do **not** invent `exam_eligible`.
+
+## Deterministic validation order
+
+Implement this order:
+
+```text
+1. schema types / unknown / missing fields
+2. canonical manifest hash
+3. contained evidence paths
+4. duplicate-safe source/target bank JSON parse
+5. raw source/target file hashes
+6. exact question counts and canonical-ID sets
+7. bank-level metadata equality excluding questions
+8. global per-question non-choice + choice-label/letter-map invariants
+9. bank content fingerprints
+10. actual fingerprint-different IDs == edge IDs
+11. exact edge from/to fingerprints
+12. review existence/hash/schema/exact before-after binding
+13. A-D semantic equivalence
+14. Microsoft Learn authority refs
+15. bank-level PASS only if all checks pass
+```
+
+Return the first deterministic blocking reason. No warning-success state.
+
+## Global invariant implementation
+
+For **every** source/target canonical question pair, before changed-ID classification:
+
+- canonical ID unchanged;
+- correct key unchanged -> else `CORRECT_KEY_CHANGED`;
+- choice label set unchanged -> else `CHOICE_LABEL_SET_CHANGED`;
+- prompt unchanged -> `PROMPT_CHANGED`;
+- question type unchanged -> `QUESTION_TYPE_CHANGED`;
+- objective unchanged -> `OBJECTIVE_CHANGED`;
+- domain unchanged -> `DOMAIN_CHANGED`;
+- topics unchanged -> `TOPICS_CHANGED`;
+- `exam_calibration_tier` unchanged -> `TIER_CHANGED`;
+- `exam_simulation_eligible` unchanged -> `EXAM_ELIGIBILITY_CHANGED`;
+- keyed choice concept/letter mapping unchanged;
+- all remaining non-choice fields unchanged -> `NONPERMITTED_FIELD_CHANGED`.
+
+Only keyed `choices[A-D]` text may differ.
+
+### Fingerprint-blind swap guard
+
+Add a specific adversarial case where B/C texts are swapped but current `question_content_fingerprint()` remains equal. Admission must reject `CHOICE_LETTER_MAPPING_CHANGED` before treating the row as unchanged.
+
+## Bank-level metadata guard
+
+Duplicate-safely parse both bank JSON objects and deep-compare all top-level fields except `questions`.
+
+Changed bank title/version/other metadata -> `NONPERMITTED_FIELD_CHANGED`.
+
+Formatting/whitespace-only differences must not fail this semantic metadata check.
+
+## Semantic-review requirements
+
+For each changed question:
+
+- review file must be contained under `review_root`;
+- raw review SHA must match;
+- review QID/from/to fingerprint must match edge;
+- review `before` equals exact source keyed choices;
+- review `after` equals exact target keyed choices;
+- review correct keys equal exact source/target correct keys;
+- semantic statuses A-D all exactly `EQUIVALENT`;
+- disposition exactly `APPROVED_FOR_FULL_CONTINUITY`;
+- edge `review_status` exactly `APPROVED`;
+- both edge and review refs contain at least one string beginning `https://learn.microsoft.com/`.
+
+## RED adversarial matrix
 
 Add separate tests for:
 
 ```text
-unsupported schema_version
-wrong manifest_kind
-wrong continuity_policy
-wrong permitted_change_class
-unknown field at top level, bank object, edge object, review object
-missing required field at each object level
-manifest payload hash mismatch
-source raw file hash mismatch
-target raw file hash mismatch
-source bank content fingerprint mismatch
-target bank content fingerprint mismatch
-source question count != 454
-target question count != 454
-duplicate canonical question ID
-different canonical question-ID set
+unsupported schema/version/kind/policy/change-class
+unknown/missing fields at every object level
+wrong field types
+edges not list
+bank binding not mapping
+question_count not integer
+choice_semantics not exact A-D mapping
+authority_refs not list[str]
+boolean assertions not bool
+blank/malformed hash/fingerprint fields
+review before/after not exact A-D mappings
+review semantic_review not exact A-D mapping
+manifest hash mismatch
+source/target raw hash mismatch
+source/target content fingerprint mismatch
+source/target count != 454
+duplicate canonical ID
+question-ID set mismatch
+bank-level metadata change
+undeclared changed question
+extra edge for unchanged question
+duplicate edge
+wrong edge from/to FP
+correct-key change
+choice-label change
+B/C keyed swap with equal FP
+prompt/objective/domain/topics change
+exam_calibration_tier change
+exam_simulation_eligible change
+question_type change
+study_focus/reasoning_steps/calibration_version/explanation/other non-choice change
+missing/unreadable review
+review hash mismatch
+review QID/from/to mismatch
+review before/after mismatch
+review correct-key mismatch
+AMBIGUOUS/SUBSTANTIVELY_CHANGED choice
+empty authority refs
+non-Microsoft-only authority refs
+unapproved review disposition/status
+absolute review path
+`..` review traversal
 ```
 
-Assert the exact finite reason for each case.
+Run RED, implement minimally, run GREEN.
 
-- [ ] **Step 3: Add RED closed-world and per-edge tests**
-
-Add separate tests for:
+Then run the existing strict identity regression wall and commit:
 
 ```text
-actual changed IDs contain an undeclared question -> UNDECLARED_CONTENT_CHANGE
-manifest contains edge for unchanged question -> EXTRA_EQUIVALENCE_EDGE
-duplicate edge question ID -> DUPLICATE_EQUIVALENCE_EDGE
-wrong edge from fingerprint -> FROM_FINGERPRINT_MISMATCH
-wrong edge to fingerprint -> TO_FINGERPRINT_MISMATCH
+feat: validate exact content revision authority
 ```
 
-- [ ] **Step 4: Add RED mechanical-invariant tests**
+---
 
-For a declared changed question, mutate one property at a time and assert:
+# Task 3 — Empty release registry, contained resolution, directed lineage
 
-```text
-correct key -> CORRECT_KEY_CHANGED
-choice label set -> CHOICE_LABEL_SET_CHANGED
-literal cross-letter swap of source B/C texts -> CHOICE_LETTER_MAPPING_CHANGED
-prompt -> PROMPT_CHANGED
-objective_code -> OBJECTIVE_CHANGED
-domain -> DOMAIN_CHANGED
-topics -> TOPICS_CHANGED
-study_focus -> TIER_CHANGED
-exam_eligible -> EXAM_ELIGIBILITY_CHANGED
-question_type -> QUESTION_TYPE_CHANGED
-general_explanation -> NONPERMITTED_FIELD_CHANGED
-choice_explanations -> NONPERMITTED_FIELD_CHANGED
-chapter/subtitle/question_number/extra durable field -> NONPERMITTED_FIELD_CHANGED
-```
+## Files
 
-The validator may permit only the values under `choices[A]`, `choices[B]`, `choices[C]`, `choices[D]` to differ after named invariant checks.
+Create:
 
-- [ ] **Step 5: Add RED semantic/review tests**
+- `content_revision_registry.py`
 
-Add separate cases:
+Modify:
 
-```text
-review file missing -> SEMANTIC_REVIEW_MISSING
-review raw SHA mismatch -> SEMANTIC_REVIEW_HASH_MISMATCH
-review QID mismatch -> SEMANTIC_EQUIVALENCE_NOT_APPROVED
-review from/to FP mismatch -> SEMANTIC_EQUIVALENCE_NOT_APPROVED
-review before choices do not exactly equal source keyed choices -> SEMANTIC_EQUIVALENCE_NOT_APPROVED
-review after choices do not exactly equal target keyed choices -> SEMANTIC_EQUIVALENCE_NOT_APPROVED
-review correct keys do not exactly equal source/target correct keys -> SEMANTIC_EQUIVALENCE_NOT_APPROVED
-one choice status AMBIGUOUS -> CHOICE_SEMANTICS_CHANGED
-one choice status SUBSTANTIVELY_CHANGED -> CHOICE_SEMANTICS_CHANGED
-review authority_refs empty -> AUTHORITY_EVIDENCE_MISSING
-manifest edge authority_refs empty -> AUTHORITY_EVIDENCE_MISSING
-review disposition not APPROVED_FOR_FULL_CONTINUITY -> SEMANTIC_EQUIVALENCE_NOT_APPROVED
-manifest review_status not APPROVED -> SEMANTIC_EQUIVALENCE_NOT_APPROVED
-```
+- `content_revision_authority.py`
+- `tests/test_content_revision_authority.py`
 
-- [ ] **Step 6: Run authority tests and verify RED**
-
-```bash
-python -m unittest tests.test_content_revision_authority -v
-```
-
-Expected: Task-1 parsing tests PASS; admission tests FAIL because admission is not implemented.
-
-- [ ] **Step 7: Implement exact schema constants and deterministic validation order**
-
-Use these exact closed-world field sets:
+## Registry constants
 
 ```python
-_MANIFEST_FIELDS = {
-    "schema_version",
-    "manifest_kind",
-    "work_id",
-    "continuity_policy",
-    "source_bank",
-    "target_bank",
-    "permitted_change_class",
-    "edges",
-    "payload_sha256",
-}
-_BANK_FIELDS = {"filename", "file_sha256", "content_fingerprint", "question_count"}
-_EDGE_FIELDS = {
-    "question_id",
-    "from_content_fingerprint",
-    "to_content_fingerprint",
-    "correct_key_unchanged",
-    "choice_letter_mapping_unchanged",
-    "prompt_unchanged",
-    "objective_unchanged",
-    "tier_unchanged",
-    "exam_eligibility_unchanged",
-    "choice_semantics",
-    "review_status",
-    "review_artifact",
-    "review_artifact_sha256",
-    "authority_refs",
-}
-_REVIEW_FIELDS = {
-    "question_id",
-    "from_content_fingerprint",
-    "to_content_fingerprint",
-    "before",
-    "after",
-    "semantic_review",
-    "correct_key_before",
-    "correct_key_after",
-    "authority_refs",
-    "disposition",
-}
-_CHOICE_LABELS = ("A", "B", "C", "D")
+AUTHORIZED_CONTENT_REVISION_MANIFESTS: dict[str, str] = {}
+CONTENT_REVISION_EVIDENCE_ROOT = Path(__file__).resolve().parent / "content_revision_evidence"
 ```
 
-Validation order is fixed:
+Production registry must remain exactly empty in Package A.
 
-```text
-schema/unknown/missing fields
-canonical manifest hash
-raw source/target file hashes
-question counts and canonical-ID set
-bank content fingerprints
-actual changed-ID set == edge-ID set
-per-edge from/to fingerprints
-named mechanical invariants
-review existence/hash/schema/exact before-after binding
-per-choice EQUIVALENT + authority refs + approved disposition
-```
-
-Version 1 returns the first deterministic blocking reason as `AdmissionResult(status=FAIL, reasons=(reason,), admitted=None)`. There is no warning-success state.
-
-- [ ] **Step 8: Implement mechanical comparison and review binding**
-
-For each declared changed question:
-
-```text
-require source/target choice keys exactly A,B,C,D
-compare named invariant fields first for specific reasons
-reject a literal cross-letter swap before semantic review
-make deep copies of source/target rows and replace target `choices` with source `choices`; if the remaining rows differ, emit NONPERMITTED_FIELD_CHANGED
-require review.before == source choices keyed by letter
-require review.after == target choices keyed by letter
-require review.semantic_review == {A:EQUIVALENT,B:EQUIVALENT,C:EQUIVALENT,D:EQUIVALENT}
-require review correct keys exact
-require nonempty authority_refs in manifest edge and review
-```
-
-On success create immutable `RevisionEdge` objects and one `AdmittedRevision` from the validated manifest.
-
-- [ ] **Step 9: Run authority tests and verify GREEN**
-
-```bash
-python -m unittest tests.test_content_revision_authority -v
-```
-
-Expected: PASS.
-
-- [ ] **Step 10: Run strict identity regression wall**
-
-```bash
-python -m unittest \
-  tests.test_backlog1_progress_identity_migration \
-  tests.test_backlog1_segment3_adversarial_closure \
-  -v
-```
-
-Expected: PASS; changed content still fails closed without the new authority.
-
-- [ ] **Step 11: Commit Task 2**
-
-```bash
-git add content_revision_authority.py tests/test_content_revision_authority.py
-git commit -m "feat: validate exact content revision authority"
-```
-
----
-
-### Task 3: Add the empty release registry, registered-target resolution, and directed lineage
-
-**Files:**
-- Create: `content_revision_registry.py`
-- Modify: `content_revision_authority.py`
-- Modify: `tests/test_content_revision_authority.py`
-
-**Interfaces:**
-- Module constant: `AUTHORIZED_CONTENT_REVISION_MANIFESTS: dict[str, str] = {}`.
-- Module constant: `CONTENT_REVISION_EVIDENCE_ROOT = Path(__file__).resolve().parent / "content_revision_evidence"`.
-- Add `AdmittedRevision.permits_fingerprint_transition(question_id, from_fp, to_fp) -> bool`.
-- Add `approved_lineage(revisions, question_id, from_fingerprint, to_fingerprint) -> tuple[RevisionEdge, ...] | None`.
-- Add `resolve_registered_revision_for_target(target_bank_path, target_questions, load_questions, evidence_root, registry) -> AdmissionResult | None`, where `load_questions(Path)` returns a sequence of question mappings.
-
-- [ ] **Step 1: Write RED registry tests**
-
-Prove:
-
-```text
-module-level registry is exactly empty
-file under content_revision_evidence without registry entry is ignored
-registered manifest with wrong canonical registry hash -> REGISTRY_HASH_MISMATCH
-registered manifest for another target filename is ignored
-exact registered manifest + exact source/target bank files -> delegates to admission and PASS
-more than one registered manifest matching the same target filename -> LINEAGE_CONFLICT
-```
-
-Tests use a temporary evidence directory and pass an explicit registry mapping. Do not mutate the module-level production registry in source.
-
-- [ ] **Step 2: Write RED lineage tests**
-
-Use synthetic admitted revisions:
-
-```text
-Q1 V1->V2 permits direct transition
-Q1 V1->V2 rejects V2->V1
-Q1 V1->V2 and V2->V3 yields a two-edge V1->V3 lineage
-missing V2->V3 yields None
-conflicting two Q1 edges sharing one from FP but different to FPs -> LINEAGE_CONFLICT
-cycle V1->V2 and V2->V1 does not loop and is rejected as conflict for traversal beyond the cycle
-```
-
-- [ ] **Step 3: Run registry/lineage tests and verify RED**
-
-```bash
-python -m unittest tests.test_content_revision_authority -v
-```
-
-Expected: new registry/lineage tests FAIL.
-
-- [ ] **Step 4: Implement registered-target resolution**
-
-`content_revision_registry.py` must:
-
-```text
-sort registry entries by relative manifest path
-read each registered manifest from evidence_root / relative path
-parse duplicate-safely
-compare canonical manifest hash to registry value before using its metadata
-select entries whose manifest.target_bank.filename == target_bank_path.name
-return None for zero matches
-return LINEAGE_CONFLICT failure for more than one match
-resolve source bank path as target_bank_path.parent / manifest.source_bank.filename
-load source questions with the injected load_questions callback
-call admit_content_revision with source path, target path, target_questions, and evidence_root / "reviews"
-```
-
-Any missing/unreadable registered manifest or source bank fails closed with the corresponding finite hash/schema reason; it must not become implicit authority.
-
-- [ ] **Step 5: Implement direct and chained lineage traversal**
-
-Use exact `(question_id, from_fp)` indexing and a visited fingerprint set. No lexical/ID-only fallback. A conflicting next edge raises `ContentRevisionManifestError(LINEAGE_CONFLICT, ...)`.
-
-- [ ] **Step 6: Run authority tests and verify GREEN**
-
-```bash
-python -m unittest tests.test_content_revision_authority -v
-```
-
-Expected: PASS.
-
-- [ ] **Step 7: Commit Task 3**
-
-```bash
-git add content_revision_authority.py content_revision_registry.py tests/test_content_revision_authority.py
-git commit -m "feat: add registered revision lineage authority"
-```
-
----
-
-### Task 4: Implement pure progress migration and revision-aware historical joins
-
-**Files:**
-- Create: `content_revision_migration.py`
-- Create: `tests/test_content_revision_migration.py`
-
-**Interfaces:**
-- Define `MigrationStatus(StrEnum)` values `APPLIED` and `MIGRATION_ALREADY_APPLIED`.
-- Define `MigrationFailureReason(StrEnum)` values `SOURCE_PROGRESS_BANK_MISMATCH`, `SOURCE_PROGRESS_FINGERPRINT_MISMATCH`, `TARGET_QUESTION_MISSING`, `UNAUTHORIZED_PROGRESS_TRANSITION`, `MIGRATION_LINEAGE_CONFLICT`, `SOURCE_SESSION_BANK_MISMATCH`, `TARGET_SESSION_QUESTION_MISMATCH`.
-- Define `ContentRevisionMigrationError(ValueError)` exposing `.reason` and `.detail`.
-- Define frozen `PayloadMigrationResult` with `payload: dict[str, Any]`, `changed: bool`, `status: MigrationStatus`, `migration_id: str`.
-- Add `derive_migration_id(revision) -> str`.
-- Add `migrate_progress_payload(payload, target_questions, revision, migrated_at) -> PayloadMigrationResult`.
-- Add `history_event_matches_approved_revision(event, question, revision_or_sequence) -> bool`.
-- Add `history_events_for_question_revision_aware(history_map, question, revision_or_sequence=None) -> list[Mapping[str, Any]]`.
-- Store progress lineage at top-level `content_revision_migrations: list[dict[str, str]]`; never edit historical event rows.
-
-- [ ] **Step 1: Write RED progress-preservation test**
-
-Build a canonical source progress payload bound to `revision.source_bank_content_fingerprint` with active Q1/Q2 records, exact `question_content_fingerprints`, one old Q1 history event containing old text/fingerprint, and one pre-existing `quarantined_questions` record.
-
-Assert an admitted Q1 revision:
-
-```text
-preserves every learner metric in Q1/Q2 records
-sets active bank fingerprint to target
-sets Q1 stored FP from exact edge.from to exact edge.to
-keeps unchanged Q2 stored FP unchanged
-leaves the history list deep-equal to source
-leaves the quarantined mapping deep-equal to source
-appends one migration lineage row for Q1 containing exact question/from/to/manifest/migration_id/migrated_at
-```
-
-- [ ] **Step 2: Add RED rejection/idempotence tests**
-
-Prove:
-
-```text
-payload source bank FP mismatch -> SOURCE_PROGRESS_BANK_MISMATCH
-changed active record stored FP mismatch -> SOURCE_PROGRESS_FINGERPRINT_MISMATCH
-active record needs a transition but no edge exists -> UNAUTHORIZED_PROGRESS_TRANSITION
-active question absent from target bank -> TARGET_QUESTION_MISSING
-pre-existing quarantined Q1 is not restored to active questions
-already-target payload with the complete expected migration lineage -> MIGRATION_ALREADY_APPLIED and changed=False
-second exact application does not duplicate attempts/history/lineage
-bank target but incomplete/conflicting lineage -> MIGRATION_LINEAGE_CONFLICT
-```
-
-- [ ] **Step 3: Add RED historical immutability and revision-aware match tests**
-
-Prove:
-
-```text
-same QID + same FP -> strict match
-same QID + approved old->new FP -> match
-same QID + no approved edge -> no match
-different QID -> no match
-reverse-only edge -> no match
-complete V1->V2->V3 sequence -> match
-missing middle edge -> no match
-returned event retains original old FP and old selected/correct text
-revision=None reproduces existing strict matcher behavior
-```
-
-- [ ] **Step 4: Run migration tests and verify RED**
-
-```bash
-python -m unittest tests.test_content_revision_migration -v
-```
-
-Expected: module import failure.
-
-- [ ] **Step 5: Implement deterministic migration ID**
-
-Use labeled canonical JSON:
+## Required interfaces
 
 ```python
-def derive_migration_id(revision: AdmittedRevision) -> str:
-    material = {
-        "kind": "sc900_content_revision_migration_v1",
-        "manifest_sha256": revision.manifest_sha256,
-        "source_bank_content_fingerprint": revision.source_bank_content_fingerprint,
-        "target_bank_content_fingerprint": revision.target_bank_content_fingerprint,
-    }
-    raw = json.dumps(material, sort_keys=True, separators=(",", ":"))
-    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+AdmittedRevision.permits_fingerprint_transition(question_id, from_fp, to_fp) -> bool
+approved_lineage(revisions, question_id, from_fingerprint, to_fingerprint) -> tuple[RevisionEdge, ...] | None
+resolve_registered_revision_for_target(...) -> AdmissionResult | None
 ```
 
-- [ ] **Step 6: Implement progress transform**
+## Resolution rules
 
-Algorithm:
+- registry paths are nonempty relative paths;
+- reject absolute or `..` traversal;
+- compare canonical manifest hash to registry-pinned hash before using metadata;
+- select only target filename matches;
+- zero matches -> `None`;
+- more than one target match -> `LINEAGE_CONFLICT`;
+- registered source/target filenames must differ;
+- source bank path is located beside target bank for v1;
+- missing/unreadable registered manifest -> `REGISTRY_HASH_MISMATCH`;
+- missing/unreadable source bank -> `SOURCE_BANK_FILE_HASH_MISMATCH`;
+- missing/unreadable target bank -> `TARGET_BANK_FILE_HASH_MISMATCH`.
+
+## Global progress-identity registration restoration
+
+`question_bank.load_bank()` mutates the registered progress-identity bank. Source-bank loading must restore target registration in `finally` even when source loading raises.
+
+Add tests for successful and failed source-bank resolution proving the registered bank remains the target bank afterward.
+
+## Lineage rules
+
+Use exact `(question_id, from_fp)` indexing and a visited-fingerprint set.
+
+Tests:
 
 ```text
-1. Deep-copy input.
-2. Build target question fingerprint map by canonical ID.
-3. Derive migration_id.
-4. If bank FP is already target, require every changed active question to be target-bound and every expected changed-active lineage row with this migration_id to exist; then return verified no-op. Any partial/conflicting target state fails MIGRATION_LINEAGE_CONFLICT.
-5. Otherwise require bank FP == revision.source bank FP.
-6. For each active record, require target question exists.
-7. If stored FP == target FP, preserve.
-8. Otherwise require exact edge where stored FP == edge.from and target FP == edge.to; update stored FP.
-9. Never move or rewrite quarantined records.
-10. Never edit history.
-11. Set bank FP to target.
-12. Append exactly one lineage row for each changed active question transitioned in this operation.
-13. Return APPLIED/changed=True.
+direct V1->V2 allowed
+reverse V2->V1 rejected
+V1->V2 + V2->V3 yields exact two-edge chain
+missing middle -> no lineage
+conflicting next edges -> LINEAGE_CONFLICT
+cycle does not loop and is rejected as conflict when traversal would be ambiguous
 ```
 
-- [ ] **Step 7: Implement revision-aware history matching**
+Run GREEN and commit:
 
-Call existing `history_event_matches_question(...)` first. If strict match is false, require same canonical ID, nonblank historical FP, and an exact approved direct/chained lineage to `question_content_fingerprint(question)`. With no revision argument, return strict behavior only.
-
-- [ ] **Step 8: Run migration tests and verify GREEN**
-
-```bash
-python -m unittest tests.test_content_revision_migration -v
-```
-
-Expected: PASS.
-
-- [ ] **Step 9: Run existing history/identity adversarial tests**
-
-```bash
-python -m unittest tests.test_backlog1_segment3_adversarial_closure -v
-```
-
-Expected: PASS unchanged.
-
-- [ ] **Step 10: Commit Task 4**
-
-```bash
-git add content_revision_migration.py tests/test_content_revision_migration.py
-git commit -m "feat: preserve progress across approved content revisions"
+```text
+feat: add registered content revision lineage authority
 ```
 
 ---
 
-### Task 5: Implement pure canonical saved-session migration
+# Task 4 — Pure progress migration and revision-aware history
 
-**Files:**
-- Modify: `content_revision_migration.py`
-- Modify: `tests/test_content_revision_migration.py`
+## Files
 
-**Interfaces:**
-- Add `migrate_session_payload(saved, target_questions, revision, target_bank_file) -> PayloadMigrationResult`.
-- Use existing `migrate_session_snapshot(...)`, `canonical_session_signature(...)`, and `ordered_question_ids(...)` for strict source/target validation.
-- Do not modify `session_store.py`.
+Create:
 
-- [ ] **Step 1: Write RED positive session-migration test**
+- `content_revision_migration.py`
+- `tests/test_content_revision_migration.py`
 
-Build a valid source snapshot with `build_session_snapshot(...)` containing:
+## Required interfaces
+
+```python
+class MigrationStatus(StrEnum):
+    APPLIED = "APPLIED"
+    MIGRATION_ALREADY_APPLIED = "MIGRATION_ALREADY_APPLIED"
+
+class MigrationFailureReason(StrEnum): ...
+class ContentRevisionMigrationError(ValueError): ...
+
+@dataclass(frozen=True, slots=True)
+class PayloadMigrationResult:
+    payload: dict[str, Any]
+    changed: bool
+    status: MigrationStatus
+    migration_id: str
+
+derive_migration_id(revision) -> str
+migrate_progress_payload(payload, target_questions, revision, migrated_at) -> PayloadMigrationResult
+history_event_matches_approved_revision(event, question, revision_or_sequence) -> bool
+history_events_for_question_revision_aware(history_map, question, revision_or_sequence=None) -> list[Mapping[str, Any]]
+```
+
+## Migration ID
+
+Use canonical labeled JSON over:
 
 ```text
-Q1 changed, answered=True, selected/pending=["B"]
-Q2 changed, answered=False, selected/pending=["B"]
-Q3 unchanged, flagged=True
-session_answer_history with Q1 old content fingerprint and old text
-nonzero current_index and elapsed_seconds
-nonempty builder_context, current_quests, session_rewards, unlocked_rewards
+kind = sc900_content_revision_migration_v1
+manifest_sha256
+source_bank_content_fingerprint
+target_bank_content_fingerprint
 ```
 
-Assert migrated target:
+## Progress transform rules
+
+When payload bank FP equals source:
+
+- unchanged active record FP must equal common source/target FP exactly;
+- changed active record FP must equal exact `edge.from`;
+- a changed record already carrying `edge.to` is a partial/conflicting source state and fails;
+- every active question must exist in target;
+- changed active question requires exact edge from stored FP to target FP;
+- update only active binding and bank FP;
+- preserve all learner metrics;
+- leave `history` deep-equal;
+- leave `quarantined_questions` deep-equal;
+- append exactly one lineage row per transitioned active question.
+
+When payload bank FP already equals target:
+
+- verify complete target binding;
+- verify expected lineage for previously transitioned active questions;
+- exact complete state -> `MIGRATION_ALREADY_APPLIED`, `changed=False`;
+- partial/conflicting target state -> fail.
+
+## History rules
+
+- call existing strict matcher first;
+- if strict match fails, require same canonical ID plus exact approved direct/chained lineage to current question FP;
+- `revision=None` reproduces current strict behavior;
+- never rewrite returned historical event data.
+
+## RED tests
+
+Cover:
 
 ```text
-Q1 completed selection remains B
-Q2 selected/pending becomes empty while answered remains false
-Q3 state remains unchanged
-ordered question IDs and restore IDs remain unchanged
-session answer history remains deep-equal to source
-current index, elapsed, builder context, quests, rewards remain unchanged
-bank_file becomes revision.target_bank_filename/explicit target_bank_file
-bank_fingerprint becomes target fingerprint
-session_signature is canonical_session_signature(mode, target_fp, question_ids)
-restore_signature is canonical_session_signature(mode, target_fp, restore_question_ids)
+full learner metric preservation
+history immutability
+quarantine non-resurrection
+source bank mismatch
+source active FP mismatch
+source-bank payload containing edge.to partial state
+missing target question
+unauthorized transition
+idempotent target no-op
+incomplete/conflicting target lineage
+strict same-FP history
+approved old->new history
+no-authority no attachment
+different ID no attachment
+reverse-only no attachment
+complete chain attachment
+missing middle no attachment
+historical old text/fingerprint retained
 ```
 
-- [ ] **Step 2: Add RED rejection tests**
+Run GREEN and existing segment-3 adversarial regressions.
 
-Prove:
+Commit:
 
 ```text
-source snapshot bank FP mismatch -> SOURCE_SESSION_BANK_MISMATCH
-invalid source session_signature -> existing strict ValueError propagated/wrapped as migration failure
-invalid source restore_signature -> strict failure
-unknown session question ID in target -> TARGET_SESSION_QUESTION_MISMATCH
-changed question target FP does not equal edge.to -> TARGET_SESSION_QUESTION_MISMATCH
-changed question has no edge -> TARGET_SESSION_QUESTION_MISMATCH
-```
-
-- [ ] **Step 3: Run session migration tests and verify RED**
-
-```bash
-python -m unittest tests.test_content_revision_migration -v
-```
-
-Expected: new session tests FAIL.
-
-- [ ] **Step 4: Implement strict source validation then target rebinding**
-
-Implementation sequence:
-
-```text
-read source IDs/restore IDs/question_numbers from snapshot
-require saved bank_fingerprint == revision.source bank FP
-call migrate_session_snapshot with source bank FP and available target IDs to validate source identity/signatures/cardinality
-build target question FP map
-for every saved/restore ID: require target question exists; for changed IDs require target FP == exact edge.to
-copy validated snapshot
-for each answer row on a changed question: if answered is false and selected or pending is nonempty, clear selected and pending only
-leave completed answers unchanged
-leave session_answer_history unchanged
-set bank_file and target bank FP
-recompute session_signature and restore_signature
-call migrate_session_snapshot again with target bank FP to validate final canonical snapshot
-return APPLIED result with deterministic migration_id
-```
-
-- [ ] **Step 5: Run session migration tests and verify GREEN**
-
-```bash
-python -m unittest tests.test_content_revision_migration -v
-```
-
-Expected: PASS.
-
-- [ ] **Step 6: Run existing canonical session tests**
-
-```bash
-python -m unittest \
-  tests.test_backlog1_segment2_session_identity \
-  tests.test_backlog1_segment2_session_app_integration \
-  -v
-```
-
-Expected: PASS unchanged.
-
-- [ ] **Step 7: Commit Task 5**
-
-```bash
-git add content_revision_migration.py tests/test_content_revision_migration.py
-git commit -m "feat: migrate approved saved sessions to target bank identity"
+feat: preserve progress across approved content revisions
 ```
 
 ---
 
-### Task 6: Add transactional persistence and crash-safe archive semantics
+# Task 5 — Pure canonical saved-session migration
 
-**Files:**
-- Modify: `runtime_persistence.py`
-- Create: `tests/test_content_revision_app_integration.py`
+## Files
 
-**Interfaces:**
-- Add `content_revision_archive_path(source_path, migration_id, label) -> Path`.
-- Add `migrate_progress_across_approved_revision(source_path, target_path, target_questions, revision, migrated_at) -> tuple[dict[str, Any] | None, Path | None, Exception | None]`.
-- Add `migrate_session_file_across_approved_revision(source_path, target_path, target_questions, revision, target_bank_file) -> tuple[dict[str, Any] | None, Path | None, Exception | None]`.
+Modify:
 
-- [ ] **Step 1: Write RED progress atomicity tests**
+- `content_revision_migration.py`
+- `tests/test_content_revision_migration.py`
 
-Using real temporary files and `unittest.mock`, prove:
+## Required interface
 
-```text
-successful migration creates deterministic pre-migration archive and verified target
-backup failure leaves source bytes unchanged and no target replacement occurs
-write failure leaves source bytes unchanged and returns archive path + error
-same source/target path is safe because archive exists before replacement
-existing target with exact already-applied migration -> no-op, no duplicate archive
-existing target with conflicting migration lineage -> fail closed and preserve both files
+```python
+migrate_session_payload(saved, target_questions, revision, target_bank_file) -> PayloadMigrationResult
 ```
 
-- [ ] **Step 2: Write RED session atomicity/crash-recovery tests**
+Reuse existing `migrate_session_snapshot`, `canonical_session_signature`, and `ordered_question_ids`; do not modify `session_store.py` or `session_models.py`.
 
-Prove:
+## Rules
+
+1. Require saved bank FP = exact source bank FP.
+2. Strictly validate source canonical session/signatures.
+3. Require every saved/restore question ID exists in target.
+4. For changed IDs, require target FP = exact edge.to.
+5. Deep-copy validated snapshot.
+6. For changed unanswered question with nonempty selected/pending, clear only selected/pending.
+7. Preserve completed answers.
+8. Preserve `session_answer_history` deep-equal.
+9. Preserve current index, elapsed, builder context, quests/rewards/checkpoints/flags/confidence and compatible state.
+10. Set target bank file/fingerprint.
+11. Regenerate canonical session/restore signatures.
+12. Strictly validate the target snapshot.
+
+## Important idempotence design
+
+Do **not** add a session migration-ID field.
+
+The current session schema does not store one. Existing-target idempotence/recovery is established later by recomputing the exact expected migrated target payload and comparing normalized equality.
+
+## RED tests
+
+Cover:
 
 ```text
-successful source!=target migration writes and verifies target before source removal
-source archive exists before source removal
+completed changed selection preserved
+changed unanswered pending selection reset
+unchanged question state preserved
+history unchanged
+signatures and bank identity regenerated
+source bank FP mismatch
+invalid source session/restore signatures
+unknown target question
+changed target FP mismatch
+changed question missing edge
+```
+
+Run existing canonical session tests and commit:
+
+```text
+feat: migrate approved sessions to target bank identity
+```
+
+---
+
+# Task 6 — Transactional persistence and non-mutating migration reads
+
+## Files
+
+Modify:
+
+- `runtime_persistence.py`
+
+Create/extend:
+
+- `tests/test_content_revision_app_integration.py`
+
+## Required interfaces
+
+```python
+content_revision_archive_path(source_path, migration_id, label) -> Path
+migrate_progress_across_approved_revision(...) -> tuple[dict[str, Any] | None, Path | None, Exception | None]
+migrate_session_file_across_approved_revision(...) -> tuple[dict[str, Any] | None, Path | None, Exception | None]
+```
+
+## Non-mutating read rule
+
+Do **not** use `load_json_or_backup(...)` for explicit content-revision source reads. It renames bad JSON, which violates this contract.
+
+Explicit migration must:
+
+```text
+read bytes/text directly
+json.loads directly
+on failure preserve source path and bytes exactly
+return error/fail closed
+```
+
+Ordinary non-revision loading remains unchanged.
+
+## Deterministic archive
+
+Archive name may include migration-ID prefix. If deterministic archive already exists, require byte-for-byte equality before reusing it.
+
+## Progress persistence rules
+
+- pure-transform before mutating source;
+- already-applied verified target -> no new backup;
+- archive source before same-path replacement;
+- safe write target;
+- re-read non-mutatingly and verify target FP + expected lineage;
+- unexpected existing target bank FP (neither source nor target) -> preserve all, fail closed;
+- if source and target both exist, never overwrite target from source unless target is verified exact source-bound state under this revision.
+
+## Session persistence rules
+
+- compute expected target from strictly validated source;
+- if target already exists, read/validate non-mutatingly and compare normalized target to exact expected migrated target;
+- exact equality -> already applied / finish source archival cleanup;
+- any difference -> conflict, preserve both;
+- write/verify target before source removal;
+- source archive exists before removal;
+- if cleanup fails after verified target, return recoverable error with target + archive intact.
+
+## RED fault-injection tests
+
+Progress:
+
+```text
+success
+archive failure
+write failure
+same-path safety
+already-applied no-op
+conflicting target
+unexpected target bank FP
+malformed source remains path+bytes unchanged
+```
+
+Session:
+
+```text
+success source!=target
+archive failure before target write
 write failure preserves source
-archive failure before target write prevents migration
-post-target source-removal failure returns recoverable error while verified target and archive remain
-restart with verified target + matching migration ID finishes source archival/removal without duplicate target
-existing target + conflicting migration identity preserves both and fails
-source==target uses pre-migration archive and does not unlink the newly written target
+cleanup failure after verified target is recoverable
+restart with exact expected target finishes cleanup
+existing differing target fails preserving both
+same-path safety
+malformed source remains path+bytes unchanged
 ```
 
-- [ ] **Step 3: Run persistence tests and verify RED**
+Run existing persistence regressions and commit:
 
-```bash
-python -m unittest tests.test_content_revision_app_integration -v
-```
-
-Expected: FAIL because new persistence methods do not exist.
-
-- [ ] **Step 4: Implement deterministic archive path**
-
-Use:
-
-```python
-def content_revision_archive_path(self, source_path: Path, *, migration_id: str, label: str) -> Path:
-    source = Path(source_path)
-    safe_label = str(label or "content_revision").strip().replace(" ", "_")
-    return self.backup_dir / f"{source.stem}_{safe_label}_{migration_id[:12]}{source.suffix}"
-```
-
-If an archive path already exists, require byte-for-byte equality with the source before treating it as reusable.
-
-- [ ] **Step 5: Implement progress persistence operation**
-
-Use `load_json_or_backup(source_path)` directly. Do not call ordinary target-bank `load_progress_with_identity_migration(...)` on the source. Call the pure transform first. If already applied, return without another backup. Otherwise archive source, write target through `self.write_json`, re-read target, and verify target bank FP plus complete migration lineage.
-
-If `source_path == target_path`, the deterministic archive is mandatory before replacement.
-
-- [ ] **Step 6: Implement session persistence operation**
-
-Read source JSON, call pure session transform, derive migration ID, reject conflicting target, write target, re-read and strictly validate target, create/verify source archive, then remove old source only when source and target paths differ. Do not classify a failed authorized migration as malformed JSON.
-
-- [ ] **Step 7: Run persistence tests and verify GREEN**
-
-```bash
-python -m unittest tests.test_content_revision_app_integration -v
-```
-
-Expected: persistence tests PASS.
-
-- [ ] **Step 8: Run existing persistence regressions**
-
-```bash
-python -m unittest \
-  tests.test_backlog1_progress_identity_migration \
-  tests.test_backlog1_segment1_adversarial_review \
-  tests.test_sc900_engine_regression \
-  -v
-```
-
-Expected: PASS except already-established display-dependent skips.
-
-- [ ] **Step 9: Commit Task 6**
-
-```bash
-git add runtime_persistence.py tests/test_content_revision_app_integration.py
-git commit -m "feat: persist approved content revision migrations atomically"
+```text
+feat: persist approved content revision migrations atomically
 ```
 
 ---
 
-### Task 7: Resolve registered authority in bank load and migrate progress before ordinary content-epoch handling
+# Task 7 — Resolve registered authority during bank load and migrate progress before ordinary binding
 
-**Files:**
-- Modify: `app.py`
-- Modify: `tests/test_content_revision_app_integration.py`
+## Files
 
-**Interfaces:**
-- `TestingEngineApp.content_revision_authority` is initialized to `None`.
-- Add `_resolve_content_revision_authority_for_loaded_bank() -> AdmissionResult | None`.
-- Add `_load_progress_with_content_revision_if_needed() -> tuple[dict[str, Any] | None, Path | None, Exception | None]`.
-- Reuse `resolve_registered_revision_for_target(...)` with `load_questions=lambda bank_path: load_bank(bank_path)["questions"]`.
+Modify:
 
-- [ ] **Step 1: Write RED no-registry progress-load regression**
+- `app.py`
+- `tests/test_content_revision_app_integration.py`
 
-Create a lightweight app fixture around `load_progress_if_present()` with empty registry. Assert it calls the existing ordinary progress-load path and preserves current `CHANGED_CONTENT` behavior exactly.
+## Runtime contract
 
-- [ ] **Step 2: Write RED cross-filename progress migration test**
-
-Use temporary target bank filename `target_bank.json`, source bank filename `source_bank.json`, and user-data progress files derived from both stems. Patch/inject a synthetic registry mapping and exact evidence. Assert:
-
-```text
-registered target revision is admitted after target bank data is loaded
-source progress path is derived from revision.source_bank_filename
-when target progress path is absent and source progress exists, source -> target migration occurs
-source archive exists
-target progress loads with target bank FP and preserved learner state
-```
-
-- [ ] **Step 3: Write RED in-place progress migration test**
-
-Set source/target progress paths equal by using equal runtime bank stems in the test fixture while keeping distinct source/target bank files for authority admission. Assert pre-migration archive exists before target replacement and final data loads normally.
-
-- [ ] **Step 4: Write RED invalid-registered-authority fail-closed test**
-
-With a registry entry present but corrupted manifest/source/review evidence, assert:
-
-```text
-progress source is preserved
-progress_write_blocked becomes true
-a warning/log path is exercised
-ordinary changed-content migration is not run afterward against the target bank
-```
-
-- [ ] **Step 5: Run app progress integration tests and verify RED**
-
-```bash
-python -m unittest tests.test_content_revision_app_integration -v
-```
-
-Expected: new app progress cases FAIL.
-
-- [ ] **Step 6: Initialize optional authority and resolve it after bank parsing**
-
-In `TestingEngineApp.__init__`, initialize:
+Initialize:
 
 ```python
-self.content_revision_authority = None
+self.content_revision_authority: AdmittedRevision | None = None
 ```
 
-In `load_from_path`, `self.data = load_bank(path)` already occurs before `load_progress_if_present()`. Keep that order. At the start of `load_progress_if_present()`, call `_resolve_content_revision_authority_for_loaded_bank()` using `self.data["questions"]` as target questions and `load_bank(source_path)["questions"]` through the injected resolver callback.
-
-With empty production registry, resolution returns `None` and current behavior is unchanged.
-
-- [ ] **Step 7: Implement explicit progress-source selection before ordinary load**
-
-When an admitted revision is present:
+Registry resolution returns `AdmissionResult | None`, handled exactly as:
 
 ```text
-current target progress path = self.progress_path
-source progress path = self.progress_file_for_bank(Path(revision.source_bank_filename))
-if target progress exists and its stored bank FP is target -> use ordinary current-bank load
-if target progress exists and its stored bank FP is source -> migrate target path in-place
-if target progress absent and source progress exists -> migrate source path to target path
-if neither exists -> keep blank progress
-if migration errors -> block writes, preserve source, report warning, do not run ordinary target content-epoch migration afterward
+None -> no authority; current behavior
+FAIL -> authority remains None; block attempted registered migration
+PASS -> require admitted != None; store only admitted object
 ```
 
-Pass `now_iso()` as `migrated_at`.
+A failed `AdmissionResult` must never reach history consumers as authority.
 
-After a successful explicit migration, feed the returned migrated dict into the existing progress normalization/application flow without re-running changed-content migration against the source.
+## Target registration restoration
 
-- [ ] **Step 8: Run app progress integration tests and verify GREEN**
+When resolver loads source bank through `load_bank`, restore target progress identity registration in `finally`.
 
-```bash
-python -m unittest tests.test_content_revision_app_integration -v
+## Progress source selection
+
+After target bank parse and before ordinary target content-epoch processing:
+
+```text
+target progress absent + source progress exists
+    -> explicit source->target migration
+
+target progress exists and stored bank FP == source
+    -> migrate that exact target path in-place
+
+target progress exists and stored bank FP == target
+    -> ordinary current-bank load
+
+target progress exists and stored bank FP is neither source nor target
+    -> fail closed, preserve files, block writes
+
+both source and target progress exist
+    -> never overwrite target from source unless target is verified exact source-bound state
 ```
 
-Expected: progress integration cases PASS.
+On explicit migration error:
 
-- [ ] **Step 9: Run current progress-load regressions**
+- preserve source/target files;
+- `progress_write_blocked = True`;
+- log/warn;
+- do not fall through to ordinary target changed-content migration.
 
-```bash
-python -m unittest \
-  tests.test_backlog1_progress_identity_migration \
-  tests.test_sc900_final_bank_activation_migration \
-  -v
-```
+## RED tests
 
-Expected: PASS.
+Cover:
 
-- [ ] **Step 10: Commit Task 7**
+- empty registry preserves current ordinary load path;
+- different source/target bank filenames migrate source progress to target path;
+- same runtime progress path case archives before replacement;
+- invalid registered authority blocks migration and preserves state;
+- unexpected target progress bank FP fails closed;
+- both source and conflicting target files remain preserved;
+- failed admission cannot leak into `self.content_revision_authority`;
+- target global registration remains target after successful/failed source authority resolution.
 
-```bash
-git add app.py tests/test_content_revision_app_integration.py
-git commit -m "feat: migrate approved progress before target bank binding"
+Run existing final-bank activation migration regressions and commit:
+
+```text
+feat: migrate approved progress before target bank binding
 ```
 
 ---
 
-### Task 8: Integrate cross-filename session discovery and the common history resolver
+# Task 8 — Cross-filename session discovery and complete history-consumer integration
 
-**Files:**
-- Modify: `app_session_persistence_mixin.py`
-- Modify: `app_analytics_mixin.py`
-- Modify: `app_game_mixin.py`
-- Modify: `app_session_builder_mixin.py`
-- Modify: `tests/test_content_revision_app_integration.py`
+## Files
 
-**Interfaces:**
-- Add `_session_builder_glob_patterns(mode) -> tuple[str, ...]` that includes the current target-bank pattern and, when an authority is active, the source-bank stem pattern.
-- Add `_try_migrate_session_across_content_revision(path, saved, desired_builder_identity) -> tuple[Path, Mapping[str, Any]] | None`.
-- All history consumers call `history_events_for_question_revision_aware(...)` with `getattr(self, "content_revision_authority", None)`.
+Modify:
 
-- [ ] **Step 1: Write RED source-bank session discovery test**
+- `app_session_persistence_mixin.py`
+- `app_analytics_mixin.py`
+- `app_game_mixin.py`
+- `app_session_builder_mixin.py`
+- `app.py`
+- `tests/test_content_revision_app_integration.py`
 
-Use different source/target bank filenames and a valid source canonical session whose filename uses the source bank stem. Assert `find_resumable_session_for_builder(...)` discovers it only when a matching admitted revision is active, migrates it to the target canonical filename, archives/removes the old source resumable file after verification, and returns the target path.
+## Session discovery
 
-- [ ] **Step 2: Write RED no-authority and failed-authority session tests**
+Add source-bank session glob pattern only when exact admitted authority is active. Deduplicate candidates.
 
-Prove:
+Attempt explicit revision migration **before** ordinary bank-mismatch quarantine only when:
 
 ```text
-no authority -> current bank-mismatch behavior remains
-admitted authority but transform/persistence failure -> source session remains and is not quarantined as corrupt JSON
-a malformed JSON/session unrelated to revision migration -> existing quarantine behavior remains
+saved bank FP == authority.source bank FP
+current bank FP == authority.target bank FP
 ```
 
-- [ ] **Step 3: Write RED history-consumer tests**
+On migration failure, preserve source session and skip it without classifying the authorized migration failure as corrupt JSON.
 
-Cover at least:
+Malformed unrelated ordinary JSON continues through existing quarantine behavior.
+
+## History-consumer integration
+
+Use the common revision-aware resolver in all directly affected consumers:
+
+- `app_analytics_mixin.py`;
+- `app_game_mixin.py`;
+- `app_session_builder_mixin.py`;
+- `TestingEngineApp.question_volatility(...)` in `app.py`.
+
+Search the repository for remaining direct `history_event_matches_question(...)` / `history_events_for_question(...)` calls in learner-history consumers. Any equivalent runtime consumer discovered must either be switched to the shared resolver or documented/tested as intentionally strict.
+
+Do not alter the strict functions in `question_identity.py`.
+
+## RED tests
+
+Cover:
 
 ```text
-AnalyticsMixin path: old approved event contributes under V2
-GameRewardsMixin stability path: old approved event contributes under V2
-SessionBuilderMixin stability/mastery path: old approved event contributes under V2
-without authority, same old event does not attach
-historical selected_texts/correct_texts remain old values in downstream input
+source-bank canonical session discovered only with matching authority
+successful migration returns target canonical path
+source resumable file archived/removed only after verified target
+no authority retains current mismatch behavior
+migration failure preserves source and avoids corrupt-file quarantine
+malformed unrelated JSON retains existing quarantine behavior
+approved V1 event contributes to AnalyticsMixin under V2
+approved V1 event contributes to GameRewardsMixin stability under V2
+approved V1 event contributes to SessionBuilderMixin/Smart Practice under V2
+approved V1 event contributes to question_volatility under V2
+without authority the same old event does not attach
+historical selected_texts/correct_texts remain original downstream values
 ```
 
-- [ ] **Step 4: Run app integration tests and verify RED**
-
-```bash
-python -m unittest tests.test_content_revision_app_integration -v
-```
-
-Expected: new session/history cases FAIL.
-
-- [ ] **Step 5: Implement dual-pattern session discovery**
-
-Refactor the existing single `_session_builder_glob_pattern(mode)` use into `_session_builder_glob_patterns(mode)` while retaining the current target pattern. When authority exists, add:
-
-```python
-source_stem = runtime_bank_stem(Path(revision.source_bank_filename))
-source_pattern = f"{source_stem}_{safe_mode}_session_*.json"
-```
-
-Deduplicate paths before evaluating candidates.
-
-- [ ] **Step 6: Attempt explicit migration before mismatch quarantine**
-
-When ordinary `migrate_session_snapshot(...)` fails because `saved.bank_fingerprint` differs from the current target:
+Run affected existing session/confidence/identity tests and commit:
 
 ```text
-if no authority -> current fail-closed path
-if saved bank FP != authority.source -> current fail-closed path
-if current bank FP != authority.target -> current fail-closed path
-otherwise compute target canonical session path using current bank + saved IDs/builder context
-call RuntimePersistence.migrate_session_file_across_approved_revision
-on success continue candidate evaluation with migrated payload/path
-on migration failure preserve source and skip candidate without corrupt-file quarantine
-```
-
-Do not broaden legacy `allow_legacy` behavior.
-
-- [ ] **Step 7: Replace all direct history lookups in the three consumers**
-
-Import:
-
-```python
-from content_revision_migration import history_events_for_question_revision_aware
-```
-
-Replace each existing `history_events_for_question(history_map, question)` call in `app_analytics_mixin.py`, `app_game_mixin.py`, and `app_session_builder_mixin.py` with the common resolver and the optional authority. Do not change downstream formulas or mutate events.
-
-- [ ] **Step 8: Run app integration tests and verify GREEN**
-
-```bash
-python -m unittest tests.test_content_revision_app_integration -v
-```
-
-Expected: PASS.
-
-- [ ] **Step 9: Run directly affected existing tests**
-
-```bash
-python -m unittest \
-  tests.test_backlog1_segment2_session_app_integration \
-  tests.test_backlog1_segment2_session_identity \
-  tests.test_backlog1_segment3_adversarial_closure \
-  tests.test_backlog2_confidence_epistemics \
-  -v
-```
-
-Expected: PASS; no-authority behavior remains unchanged.
-
-- [ ] **Step 10: Commit Task 8**
-
-```bash
-git add \
-  app_session_persistence_mixin.py \
-  app_analytics_mixin.py \
-  app_game_mixin.py \
-  app_session_builder_mixin.py \
-  tests/test_content_revision_app_integration.py
-git commit -m "feat: integrate approved revision continuity into runtime consumers"
+feat: integrate approved revision continuity into runtime consumers
 ```
 
 ---
 
-### Task 9: Add new modules to repository quality/type authority
+# Task 9 — Repository quality/type authority
 
-**Files:**
-- Modify: `pyproject.toml`
-- Modify: `tools/run_quality_checks.py`
-- Modify: `tests/test_content_revision_authority.py`
+## Files
 
-**Interfaces:**
-- No runtime behavior change.
-- New maintained modules become Ruff/Black/mypy targets.
+Modify:
 
-- [ ] **Step 1: Write RED quality-target assertion**
+- `pyproject.toml`
+- `tools/run_quality_checks.py`
+- `tests/test_content_revision_authority.py`
 
-Add a test that imports `tools.run_quality_checks.QUALITY_TARGETS` and asserts the three new source files are present. Read `pyproject.toml` and assert the module names occur in Ruff `known-first-party` and the `.py` files occur in mypy `files`.
+## Required configuration
 
-- [ ] **Step 2: Run authority tests and verify RED**
-
-```bash
-python -m unittest tests.test_content_revision_authority -v
-```
-
-Expected: quality-target assertion FAIL.
-
-- [ ] **Step 3: Update quality/type configuration**
-
-Add these module names to Ruff `known-first-party`:
+Add first-party modules:
 
 ```text
 content_revision_authority
@@ -1263,60 +957,49 @@ content_revision_migration
 content_revision_registry
 ```
 
-Add these source files to `[tool.mypy].files` and `tools/run_quality_checks.py` `QUALITY_TARGETS`:
+Add source files to maintained quality/mypy target lists.
 
-```text
-content_revision_authority.py
-content_revision_migration.py
-content_revision_registry.py
-```
+## RED/GREEN test
 
-- [ ] **Step 4: Run authority tests and verify GREEN**
+Add a test asserting the three modules appear in `QUALITY_TARGETS`, Ruff known-first-party, and mypy files.
 
-```bash
-python -m unittest tests.test_content_revision_authority -v
-```
-
-Expected: PASS.
-
-- [ ] **Step 5: Run targeted formatting/lint/type checks**
-
-Run:
+Then run:
 
 ```bash
 python -m ruff check \
   content_revision_authority.py content_revision_migration.py content_revision_registry.py \
   runtime_persistence.py app.py app_session_persistence_mixin.py app_analytics_mixin.py app_game_mixin.py app_session_builder_mixin.py \
   tests/test_content_revision_authority.py tests/test_content_revision_migration.py tests/test_content_revision_app_integration.py
+
 python -m black --check \
   content_revision_authority.py content_revision_migration.py content_revision_registry.py \
   runtime_persistence.py app.py app_session_persistence_mixin.py app_analytics_mixin.py app_game_mixin.py app_session_builder_mixin.py \
   tests/test_content_revision_authority.py tests/test_content_revision_migration.py tests/test_content_revision_app_integration.py
+
 python -m mypy
 ```
 
-Expected: PASS. If Black reports formatting differences, run Black only on the listed touched files, then rerun these checks. Do not reformat unrelated files.
+If Black reports only touched-file formatting, format only touched files and rerun.
 
-- [ ] **Step 6: Commit Task 9**
+Commit:
 
-```bash
-git add pyproject.toml tools/run_quality_checks.py tests/test_content_revision_authority.py
-git commit -m "chore: add content revision modules to quality gates"
+```text
+chore: add content revision modules to quality gates
 ```
 
 ---
 
-### Task 10: Execute Package-A closure verification and record exact evidence
+# Task 10 — Package-A closure verification and exact evidence
 
-**Files:**
-- Create: `docs/research/SC900-CONTENT-REVISION-EQUIVALENCE-MIGRATION-001/01-PACKAGE-A-VERIFICATION.md`
-- No production code edit is allowed in this task unless verification exposes a defect; if a defect is found, return to the owning task's RED/GREEN cycle and make a separate fix commit before restarting closure.
+## Files
 
-**Interfaces:**
-- Produces exact Package-A terminal evidence.
-- Does not authorize Package B or production activation.
+Create:
 
-- [ ] **Step 1: Verify exact diff boundary before closure tests**
+`docs/research/SC900-CONTENT-REVISION-EQUIVALENCE-MIGRATION-001/01-PACKAGE-A-VERIFICATION.md`
+
+No production code edits are allowed in this task unless verification exposes a defect. If a defect is found, return to the owning task's RED/GREEN cycle, fix in a separate commit, and restart closure.
+
+## 10.1 Diff boundary
 
 Run:
 
@@ -1325,7 +1008,7 @@ git diff --name-status 23d440b6976b9f6bbb3b77285bf0d11effc2513f...HEAD
 git status --short
 ```
 
-Before the verification receipt is created, the only allowed changed paths are:
+Before receipt creation, allowed implementation paths are only:
 
 ```text
 content_revision_authority.py
@@ -1344,9 +1027,9 @@ tests/test_content_revision_migration.py
 tests/test_content_revision_app_integration.py
 ```
 
-No bank JSON, EXE, PR13, recovery-ref artifact, production manifest, or unrelated source path may appear.
+No bank JSON, EXE, production evidence, PR13 artifact, recovery artifact, or unrelated source path may appear.
 
-- [ ] **Step 2: Run focused new Package-A tests**
+## 10.2 Focused Package-A tests
 
 ```bash
 python -m unittest \
@@ -1356,9 +1039,9 @@ python -m unittest \
   -v
 ```
 
-Expected: PASS.
+Required: PASS.
 
-- [ ] **Step 3: Run canonical identity/session regression wall**
+## 10.3 Existing identity/session regression wall
 
 ```bash
 python -m unittest \
@@ -1371,17 +1054,17 @@ python -m unittest \
   -v
 ```
 
-Expected: PASS; existing `CHANGED_CONTENT` and ordinary bank mismatch behavior remain unchanged with empty registry/no authority.
+Required: PASS; existing no-authority fail-closed behavior remains unchanged.
 
-- [ ] **Step 4: Run full repository unittest discovery**
+## 10.4 Full repository tests
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-Expected: zero failures/errors. Environment-specific Tk/display skips are acceptable only when reported as skips.
+Required: zero failures/errors. Existing environment-specific Tk/display skips are acceptable only when reported as skips.
 
-- [ ] **Step 5: Run repository quality, bank lint, and installation verification**
+## 10.5 Repository quality/bank/install verification
 
 ```bash
 python -m tools.run_quality_checks
@@ -1389,9 +1072,9 @@ python -m tools.lint_bank --allow-warnings sc900_bank_v8_final.json
 python -m tools.verify_installation
 ```
 
-Expected: all commands PASS. Bank lint must still report the current 454-question production bank and only the already-known allowed warning profile.
+Required: PASS.
 
-- [ ] **Step 6: Prove production bank and EXE immutability**
+## 10.6 Production immutability
 
 Run:
 
@@ -1409,32 +1092,30 @@ if exe.exists():
 PY
 ```
 
-Required bank SHA-256:
+Required production bank SHA:
 
 ```text
 177a4fb5f8a874ffe4dda6b69e3d1c03dbdad1f5db5a174a990eb8b5a0e5927c
 ```
 
-If the root production EXE is present, required unchanged SHA-256:
+If root production EXE is present, required unchanged SHA:
 
 ```text
 9c5d6cdfa46e4b6a49dd5ff1760f1f1d1640b4e1e889009547b682ecd54f7558
 ```
 
-If the EXE is absent from the isolated checkout, record that absence; do not build it.
+If absent, record absence; do not build it.
 
-- [ ] **Step 7: Write the verification receipt using only observed evidence**
+## 10.7 Verification receipt
 
-Create `docs/research/SC900-CONTENT-REVISION-EQUIVALENCE-MIGRATION-001/01-PACKAGE-A-VERIFICATION.md` with these headings and fields, each populated directly from the command outputs just observed:
+Populate only observed results. Include:
 
 ```text
-# Package A Verification — Content-Revision Equivalence Migration
-
 WORK_ID
+DESIGN_REVIEW_HEAD
 START_MAIN_SHA
 IMPLEMENTATION_HEAD
 
-## Scope
 PRODUCTION_QUESTION_WORDING_CHANGES
 PRODUCTION_BANK_ACTIVATION
 AUTHORIZED_CONTENT_REVISION_MANIFESTS_COUNT
@@ -1443,7 +1124,6 @@ RECOVERY_REFS_MODIFIED
 PRODUCTION_EXE_CHANGED
 MERGED
 
-## Focused verification
 PACKAGE_A_TESTS
 IDENTITY_SESSION_REGRESSION_WALL
 FULL_UNITTEST_DISCOVERY
@@ -1451,12 +1131,10 @@ QUALITY_CHECKS
 BANK_LINT
 INSTALLATION_VERIFICATION
 
-## Production immutability
 PRODUCTION_BANK_SHA256
 PRODUCTION_EXE_PRESENT
 PRODUCTION_EXE_SHA256
 
-## Contract proof
 NO_AUTHORITY_BEHAVIOR
 ADMITTED_SYNTHETIC_REVISION
 HISTORICAL_EVENTS_REWRITTEN
@@ -1464,15 +1142,16 @@ QUARANTINE_RESURRECTION
 PENDING_SELECTION_ON_CHANGED_UNANSWERED_QUESTION
 MIGRATION_IDEMPOTENCE
 ATOMIC_BACKUP_WRITE_RECOVERY
+TARGET_REGISTRATION_RESTORED
+NONMUTATING_MIGRATION_READS
 
-## Disposition
 PACKAGE_A
 PACKAGE_B_AUTHORIZED
 PRODUCTION_ACTIVATION_AUTHORIZED
 MERGE_AUTHORIZED
 ```
 
-Required constant values where the commands/tests support them:
+Constant values only where verified by scope/tests:
 
 ```text
 WORK_ID = SC900-CONTENT-REVISION-EQUIVALENCE-MIGRATION-001 / PACKAGE-A
@@ -1493,28 +1172,15 @@ PRODUCTION_ACTIVATION_AUTHORIZED = NO
 MERGE_AUTHORIZED = NO
 ```
 
-For test counts, implementation head, EXE presence/hash, and PASS disposition, write only the values actually observed; do not infer or pre-fill them.
+Test counts, implementation head, EXE presence/hash, and PASS results must come from observed command output.
 
-- [ ] **Step 8: Re-run focused Package-A tests after the receipt is added**
+After adding the receipt, rerun focused Package-A tests and commit:
 
-```bash
-python -m unittest \
-  tests.test_content_revision_authority \
-  tests.test_content_revision_migration \
-  tests.test_content_revision_app_integration \
-  -v
+```text
+docs: record package A migration verification
 ```
 
-Expected: PASS.
-
-- [ ] **Step 9: Commit the verification receipt**
-
-```bash
-git add docs/research/SC900-CONTENT-REVISION-EQUIVALENCE-MIGRATION-001/01-PACKAGE-A-VERIFICATION.md
-git commit -m "docs: record package A migration verification"
-```
-
-- [ ] **Step 10: Perform final exact-head review gate**
+## 10.8 Final exact-head review
 
 Run:
 
@@ -1529,7 +1195,7 @@ Required terminal state:
 
 ```text
 working tree clean
-Package A paths only
+Package-A paths only
 production bank unchanged
 module-level production registry empty
 no production manifest/review evidence
@@ -1537,35 +1203,38 @@ no EXE change
 no merge
 ```
 
-Stop and return the exact implementation head SHA plus the verification receipt for external review. Do not begin Package B under this authorization.
+Stop and return exact implementation head + verification receipt. Do not begin Package B.
 
 ---
 
-## Plan Self-Review Result
+# Plan self-review checklist
 
-Spec coverage mapping:
-
-```text
-Section 1 strict identity + directed equivalence -> Tasks 1, 3, 4
-Section 2 manifest/hash/closed-world/semantic admission -> Tasks 1, 2, 3
-Section 3 progress/history/session continuity, pending reset, atomicity, idempotence -> Tasks 4, 5, 6, 7, 8
-Section 4 adversarial proof obligations -> Tasks 2 through 8 and closure Task 10
-Section 5 component ownership -> source-file split in Tasks 1 through 9
-Section 5 Package A/B/C boundary -> this plan stops after Package A external-review handoff
-```
-
-Self-review findings resolved in this plan:
+Before Cursor starts implementation, this plan is considered reconciled only if all statements below remain true:
 
 ```text
-positive admission fixture uses exactly 454 synthetic questions
-runtime progress migration is wired before ordinary target content-epoch handling
-source and target bank filenames may differ for both progress and session discovery
-registered authority resolution requires both exact bank files and exact registry hash
-question_identity.py and session_store.py stay strict and unmodified
-no unused imports are specified in implementation snippets
-no production registry entry is added
-no production content/EXE/activation/merge is authorized
-verification receipt requires observed values rather than predeclared PASS values
+real fields used: exam_calibration_tier / exam_simulation_eligible
+fingerprint-blind keyed choice swaps independently rejected
+all non-choice fields globally constrained
+bank-level metadata constrained
+manifest/review/bank authority JSON duplicate-safe
+Microsoft Learn authority syntax mechanically checked
+target identity registration restored after source bank load
+explicit migration reads non-mutating on failure
+source-bound progress cannot be partially target-bound
+runtime authority stores AdmittedRevision only
+question_volatility included in history integration
+session recovery uses exact expected-target equality, not stored migration ID
+unexpected target progress state fails closed
+registered runtime source/target filenames distinct
+evidence paths contained under governed roots
+missing/unreadable evidence mapped to finite reasons
+wrong-type authority structures adversarially tested
+production registry empty
+production content unchanged
+EXE unchanged
+PR13 untouched
+recovery refs untouched
+merge unauthorized
 ```
 
-Package B candidate generation and semantic production evidence, and Package C activation/release work, require separate implementation plans and separate authorization.
+Package B and Package C require separate plans and separate authorization.
