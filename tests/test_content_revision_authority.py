@@ -697,14 +697,27 @@ class ContentRevisionAdmissionTests(unittest.TestCase):
         self._rehash()
         self.assertEqual(RevisionFailureReason.AUTHORITY_EVIDENCE_MISSING, self._fail_reason())
         self.pkg.materialize()
-        self.pkg.manifest["edges"][0]["authority_refs"] = [MS_LEARN_REF, "https://example.com/other"]
+        self.pkg.manifest["edges"][0]["authority_refs"] = ["https://example.com/other"]
         review_path = self.pkg.review_root / self.pkg.review_name
         review = parse_json_duplicate_safe(review_path.read_text(encoding="utf-8"))
-        review["authority_refs"] = [MS_LEARN_REF, "https://example.com/other"]
+        review["authority_refs"] = ["https://example.com/other"]
         _write_json(review_path, review)
         self.pkg.manifest["edges"][0]["review_artifact_sha256"] = sha256_file(review_path)
         self._rehash()
         self.assertEqual(RevisionFailureReason.AUTHORITY_EVIDENCE_MISSING, self._fail_reason())
+
+    def test_authority_refs_allow_supplemental_with_microsoft_learn(self) -> None:
+        mixed = [MS_LEARN_REF, "https://example.com/other"]
+        self.pkg.manifest["edges"][0]["authority_refs"] = mixed
+        review_path = self.pkg.review_root / self.pkg.review_name
+        review = parse_json_duplicate_safe(review_path.read_text(encoding="utf-8"))
+        review["authority_refs"] = mixed
+        _write_json(review_path, review)
+        self.pkg.manifest["edges"][0]["review_artifact_sha256"] = sha256_file(review_path)
+        self._rehash()
+        result = self.pkg.admit()
+        self.assertEqual(AdmissionStatus.PASS, result.status)
+        self.assertIsNotNone(result.admitted)
 
     def test_unapproved_review_disposition_and_status(self) -> None:
         review_path = self.pkg.review_root / self.pkg.review_name
@@ -864,6 +877,23 @@ class ContentRevisionRegistryAndLineageTests(unittest.TestCase):
             )
             self.assertEqual(AdmissionStatus.FAIL, result.status)
             self.assertEqual(RevisionFailureReason.REGISTRY_HASH_MISMATCH, result.reasons[0])
+
+    def test_registered_manifest_duplicate_key_preserves_duplicate_json_key(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / "target_bank.json"
+            target.write_text("{}", encoding="utf-8")
+            evidence = Path(tmp) / "evidence"
+            manifest_rel = "manifests/rev.json"
+            manifest_path = evidence / manifest_rel
+            manifest_path.parent.mkdir(parents=True)
+            manifest_path.write_text('{"schema_version":1,"schema_version":2}', encoding="utf-8")
+            result = resolve_registered_revision_for_target(
+                target,
+                evidence_root=evidence,
+                registry={manifest_rel: "a" * 64},
+            )
+            self.assertEqual(AdmissionStatus.FAIL, result.status)
+            self.assertEqual((RevisionFailureReason.DUPLICATE_JSON_KEY,), result.reasons)
 
     def test_unsafe_registry_path_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

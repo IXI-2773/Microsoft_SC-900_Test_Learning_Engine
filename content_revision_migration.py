@@ -119,6 +119,20 @@ def history_events_for_question_revision_aware(
     ]
 
 
+def _require_progress_payload_shape(payload: Mapping[str, Any]) -> None:
+    history = payload.get("history")
+    if not isinstance(history, list):
+        raise ContentRevisionMigrationError(MigrationFailureReason.INVALID_PROGRESS_PAYLOAD, "history")
+    records = payload.get("questions")
+    stored_fps = payload.get("question_content_fingerprints")
+    if not isinstance(records, Mapping) or not isinstance(stored_fps, Mapping):
+        raise ContentRevisionMigrationError(MigrationFailureReason.INVALID_PROGRESS_PAYLOAD)
+    if "quarantined_questions" in payload and not isinstance(payload.get("quarantined_questions"), Mapping):
+        raise ContentRevisionMigrationError(MigrationFailureReason.INVALID_PROGRESS_PAYLOAD, "quarantined_questions")
+    if "content_revision_lineage" in payload and not isinstance(payload.get("content_revision_lineage"), list):
+        raise ContentRevisionMigrationError(MigrationFailureReason.INVALID_PROGRESS_PAYLOAD, "content_revision_lineage")
+
+
 def _lineage_row(
     question_id: str, from_fp: str, to_fp: str, revision: AdmittedRevision, migrated_at: str, migration_id: str
 ) -> dict[str, str]:
@@ -219,6 +233,7 @@ def migrate_progress_payload(
 ) -> PayloadMigrationResult:
     if not isinstance(payload, Mapping):
         raise ContentRevisionMigrationError(MigrationFailureReason.INVALID_PROGRESS_PAYLOAD)
+    _require_progress_payload_shape(payload)
     migration_id = derive_migration_id(revision)
     bank_fp = str(payload.get("bank_fingerprint") or "").strip()
     if bank_fp == revision.target_bank_content_fingerprint:
@@ -269,7 +284,7 @@ def migrate_progress_payload(
     migrated["questions"] = copy.deepcopy(dict(records))
     migrated["question_content_fingerprints"] = new_fps
     migrated["bank_fingerprint"] = revision.target_bank_content_fingerprint
-    migrated["history"] = copy.deepcopy(list(payload.get("history") or []))
+    migrated["history"] = copy.deepcopy(payload["history"])
     if "quarantined_questions" in payload:
         migrated["quarantined_questions"] = copy.deepcopy(payload.get("quarantined_questions"))
     migrated["content_revision_lineage"] = copy.deepcopy(list(existing_lineage)) + new_lineage

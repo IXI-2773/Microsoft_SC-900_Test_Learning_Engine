@@ -456,10 +456,13 @@ def _pair_invariant_reason(source: Mapping[str, Any], target: Mapping[str, Any])
 def _microsoft_learn_refs(refs: Sequence[Any]) -> bool:
     if not refs:
         return False
+    has_microsoft_learn = False
     for ref in refs:
-        if not isinstance(ref, str) or not ref.strip().startswith(MS_LEARN_PREFIX):
+        if not isinstance(ref, str):
             return False
-    return True
+        if ref.strip().startswith(MS_LEARN_PREFIX):
+            has_microsoft_learn = True
+    return has_microsoft_learn
 
 
 def admit_content_revision(

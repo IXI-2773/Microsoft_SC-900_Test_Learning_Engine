@@ -228,10 +228,10 @@ class RuntimePersistence:
                 transform_source = existing
             else:
                 try:
-                    expected = migrate_progress_payload(payload, target_questions, revision, migrated_at)
+                    verified = migrate_progress_payload(existing, target_questions, revision, migrated_at)
                 except ContentRevisionMigrationError as exc:
                     return None, None, exc
-                if json.dumps(existing, sort_keys=True) != json.dumps(expected.payload, sort_keys=True):
+                if verified.status != MigrationStatus.MIGRATION_ALREADY_APPLIED:
                     return (
                         None,
                         None,
@@ -240,13 +240,26 @@ class RuntimePersistence:
                             str(target_path),
                         ),
                     )
+                leftover, leftover_error = self._read_json_nonmutating(source_path)
+                if leftover_error is not None or leftover is None:
+                    return None, None, leftover_error
+                leftover_fp = str(leftover.get("bank_fingerprint") or "").strip()
+                if leftover_fp != revision.source_bank_content_fingerprint:
+                    return (
+                        None,
+                        None,
+                        ContentRevisionMigrationError(
+                            MigrationFailureReason.TARGET_PROGRESS_CONFLICT,
+                            str(source_path),
+                        ),
+                    )
                 archive = None
                 if source_path.exists() and not same_path:
                     try:
-                        archive = self._archive_source_bytes(source_path, expected.migration_id, "progress")
+                        archive = self._archive_source_bytes(source_path, verified.migration_id, "progress")
                         source_path.unlink()
                     except OSError as exc:
-                        return expected.payload, archive, exc
+                        return existing, archive, exc
                 return existing, archive, None
         try:
             result = migrate_progress_payload(transform_source, target_questions, revision, migrated_at)

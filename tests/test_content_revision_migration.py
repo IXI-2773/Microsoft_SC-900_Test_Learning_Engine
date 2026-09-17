@@ -180,6 +180,36 @@ class ContentRevisionProgressMigrationTests(unittest.TestCase):
             migrate_progress_payload(first.payload, self.target_questions, self.revision, self.migrated_at)
         self.assertEqual(MigrationFailureReason.TARGET_PROGRESS_CONFLICT, ctx.exception.reason)
 
+    def test_malformed_parseable_payload_shapes_fail_closed(self) -> None:
+        cases = {
+            "history_mapping": ("history", {"0": self.source_payload["history"][0]}),
+            "questions_list": ("questions", [self.source_payload["questions"]]),
+            "fingerprints_list": ("question_content_fingerprints", ["keep"]),
+            "quarantine_list": ("quarantined_questions", ["gone"]),
+            "lineage_mapping": ("content_revision_lineage", {"change": {}}),
+        }
+        for label, (field, value) in cases.items():
+            with self.subTest(label=label):
+                payload = copy.deepcopy(self.source_payload)
+                payload[field] = value
+                with self.assertRaises(ContentRevisionMigrationError) as ctx:
+                    migrate_progress_payload(payload, self.target_questions, self.revision, self.migrated_at)
+                self.assertEqual(MigrationFailureReason.INVALID_PROGRESS_PAYLOAD, ctx.exception.reason)
+
+    def test_history_mapping_is_not_coerced_to_key_list(self) -> None:
+        payload = copy.deepcopy(self.source_payload)
+        payload["history"] = {"question_id": "change"}
+        with self.assertRaises(ContentRevisionMigrationError) as ctx:
+            migrate_progress_payload(payload, self.target_questions, self.revision, self.migrated_at)
+        self.assertEqual(MigrationFailureReason.INVALID_PROGRESS_PAYLOAD, ctx.exception.reason)
+
+    def test_target_fingerprint_alone_is_not_already_applied(self) -> None:
+        payload = copy.deepcopy(self.source_payload)
+        payload["bank_fingerprint"] = self.revision.target_bank_content_fingerprint
+        with self.assertRaises(ContentRevisionMigrationError) as ctx:
+            migrate_progress_payload(payload, self.target_questions, self.revision, self.migrated_at)
+        self.assertEqual(MigrationFailureReason.TARGET_PROGRESS_CONFLICT, ctx.exception.reason)
+
     def test_strict_same_fp_history_and_approved_old_to_new(self) -> None:
         event = self.source_payload["history"][0]
         self.assertTrue(history_event_matches_question(event, self.changed_source))

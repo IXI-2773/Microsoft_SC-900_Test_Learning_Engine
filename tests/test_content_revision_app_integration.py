@@ -207,6 +207,60 @@ class ContentRevisionPersistenceTests(unittest.TestCase):
         self.assertTrue(self.source_progress.exists())
         self.assertFalse(self.target_progress.exists())
 
+    def test_malformed_parseable_progress_source_bytes_unchanged(self) -> None:
+        broken = copy.deepcopy(self.progress_payload)
+        broken["history"] = {"0": broken["history"][0]}
+        self.source_progress.write_text(json.dumps(broken), encoding="utf-8")
+        original = self.source_progress.read_bytes()
+        payload, archive, error = self.persistence.migrate_progress_across_approved_revision(
+            self.source_progress,
+            self.target_progress,
+            self.target_questions,
+            self.revision,
+            "2026-09-17T00:00:00",
+        )
+        self.assertIsNone(payload)
+        self.assertIsNone(archive)
+        self.assertIsInstance(error, ContentRevisionMigrationError)
+        self.assertEqual(MigrationFailureReason.INVALID_PROGRESS_PAYLOAD, error.reason)
+        self.assertEqual(original, self.source_progress.read_bytes())
+        self.assertEqual(self.source_progress, Path(self.source_progress))
+        self.assertFalse(self.target_progress.exists())
+
+    def test_crash_retry_verified_target_does_not_require_matching_timestamp(self) -> None:
+        original_source = self.source_progress.read_bytes()
+        first_payload, first_archive, first_error = self.persistence.migrate_progress_across_approved_revision(
+            self.source_progress,
+            self.target_progress,
+            self.target_questions,
+            self.revision,
+            "2026-09-17T00:00:00",
+        )
+        self.assertIsNone(first_error)
+        self.assertIsNotNone(first_payload)
+        self.assertIsNotNone(first_archive)
+        self.assertFalse(self.source_progress.exists())
+        self.source_progress.write_bytes(original_source)
+        original_target = self.target_progress.read_bytes()
+        retry_payload, retry_archive, retry_error = self.persistence.migrate_progress_across_approved_revision(
+            self.source_progress,
+            self.target_progress,
+            self.target_questions,
+            self.revision,
+            "2026-09-18T12:00:00",
+        )
+        self.assertIsNone(retry_error)
+        self.assertIsNotNone(retry_payload)
+        self.assertFalse(self.source_progress.exists())
+        self.assertEqual(original_target, self.target_progress.read_bytes())
+        assert first_payload is not None and retry_payload is not None
+        self.assertEqual(first_payload["content_revision_lineage"], retry_payload["content_revision_lineage"])
+        self.assertEqual("2026-09-17T00:00:00", retry_payload["content_revision_lineage"][0]["migrated_at"])
+        self.assertEqual(1, len(retry_payload["content_revision_lineage"]))
+        self.assertIsNotNone(retry_archive)
+        assert retry_archive is not None
+        self.assertTrue(retry_archive.exists())
+
 
 class ContentRevisionSessionPersistenceTests(unittest.TestCase):
     def setUp(self) -> None:
@@ -439,6 +493,79 @@ class ContentRevisionAppIntegrationTests(unittest.TestCase):
         bound = self.engine._bind_content_revision_authority(result)
         self.assertIsNone(bound)
         self.assertIsNone(self.engine.content_revision_authority)
+        self.assertTrue(self.engine.progress_write_blocked)
+
+    def test_failed_registered_admission_does_not_invoke_load_progress_if_present(self) -> None:
+        fail = AdmissionResult(AdmissionStatus.FAIL, (RevisionFailureReason.REGISTRY_HASH_MISMATCH,), None)
+        target_progress = progress_file_path(self.user_data, self.target_bank)
+        target_progress.write_text(json.dumps(self._progress_payload(self.target_questions, "e" * 64)), encoding="utf-8")
+        original = target_progress.read_bytes()
+        self.engine.domain_combo = mock.MagicMock()
+        self.engine.topic_combo = mock.MagicMock()
+        self.engine.status_combo = mock.MagicMock()
+        self.engine.status_combo.__contains__.return_value = True
+        self.engine.domain_combo.__getitem__.return_value = ["All domains"]
+        self.engine.topic_combo.__getitem__.return_value = ["All topics"]
+        self.engine.status_combo.__getitem__.return_value = ["All questions"]
+        self.engine.domain_filter_var = mock.MagicMock()
+        self.engine.topic_filter_var = mock.MagicMock()
+        self.engine.status_filter_var = mock.MagicMock()
+        self.engine.session_source_var = mock.MagicMock()
+        self.engine.config = {}
+        self.engine.root = mock.MagicMock()
+        self.engine.normalize_status_filter = mock.Mock(return_value="All questions")
+        self.engine.normalize_session_source = mock.Mock(return_value="Full bank")
+        with (
+            mock.patch.object(self.app_module, "load_bank", return_value={"questions": self.target_questions}),
+            mock.patch.object(self.app_module, "resolve_registered_revision_for_target", return_value=fail),
+            mock.patch.object(self.engine, "load_progress_if_present") as load_progress,
+            mock.patch.object(self.engine, "_clone_questions", return_value=self.target_questions),
+            mock.patch.object(self.engine, "_reset_runtime_question_state"),
+            mock.patch.object(self.engine, "_rebuild_followup_candidate_index"),
+            mock.patch.object(self.engine, "clear_active_session"),
+            mock.patch.object(self.engine, "invalidate_learning_state"),
+            mock.patch.object(self.engine, "_progress_snapshot_payload", return_value={"questions": {}, "history": []}),
+        ):
+            self.engine.load_from_path(self.target_bank)
+        load_progress.assert_not_called()
+        self.assertIsNone(self.engine.content_revision_authority)
+        self.assertTrue(self.engine.progress_write_blocked)
+        self.assertEqual(original, target_progress.read_bytes())
+
+    def test_incomplete_target_fingerprint_is_verified_not_skipped(self) -> None:
+        target_progress = progress_file_path(self.user_data, self.target_bank)
+        payload = self._progress_payload(self.source_questions, self.revision.target_bank_content_fingerprint)
+        target_progress.write_text(json.dumps(payload), encoding="utf-8")
+        original = target_progress.read_bytes()
+        skipped = self.engine._migrate_progress_for_admitted_revision(self.revision)
+        self.assertTrue(skipped)
+        self.assertTrue(self.engine.progress_write_blocked)
+        self.assertEqual(original, target_progress.read_bytes())
+
+    def test_crash_retry_app_cleanup_at_different_timestamp(self) -> None:
+        source_progress = progress_file_path(self.user_data, self.source_bank)
+        target_progress = progress_file_path(self.user_data, self.target_bank)
+        source_progress.write_text(
+            json.dumps(self._progress_payload(self.source_questions, self.revision.source_bank_content_fingerprint)),
+            encoding="utf-8",
+        )
+        self.engine.content_revision_authority = self.revision
+        with mock.patch.object(self.app_module, "now_iso", return_value="2026-09-17T00:00:00"):
+            self.assertFalse(self.engine._migrate_progress_for_admitted_revision(self.revision))
+        original_source = json.dumps(
+            self._progress_payload(self.source_questions, self.revision.source_bank_content_fingerprint)
+        ).encode("utf-8")
+        source_progress.write_bytes(original_source)
+        target_before_retry = target_progress.read_bytes()
+        with mock.patch.object(self.app_module, "now_iso", return_value="2026-09-18T12:00:00"):
+            skipped = self.engine._migrate_progress_for_admitted_revision(self.revision)
+        self.assertFalse(skipped)
+        self.assertFalse(self.engine.progress_write_blocked)
+        self.assertFalse(source_progress.exists())
+        self.assertEqual(target_before_retry, target_progress.read_bytes())
+        loaded = json.loads(target_progress.read_text(encoding="utf-8"))
+        self.assertEqual(1, len(loaded["content_revision_lineage"]))
+        self.assertEqual("2026-09-17T00:00:00", loaded["content_revision_lineage"][0]["migrated_at"])
 
     def test_different_filenames_migrate_source_progress(self) -> None:
         source_progress = progress_file_path(self.user_data, self.source_bank)

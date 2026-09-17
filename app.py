@@ -41,8 +41,6 @@ from cert_config import QUESTION_BANK_FILENAME, USER_DATA_DIRNAME
 from config_store import DEFAULT_CONFIG, load_config, save_config
 from content_revision_authority import AdmissionResult, AdmissionStatus, AdmittedRevision
 from content_revision_migration import (
-    ContentRevisionMigrationError,
-    MigrationFailureReason,
     history_event_matches_approved_revision,
     history_events_for_question_revision_aware,
 )
@@ -2638,6 +2636,7 @@ class TestingEngineApp(
         if result is None:
             return None
         if result.status != AdmissionStatus.PASS or result.admitted is None:
+            self.progress_write_blocked = True
             logging.warning("Registered content revision was not admitted: %s", result.reasons)
             return None
         self.content_revision_authority = result.admitted
@@ -2660,40 +2659,9 @@ class TestingEngineApp(
             return False
         questions = list((self.data or {}).get("questions") or [])
         migrated_at = now_iso()
-        if target_exists:
-            existing, existing_error = self.persistence._read_json_nonmutating(target_progress)
-            if existing_error is not None or existing is None:
-                return self._fail_closed_content_revision_progress(
-                    existing_error or ValueError("unreadable target progress")
-                )
-            existing_fp = str(existing.get("bank_fingerprint") or "").strip()
-            if existing_fp == revision.target_bank_content_fingerprint:
-                return False
-            if existing_fp != revision.source_bank_content_fingerprint:
-                return self._fail_closed_content_revision_progress(
-                    ContentRevisionMigrationError(MigrationFailureReason.UNEXPECTED_BANK_FINGERPRINT, existing_fp)
-                )
-            if source_exists and source_progress.resolve() != target_progress.resolve():
-                source_payload, source_error = self.persistence._read_json_nonmutating(source_progress)
-                if source_error is None and source_payload is not None:
-                    if json.dumps(source_payload, sort_keys=True) != json.dumps(existing, sort_keys=True):
-                        return self._fail_closed_content_revision_progress(
-                            ContentRevisionMigrationError(
-                                MigrationFailureReason.TARGET_PROGRESS_CONFLICT, str(target_progress)
-                            )
-                        )
-            _payload, _archive, error = self.persistence.migrate_progress_across_approved_revision(
-                target_progress,
-                target_progress,
-                questions,
-                revision,
-                migrated_at,
-            )
-            if error is not None:
-                return self._fail_closed_content_revision_progress(error)
-            return False
+        migrate_from = source_progress if source_exists else target_progress
         _payload, _archive, error = self.persistence.migrate_progress_across_approved_revision(
-            source_progress,
+            migrate_from,
             target_progress,
             questions,
             revision,
@@ -2705,9 +2673,11 @@ class TestingEngineApp(
 
     def _apply_registered_content_revision(self, target_bank_path: Path) -> bool:
         result = resolve_registered_revision_for_target(Path(target_bank_path))
+        if result is None:
+            return False
         revision = self._bind_content_revision_authority(result)
         if revision is None:
-            return False
+            return True
         return self._migrate_progress_for_admitted_revision(revision)
 
     def load_from_path(self, path: Path):

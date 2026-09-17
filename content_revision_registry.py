@@ -7,6 +7,7 @@ from typing import Any
 from content_revision_authority import (
     AdmissionResult,
     AdmissionStatus,
+    ContentRevisionManifestError,
     RevisionFailureReason,
     admit_content_revision,
     canonical_manifest_sha256,
@@ -48,6 +49,10 @@ def resolve_registered_revision_for_target(
             return _fail(RevisionFailureReason.REGISTRY_HASH_MISMATCH)
         try:
             payload = parse_json_duplicate_safe(raw)
+        except ContentRevisionManifestError as exc:
+            if exc.reason == RevisionFailureReason.DUPLICATE_JSON_KEY:
+                return _fail(RevisionFailureReason.DUPLICATE_JSON_KEY)
+            return _fail(RevisionFailureReason.REGISTRY_HASH_MISMATCH)
         except Exception:
             return _fail(RevisionFailureReason.REGISTRY_HASH_MISMATCH)
         if canonical_manifest_sha256(payload) != expected_hash:
