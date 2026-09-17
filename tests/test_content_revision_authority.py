@@ -11,14 +11,27 @@ from typing import Any
 
 from content_revision_authority import (
     AdmissionStatus,
+    AdmittedRevision,
     ContentRevisionManifestError,
+    RevisionEdge,
     RevisionFailureReason,
     admit_content_revision,
+    approved_lineage,
     canonical_manifest_sha256,
     parse_json_duplicate_safe,
     sha256_file,
 )
-from question_identity import bank_content_fingerprint, question_content_fingerprint
+from content_revision_registry import (
+    AUTHORIZED_CONTENT_REVISION_MANIFESTS,
+    resolve_registered_revision_for_target,
+)
+from question_bank import load_bank
+from question_identity import (
+    bank_content_fingerprint,
+    canonical_question_id,
+    question_content_fingerprint,
+    registered_progress_identity_bank,
+)
 
 QUESTION_COUNT = 454
 MS_LEARN_REF = "https://learn.microsoft.com/en-us/security/zero-trust/"
@@ -711,6 +724,144 @@ class ContentRevisionAdmissionTests(unittest.TestCase):
             encoding="utf-8",
         )
         self.assertEqual(RevisionFailureReason.DUPLICATE_JSON_KEY, self._fail_reason())
+
+
+def _lineage_edge(question_id: str, from_fp: str, to_fp: str) -> RevisionEdge:
+    return RevisionEdge(question_id, from_fp, to_fp, "review.json", "a" * 64)
+
+
+def _lineage_revision(*edges: RevisionEdge) -> AdmittedRevision:
+    return AdmittedRevision("m" * 64, "source.json", "s" * 64, "sf" * 64, "target.json", "t" * 64, "tf" * 64, edges)
+
+
+class ContentRevisionRegistryAndLineageTests(unittest.TestCase):
+    def test_production_registry_is_empty(self) -> None:
+        self.assertEqual({}, AUTHORIZED_CONTENT_REVISION_MANIFESTS)
+
+    def test_empty_registry_resolves_to_none(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / "target_bank.json"
+            target.write_text("{}", encoding="utf-8")
+            self.assertIsNone(resolve_registered_revision_for_target(target, registry={}))
+
+    def test_direct_and_chained_lineage(self) -> None:
+        qid = "sc900_syn_000"
+        v1, v2, v3 = "1" * 64, "2" * 64, "3" * 64
+        first = _lineage_edge(qid, v1, v2)
+        second = _lineage_edge(qid, v2, v3)
+        revision = _lineage_revision(first)
+        self.assertTrue(revision.permits_fingerprint_transition(qid, v1, v2))
+        self.assertFalse(revision.permits_fingerprint_transition(qid, v2, v1))
+        self.assertEqual((first,), approved_lineage([revision], qid, v1, v2))
+        self.assertIsNone(approved_lineage([revision], qid, v2, v1))
+        chained = approved_lineage([_lineage_revision(first), _lineage_revision(second)], qid, v1, v3)
+        self.assertEqual((first, second), chained)
+        self.assertIsNone(approved_lineage([_lineage_revision(first), _lineage_revision(_lineage_edge(qid, "4" * 64, v3))], qid, v1, v3))
+
+    def test_conflicting_and_cyclic_lineage(self) -> None:
+        qid = "sc900_syn_000"
+        v1, v2, v3 = "1" * 64, "2" * 64, "3" * 64
+        with self.assertRaises(ContentRevisionManifestError) as ctx:
+            approved_lineage(
+                [_lineage_revision(_lineage_edge(qid, v1, v2), _lineage_edge(qid, v1, v3))],
+                qid,
+                v1,
+                v3,
+            )
+        self.assertEqual(RevisionFailureReason.LINEAGE_CONFLICT, ctx.exception.reason)
+        with self.assertRaises(ContentRevisionManifestError) as ctx:
+            approved_lineage(
+                [_lineage_revision(_lineage_edge(qid, v1, v2), _lineage_edge(qid, v2, v1))],
+                qid,
+                v1,
+                v3,
+            )
+        self.assertEqual(RevisionFailureReason.LINEAGE_CONFLICT, ctx.exception.reason)
+
+    def test_registered_resolution_restores_target_bank(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            pkg = RevisionPackage(Path(tmp))
+            pkg.materialize()
+            evidence = Path(tmp) / "content_revision_evidence"
+            manifest_rel = "manifests/rev.json"
+            _write_json(evidence / manifest_rel, pkg.manifest)
+            registry = {manifest_rel: pkg.manifest["payload_sha256"]}
+            load_bank(pkg.target_path)
+            target_ids = [canonical_question_id(row) for row in registered_progress_identity_bank()]
+            result = resolve_registered_revision_for_target(
+                pkg.target_path,
+                evidence_root=evidence,
+                review_root=pkg.review_root,
+                registry=registry,
+            )
+            self.assertEqual(AdmissionStatus.PASS, result.status)
+            restored_ids = [canonical_question_id(row) for row in registered_progress_identity_bank()]
+            self.assertEqual(target_ids, restored_ids)
+            self.assertNotEqual(pkg.source_path.name, pkg.target_path.name)
+
+    def test_failed_source_resolution_restores_target_bank(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            pkg = RevisionPackage(Path(tmp))
+            pkg.materialize()
+            evidence = Path(tmp) / "content_revision_evidence"
+            manifest_rel = "manifests/rev.json"
+            _write_json(evidence / manifest_rel, pkg.manifest)
+            registry = {manifest_rel: pkg.manifest["payload_sha256"]}
+            load_bank(pkg.target_path)
+            target_ids = [canonical_question_id(row) for row in registered_progress_identity_bank()]
+            pkg.source_path.unlink()
+            result = resolve_registered_revision_for_target(
+                pkg.target_path,
+                evidence_root=evidence,
+                review_root=pkg.review_root,
+                registry=registry,
+            )
+            self.assertEqual(AdmissionStatus.FAIL, result.status)
+            self.assertEqual(RevisionFailureReason.SOURCE_BANK_FILE_HASH_MISMATCH, result.reasons[0])
+            restored_ids = [canonical_question_id(row) for row in registered_progress_identity_bank()]
+            self.assertEqual(target_ids, restored_ids)
+
+    def test_same_source_target_filename_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            pkg = RevisionPackage(Path(tmp))
+            pkg.materialize()
+            pkg.manifest["source_bank"]["filename"] = pkg.manifest["target_bank"]["filename"]
+            pkg.manifest["payload_sha256"] = canonical_manifest_sha256(pkg.manifest)
+            evidence = Path(tmp) / "content_revision_evidence"
+            manifest_rel = "manifests/rev.json"
+            _write_json(evidence / manifest_rel, pkg.manifest)
+            result = resolve_registered_revision_for_target(
+                pkg.target_path,
+                evidence_root=evidence,
+                review_root=pkg.review_root,
+                registry={manifest_rel: pkg.manifest["payload_sha256"]},
+            )
+            self.assertEqual(AdmissionStatus.FAIL, result.status)
+            self.assertEqual(RevisionFailureReason.SCHEMA_UNSUPPORTED, result.reasons[0])
+
+    def test_missing_registered_manifest_maps_to_registry_hash_mismatch(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / "target_bank.json"
+            target.write_text("{}", encoding="utf-8")
+            result = resolve_registered_revision_for_target(
+                target,
+                evidence_root=Path(tmp),
+                registry={"manifests/missing.json": "a" * 64},
+            )
+            self.assertEqual(AdmissionStatus.FAIL, result.status)
+            self.assertEqual(RevisionFailureReason.REGISTRY_HASH_MISMATCH, result.reasons[0])
+
+    def test_unsafe_registry_path_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / "target_bank.json"
+            target.write_text("{}", encoding="utf-8")
+            result = resolve_registered_revision_for_target(
+                target,
+                evidence_root=Path(tmp),
+                registry={"../escape.json": "a" * 64},
+            )
+            self.assertEqual(AdmissionStatus.FAIL, result.status)
+            self.assertEqual(RevisionFailureReason.SCHEMA_UNSUPPORTED, result.reasons[0])
 
 
 if __name__ == "__main__":

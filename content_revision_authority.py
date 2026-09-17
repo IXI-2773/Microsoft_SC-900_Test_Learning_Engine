@@ -85,6 +85,14 @@ class AdmittedRevision:
     target_bank_content_fingerprint: str
     edges: tuple[RevisionEdge, ...]
 
+    def permits_fingerprint_transition(self, question_id: str, from_fp: str, to_fp: str) -> bool:
+        return any(
+            edge.question_id == question_id
+            and edge.from_content_fingerprint == from_fp
+            and edge.to_content_fingerprint == to_fp
+            for edge in self.edges
+        )
+
 
 @dataclass(frozen=True, slots=True)
 class AdmissionResult:
@@ -604,3 +612,36 @@ def admit_content_revision(
         edges=tuple(admitted_edges),
     )
     return AdmissionResult(AdmissionStatus.PASS, (), admitted)
+
+
+def approved_lineage(
+    revisions: Sequence[AdmittedRevision],
+    question_id: str,
+    from_fingerprint: str,
+    to_fingerprint: str,
+) -> tuple[RevisionEdge, ...] | None:
+    if from_fingerprint == to_fingerprint:
+        return ()
+    index: dict[str, list[RevisionEdge]] = {}
+    for revision in revisions:
+        for edge in revision.edges:
+            if edge.question_id != question_id:
+                continue
+            index.setdefault(edge.from_content_fingerprint, []).append(edge)
+    chain: list[RevisionEdge] = []
+    visited = {from_fingerprint}
+    current = from_fingerprint
+    while current != to_fingerprint:
+        options = index.get(current, [])
+        if not options:
+            return None
+        destinations = {edge.to_content_fingerprint for edge in options}
+        if len(destinations) != 1:
+            raise ContentRevisionManifestError(RevisionFailureReason.LINEAGE_CONFLICT, question_id)
+        edge = options[0]
+        if edge.to_content_fingerprint in visited:
+            raise ContentRevisionManifestError(RevisionFailureReason.LINEAGE_CONFLICT, question_id)
+        visited.add(edge.to_content_fingerprint)
+        chain.append(edge)
+        current = edge.to_content_fingerprint
+    return tuple(chain)
