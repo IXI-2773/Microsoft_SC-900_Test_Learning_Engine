@@ -146,7 +146,10 @@ class QuestionFlowMixin:
                 if ax_root <= pointer_root_x <= ax_root + aw and ay_root <= pointer_root_y <= ay_root + ah:
                     pointer_x = pointer_root_x - host.winfo_rootx()
                     pointer_y = pointer_root_y - host.winfo_rooty()
+                    centered_x = pointer_x - int(pop_w / 2)
                     pointer_candidates = [
+                        (centered_x, pointer_y + 12),
+                        (centered_x, pointer_y - pop_h - 12),
                         (pointer_x + 12, pointer_y + 12),
                         (pointer_x - pop_w - 12, pointer_y + 12),
                         (pointer_x + 12, pointer_y - pop_h - 12),

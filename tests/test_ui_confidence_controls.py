@@ -126,8 +126,8 @@ class ConfidenceControlRegressionTests(unittest.TestCase):
 
         x, y = app._position_feedback_popover(prompt, answer_row)
 
-        self.assertGreaterEqual(x, 250)
-        self.assertLessEqual(x, 300)
+        pointer_x_in_host = app.root.pointer_x - app.content_frame.x
+        self.assertEqual(pointer_x_in_host, x + prompt.requested_width // 2)
         self.assertGreaterEqual(y, 410)
         self.assertLessEqual(y, 450)
 
