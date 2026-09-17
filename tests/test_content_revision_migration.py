@@ -12,20 +12,24 @@ from content_revision_migration import (
     history_event_matches_approved_revision,
     history_events_for_question_revision_aware,
     migrate_progress_payload,
+    migrate_session_payload,
 )
+from app_constants import MODE_PRACTICE
 from question_identity import (
     bank_content_fingerprint,
     canonical_question_history_map,
     history_event_matches_question,
     question_content_fingerprint,
 )
+from session_identity import canonical_session_signature, ordered_question_ids
+from session_store import build_session_snapshot
 
 
-def _question(qid: str, *, choice_b: str = "beta") -> dict:
+def _question(qid: str, *, choice_b: str = "beta", number: int = 1) -> dict:
     return {
         "id": qid,
         "question_id": qid,
-        "question_number": 1,
+        "question_number": number,
         "prompt": f"Prompt {qid}",
         "choices": {"A": "alpha", "B": choice_b, "C": "gamma", "D": "delta"},
         "correct": ["A"],
@@ -226,6 +230,163 @@ class ContentRevisionProgressMigrationTests(unittest.TestCase):
             [rev12, rev23],
         )
         self.assertEqual(["v1 text"], attached[0]["selected_texts"])
+
+
+def _answer(*, selected=None, pending=None, answered=False, flagged=False):
+    return {
+        "selected": list(selected or []),
+        "pending": list(pending if pending is not None else selected or []),
+        "answered": answered,
+        "flagged": flagged,
+        "suspended": False,
+        "last_confidence": "Sure" if answered else "",
+        "last_miss_reason": "",
+        "recall_ready": False,
+        "session_tag": "",
+        "smart_primary_role": "",
+        "smart_selection_reasons": [],
+        "smart_utility": 0.0,
+        "smart_utility_breakdown": {},
+        "smart_policy_version": "",
+        "smart_policy_id": "",
+        "smart_concept_key": "",
+        "smart_root_cause": "",
+        "smart_root_cause_confidence": 0.0,
+        "smart_supporting_concepts": [],
+        "smart_graph_version": "",
+        "smart_information_value": 0.0,
+        "smart_information_breakdown": {},
+        "smart_question_quality_status": "",
+        "smart_question_quality_confidence": 0.0,
+        "smart_graph_bottleneck": 0.0,
+        "repair_stage": "",
+        "repair_concept_key": "",
+        "legacy_repair_concept_key": "",
+        "prediction_id": "",
+        "prediction_snapshot": {},
+    }
+
+
+class ContentRevisionSessionMigrationTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.keep_source = _question("keep", number=1)
+        self.keep_target = copy.deepcopy(self.keep_source)
+        self.change_source = _question("change", choice_b="beta", number=2)
+        self.change_target = _question("change", choice_b="beta rebalanced", number=2)
+        self.source_questions = [self.keep_source, self.change_source]
+        self.target_questions = [self.keep_target, self.change_target]
+        self.edge = RevisionEdge(
+            "change",
+            question_content_fingerprint(self.change_source),
+            question_content_fingerprint(self.change_target),
+            "review.json",
+            "d" * 64,
+        )
+        self.revision = _revision(self.source_questions, self.target_questions, (self.edge,))
+        history_event = {
+            "question_id": "change",
+            "question_number": 2,
+            "question_content_fingerprint": question_content_fingerprint(self.change_source),
+            "selected_texts": ["beta"],
+            "correct_texts": ["alpha"],
+            "correct": False,
+        }
+        self.snapshot = build_session_snapshot(
+            app_version="test",
+            bank_file="source_bank.json",
+            mode=MODE_PRACTICE,
+            builder_context={
+                "mode": MODE_PRACTICE,
+                "count": "2",
+                "source_label": "Full bank",
+                "session_source": "",
+                "randomize": False,
+                "domain_filter": "All domains",
+                "topic_filter": "All topics",
+                "status_filter": "All questions",
+            },
+            source_label="Full bank",
+            question_numbers=[1, 2],
+            restore_question_numbers=[1, 2],
+            bank_fingerprint=self.revision.source_bank_content_fingerprint,
+            question_ids=["keep", "change"],
+            restore_question_ids=["keep", "change"],
+            session_base_question_count=2,
+            session_question_limit=2,
+            current_index=1,
+            elapsed_seconds=42,
+            exam_reveal=True,
+            checkpoints_saved=["cp1"],
+            session_rewards=["r1"],
+            unlocked_rewards=["u1"],
+            session_answer_history=[history_event],
+            current_quests=[],
+            quest_completion_keys=["q1"],
+            session_boss_markers=[],
+            session_stealth_markers=[],
+            session_xp_gained=7,
+            answers=[_answer(selected=["A"], answered=True, flagged=True), _answer(selected=["B"], pending=["B"], answered=False)],
+        )
+
+    def _migrate(self, snapshot=None, revision=None, target_questions=None):
+        return migrate_session_payload(
+            snapshot if snapshot is not None else self.snapshot,
+            target_questions if target_questions is not None else self.target_questions,
+            revision if revision is not None else self.revision,
+            "target_bank.json",
+            source_questions=self.source_questions,
+        )
+
+    def test_completed_changed_and_unanswered_pending_reset(self) -> None:
+        result = self._migrate()
+        self.assertEqual(MigrationStatus.APPLIED, result.status)
+        answers = {row["question_id"]: row for row in result.payload["answers"]}
+        self.assertEqual(["A"], answers["keep"]["selected"])
+        self.assertTrue(answers["keep"]["answered"])
+        self.assertTrue(answers["keep"]["flagged"])
+        self.assertEqual([], answers["change"]["selected"])
+        self.assertEqual([], answers["change"]["pending"])
+        self.assertFalse(answers["change"]["answered"])
+        self.assertEqual(self.snapshot["session_answer_history"], result.payload["session_answer_history"])
+        self.assertEqual(1, result.payload["current_index"])
+        self.assertEqual(42, result.payload["elapsed_seconds"])
+        self.assertEqual(["cp1"], result.payload["checkpoints_saved"])
+        self.assertEqual("target_bank.json", result.payload["bank_file"])
+        self.assertEqual(self.revision.target_bank_content_fingerprint, result.payload["bank_fingerprint"])
+        self.assertEqual(
+            canonical_session_signature(MODE_PRACTICE, self.revision.target_bank_content_fingerprint, ["keep", "change"]),
+            result.payload["session_signature"],
+        )
+        self.assertNotEqual(self.snapshot["session_signature"], result.payload["session_signature"])
+
+    def test_source_bank_fingerprint_mismatch(self) -> None:
+        self.snapshot["bank_fingerprint"] = "f" * 64
+        with self.assertRaises(ContentRevisionMigrationError) as ctx:
+            self._migrate()
+        self.assertEqual(MigrationFailureReason.SOURCE_BANK_MISMATCH, ctx.exception.reason)
+
+    def test_invalid_source_signatures(self) -> None:
+        self.snapshot["session_signature"] = "deadbeef"
+        with self.assertRaises(ContentRevisionMigrationError) as ctx:
+            self._migrate()
+        self.assertEqual(MigrationFailureReason.INVALID_SOURCE_SESSION, ctx.exception.reason)
+
+    def test_unknown_target_question(self) -> None:
+        with self.assertRaises(ContentRevisionMigrationError) as ctx:
+            self._migrate(target_questions=[self.change_target])
+        self.assertEqual(MigrationFailureReason.TARGET_QUESTION_MISSING, ctx.exception.reason)
+
+    def test_changed_target_fingerprint_mismatch(self) -> None:
+        wrong_target = _question("change", choice_b="other wording", number=2)
+        with self.assertRaises(ContentRevisionMigrationError) as ctx:
+            self._migrate(target_questions=[self.keep_target, wrong_target])
+        self.assertEqual(MigrationFailureReason.UNAUTHORIZED_TRANSITION, ctx.exception.reason)
+
+    def test_changed_question_missing_edge(self) -> None:
+        empty = _revision(self.source_questions, self.target_questions, ())
+        with self.assertRaises(ContentRevisionMigrationError) as ctx:
+            self._migrate(revision=empty)
+        self.assertEqual(MigrationFailureReason.CHANGED_QUESTION_MISSING_EDGE, ctx.exception.reason)
 
 
 if __name__ == "__main__":

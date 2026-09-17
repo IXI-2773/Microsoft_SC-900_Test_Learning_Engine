@@ -6,6 +6,7 @@ import json
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from enum import StrEnum
+from pathlib import Path
 from typing import Any
 
 from content_revision_authority import AdmittedRevision, RevisionFailureReason, approved_lineage
@@ -32,6 +33,8 @@ class MigrationFailureReason(StrEnum):
     INVALID_PROGRESS_PAYLOAD = "INVALID_PROGRESS_PAYLOAD"
     LINEAGE_INCOMPLETE = "LINEAGE_INCOMPLETE"
     LINEAGE_CONFLICT = "LINEAGE_CONFLICT"
+    INVALID_SOURCE_SESSION = "INVALID_SOURCE_SESSION"
+    CHANGED_QUESTION_MISSING_EDGE = "CHANGED_QUESTION_MISSING_EDGE"
 
 
 class ContentRevisionMigrationError(ValueError):
@@ -257,4 +260,87 @@ def migrate_progress_payload(
         migrated["quarantined_questions"] = copy.deepcopy(payload.get("quarantined_questions"))
     migrated["content_revision_lineage"] = copy.deepcopy(list(existing_lineage)) + new_lineage
     return PayloadMigrationResult(migrated, True, MigrationStatus.APPLIED, migration_id)
+
+
+def migrate_session_payload(
+    saved: Mapping[str, Any],
+    target_questions: Sequence[Mapping[str, Any]],
+    revision: AdmittedRevision,
+    target_bank_file: str | Path,
+    *,
+    source_questions: Sequence[Mapping[str, Any]] | None = None,
+) -> PayloadMigrationResult:
+    from session_identity import canonical_session_signature, ordered_question_ids
+    from session_store import migrate_session_snapshot
+
+    if not isinstance(saved, Mapping):
+        raise ContentRevisionMigrationError(MigrationFailureReason.INVALID_SOURCE_SESSION)
+    saved_fp = str(saved.get("bank_fingerprint") or "").strip()
+    if saved_fp != revision.source_bank_content_fingerprint:
+        raise ContentRevisionMigrationError(MigrationFailureReason.SOURCE_BANK_MISMATCH, saved_fp)
+    mode = str(saved.get("mode") or "")
+    question_numbers = list(saved.get("question_numbers") or [])
+    try:
+        validated = migrate_session_snapshot(
+            saved,
+            mode,
+            question_numbers,
+            bank_fingerprint=revision.source_bank_content_fingerprint,
+            question_ids=list(saved.get("question_ids") or []),
+            restore_question_ids=list(saved.get("restore_question_ids") or []),
+        )
+    except ValueError as exc:
+        raise ContentRevisionMigrationError(MigrationFailureReason.INVALID_SOURCE_SESSION, str(exc)) from exc
+    target_index = {canonical_question_id(question): question for question in target_questions}
+    target_fps = {qid: question_content_fingerprint(question) for qid, question in target_index.items()}
+    source_index = (
+        {canonical_question_id(question): question for question in source_questions} if source_questions is not None else {}
+    )
+    edges = {edge.question_id: edge for edge in revision.edges}
+    referenced_ids = list(validated.get("question_ids") or []) + list(validated.get("restore_question_ids") or [])
+    for question_id in referenced_ids:
+        if question_id not in target_index:
+            raise ContentRevisionMigrationError(MigrationFailureReason.TARGET_QUESTION_MISSING, question_id)
+        target_fp = target_fps[question_id]
+        edge = edges.get(question_id)
+        source_fp = ""
+        if question_id in source_index:
+            source_fp = question_content_fingerprint(source_index[question_id])
+        if source_fp and source_fp != target_fp and edge is None:
+            raise ContentRevisionMigrationError(MigrationFailureReason.CHANGED_QUESTION_MISSING_EDGE, question_id)
+        if edge is not None and target_fp != edge.to_content_fingerprint:
+            raise ContentRevisionMigrationError(MigrationFailureReason.UNAUTHORIZED_TRANSITION, question_id)
+    migrated = copy.deepcopy(dict(validated))
+    answers = []
+    for row in migrated.get("answers") or []:
+        updated = copy.deepcopy(dict(row))
+        question_id = str(updated.get("question_id") or "")
+        if question_id in edges and not updated.get("answered"):
+            if updated.get("selected") or updated.get("pending"):
+                updated["selected"] = []
+                updated["pending"] = []
+        answers.append(updated)
+    migrated["answers"] = answers
+    migrated["session_answer_history"] = copy.deepcopy(list(validated.get("session_answer_history") or []))
+    migrated["bank_file"] = str(target_bank_file)
+    migrated["bank_fingerprint"] = revision.target_bank_content_fingerprint
+    migrated["session_signature"] = canonical_session_signature(
+        mode, revision.target_bank_content_fingerprint, list(migrated.get("question_ids") or [])
+    )
+    migrated["restore_signature"] = canonical_session_signature(
+        mode, revision.target_bank_content_fingerprint, list(migrated.get("restore_question_ids") or [])
+    )
+    try:
+        target_validated = migrate_session_snapshot(
+            migrated,
+            mode,
+            list(migrated.get("question_numbers") or []),
+            bank_fingerprint=revision.target_bank_content_fingerprint,
+            question_ids=list(migrated.get("question_ids") or []),
+            restore_question_ids=list(migrated.get("restore_question_ids") or []),
+            available_question_ids=ordered_question_ids(target_questions),
+        )
+    except ValueError as exc:
+        raise ContentRevisionMigrationError(MigrationFailureReason.INVALID_SOURCE_SESSION, str(exc)) from exc
+    return PayloadMigrationResult(dict(target_validated), True, MigrationStatus.APPLIED, derive_migration_id(revision))
 
