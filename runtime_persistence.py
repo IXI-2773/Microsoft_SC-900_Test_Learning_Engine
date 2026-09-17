@@ -207,15 +207,23 @@ class RuntimePersistence:
                 revision.source_bank_content_fingerprint,
                 revision.target_bank_content_fingerprint,
             }:
-                return None, None, ContentRevisionMigrationError(
-                    MigrationFailureReason.UNEXPECTED_BANK_FINGERPRINT,
-                    existing_fp,
+                return (
+                    None,
+                    None,
+                    ContentRevisionMigrationError(
+                        MigrationFailureReason.UNEXPECTED_BANK_FINGERPRINT,
+                        existing_fp,
+                    ),
                 )
             if existing_fp == revision.source_bank_content_fingerprint:
                 if json.dumps(existing, sort_keys=True) != json.dumps(payload, sort_keys=True):
-                    return None, None, ContentRevisionMigrationError(
-                        MigrationFailureReason.TARGET_PROGRESS_CONFLICT,
-                        str(target_path),
+                    return (
+                        None,
+                        None,
+                        ContentRevisionMigrationError(
+                            MigrationFailureReason.TARGET_PROGRESS_CONFLICT,
+                            str(target_path),
+                        ),
                     )
                 transform_source = existing
             else:
@@ -224,9 +232,13 @@ class RuntimePersistence:
                 except ContentRevisionMigrationError as exc:
                     return None, None, exc
                 if json.dumps(existing, sort_keys=True) != json.dumps(expected.payload, sort_keys=True):
-                    return None, None, ContentRevisionMigrationError(
-                        MigrationFailureReason.TARGET_PROGRESS_CONFLICT,
-                        str(target_path),
+                    return (
+                        None,
+                        None,
+                        ContentRevisionMigrationError(
+                            MigrationFailureReason.TARGET_PROGRESS_CONFLICT,
+                            str(target_path),
+                        ),
                     )
                 archive = None
                 if source_path.exists() and not same_path:
@@ -262,9 +274,13 @@ class RuntimePersistence:
         except ContentRevisionMigrationError as exc:
             return None, archive, exc
         if verified.status != MigrationStatus.MIGRATION_ALREADY_APPLIED:
-            return None, archive, ContentRevisionMigrationError(
-                MigrationFailureReason.TARGET_PROGRESS_CONFLICT,
-                "target verification failed",
+            return (
+                None,
+                archive,
+                ContentRevisionMigrationError(
+                    MigrationFailureReason.TARGET_PROGRESS_CONFLICT,
+                    "target verification failed",
+                ),
             )
         if not same_path and source_path.exists():
             try:
@@ -305,9 +321,13 @@ class RuntimePersistence:
             if existing_error is not None or existing is None:
                 return None, None, existing_error
             if json.dumps(existing, sort_keys=True) != json.dumps(expected.payload, sort_keys=True):
-                return None, None, ContentRevisionMigrationError(
-                    MigrationFailureReason.TARGET_PROGRESS_CONFLICT,
-                    str(target_path),
+                return (
+                    None,
+                    None,
+                    ContentRevisionMigrationError(
+                        MigrationFailureReason.TARGET_PROGRESS_CONFLICT,
+                        str(target_path),
+                    ),
                 )
             archive = None
             try:
@@ -328,9 +348,13 @@ class RuntimePersistence:
         if reread_error is not None or reread is None:
             return None, archive, reread_error
         if json.dumps(reread, sort_keys=True) != json.dumps(expected.payload, sort_keys=True):
-            return None, archive, ContentRevisionMigrationError(
-                MigrationFailureReason.TARGET_PROGRESS_CONFLICT,
-                "session target verification failed",
+            return (
+                None,
+                archive,
+                ContentRevisionMigrationError(
+                    MigrationFailureReason.TARGET_PROGRESS_CONFLICT,
+                    "session target verification failed",
+                ),
             )
         if not same_path and source_path.exists():
             try:

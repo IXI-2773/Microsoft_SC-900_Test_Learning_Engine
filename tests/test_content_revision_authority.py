@@ -144,7 +144,9 @@ def _review_payload(source: Mapping[str, Any], target: Mapping[str, Any]) -> dic
     }
 
 
-def _edge_payload(source: Mapping[str, Any], target: Mapping[str, Any], review_name: str, review_sha: str) -> dict[str, Any]:
+def _edge_payload(
+    source: Mapping[str, Any], target: Mapping[str, Any], review_name: str, review_sha: str
+) -> dict[str, Any]:
     return {
         "question_id": source["id"],
         "from_content_fingerprint": question_content_fingerprint(source),
@@ -184,8 +186,6 @@ class RevisionPackage:
         review = _review_payload(self.source_questions[0], self.target_questions[0])
         review_path = self.review_root / self.review_name
         _write_json(review_path, review)
-        source_bank = _bank(self.source_questions)
-        target_bank = _bank(self.target_questions)
         self.manifest = {
             "schema_version": 1,
             "manifest_kind": "sc900_content_revision_equivalence",
@@ -422,7 +422,9 @@ class ContentRevisionAdmissionTests(unittest.TestCase):
         review = parse_json_duplicate_safe((self.pkg.review_root / self.pkg.review_name).read_text(encoding="utf-8"))
         review["semantic_review"] = {"A": "EQUIVALENT"}
         _write_json(self.pkg.review_root / self.pkg.review_name, review)
-        self.pkg.manifest["edges"][0]["review_artifact_sha256"] = sha256_file(self.pkg.review_root / self.pkg.review_name)
+        self.pkg.manifest["edges"][0]["review_artifact_sha256"] = sha256_file(
+            self.pkg.review_root / self.pkg.review_name
+        )
         self._rehash()
         self.assertEqual(RevisionFailureReason.SCHEMA_UNSUPPORTED, self._fail_reason())
 
@@ -555,10 +557,14 @@ class ContentRevisionAdmissionTests(unittest.TestCase):
         self.pkg.rewrite_banks()
         self.pkg.manifest["target_bank"]["file_sha256"] = sha256_file(self.pkg.target_path)
         self.pkg.manifest["target_bank"]["content_fingerprint"] = bank_content_fingerprint(self.pkg.target_questions)
-        self.pkg.manifest["edges"][0]["to_content_fingerprint"] = question_content_fingerprint(self.pkg.target_questions[0])
+        self.pkg.manifest["edges"][0]["to_content_fingerprint"] = question_content_fingerprint(
+            self.pkg.target_questions[0]
+        )
         review = _review_payload(self.pkg.source_questions[0], self.pkg.target_questions[0])
         _write_json(self.pkg.review_root / self.pkg.review_name, review)
-        self.pkg.manifest["edges"][0]["review_artifact_sha256"] = sha256_file(self.pkg.review_root / self.pkg.review_name)
+        self.pkg.manifest["edges"][0]["review_artifact_sha256"] = sha256_file(
+            self.pkg.review_root / self.pkg.review_name
+        )
         self._rehash()
 
     def test_correct_key_change(self) -> None:
@@ -574,7 +580,9 @@ class ContentRevisionAdmissionTests(unittest.TestCase):
         self.pkg.rewrite_banks()
         self.pkg.manifest["target_bank"]["file_sha256"] = sha256_file(self.pkg.target_path)
         self.pkg.manifest["target_bank"]["content_fingerprint"] = bank_content_fingerprint(self.pkg.target_questions)
-        self.pkg.manifest["edges"][0]["to_content_fingerprint"] = question_content_fingerprint(self.pkg.target_questions[0])
+        self.pkg.manifest["edges"][0]["to_content_fingerprint"] = question_content_fingerprint(
+            self.pkg.target_questions[0]
+        )
         self._rehash()
         self.assertEqual(RevisionFailureReason.CHOICE_LABEL_SET_CHANGED, self._fail_reason())
 
@@ -665,7 +673,9 @@ class ContentRevisionAdmissionTests(unittest.TestCase):
         review = parse_json_duplicate_safe((self.pkg.review_root / self.pkg.review_name).read_text(encoding="utf-8"))
         review["correct_key_after"] = ["B"]
         _write_json(self.pkg.review_root / self.pkg.review_name, review)
-        self.pkg.manifest["edges"][0]["review_artifact_sha256"] = sha256_file(self.pkg.review_root / self.pkg.review_name)
+        self.pkg.manifest["edges"][0]["review_artifact_sha256"] = sha256_file(
+            self.pkg.review_root / self.pkg.review_name
+        )
         self._rehash()
         self.assertEqual(RevisionFailureReason.SEMANTIC_EQUIVALENCE_NOT_APPROVED, self._fail_reason())
 
@@ -756,7 +766,11 @@ class ContentRevisionRegistryAndLineageTests(unittest.TestCase):
         self.assertIsNone(approved_lineage([revision], qid, v2, v1))
         chained = approved_lineage([_lineage_revision(first), _lineage_revision(second)], qid, v1, v3)
         self.assertEqual((first, second), chained)
-        self.assertIsNone(approved_lineage([_lineage_revision(first), _lineage_revision(_lineage_edge(qid, "4" * 64, v3))], qid, v1, v3))
+        self.assertIsNone(
+            approved_lineage(
+                [_lineage_revision(first), _lineage_revision(_lineage_edge(qid, "4" * 64, v3))], qid, v1, v3
+            )
+        )
 
     def test_conflicting_and_cyclic_lineage(self) -> None:
         qid = "sc900_syn_000"
@@ -862,6 +876,29 @@ class ContentRevisionRegistryAndLineageTests(unittest.TestCase):
             )
             self.assertEqual(AdmissionStatus.FAIL, result.status)
             self.assertEqual(RevisionFailureReason.SCHEMA_UNSUPPORTED, result.reasons[0])
+
+
+class ContentRevisionQualityGateTests(unittest.TestCase):
+    MODULES = (
+        "content_revision_authority",
+        "content_revision_migration",
+        "content_revision_registry",
+    )
+
+    def test_quality_gates_include_content_revision_modules(self) -> None:
+        import tomllib
+
+        from tools.run_quality_checks import QUALITY_TARGETS
+
+        pyproject = tomllib.loads(Path("pyproject.toml").read_text(encoding="utf-8"))
+        first_party = set(pyproject["tool"]["ruff"]["lint"]["isort"]["known-first-party"])
+        mypy_files = set(pyproject["tool"]["mypy"]["files"])
+        quality = set(QUALITY_TARGETS)
+        for module in self.MODULES:
+            with self.subTest(module=module):
+                self.assertIn(module, first_party)
+                self.assertIn(f"{module}.py", quality)
+                self.assertIn(f"{module}.py", mypy_files)
 
 
 if __name__ == "__main__":

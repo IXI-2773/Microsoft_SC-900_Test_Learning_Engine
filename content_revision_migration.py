@@ -64,12 +64,16 @@ def derive_migration_id(revision: AdmittedRevision) -> str:
     return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
 
 
-def _as_revisions(revision_or_sequence: AdmittedRevision | Sequence[AdmittedRevision] | None) -> tuple[AdmittedRevision, ...]:
+def _as_revisions(
+    revision_or_sequence: AdmittedRevision | Sequence[AdmittedRevision] | None,
+) -> tuple[AdmittedRevision, ...]:
     if revision_or_sequence is None:
         return ()
     if isinstance(revision_or_sequence, AdmittedRevision):
         return (revision_or_sequence,)
-    if isinstance(revision_or_sequence, Sequence) and all(isinstance(item, AdmittedRevision) for item in revision_or_sequence):
+    if isinstance(revision_or_sequence, Sequence) and all(
+        isinstance(item, AdmittedRevision) for item in revision_or_sequence
+    ):
         return tuple(revision_or_sequence)
     return ()
 
@@ -115,7 +119,9 @@ def history_events_for_question_revision_aware(
     ]
 
 
-def _lineage_row(question_id: str, from_fp: str, to_fp: str, revision: AdmittedRevision, migrated_at: str, migration_id: str) -> dict[str, str]:
+def _lineage_row(
+    question_id: str, from_fp: str, to_fp: str, revision: AdmittedRevision, migrated_at: str, migration_id: str
+) -> dict[str, str]:
     return {
         "question_id": question_id,
         "from_fingerprint": from_fp,
@@ -200,7 +206,9 @@ def _verify_target_progress(
         )
         if key not in actual_keys:
             raise ContentRevisionMigrationError(MigrationFailureReason.TARGET_PROGRESS_CONFLICT, row["question_id"])
-    return PayloadMigrationResult(copy.deepcopy(dict(payload)), False, MigrationStatus.MIGRATION_ALREADY_APPLIED, migration_id)
+    return PayloadMigrationResult(
+        copy.deepcopy(dict(payload)), False, MigrationStatus.MIGRATION_ALREADY_APPLIED, migration_id
+    )
 
 
 def migrate_progress_payload(
@@ -247,10 +255,16 @@ def migrate_progress_payload(
             raise ContentRevisionMigrationError(MigrationFailureReason.SOURCE_PROGRESS_FINGERPRINT_MISMATCH, qid)
         if stored_fp != edge.from_content_fingerprint:
             raise ContentRevisionMigrationError(MigrationFailureReason.SOURCE_PROGRESS_FINGERPRINT_MISMATCH, qid)
-        if target_fp != edge.to_content_fingerprint or not revision.permits_fingerprint_transition(qid, stored_fp, target_fp):
+        if target_fp != edge.to_content_fingerprint or not revision.permits_fingerprint_transition(
+            qid, stored_fp, target_fp
+        ):
             raise ContentRevisionMigrationError(MigrationFailureReason.UNAUTHORIZED_TRANSITION, qid)
         new_fps[qid] = edge.to_content_fingerprint
-        new_lineage.append(_lineage_row(qid, edge.from_content_fingerprint, edge.to_content_fingerprint, revision, migrated_at, migration_id))
+        new_lineage.append(
+            _lineage_row(
+                qid, edge.from_content_fingerprint, edge.to_content_fingerprint, revision, migrated_at, migration_id
+            )
+        )
     migrated = copy.deepcopy(dict(payload))
     migrated["questions"] = copy.deepcopy(dict(records))
     migrated["question_content_fingerprints"] = new_fps
@@ -294,7 +308,9 @@ def migrate_session_payload(
     target_index = {canonical_question_id(question): question for question in target_questions}
     target_fps = {qid: question_content_fingerprint(question) for qid, question in target_index.items()}
     source_index = (
-        {canonical_question_id(question): question for question in source_questions} if source_questions is not None else {}
+        {canonical_question_id(question): question for question in source_questions}
+        if source_questions is not None
+        else {}
     )
     edges = {edge.question_id: edge for edge in revision.edges}
     referenced_ids = list(validated.get("question_ids") or []) + list(validated.get("restore_question_ids") or [])
@@ -310,7 +326,7 @@ def migrate_session_payload(
             raise ContentRevisionMigrationError(MigrationFailureReason.CHANGED_QUESTION_MISSING_EDGE, question_id)
         if edge is not None and target_fp != edge.to_content_fingerprint:
             raise ContentRevisionMigrationError(MigrationFailureReason.UNAUTHORIZED_TRANSITION, question_id)
-    migrated = copy.deepcopy(dict(validated))
+    migrated: dict[str, Any] = copy.deepcopy(dict(validated))
     answers = []
     for row in migrated.get("answers") or []:
         updated = copy.deepcopy(dict(row))
@@ -343,4 +359,3 @@ def migrate_session_payload(
     except ValueError as exc:
         raise ContentRevisionMigrationError(MigrationFailureReason.INVALID_SOURCE_SESSION, str(exc)) from exc
     return PayloadMigrationResult(dict(target_validated), True, MigrationStatus.APPLIED, derive_migration_id(revision))
-

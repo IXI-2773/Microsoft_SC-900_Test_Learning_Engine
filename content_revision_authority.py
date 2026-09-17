@@ -361,7 +361,9 @@ def contained_relative_path(path_value: str, root: Path) -> bool:
     return True
 
 
-def _read_authority_object(path: Path, missing_reason: RevisionFailureReason) -> tuple[dict[str, Any] | None, AdmissionResult | None]:
+def _read_authority_object(
+    path: Path, missing_reason: RevisionFailureReason
+) -> tuple[dict[str, Any] | None, AdmissionResult | None]:
     try:
         raw = Path(path).read_text(encoding="utf-8")
     except OSError:
@@ -428,7 +430,12 @@ def _pair_invariant_reason(source: Mapping[str, Any], target: Mapping[str, Any])
         return RevisionFailureReason.CORRECT_KEY_CHANGED
     source_labels = _choice_labels(source)
     target_labels = _choice_labels(target)
-    if source_labels is None or target_labels is None or source_labels != target_labels or source_labels != set(CHOICE_LABELS):
+    if (
+        source_labels is None
+        or target_labels is None
+        or source_labels != target_labels
+        or source_labels != set(CHOICE_LABELS)
+    ):
         return RevisionFailureReason.CHOICE_LABEL_SET_CHANGED
     for field, reason in _SPECIFIC_QUESTION_REASONS.items():
         if _canonical_json(source.get(field)) != _canonical_json(target.get(field)):
@@ -477,10 +484,14 @@ def admit_content_revision(
     for edge in edges:
         if not contained_relative_path(str(edge["review_artifact"]), review_root):
             return _fail(RevisionFailureReason.SCHEMA_UNSUPPORTED)
-    source_bank, source_error = _read_authority_object(source_bank_path, RevisionFailureReason.SOURCE_BANK_FILE_HASH_MISMATCH)
+    source_bank, source_error = _read_authority_object(
+        source_bank_path, RevisionFailureReason.SOURCE_BANK_FILE_HASH_MISMATCH
+    )
     if source_error is not None:
         return source_error
-    target_bank, target_error = _read_authority_object(target_bank_path, RevisionFailureReason.TARGET_BANK_FILE_HASH_MISMATCH)
+    target_bank, target_error = _read_authority_object(
+        target_bank_path, RevisionFailureReason.TARGET_BANK_FILE_HASH_MISMATCH
+    )
     if target_error is not None:
         return target_error
     assert source_bank is not None and target_bank is not None
@@ -554,7 +565,9 @@ def admit_content_revision(
         if target_question_fps[question_id] != edge["to_content_fingerprint"]:
             return _fail(RevisionFailureReason.TO_FINGERPRINT_MISMATCH)
         review_path = review_root / str(edge["review_artifact"])
-        review_payload, review_error = _read_authority_object(review_path, RevisionFailureReason.SEMANTIC_REVIEW_MISSING)
+        review_payload, review_error = _read_authority_object(
+            review_path, RevisionFailureReason.SEMANTIC_REVIEW_MISSING
+        )
         if review_error is not None:
             return review_error
         assert review_payload is not None
@@ -588,9 +601,14 @@ def admit_content_revision(
         for letter in CHOICE_LABELS:
             if edge_semantics[letter] != SEMANTIC_EQUIVALENT or review_semantics[letter] != SEMANTIC_EQUIVALENT:
                 return _fail(RevisionFailureReason.CHOICE_SEMANTICS_CHANGED)
-        if edge["review_status"] != REVIEW_STATUS_APPROVED or review_payload["disposition"] != REVIEW_DISPOSITION_APPROVED:
+        if (
+            edge["review_status"] != REVIEW_STATUS_APPROVED
+            or review_payload["disposition"] != REVIEW_DISPOSITION_APPROVED
+        ):
             return _fail(RevisionFailureReason.SEMANTIC_EQUIVALENCE_NOT_APPROVED)
-        if not _microsoft_learn_refs(edge["authority_refs"]) or not _microsoft_learn_refs(review_payload["authority_refs"]):
+        if not _microsoft_learn_refs(edge["authority_refs"]) or not _microsoft_learn_refs(
+            review_payload["authority_refs"]
+        ):
             return _fail(RevisionFailureReason.AUTHORITY_EVIDENCE_MISSING)
         admitted_edges.append(
             RevisionEdge(

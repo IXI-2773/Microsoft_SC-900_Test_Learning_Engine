@@ -301,7 +301,10 @@ class SessionPersistenceMixin:
             current_fp = self.current_bank_fingerprint()
         except ValueError:
             return saved, Path(path), None
-        if saved_fp != authority.source_bank_content_fingerprint or current_fp != authority.target_bank_content_fingerprint:
+        if (
+            saved_fp != authority.source_bank_content_fingerprint
+            or current_fp != authority.target_bank_content_fingerprint
+        ):
             return saved, Path(path), None
         target_path = self.session_file_for_bank(
             self.bank_path,
@@ -329,7 +332,9 @@ class SessionPersistenceMixin:
             source_questions=source_questions,
         )
         if error is not None or payload is None:
-            logging.warning("Approved content revision session migration skipped without quarantine: %s (%s)", path, error)
+            logging.warning(
+                "Approved content revision session migration skipped without quarantine: %s (%s)", path, error
+            )
             return None, Path(path), error
         return payload, Path(target_path), None
 

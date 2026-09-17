@@ -10,7 +10,11 @@ from unittest import mock
 from app_constants import MODE_PRACTICE
 from content_revision_authority import AdmissionResult, AdmissionStatus, RevisionEdge, RevisionFailureReason
 from content_revision_migration import ContentRevisionMigrationError, MigrationFailureReason
-from question_identity import canonical_question_history_map, question_content_fingerprint, registered_progress_identity_bank
+from question_identity import (
+    canonical_question_history_map,
+    question_content_fingerprint,
+    registered_progress_identity_bank,
+)
 from runtime_persistence import RuntimePersistence
 from session_store import build_session_snapshot, progress_file_path
 from tests.test_content_revision_migration import _answer, _question, _record, _revision
@@ -48,7 +52,13 @@ class ContentRevisionPersistenceTests(unittest.TestCase):
                 "change": question_content_fingerprint(self.change_source),
             },
             "questions": {"keep": _record(), "change": _record()},
-            "history": [{"question_id": "change", "question_content_fingerprint": question_content_fingerprint(self.change_source), "selected_texts": ["old"]}],
+            "history": [
+                {
+                    "question_id": "change",
+                    "question_content_fingerprint": question_content_fingerprint(self.change_source),
+                    "selected_texts": ["old"],
+                }
+            ],
             "quarantined_questions": {"gone": {"reason": "CHANGED_CONTENT", "record": {"attempts": 9}}},
         }
         self.source_progress.write_text(json.dumps(self.progress_payload, indent=2), encoding="utf-8")
@@ -143,7 +153,9 @@ class ContentRevisionPersistenceTests(unittest.TestCase):
         self.assertEqual(self.revision.source_bank_content_fingerprint, archived["bank_fingerprint"])
 
     def test_progress_unexpected_target_bank_fp(self) -> None:
-        self.target_progress.write_text(json.dumps({**self.progress_payload, "bank_fingerprint": "e" * 64}), encoding="utf-8")
+        self.target_progress.write_text(
+            json.dumps({**self.progress_payload, "bank_fingerprint": "e" * 64}), encoding="utf-8"
+        )
         original_source = self.source_progress.read_bytes()
         original_target = self.target_progress.read_bytes()
         payload, archive, error = self.persistence.migrate_progress_across_approved_revision(
@@ -249,7 +261,10 @@ class ContentRevisionSessionPersistenceTests(unittest.TestCase):
             session_boss_markers=[],
             session_stealth_markers=[],
             session_xp_gained=7,
-            answers=[_answer(selected=["A"], answered=True, flagged=True), _answer(selected=["B"], pending=["B"], answered=False)],
+            answers=[
+                _answer(selected=["A"], answered=True, flagged=True),
+                _answer(selected=["B"], pending=["B"], answered=False),
+            ],
         )
         self.source_path = root / "source.session.json"
         self.target_path = root / "target.session.json"
@@ -374,7 +389,9 @@ class ContentRevisionAppIntegrationTests(unittest.TestCase):
         self.app_module = app_module
         engine = app_module.TestingEngineApp.__new__(app_module.TestingEngineApp)
         engine.user_data_dir = self.user_data
-        engine.persistence = RuntimePersistence(checkpoint_dir=self.root / "checkpoints", backup_dir=self.root / "backups")
+        engine.persistence = RuntimePersistence(
+            checkpoint_dir=self.root / "checkpoints", backup_dir=self.root / "backups"
+        )
         engine.bank_path = self.target_bank
         engine.progress_path = progress_file_path(self.user_data, self.target_bank)
         engine.data = {"questions": self.target_questions}
@@ -483,7 +500,7 @@ class ContentRevisionAppIntegrationTests(unittest.TestCase):
 
     def test_target_registration_restored_after_resolution(self) -> None:
         from question_bank import load_bank
-        from question_identity import canonical_question_id, register_progress_identity_bank
+        from question_identity import canonical_question_id
 
         load_bank(self.target_bank)
         target_ids = [canonical_question_id(row) for row in registered_progress_identity_bank()]

@@ -38,6 +38,7 @@ from application_bootstrap import BootstrapConfig, BootstrapResult, prepare_appl
 from bank_models import QuestionBankData
 from cand01r3_runtime import sanitize_history_event
 from cert_config import QUESTION_BANK_FILENAME, USER_DATA_DIRNAME
+from config_store import DEFAULT_CONFIG, load_config, save_config
 from content_revision_authority import AdmissionResult, AdmissionStatus, AdmittedRevision
 from content_revision_migration import (
     ContentRevisionMigrationError,
@@ -46,7 +47,6 @@ from content_revision_migration import (
     history_events_for_question_revision_aware,
 )
 from content_revision_registry import resolve_registered_revision_for_target
-from config_store import DEFAULT_CONFIG, load_config, save_config
 from legacy_source_layout import BASE_DIR
 from progress_models import (
     IssueReport,
@@ -2663,7 +2663,9 @@ class TestingEngineApp(
         if target_exists:
             existing, existing_error = self.persistence._read_json_nonmutating(target_progress)
             if existing_error is not None or existing is None:
-                return self._fail_closed_content_revision_progress(existing_error or ValueError("unreadable target progress"))
+                return self._fail_closed_content_revision_progress(
+                    existing_error or ValueError("unreadable target progress")
+                )
             existing_fp = str(existing.get("bank_fingerprint") or "").strip()
             if existing_fp == revision.target_bank_content_fingerprint:
                 return False
@@ -2676,7 +2678,9 @@ class TestingEngineApp(
                 if source_error is None and source_payload is not None:
                     if json.dumps(source_payload, sort_keys=True) != json.dumps(existing, sort_keys=True):
                         return self._fail_closed_content_revision_progress(
-                            ContentRevisionMigrationError(MigrationFailureReason.TARGET_PROGRESS_CONFLICT, str(target_progress))
+                            ContentRevisionMigrationError(
+                                MigrationFailureReason.TARGET_PROGRESS_CONFLICT, str(target_progress)
+                            )
                         )
             _payload, _archive, error = self.persistence.migrate_progress_across_approved_revision(
                 target_progress,

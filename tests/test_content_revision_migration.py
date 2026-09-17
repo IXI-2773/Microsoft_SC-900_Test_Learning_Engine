@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import unittest
 
+from app_constants import MODE_PRACTICE
 from content_revision_authority import AdmittedRevision, RevisionEdge
 from content_revision_migration import (
     ContentRevisionMigrationError,
@@ -14,14 +15,13 @@ from content_revision_migration import (
     migrate_progress_payload,
     migrate_session_payload,
 )
-from app_constants import MODE_PRACTICE
 from question_identity import (
     bank_content_fingerprint,
     canonical_question_history_map,
     history_event_matches_question,
     question_content_fingerprint,
 )
-from session_identity import canonical_session_signature, ordered_question_ids
+from session_identity import canonical_session_signature
 from session_store import build_session_snapshot
 
 
@@ -128,7 +128,9 @@ class ContentRevisionProgressMigrationTests(unittest.TestCase):
         self.assertEqual(self.source_payload["quarantined_questions"], result.payload["quarantined_questions"])
         self.assertNotIn("gone", result.payload["questions"])
         self.assertEqual(self.revision.target_bank_content_fingerprint, result.payload["bank_fingerprint"])
-        self.assertEqual(question_content_fingerprint(self.changed_target), result.payload["question_content_fingerprints"]["change"])
+        self.assertEqual(
+            question_content_fingerprint(self.changed_target), result.payload["question_content_fingerprints"]["change"]
+        )
         self.assertEqual(1, len(result.payload["content_revision_lineage"]))
         self.assertEqual("change", result.payload["content_revision_lineage"][0]["question_id"])
         self.assertEqual(derive_migration_id(self.revision), result.migration_id)
@@ -213,8 +215,12 @@ class ContentRevisionProgressMigrationTests(unittest.TestCase):
         v1 = _question("change", choice_b="beta")
         v2 = _question("change", choice_b="beta two")
         v3 = _question("change", choice_b="beta three")
-        e12 = RevisionEdge("change", question_content_fingerprint(v1), question_content_fingerprint(v2), "r1.json", "1" * 64)
-        e23 = RevisionEdge("change", question_content_fingerprint(v2), question_content_fingerprint(v3), "r2.json", "2" * 64)
+        e12 = RevisionEdge(
+            "change", question_content_fingerprint(v1), question_content_fingerprint(v2), "r1.json", "1" * 64
+        )
+        e23 = RevisionEdge(
+            "change", question_content_fingerprint(v2), question_content_fingerprint(v3), "r2.json", "2" * 64
+        )
         rev12 = _revision([v1], [v2], (e12,))
         rev23 = _revision([v2], [v3], (e23,))
         event = {
@@ -325,7 +331,10 @@ class ContentRevisionSessionMigrationTests(unittest.TestCase):
             session_boss_markers=[],
             session_stealth_markers=[],
             session_xp_gained=7,
-            answers=[_answer(selected=["A"], answered=True, flagged=True), _answer(selected=["B"], pending=["B"], answered=False)],
+            answers=[
+                _answer(selected=["A"], answered=True, flagged=True),
+                _answer(selected=["B"], pending=["B"], answered=False),
+            ],
         )
 
     def _migrate(self, snapshot=None, revision=None, target_questions=None):
@@ -354,7 +363,9 @@ class ContentRevisionSessionMigrationTests(unittest.TestCase):
         self.assertEqual("target_bank.json", result.payload["bank_file"])
         self.assertEqual(self.revision.target_bank_content_fingerprint, result.payload["bank_fingerprint"])
         self.assertEqual(
-            canonical_session_signature(MODE_PRACTICE, self.revision.target_bank_content_fingerprint, ["keep", "change"]),
+            canonical_session_signature(
+                MODE_PRACTICE, self.revision.target_bank_content_fingerprint, ["keep", "change"]
+            ),
             result.payload["session_signature"],
         )
         self.assertNotEqual(self.snapshot["session_signature"], result.payload["session_signature"])
