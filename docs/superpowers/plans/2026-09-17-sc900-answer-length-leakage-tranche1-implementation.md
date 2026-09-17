@@ -67,7 +67,7 @@
 - Consumes: question dictionaries from `question_bank.load_bank(path)["questions"]`.
 - Produces:
   - `normalize_choice_text(value: object) -> str`
-  - `choice_length(value: object) -> tuple[int, int]` returning `(character_count, word_count)` after whitespace normalization.
+  - `choice_length(value: object) -> tuple[int, int]`
   - `analyze_question(question: dict) -> dict | None`
   - `analyze_bank(questions: list[dict]) -> dict`
   - `rank_longest_outliers(question_rows: list[dict]) -> list[dict]`
@@ -75,18 +75,38 @@
   - `write_markdown_report(report: dict, path: Path) -> None`
   - CLI: `python -m tools.answer_length_audit --bank sc900_bank_v8_final.json --json-out <path> --markdown-out <path>`.
 
-- [ ] **Step 1: Write synthetic RED tests for analyzability and length normalization.**
+- [ ] **Step 1: Write the failing synthetic tests and local fixture helper.**
+
+At the top of `tests/test_answer_length_audit.py`, define the helper used by every test in this task:
+
+```python
+def make_question(
+    question_id: str,
+    correct_letter: str,
+    choices: dict[str, str],
+    *,
+    domain: str = "Domain A",
+) -> dict:
+    return {
+        "id": question_id,
+        "question_number": 1,
+        "question_type": "single",
+        "domain": domain,
+        "choices": dict(choices),
+        "correct": [correct_letter],
+    }
+```
+
+Then add:
 
 ```python
 class AnswerLengthAuditTests(unittest.TestCase):
     def test_single_answer_question_reports_length_metrics(self):
-        question = {
-            "id": "q1",
-            "question_type": "single",
-            "domain": "Domain A",
-            "choices": {"A": "short", "B": "the clearly much longer correct choice", "C": "medium text", "D": "other"},
-            "correct": ["B"],
-        }
+        question = make_question(
+            "q1",
+            "B",
+            {"A": "short", "B": "the clearly much longer correct choice", "C": "medium text", "D": "other"},
+        )
         row = analyze_question(question)
         self.assertIsNotNone(row)
         self.assertTrue(row["correct_is_strict_longest"])
@@ -94,13 +114,16 @@ class AnswerLengthAuditTests(unittest.TestCase):
         self.assertGreater(row["correct_characters"], row["max_distractor_characters"])
 
     def test_non_single_question_is_not_analyzable(self):
-        question = {"id": "q2", "question_type": "multiple", "choices": {"A": "x", "B": "y"}, "correct": ["A", "B"]}
+        question = {
+            "id": "q2",
+            "question_type": "multiple",
+            "choices": {"A": "x", "B": "y"},
+            "correct": ["A", "B"],
+        }
         self.assertIsNone(analyze_question(question))
 ```
 
 - [ ] **Step 2: Run the focused tests and verify RED.**
-
-Run:
 
 ```bash
 python -m unittest tests.test_answer_length_audit -v
@@ -109,8 +132,6 @@ python -m unittest tests.test_answer_length_audit -v
 Expected: import/function failures because `tools.answer_length_audit` does not exist yet.
 
 - [ ] **Step 3: Implement normalization and per-question analysis minimally.**
-
-Use whitespace normalization only; do not strip meaningful punctuation or alter the bank:
 
 ```python
 def normalize_choice_text(value: object) -> str:
@@ -122,15 +143,9 @@ def choice_length(value: object) -> tuple[int, int]:
     return len(text), len(text.split())
 ```
 
-`analyze_question()` must require:
-- `question_type == "single"`;
-- exactly one correct letter;
-- correct letter present in non-empty `choices`;
-- at least two non-empty choices.
+`analyze_question()` must require `question_type == "single"`, exactly one correct letter, the correct letter present in non-empty `choices`, and at least two non-empty choices. Its returned row must include canonical ID, question number, domain, correct letter, per-choice character/word counts, strict/tied longest, strict/tied shortest, absolute correct-vs-strongest-distractor gap, relative gap, and answer-letter metadata.
 
-Its returned row must include canonical ID, question number, domain, correct letter, per-choice character/word counts, strict/tied longest, strict/tied shortest, absolute correct-vs-strongest-distractor gap, relative gap, and answer-letter metadata.
-
-- [ ] **Step 4: Write RED tests for bank-level longest, shortest, letter, and domain metrics.**
+- [ ] **Step 4: Add RED tests for bank-level longest, shortest, letter, and domain metrics.**
 
 ```python
 def test_bank_metrics_detect_longest_and_shortest_heuristics(self):
@@ -143,11 +158,12 @@ def test_bank_metrics_detect_longest_and_shortest_heuristics(self):
     self.assertEqual(0.5, report["strict_longest_correct_rate"])
     self.assertEqual(0.5, report["strict_shortest_correct_rate"])
     self.assertEqual({"A": 1, "D": 1}, report["correct_letter_distribution"])
+    self.assertEqual(0.5, report["most_common_answer_letter_rate"])
 ```
 
 - [ ] **Step 5: Implement bank aggregation and deterministic outlier ranking.**
 
-`rank_longest_outliers()` must include only rows with a positive correct-vs-max-distractor character gap and sort by:
+`rank_longest_outliers()` must include only rows with positive `absolute_gap` and sort by:
 
 ```python
 key=lambda row: (
@@ -157,27 +173,37 @@ key=lambda row: (
 )
 ```
 
-This makes severity deterministic and prioritizes proportionally extreme cues before raw gap ties.
+`analyze_bank()` must expose these exact keys:
 
-`analyze_bank()` must expose at least:
-- `question_count`;
-- `analyzable_count`;
-- `strict_longest_correct_count/rate`;
-- `correct_among_longest_count/rate`;
-- `unique_longest_question_count`;
-- `unique_longest_heuristic_success_count/rate`;
-- `strict_shortest_correct_count/rate`;
-- `unique_shortest_question_count`;
-- `unique_shortest_heuristic_success_count/rate`;
-- `correct_letter_distribution` and rates;
-- per-domain versions of the above;
-- `mean_correct_characters`;
-- `mean_max_distractor_characters`;
-- ordered `longest_outliers`.
+```text
+question_count
+analyzable_count
+strict_longest_correct_count
+strict_longest_correct_rate
+correct_among_longest_count
+correct_among_longest_rate
+unique_longest_question_count
+unique_longest_heuristic_success_count
+unique_longest_heuristic_success_rate
+strict_shortest_correct_count
+strict_shortest_correct_rate
+unique_shortest_question_count
+unique_shortest_heuristic_success_count
+unique_shortest_heuristic_success_rate
+correct_letter_distribution
+correct_letter_rates
+most_common_answer_letter_rate
+mean_correct_characters
+mean_max_distractor_characters
+per_domain
+longest_outliers
+```
+
+Each `per_domain` row uses the same rate-key names where applicable.
 
 - [ ] **Step 6: Add JSON and Markdown report rendering and CLI parsing.**
 
-The Markdown report must show the overall metrics, per-domain table, correct-letter distribution, and top 60 outliers with question ID/number, correct letter, lengths, absolute gap, and relative gap. It must not print answer text into CI logs by default.
+The Markdown report shows overall metrics, a per-domain table, correct-letter distribution, and the top 60 outliers with question ID/number, correct letter, lengths, absolute gap, and relative gap. Do not print answer text into CI logs by default.
 
 - [ ] **Step 7: Run focused tests GREEN.**
 
@@ -206,21 +232,36 @@ git commit -m "feat: add deterministic answer-length leakage audit"
 - Consumes: baseline and candidate question lists plus reports from `tools.answer_length_audit.analyze_bank`.
 - Produces:
   - `question_invariants(question: dict) -> dict`
-  - `compare_bank_invariants(baseline: list[dict], candidate: list[dict]) -> list[str]`
+  - `compare_bank_invariants(baseline: list[dict], candidate: list[dict], *, expected_count: int | None = None) -> list[str]`
   - `compare_bias_metrics(baseline_report: dict, candidate_report: dict, *, final_gate: bool = False) -> list[str]`
   - CLI returning exit code 1 on any invariant/bias failure.
 
-- [ ] **Step 1: Write RED tests proving invariant drift fails closed.**
+- [ ] **Step 1: Write RED tests with a local fixture helper.**
 
-Create independent tests for:
-- question removed;
-- question added;
-- canonical ID changed;
-- correct key changed;
-- `objective_code` changed;
-- `exam_calibration_tier` changed;
-- `exam_simulation_eligible` changed;
-- count not equal to 454 for production-bank mode.
+At the top of `tests/test_bank_revision_guard.py`:
+
+```python
+def question(
+    question_id: str,
+    *,
+    correct: list[str] | None = None,
+    objective_code: str = "1.1",
+    tier: str = "CORE",
+    eligible: bool = True,
+) -> dict:
+    return {
+        "id": question_id,
+        "question_number": 1,
+        "question_type": "single",
+        "choices": {"A": "a", "B": "bb", "C": "ccc", "D": "dddd"},
+        "correct": list(correct or ["A"]),
+        "objective_code": objective_code,
+        "exam_calibration_tier": tier,
+        "exam_simulation_eligible": eligible,
+    }
+```
+
+Add independent tests for question removed, question added, canonical ID changed, correct key changed, `objective_code` changed, `exam_calibration_tier` changed, `exam_simulation_eligible` changed, and `expected_count` mismatch.
 
 Example:
 
@@ -242,7 +283,7 @@ Expected: import/function failure.
 
 - [ ] **Step 3: Implement exact-ID invariant comparison.**
 
-`question_invariants()` must project only:
+`question_invariants()` projects exactly:
 
 ```python
 {
@@ -254,33 +295,33 @@ Expected: import/function failure.
 }
 ```
 
-Compare by canonical ID, not question number. Return stable machine-readable failure strings beginning with the design names: `QUESTION_IDS_ADDED`, `QUESTION_IDS_REMOVED`, `CORRECT_KEYS_CHANGED`, `OBJECTIVE_CODES_CHANGED`, `TIERS_CHANGED`, `EXAM_ELIGIBILITY_CHANGED`, `QUESTION_COUNT_CHANGED`.
+Compare by canonical ID, never by question number. Stable failure strings begin with `QUESTION_IDS_ADDED`, `QUESTION_IDS_REMOVED`, `CORRECT_KEYS_CHANGED`, `OBJECTIVE_CODES_CHANGED`, `TIERS_CHANGED`, `EXAM_ELIGIBILITY_CHANGED`, or `QUESTION_COUNT_CHANGED`.
 
-- [ ] **Step 4: Write RED tests for bias-substitution gates.**
+- [ ] **Step 4: Add RED tests for bias-substitution gates.**
 
-Define “material” for this implementation as a **greater than 2.0 percentage-point bank-wide increase** in either strict-shortest or unique-shortest heuristic success, or a **greater than 2.0 percentage-point increase** in the most-common-answer-letter heuristic. For domains with at least 20 analyzable questions, a greater than 5.0 percentage-point worsening in strict-longest rate also fails a tranche candidate.
+For this implementation, “material” means:
+- more than `0.02` bank-wide increase in `strict_shortest_correct_rate`;
+- more than `0.02` increase in `unique_shortest_heuristic_success_rate`;
+- more than `0.02` increase in `most_common_answer_letter_rate`;
+- for domains with at least 20 analyzable questions, more than `0.05` worsening in `strict_longest_correct_rate`.
 
-Final-gate requirements additionally enforce:
-- strict-longest correct `< 0.40`;
-- unique-longest heuristic success `< 0.40`;
-- every sufficiently populated domain strict-longest `<= 0.45`.
+Final gate additionally requires bank-wide strict-longest `< 0.40`, unique-longest heuristic `< 0.40`, and sufficiently populated domain strict-longest `<= 0.45`.
 
 - [ ] **Step 5: Implement `compare_bias_metrics`.**
 
-Tranche mode must require the candidate to improve at least one of `strict_longest_correct_rate` or `unique_longest_heuristic_success_rate` and not worsen either by more than 0.005. It must enforce the 0.02 shortest/position substitution limits above.
+Tranche mode requires improvement in at least one of `strict_longest_correct_rate` or `unique_longest_heuristic_success_rate`, allows no more than `0.005` worsening in the other, and enforces the substitution limits above.
 
 - [ ] **Step 6: Add CLI.**
-
-Required command shape:
 
 ```bash
 python -m tools.bank_revision_guard \
   --baseline sc900_bank_v8_final.json \
   --candidate path/to/candidate.json \
+  --expected-count 454 \
   --mode tranche
 ```
 
-`--mode final` turns on the strong `<40%`/domain `<=45%` final thresholds.
+`--mode final` enables the strong final thresholds.
 
 - [ ] **Step 7: Run focused tests GREEN and commit.**
 
@@ -296,15 +337,13 @@ git commit -m "feat: add bank revision leakage guard"
 
 **Files:**
 - Create: `docs/research/SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001/00-TRANCHE1-BASELINE.md`
-- Generated during verification but do not commit unless intentionally governed: `reports/answer_length_baseline.json`
+- Ephemeral: `/tmp/sc900-answer-length-audit-1.json`, `/tmp/sc900-answer-length-audit-2.json`
 
 **Interfaces:**
 - Consumes: current `sc900_bank_v8_final.json`.
 - Produces: reproducible metrics and top-outlier list used to select Tranche 1.
 
 - [ ] **Step 1: Verify source authority before measurement.**
-
-Run:
 
 ```bash
 python - <<'PY'
@@ -317,38 +356,25 @@ python -m tools.lint_bank
 python -m tools.verify_installation
 ```
 
-Record the exact source SHA-256, question count, lint disposition, and current `main` SHA.
+Record exact source SHA-256, question count, lint disposition, and current `main` SHA.
 
-- [ ] **Step 2: Run the new audit twice and prove deterministic byte-identical JSON output.**
+- [ ] **Step 2: Run the audit twice and prove deterministic byte-identical JSON output.**
 
 ```bash
-python -m tools.answer_length_audit --bank sc900_bank_v8_final.json --json-out /tmp/audit1.json --markdown-out /tmp/audit1.md
-python -m tools.answer_length_audit --bank sc900_bank_v8_final.json --json-out /tmp/audit2.json --markdown-out /tmp/audit2.md
-cmp /tmp/audit1.json /tmp/audit2.json
+python -m tools.answer_length_audit --bank sc900_bank_v8_final.json --json-out /tmp/sc900-answer-length-audit-1.json --markdown-out /tmp/sc900-answer-length-audit-1.md
+python -m tools.answer_length_audit --bank sc900_bank_v8_final.json --json-out /tmp/sc900-answer-length-audit-2.json --markdown-out /tmp/sc900-answer-length-audit-2.md
+cmp /tmp/sc900-answer-length-audit-1.json /tmp/sc900-answer-length-audit-2.json
 ```
 
 Expected: `cmp` exits 0.
 
-- [ ] **Step 3: Assert the measured baseline matches the previously observed pattern closely enough to establish continuity.**
+- [ ] **Step 3: Check continuity against the prior read-only audit.**
 
-The authoritative new tool output becomes the baseline, but investigate rather than silently accept if any of these differ materially from the prior read-only audit:
-- analyzable count near `449`;
-- strict-longest correct near `64.81%`;
-- unique-longest heuristic success near `67.52%`.
-
-A difference greater than 1.0 percentage point or more than 5 analyzable questions requires root-cause explanation before continuing.
+Investigate rather than silently accept if the authoritative new tool differs by more than 1.0 percentage point or more than 5 analyzable questions from the previously observed `449`, `64.81%` strict-longest, and `67.52%` unique-longest heuristic figures.
 
 - [ ] **Step 4: Write the baseline receipt.**
 
-Include:
-- exact main SHA;
-- source bank SHA-256;
-- exact audit command;
-- overall/per-domain metrics;
-- A/B/C/D distribution;
-- shortest-answer metrics;
-- top 60 outlier IDs and severity values;
-- statement that no bank content changed.
+Include exact main SHA, bank SHA-256, audit command, overall/per-domain metrics, A/B/C/D distribution, shortest-answer metrics, top 60 outlier IDs/severity values, and `BANK_CONTENT_CHANGED = NO`.
 
 - [ ] **Step 5: Commit the receipt.**
 
@@ -367,18 +393,70 @@ git commit -m "docs: record answer-length leakage baseline"
 - Read only: `question_identity.py`, `session_store.py`, `runtime_persistence.py`, `tests/test_backlog1_segment3_adversarial_closure.py`, `tests/test_sc900_final_bank_activation_migration.py`
 
 **Interfaces:**
-- Consumes: `question_content_fingerprint`, `bank_content_fingerprint`, `migrate_progress_content_epoch`, session bank fingerprint checks.
-- Produces: one of exactly two dispositions:
+- Consumes: `question_content_fingerprint`, `bank_content_fingerprint`, `migrate_progress_content_epoch`, `saved_session_matches_current`.
+- Produces exactly one disposition:
   - `LEARNER_HISTORY_COMPATIBILITY = PASS_WITH_EXISTING_ARCHITECTURE`
   - `LEARNER_HISTORY_COMPATIBILITY = BLOCKED_BY_CHANGED_CONTENT_QUARANTINE`
 
-- [ ] **Step 1: Write a characterization test for choice-wording change.**
+- [ ] **Step 1: Add exact local helpers to the new test module.**
 
-Construct one canonical question and canonical progress payload using the existing epoch fields, then change only one distractor’s text while preserving ID, key, objective, tier, and eligibility:
+```python
+from copy import deepcopy
+
+from question_identity import (
+    PROGRESS_CONTENT_EPOCH_VERSION,
+    PROGRESS_IDENTITY_KIND,
+    PROGRESS_IDENTITY_VERSION,
+    bank_content_fingerprint,
+    canonical_question_id,
+    migrate_progress_content_epoch,
+    question_content_fingerprint,
+)
+
+
+def make_question(question_id: str, *, choices: dict[str, str], correct: list[str]) -> dict:
+    return {
+        "id": question_id,
+        "question_number": 1,
+        "question_type": "single",
+        "prompt": "Which option is correct?",
+        "domain": "Describe the concepts of security, compliance, and identity",
+        "topics": ["test"],
+        "objective_code": "1.1",
+        "exam_calibration_tier": "CORE",
+        "exam_simulation_eligible": True,
+        "choices": dict(choices),
+        "correct": list(correct),
+        "general_explanation": "Test explanation.",
+        "choice_explanations": {letter: f"Explanation {letter}" for letter in choices},
+    }
+
+
+def canonical_progress_for(questions: list[dict], records: dict) -> dict:
+    fingerprints = {
+        canonical_question_id(question): question_content_fingerprint(question) for question in questions
+    }
+    return {
+        "version": 3,
+        "progress_identity_version": PROGRESS_IDENTITY_VERSION,
+        "question_identity": PROGRESS_IDENTITY_KIND,
+        "progress_content_epoch_version": PROGRESS_CONTENT_EPOCH_VERSION,
+        "bank_fingerprint": bank_content_fingerprint(questions),
+        "question_content_fingerprints": fingerprints,
+        "questions": deepcopy(records),
+        "history": [],
+    }
+```
+
+- [ ] **Step 2: Add the wording-change characterization test.**
 
 ```python
 def test_wording_only_choice_edit_changes_content_fingerprint_and_quarantines_prior_state(self):
-    original = make_question("sc900-x", choices={"A": "one", "B": "two", "C": "three", "D": "four"}, correct=["A"])
+    original = make_question(
+        "sc900-x",
+        choices={"A": "one", "B": "two", "C": "three", "D": "four"},
+        correct=["A"],
+    )
     revised = deepcopy(original)
     revised["choices"]["D"] = "a more realistic distractor"
 
@@ -391,23 +469,60 @@ def test_wording_only_choice_edit_changes_content_fingerprint_and_quarantines_pr
     self.assertEqual("CHANGED_CONTENT", migrated["quarantined_questions"]["sc900-x"]["reason"])
 ```
 
-This is a characterization test of the intended existing safety behavior; do not alter production identity code to make it pass differently.
+This characterizes the intended current safety behavior; do not change production identity code to make it pass differently.
 
-- [ ] **Step 2: Add a session characterization proving revised bank fingerprint invalidates old saved-session identity.**
+- [ ] **Step 3: Add saved-session fingerprint mismatch coverage without inventing a migration path.**
 
-Use `build_session_snapshot`, `saved_session_matches_current`, and `migrate_session_snapshot` in the same style as `tests/test_sc900_final_bank_activation_migration.py`. A wording change that changes bank fingerprint must not be silently treated as the same saved session.
+Use a minimal saved-session mapping because `saved_session_matches_current` only needs the persisted identity fields for this assertion:
 
-- [ ] **Step 3: Run the compatibility tests.**
+```python
+def test_wording_only_edit_changes_bank_fingerprint_and_old_session_no_longer_matches(self):
+    original = make_question(
+        "sc900-x",
+        choices={"A": "one", "B": "two", "C": "three", "D": "four"},
+        correct=["A"],
+    )
+    revised = deepcopy(original)
+    revised["choices"]["D"] = "a more realistic distractor"
+
+    old_bank_fp = bank_content_fingerprint([original])
+    new_bank_fp = bank_content_fingerprint([revised])
+    self.assertNotEqual(old_bank_fp, new_bank_fp)
+
+    saved = {
+        "mode": "practice",
+        "question_numbers": [1],
+        "restore_question_numbers": [1],
+        "question_ids": ["sc900-x"],
+        "restore_question_ids": ["sc900-x"],
+        "bank_fingerprint": old_bank_fp,
+    }
+    self.assertFalse(
+        saved_session_matches_current(
+            saved,
+            "practice",
+            [1],
+            [1],
+            bank_fingerprint=new_bank_fp,
+            current_question_ids=["sc900-x"],
+            restore_question_ids=["sc900-x"],
+        )
+    )
+```
+
+If the exact current `saved_session_matches_current` signature requires an additional explicit argument, use the signature from `session_store.py` without changing its semantics; do not pass a legacy-bypass flag.
+
+- [ ] **Step 4: Run the compatibility tests.**
 
 ```bash
 python -m unittest tests.test_answer_length_history_compatibility -v
 ```
 
-Expected under the current repository design: tests PASS while proving changed wording is fail-closed as `CHANGED_CONTENT` and old session fingerprints do not match.
+Expected under current authority: tests PASS while proving wording changes trigger fail-closed content/session mismatch behavior.
 
-- [ ] **Step 4: Make the package-level safety decision.**
+- [ ] **Step 5: Make the package-level safety decision.**
 
-If the result is the expected `CHANGED_CONTENT` quarantine, set:
+If the result is `CHANGED_CONTENT` quarantine, record:
 
 ```text
 LEARNER_HISTORY_COMPATIBILITY = BLOCKED_BY_CHANGED_CONTENT_QUARANTINE
@@ -415,13 +530,11 @@ TRANCHE1_CONTENT_REWRITE_AUTHORIZED = NO
 NEW_IDENTITY_OR_MIGRATION_ARCHITECTURE_AUTHORIZED = NO
 ```
 
-Then **STOP before Task 5**. This is not a failed implementation; it is the design’s mandatory fail-closed stop condition. Return the evidence for external review and request a separate decision on whether learner state for deliberately reworded questions may be explicitly reset/quarantined, or whether a new reviewed content-revision migration contract is desired.
+Then **STOP before Task 5**. This is the design’s mandatory fail-closed condition. Return evidence for a separate operator decision: either explicitly accept/reset learner state for deliberately reworded questions, or authorize a separately designed content-revision migration contract.
 
-Only if the existing architecture already provides a reviewed mechanism that preserves learner state across semantically equivalent wording changes without weakening fingerprint safety may execution continue to Task 5. Do not invent such a mechanism during this package.
+Only if the existing architecture already provides a reviewed mechanism that preserves learner state across semantically equivalent wording changes without weakening fingerprint safety may execution continue to Task 5. Do not invent such a mechanism here.
 
-- [ ] **Step 5: Write and commit the compatibility receipt.**
-
-The receipt must state the exact behavior observed for progress history and sessions, include the focused test command/result, and explicitly say whether content rewriting is authorized to continue.
+- [ ] **Step 6: Write and commit the compatibility receipt.**
 
 ```bash
 git add tests/test_answer_length_history_compatibility.py docs/research/SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001/01-HISTORY-COMPATIBILITY-GATE.md
@@ -432,9 +545,9 @@ git commit -m "test: characterize answer-length revision history safety"
 
 ## Conditional continuation — execute only if Task 4 returns PASS_WITH_EXISTING_ARCHITECTURE
 
-Tasks 5-7 are deliberately conditional. They are not authorization to alter identity/migration semantics. If Task 4 returns `BLOCKED_BY_CHANGED_CONTENT_QUARANTINE`, do not execute them.
+Tasks 5-7 are not authorization to alter identity/migration semantics. If Task 4 returns `BLOCKED_BY_CHANGED_CONTENT_QUARANTINE`, do not execute them.
 
-### Task 5: Create a deterministic Tranche 1 patch format and candidate builder
+### Task 5: Create deterministic Tranche 1 patch manifest and candidate builder
 
 **Files:**
 - Create: `tools/build_answer_length_tranche.py`
@@ -443,49 +556,64 @@ Tasks 5-7 are deliberately conditional. They are not authorization to alter iden
 - Generate: `content/sc900/answer-length-repair/tranche1/candidate_bank.json`
 
 **Interfaces:**
-- Patch manifest entry shape:
+- Patch entry:
 
 ```json
 {
-  "question_id": "<canonical-id>",
-  "classification": "mechanical|semantic",
-  "choice_updates": {"A": "new text"},
+  "question_id": "sc900-example",
+  "classification": "mechanical",
+  "choice_updates": {"D": "Revised distractor text"},
   "choice_explanation_updates": {},
   "authority_refs": []
 }
 ```
 
 - Builder: `build_candidate(source_path: Path, patch_path: Path) -> dict`.
-- Builder may modify only `choices` and corresponding `choice_explanations`; it must reject any request to change `correct`, ID, objective, tier, eligibility, prompt, domain, or question count in Tranche 1.
+- Allowed Tranche 1 mutation fields: `choices`, `choice_explanations` only.
+- Explicitly reject patch fields that target `correct`, ID, prompt, domain, objective, tier, eligibility, question number, or question count.
 
-- [ ] **Step 1: Write RED tests that reject unauthorized patch fields and unknown IDs.**
-- [ ] **Step 2: Implement the minimal deterministic patch builder.**
-- [ ] **Step 3: Select the top 40-60 baseline outliers by the Task 3 deterministic ranking, reducing scope when factual review is difficult.**
-- [ ] **Step 4: For each selected question, author the smallest safe wording repair using the approved order: tighten verbose correct answer first, strengthen implausibly terse distractors second, rebalance both only when needed.**
-- [ ] **Step 5: For every semantic edit, record current Microsoft Learn authority in `authority_refs`; if official support is insufficient, leave the question unchanged.**
-- [ ] **Step 6: Generate candidate twice and `cmp` outputs to prove reproducibility.**
-- [ ] **Step 7: Commit manifest, builder, tests, and candidate.**
+- [ ] **Step 1: Write RED tests that reject unknown IDs, duplicate patch IDs, and unauthorized fields.**
+
+```python
+def test_builder_rejects_correct_key_change(self):
+    patch = {"question_id": "q1", "classification": "mechanical", "correct": ["B"]}
+    with self.assertRaises(ValueError):
+        validate_patch_entry(patch)
+```
+
+- [ ] **Step 2: Implement the deterministic builder and validate patch classifications.**
+- [ ] **Step 3: Select the top 40-60 current outliers from the Task 3 ranking; reduce scope when semantic review is difficult.**
+- [ ] **Step 4: Author the smallest safe wording repair per selected question: tighten verbose correct answer first, strengthen implausibly terse distractors second, rebalance both only when needed.**
+- [ ] **Step 5: For every semantic edit, record current Microsoft Learn URLs/authority in `authority_refs`; if official support is insufficient, leave the item unchanged.**
+- [ ] **Step 6: Generate candidate twice and prove byte-identical output.**
+
+```bash
+python -m tools.build_answer_length_tranche --source sc900_bank_v8_final.json --patches content/sc900/answer-length-repair/tranche1/patches.json --out /tmp/candidate1.json
+python -m tools.build_answer_length_tranche --source sc900_bank_v8_final.json --patches content/sc900/answer-length-repair/tranche1/patches.json --out /tmp/candidate2.json
+cmp /tmp/candidate1.json /tmp/candidate2.json
+```
+
+- [ ] **Step 7: Commit manifest, builder, tests, and governed candidate.**
 
 ---
 
-### Task 6: Run mechanical, semantic, and statistical admission gates on Tranche 1
+### Task 6: Run mechanical, semantic, and statistical Tranche 1 admission gates
 
 **Files:**
 - Create: `docs/research/SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001/02-TRANCHE1-REVIEW.md`
 - Test: `tests/test_answer_length_tranche1_candidate.py`
 
-- [ ] **Step 1: Run bank invariant guard.**
+- [ ] **Step 1: Run invariant and substitution guard.**
 
 ```bash
 python -m tools.bank_revision_guard \
   --baseline sc900_bank_v8_final.json \
   --candidate content/sc900/answer-length-repair/tranche1/candidate_bank.json \
+  --expected-count 454 \
   --mode tranche
 ```
 
-Expected: zero invariant failures; leakage improves without >2pp shortest/position substitution.
-
-- [ ] **Step 2: Run generic bank validation on candidate.**
+- [ ] **Step 2: Run generic candidate validation.**
 
 ```bash
 python - <<'PY'
@@ -498,27 +626,11 @@ print('candidate validation PASS', len(r.get('warnings', [])), 'warnings')
 PY
 ```
 
-Existing governed production warnings must be distinguished from new warnings; a new warning fails closed until reviewed.
+Any new warning fails closed until explained. Do not use `--allow-warnings` as an acceptance override.
 
-- [ ] **Step 3: Audit candidate and compare against baseline.**
-
-Produce overall/per-domain metrics and top remaining outliers. Do not claim the final `<40%` target after Tranche 1 unless it is actually reached; the tranche only needs safe directional improvement.
-
-- [ ] **Step 4: Perform line-by-line semantic review of every edited question.**
-
-For each question record:
-- before and after choice text;
-- mechanical vs semantic classification;
-- official authority for semantic edits;
-- correct key unchanged;
-- all distractors remain clearly incorrect;
-- explanation remains consistent;
-- no padding/filler;
-- no new style cue.
-
-Any uncertain item is removed from `patches.json`, candidate regenerated, and all gates rerun.
-
-- [ ] **Step 5: Run focused tests, identity tests, and full suite.**
+- [ ] **Step 3: Audit candidate and compare bank/domain/shortest/letter metrics to baseline.**
+- [ ] **Step 4: Perform line-by-line semantic review for every edited question.** Record before/after text, classification, official authority for semantic edits, key unchanged, distractors clearly incorrect, explanation consistency, and absence of filler/new cues. Remove uncertain items and regenerate before continuing.
+- [ ] **Step 5: Run focused, identity, and full regression.**
 
 ```bash
 python -m unittest tests.test_answer_length_audit tests.test_bank_revision_guard tests.test_answer_length_history_compatibility tests.test_answer_length_tranche1_candidate -v
@@ -528,23 +640,21 @@ python -m tools.run_quality_checks
 python -m tools.verify_installation
 ```
 
-If `tools.run_quality_checks` still reports the known baseline-identical `builder_identity.py` mypy issue on the then-current base, document exact baseline-vs-candidate equivalence; do not suppress or broaden type checking inside this package.
+If `tools.run_quality_checks` reports a baseline-identical pre-existing issue, prove exact baseline-vs-candidate equivalence; do not suppress it inside this package.
 
-- [ ] **Step 6: Write and commit the Tranche 1 review artifact.**
-
-The artifact must include source/candidate SHA-256, edited IDs, exact invariant attestations, baseline/candidate leakage metrics, per-domain metrics, shortest/letter checks, semantic authority table, tests, and remaining worst outliers.
+- [ ] **Step 6: Write the Tranche 1 review artifact with source/candidate SHA-256, edited IDs, invariants, baseline/candidate metrics, per-domain metrics, shortest/letter checks, authority table, tests, and remaining outliers.**
 
 ---
 
 ### Task 7: External-review handoff only — no production activation
 
 **Files:**
-- No production bank replacement.
+- No production-bank replacement.
 - No EXE replacement.
 
 - [ ] **Step 1: Verify final branch diff contains only approved audit/gating/tranche artifacts.**
 - [ ] **Step 2: Re-verify PR #13 and both recovery refs at their protected SHAs.**
-- [ ] **Step 3: Open a draft PR for external review if and only if all executed gates pass.**
+- [ ] **Step 3: Open a draft PR only if all executed gates pass.**
 - [ ] **Step 4: Report exact head SHA and STOP.**
 
 Required terminal report:
@@ -593,10 +703,18 @@ NEXT_ACTION = <history-policy decision or external tranche review>
 - Strong final thresholds and substitution protection: Task 2.
 - Reproducible production baseline: Task 3.
 - Learner-history/session safety: Task 4.
-- Fail-closed stop rather than inventing an identity architecture: Task 4.
+- Fail-closed stop rather than inventing identity architecture: Task 4.
 - Bounded 40-60-question Tranche 1, Microsoft Learn semantic review, deterministic candidate: Task 5, conditional.
 - Mechanical/semantic/statistical admission gates: Task 6, conditional.
 - No merge/EXE/PR13/recovery mutation: Global Constraints and Task 7.
+
+### Placeholder scan
+
+No `TBD`, `TODO`, “implement later”, or undefined cross-task helper is intentionally left in the plan. Each example helper used by a test is defined in the same task.
+
+### Type/interface consistency
+
+The metric key names used by `analyze_bank` are the same keys consumed by `compare_bias_metrics`: `strict_longest_correct_rate`, `unique_longest_heuristic_success_rate`, `strict_shortest_correct_rate`, `unique_shortest_heuristic_success_rate`, and `most_common_answer_letter_rate`.
 
 ### Important planning discovery
 
