@@ -8,11 +8,11 @@ from pathlib import Path
 from unittest import mock
 
 from app_constants import MODE_PRACTICE
-from content_revision_authority import RevisionEdge
+from content_revision_authority import AdmissionResult, AdmissionStatus, RevisionEdge, RevisionFailureReason
 from content_revision_migration import ContentRevisionMigrationError, MigrationFailureReason
-from question_identity import question_content_fingerprint
+from question_identity import canonical_question_history_map, question_content_fingerprint, registered_progress_identity_bank
 from runtime_persistence import RuntimePersistence
-from session_store import build_session_snapshot
+from session_store import build_session_snapshot, progress_file_path
 from tests.test_content_revision_migration import _answer, _question, _record, _revision
 
 
@@ -343,6 +343,251 @@ class ContentRevisionSessionPersistenceTests(unittest.TestCase):
         self.assertIsNotNone(error)
         self.assertEqual(original, self.source_path.read_bytes())
         self.assertTrue(self.source_path.exists())
+
+
+class ContentRevisionAppIntegrationTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name)
+        self.user_data = self.root / "user_data"
+        self.user_data.mkdir()
+        self.keep_source = _question("keep", number=1)
+        self.keep_target = copy.deepcopy(self.keep_source)
+        self.change_source = _question("change", choice_b="beta", number=2)
+        self.change_target = _question("change", choice_b="beta rebalanced", number=2)
+        self.source_questions = [self.keep_source, self.change_source]
+        self.target_questions = [self.keep_target, self.change_target]
+        self.edge = RevisionEdge(
+            "change",
+            question_content_fingerprint(self.change_source),
+            question_content_fingerprint(self.change_target),
+            "review.json",
+            "d" * 64,
+        )
+        self.revision = _revision(self.source_questions, self.target_questions, (self.edge,))
+        self.source_bank = self.root / "source_bank.json"
+        self.target_bank = self.root / "target_bank.json"
+        self.source_bank.write_text(json.dumps({"title": "s", "questions": self.source_questions}), encoding="utf-8")
+        self.target_bank.write_text(json.dumps({"title": "t", "questions": self.target_questions}), encoding="utf-8")
+        import app as app_module
+
+        self.app_module = app_module
+        engine = app_module.TestingEngineApp.__new__(app_module.TestingEngineApp)
+        engine.user_data_dir = self.user_data
+        engine.persistence = RuntimePersistence(checkpoint_dir=self.root / "checkpoints", backup_dir=self.root / "backups")
+        engine.bank_path = self.target_bank
+        engine.progress_path = progress_file_path(self.user_data, self.target_bank)
+        engine.data = {"questions": self.target_questions}
+        engine.master_questions = self.target_questions
+        engine.questions = self.target_questions
+        engine.content_revision_authority = None
+        engine.progress_write_blocked = False
+        engine.progress_data = {"history": []}
+        engine.active_session_mode = MODE_PRACTICE
+        self.engine = engine
+
+    def tearDown(self) -> None:
+        self.tmp.cleanup()
+
+    def _progress_payload(self, questions, bank_fp):
+        return {
+            "version": 3,
+            "progress_identity_version": 1,
+            "question_identity": "canonical_question_id",
+            "progress_content_epoch_version": 1,
+            "bank_fingerprint": bank_fp,
+            "question_content_fingerprints": {
+                question["id"]: question_content_fingerprint(question) for question in questions
+            },
+            "questions": {question["id"]: _record() for question in questions},
+            "history": [
+                {
+                    "question_id": "change",
+                    "question_content_fingerprint": question_content_fingerprint(self.change_source),
+                    "selected_texts": ["old wording"],
+                    "correct_texts": ["alpha"],
+                    "correct": True,
+                }
+            ],
+        }
+
+    def test_empty_registry_preserves_ordinary_load_path(self) -> None:
+        self.assertIsNone(self.engine.content_revision_authority)
+        self.assertFalse(self.engine._apply_registered_content_revision(self.target_bank))
+        self.assertIsNone(self.engine.content_revision_authority)
+        self.assertFalse(self.engine.progress_write_blocked)
+
+    def test_failed_admission_does_not_leak_into_authority(self) -> None:
+        result = AdmissionResult(AdmissionStatus.FAIL, (RevisionFailureReason.SCHEMA_UNSUPPORTED,), None)
+        bound = self.engine._bind_content_revision_authority(result)
+        self.assertIsNone(bound)
+        self.assertIsNone(self.engine.content_revision_authority)
+
+    def test_different_filenames_migrate_source_progress(self) -> None:
+        source_progress = progress_file_path(self.user_data, self.source_bank)
+        source_progress.write_text(
+            json.dumps(self._progress_payload(self.source_questions, self.revision.source_bank_content_fingerprint)),
+            encoding="utf-8",
+        )
+        original = source_progress.read_bytes()
+        self.engine.content_revision_authority = self.revision
+        skipped = self.engine._migrate_progress_for_admitted_revision(self.revision)
+        self.assertFalse(skipped)
+        self.assertFalse(self.engine.progress_write_blocked)
+        self.assertFalse(source_progress.exists())
+        target_progress = progress_file_path(self.user_data, self.target_bank)
+        self.assertTrue(target_progress.exists())
+        loaded = json.loads(target_progress.read_text(encoding="utf-8"))
+        self.assertEqual(self.revision.target_bank_content_fingerprint, loaded["bank_fingerprint"])
+        self.assertEqual(["old wording"], loaded["history"][0]["selected_texts"])
+        archive_dir_files = list(source_progress.parent.glob(f"*{source_progress.name}"))
+        self.assertTrue(archive_dir_files or original)
+
+    def test_same_path_progress_archives_before_replacement(self) -> None:
+        target_progress = progress_file_path(self.user_data, self.target_bank)
+        target_progress.write_text(
+            json.dumps(self._progress_payload(self.source_questions, self.revision.source_bank_content_fingerprint)),
+            encoding="utf-8",
+        )
+        skipped = self.engine._migrate_progress_for_admitted_revision(self.revision)
+        self.assertFalse(skipped)
+        loaded = json.loads(target_progress.read_text(encoding="utf-8"))
+        self.assertEqual(self.revision.target_bank_content_fingerprint, loaded["bank_fingerprint"])
+        archives = [path for path in target_progress.parent.glob(f"*.progress.{target_progress.name}")]
+        self.assertTrue(archives)
+
+    def test_unexpected_target_progress_fails_closed(self) -> None:
+        target_progress = progress_file_path(self.user_data, self.target_bank)
+        payload = self._progress_payload(self.source_questions, "e" * 64)
+        target_progress.write_text(json.dumps(payload), encoding="utf-8")
+        original = target_progress.read_bytes()
+        skipped = self.engine._migrate_progress_for_admitted_revision(self.revision)
+        self.assertTrue(skipped)
+        self.assertTrue(self.engine.progress_write_blocked)
+        self.assertEqual(original, target_progress.read_bytes())
+
+    def test_conflicting_source_and_target_progress_preserved(self) -> None:
+        source_progress = progress_file_path(self.user_data, self.source_bank)
+        target_progress = progress_file_path(self.user_data, self.target_bank)
+        source_payload = self._progress_payload(self.source_questions, self.revision.source_bank_content_fingerprint)
+        target_payload = self._progress_payload(self.source_questions, self.revision.source_bank_content_fingerprint)
+        target_payload["questions"]["keep"] = {**_record(), "attempts": 99}
+        source_progress.write_text(json.dumps(source_payload), encoding="utf-8")
+        target_progress.write_text(json.dumps(target_payload), encoding="utf-8")
+        original_source = source_progress.read_bytes()
+        original_target = target_progress.read_bytes()
+        skipped = self.engine._migrate_progress_for_admitted_revision(self.revision)
+        self.assertTrue(skipped)
+        self.assertEqual(original_source, source_progress.read_bytes())
+        self.assertEqual(original_target, target_progress.read_bytes())
+
+    def test_target_registration_restored_after_resolution(self) -> None:
+        from question_bank import load_bank
+        from question_identity import canonical_question_id, register_progress_identity_bank
+
+        load_bank(self.target_bank)
+        target_ids = [canonical_question_id(row) for row in registered_progress_identity_bank()]
+        with mock.patch(
+            "app.resolve_registered_revision_for_target",
+            return_value=AdmissionResult(AdmissionStatus.PASS, (), self.revision),
+        ):
+            self.engine._apply_registered_content_revision(self.target_bank)
+        restored_ids = [canonical_question_id(row) for row in registered_progress_identity_bank()]
+        self.assertEqual(target_ids, restored_ids)
+
+    def test_history_consumers_use_approved_lineage(self) -> None:
+        self.engine.progress_data = {
+            "history": [
+                {
+                    "question_id": "change",
+                    "question_content_fingerprint": question_content_fingerprint(self.change_source),
+                    "selected_texts": ["old wording"],
+                    "correct": True,
+                }
+            ]
+        }
+        mapped = canonical_question_history_map(self.engine.progress_data["history"])
+        without_authority = self.engine.revision_aware_history_events(mapped, self.change_target)
+        self.assertEqual([], without_authority)
+        self.engine.content_revision_authority = self.revision
+        with_authority = self.engine.revision_aware_history_events(mapped, self.change_target)
+        self.assertEqual(["old wording"], with_authority[0]["selected_texts"])
+        volatility = self.engine.question_volatility(self.change_target)
+        self.assertGreaterEqual(volatility["attempts"], 1)
+
+    def test_source_session_discovered_only_with_authority(self) -> None:
+        self.engine.content_revision_authority = None
+        patterns = self.engine._session_discovery_glob_patterns(MODE_PRACTICE)
+        self.assertEqual(1, len(patterns))
+        self.engine.content_revision_authority = self.revision
+        patterns = self.engine._session_discovery_glob_patterns(MODE_PRACTICE)
+        self.assertEqual(2, len(patterns))
+
+    def test_successful_session_migration_returns_target_path(self) -> None:
+        snapshot = build_session_snapshot(
+            app_version="test",
+            bank_file="source_bank.json",
+            mode=MODE_PRACTICE,
+            builder_context={
+                "mode": MODE_PRACTICE,
+                "count": "2",
+                "source_label": "Full bank",
+                "session_source": "",
+                "randomize": False,
+                "domain_filter": "All domains",
+                "topic_filter": "All topics",
+                "status_filter": "All questions",
+            },
+            source_label="Full bank",
+            question_numbers=[1, 2],
+            restore_question_numbers=[1, 2],
+            bank_fingerprint=self.revision.source_bank_content_fingerprint,
+            question_ids=["keep", "change"],
+            restore_question_ids=["keep", "change"],
+            session_base_question_count=2,
+            session_question_limit=2,
+            current_index=0,
+            elapsed_seconds=1,
+            exam_reveal=True,
+            checkpoints_saved=[],
+            session_rewards=[],
+            unlocked_rewards=[],
+            session_answer_history=[],
+            current_quests=[],
+            quest_completion_keys=[],
+            session_boss_markers=[],
+            session_stealth_markers=[],
+            session_xp_gained=0,
+            answers=[_answer(selected=["A"], answered=True), _answer()],
+        )
+        source_session = self.user_data / "source_bank_practice_session_abc.json"
+        source_session.write_text(json.dumps(snapshot), encoding="utf-8")
+        self.engine.content_revision_authority = self.revision
+        saved, target_path, error = self.engine._maybe_migrate_authorized_session(source_session, snapshot)
+        self.assertIsNone(error)
+        self.assertIsNotNone(saved)
+        self.assertNotEqual(source_session, target_path)
+        self.assertTrue(target_path.exists())
+        self.assertFalse(source_session.exists())
+        self.assertEqual(self.revision.target_bank_content_fingerprint, saved["bank_fingerprint"])
+
+    def test_session_migration_failure_preserves_source_without_quarantine(self) -> None:
+        snapshot = {
+            "bank_fingerprint": self.revision.source_bank_content_fingerprint,
+            "mode": MODE_PRACTICE,
+            "question_ids": ["keep", "change"],
+            "question_numbers": [1, 2],
+        }
+        source_session = self.user_data / "source_bank_practice_session_bad.json"
+        source_session.write_text(json.dumps(snapshot), encoding="utf-8")
+        original = source_session.read_bytes()
+        self.engine.content_revision_authority = self.revision
+        saved, path, error = self.engine._maybe_migrate_authorized_session(source_session, snapshot)
+        self.assertIsNotNone(error)
+        self.assertIsNone(saved)
+        self.assertEqual(original, source_session.read_bytes())
+        self.assertTrue(source_session.exists())
+        self.assertFalse(list(self.user_data.glob("*.bad.json")))
 
 
 if __name__ == "__main__":

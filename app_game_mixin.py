@@ -20,7 +20,6 @@ from progress_store import is_active_weak, is_review_due, is_suspended, now_iso
 from question_identity import (
     canonical_question_history_map,
     canonical_question_id,
-    history_events_for_question,
 )
 from session_models import QuestProgressState
 from ui_theme import AMBER, BG, BLUE, CARD, GREEN, MUTED, RED, TEXT
@@ -675,7 +674,7 @@ class GameRewardsMixin:
         rec = self._progress_record(current_q, create=False) or {}
         qnum = int(current_q.get("question_number") or 0)
         question_history_map = canonical_question_history_map(self._recent_history(28))
-        history_events = history_events_for_question(question_history_map, current_q)
+        history_events = self.revision_aware_history_events(question_history_map, current_q)
         question_stability = {qnum: self._question_stability_score(current_q, rec, history_events)}
         source_rows, source_map = self._build_source_agreement_rows(training_source_questions(self.master_questions))
         _source_trust_rows, source_trust_map = self._build_source_trust_rows(

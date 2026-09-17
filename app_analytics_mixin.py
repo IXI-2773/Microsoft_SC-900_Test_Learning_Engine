@@ -81,7 +81,7 @@ from progress_store import (
     study_status_name,
 )
 from question_bank import sanitize_text
-from question_identity import canonical_question_history_map, history_events_for_question
+from question_identity import canonical_question_history_map
 from session_models import QuestionHistoryEvent
 from smart_practice_measurement import build_measurement_report, normalize_measurement_store
 from smart_practice_policy import (
@@ -549,7 +549,7 @@ class AnalyticsMixin:
             if attempts <= 0 or is_active_weak(rec):
                 continue
             qnum = int(q.get("question_number") or 0)
-            history_events = history_events_for_question(question_history_map, q)
+            history_events = self.revision_aware_history_events(question_history_map, q)
             if not history_events:
                 continue
             guessed_correct = sum(
@@ -759,7 +759,7 @@ class AnalyticsMixin:
                 bucket["active_weak"] += 1
             if is_review_due(rec):
                 bucket["due"] += 1
-            bucket["trend_events"].extend(history_events_for_question(question_history_map, q))
+            bucket["trend_events"].extend(self.revision_aware_history_events(question_history_map, q))
 
         rows: list[ObjectiveMasteryRow] = []
         row_map: dict[str, ObjectiveMasteryRow] = {}
@@ -890,7 +890,7 @@ class AnalyticsMixin:
                 },
             )
             qnum = int(q.get("question_number") or 0)
-            for event in history_events_for_question(question_history_map, q):
+            for event in self.revision_aware_history_events(question_history_map, q):
                 if not event.get("correct"):
                     continue
                 bucket["correct_total"] += 1
@@ -965,7 +965,7 @@ class AnalyticsMixin:
             bucket["source_count"].add(str(q.get("source_name") or "Unknown source"))
             bucket["stability_total"] += float(question_stability.get(int(q.get("question_number") or 0), 0.0))
             bucket["stability_seen"] += 1
-            history_events = history_events_for_question(question_history_map, q)
+            history_events = self.revision_aware_history_events(question_history_map, q)
             if history_events:
                 if any(event.get("correct") for event in history_events):
                     bucket["seen_styles"].add(style)
@@ -1172,7 +1172,7 @@ class AnalyticsMixin:
         for q in list(questions or self.master_questions):
             rec = records.get(self._question_key(q), {})
             qnum = int(q.get("question_number") or 0)
-            events = history_events_for_question(recent_events, q)
+            events = self.revision_aware_history_events(recent_events, q)
             penalty = 0.0
             if events:
                 last_seen = max(self._parse_event_time(event) for event in events)
@@ -1511,7 +1511,7 @@ class AnalyticsMixin:
             qnum = int(q.get("question_number") or 0)
             bucket["stability_total"] += float(question_stability.get(qnum, 0.0))
             bucket["volatility_total"] += float(self.question_volatility(q).get("score", 0.0))
-            history_events = history_events_for_question(question_history_map, q)
+            history_events = self.revision_aware_history_events(question_history_map, q)
             correct_events = [event for event in history_events if event.get("correct")]
             if correct_events:
                 bucket["confidence_total"] += sum(
@@ -1980,7 +1980,7 @@ class AnalyticsMixin:
                     "events": [],
                     "canonical_concept_id": self._canonical_concept_id(q),
                 },
-            )["events"].extend(history_events_for_question(question_history_map, q))
+            )["events"].extend(self.revision_aware_history_events(question_history_map, q))
 
         rows: list[KnowledgeTraceRow] = []
         row_map: dict[str, KnowledgeTraceRow] = {}
@@ -2062,7 +2062,7 @@ class AnalyticsMixin:
                     "retrieval_correct": 0,
                 },
             )
-            events = history_events_for_question(question_history_map, q)
+            events = self.revision_aware_history_events(question_history_map, q)
             for event in events:
                 if style in ("Definition", "General"):
                     bucket["recognition_total"] += 1
@@ -2888,7 +2888,7 @@ class AnalyticsMixin:
             source_name = str(q.get("source_name") or "Unknown source")
             bucket["styles"].add(style)
             bucket["sources"].add(source_name)
-            events = history_events_for_question(question_history_map, q)
+            events = self.revision_aware_history_events(question_history_map, q)
             bucket["events"].extend(events)
             for event in events:
                 if event.get("correct"):
@@ -3597,7 +3597,7 @@ class AnalyticsMixin:
                 continue
             qnum = int(q.get("question_number") or 0)
             question_stability[qnum] = self._question_stability_score(
-                q, rec, history_events_for_question(question_history_map, q)
+                q, rec, self.revision_aware_history_events(question_history_map, q)
             )
         source_agreement_rows, source_agreement_map = self._build_source_agreement_rows(self.master_questions)
         source_trust_rows, source_trust_map = self._build_source_trust_rows(

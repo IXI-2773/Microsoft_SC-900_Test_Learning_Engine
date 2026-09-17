@@ -3,6 +3,7 @@ import logging
 import random
 import time
 from datetime import datetime
+from pathlib import Path
 
 from app_constants import MODE_EXAM, MODE_PRACTICE
 from app_info import APP_VERSION
@@ -267,6 +268,71 @@ class SessionPersistenceMixin:
         safe_mode = str(mode or "").lower().replace(" ", "_").replace("/", "_")
         return f"{self.runtime_bank_stem(self.bank_path)}_{safe_mode}_session_*.json"
 
+    def _session_discovery_glob_patterns(self, mode):
+        patterns = [self._session_builder_glob_pattern(mode)]
+        authority = getattr(self, "content_revision_authority", None)
+        if authority is None or not self.bank_path:
+            return patterns
+        safe_mode = str(mode or "").lower().replace(" ", "_").replace("/", "_")
+        source_stem = runtime_bank_stem(Path(self.bank_path).with_name(authority.source_bank_filename))
+        source_pattern = f"{source_stem}_{safe_mode}_session_*.json"
+        if source_pattern not in patterns:
+            patterns.append(source_pattern)
+        return patterns
+
+    def _session_discovery_paths(self, mode):
+        seen: set[Path] = set()
+        paths: list[Path] = []
+        for pattern in self._session_discovery_glob_patterns(mode):
+            for path in self.user_data_dir.glob(pattern):
+                resolved = path.resolve()
+                if resolved in seen:
+                    continue
+                seen.add(resolved)
+                paths.append(path)
+        return paths
+
+    def _maybe_migrate_authorized_session(self, path: Path, saved):
+        authority = getattr(self, "content_revision_authority", None)
+        if authority is None or not isinstance(saved, dict) or not self.bank_path:
+            return saved, Path(path), None
+        saved_fp = str(saved.get("bank_fingerprint") or "").strip()
+        try:
+            current_fp = self.current_bank_fingerprint()
+        except ValueError:
+            return saved, Path(path), None
+        if saved_fp != authority.source_bank_content_fingerprint or current_fp != authority.target_bank_content_fingerprint:
+            return saved, Path(path), None
+        target_path = self.session_file_for_bank(
+            self.bank_path,
+            mode=saved.get("mode"),
+            question_ids=list(saved.get("question_ids") or []),
+            question_numbers=list(saved.get("question_numbers") or []),
+            builder_context=saved.get("builder_context"),
+            builder_context_fingerprint=saved.get("builder_context_fingerprint"),
+        )
+        source_questions = None
+        source_bank_path = Path(self.bank_path).parent / authority.source_bank_filename
+        if source_bank_path.exists():
+            try:
+                source_payload = json.loads(source_bank_path.read_text(encoding="utf-8"))
+                if isinstance(source_payload, dict) and isinstance(source_payload.get("questions"), list):
+                    source_questions = source_payload["questions"]
+            except (OSError, UnicodeError, json.JSONDecodeError):
+                source_questions = None
+        payload, _archive, error = self.persistence.migrate_session_file_across_approved_revision(
+            Path(path),
+            Path(target_path),
+            list((getattr(self, "data", None) or {}).get("questions") or self._session_bank_questions()),
+            authority,
+            Path(self.bank_path).name,
+            source_questions=source_questions,
+        )
+        if error is not None or payload is None:
+            logging.warning("Approved content revision session migration skipped without quarantine: %s (%s)", path, error)
+            return None, Path(path), error
+        return payload, Path(target_path), None
+
     def _latest_completed_session_timestamp(self, builder_context):
         desired = canonical_builder_identity(builder_context)
         desired_fp = desired["builder_context_fingerprint"]
@@ -292,9 +358,7 @@ class SessionPersistenceMixin:
         available_qnums = [q.get("question_number") for q in available_questions]
         available_ids = None if experimental else ordered_question_ids(available_questions)
         fingerprint = None if experimental else self.current_bank_fingerprint()
-        for path in self.user_data_dir.glob(
-            self._session_builder_glob_pattern(desired["builder_context"].get("mode", self.active_session_mode))
-        ):
+        for path in self._session_discovery_paths(desired["builder_context"].get("mode", self.active_session_mode)):
             if latest_completed_at and path.stat().st_mtime <= latest_completed_at:
                 continue
             saved, backup, err = self.persistence.load_json_with_backup(path)
@@ -302,6 +366,9 @@ class SessionPersistenceMixin:
                 if err:
                     logging.warning("Skipped resumable session candidate after read failure: %s", path)
                     self._show_bad_json_warning("Session", path, backup, err)
+                continue
+            saved, path, migrate_error = self._maybe_migrate_authorized_session(path, saved)
+            if migrate_error or not saved:
                 continue
             candidate_experimental = experimental or bool(isinstance(saved, dict) and saved.get("cand01r3"))
             try:
@@ -345,11 +412,12 @@ class SessionPersistenceMixin:
         available_qnums = [q.get("question_number") for q in available_questions]
         available_ids = None if experimental else ordered_question_ids(available_questions)
         fingerprint = None if experimental else self.current_bank_fingerprint()
-        for path in self.user_data_dir.glob(
-            self._session_builder_glob_pattern(desired["builder_context"].get("mode", self.active_session_mode))
-        ):
+        for path in self._session_discovery_paths(desired["builder_context"].get("mode", self.active_session_mode)):
             saved, _backup, err = self.persistence.load_json_with_backup(path)
             if err or not saved:
+                continue
+            saved, path, migrate_error = self._maybe_migrate_authorized_session(path, saved)
+            if migrate_error or not saved:
                 continue
             candidate_experimental = experimental or bool(isinstance(saved, dict) and saved.get("cand01r3"))
             try:
