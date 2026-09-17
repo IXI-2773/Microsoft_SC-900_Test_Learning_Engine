@@ -282,21 +282,23 @@ Conceptual top-level shape:
   "continuity_policy": "FULL_CONTINUITY",
   "source_bank": {
     "filename": "sc900_bank_v8_final.json",
-    "file_sha256": "<64 hex>",
-    "content_fingerprint": "<64 hex>",
+    "file_sha256": "SOURCE_BANK_FILE_SHA256",
+    "content_fingerprint": "SOURCE_BANK_CONTENT_FINGERPRINT",
     "question_count": 454
   },
   "target_bank": {
-    "filename": "<candidate filename>",
-    "file_sha256": "<64 hex>",
-    "content_fingerprint": "<64 hex>",
+    "filename": "TARGET_BANK_FILENAME",
+    "file_sha256": "TARGET_BANK_FILE_SHA256",
+    "content_fingerprint": "TARGET_BANK_CONTENT_FINGERPRINT",
     "question_count": 454
   },
   "permitted_change_class": "WORDING_ONLY_LENGTH_REBALANCE",
   "edges": [],
-  "payload_sha256": "<canonical payload digest>"
+  "payload_sha256": "CANONICAL_MANIFEST_PAYLOAD_SHA256"
 }
 ```
+
+The symbolic digest/filename values above define the required bindings; the implementation populates them with the exact generated values for each admitted revision.
 
 The final implementation schema may use typed objects or equivalent field names, but it must preserve the semantics and proof obligations in this design.
 
@@ -422,13 +424,15 @@ json.dumps(
 
 Continuity authority must not come from a user-writable runtime directory or arbitrary downloaded file.
 
-Approved manifest/review material is release-controlled repository/package content under the Section 5 authority surface:
+Approved manifest/review material is release-controlled repository/package content under the Section 5 evidence surface:
 
 ```text
-content_revision_authority/
+content_revision_evidence/
     manifests/
     reviews/
 ```
+
+The evidence directory is intentionally distinct from the `content_revision_authority.py` module name.
 
 Runtime does not provide a user override such as “trust this changed bank.”
 
@@ -602,9 +606,9 @@ BANK V8 --M1--> BANK V9
 BANK V9 --M2--> BANK V10
 ```
 
-A direct V8 -> V10 continuity operation requires validation of the complete approved chain. Neither bank nor question equivalence is inferred from IDs or similarity.
+A V8 historical event may be recognized at V10 only through validation of the complete approved chain. Version-1 live-state migration itself remains limited by Section 5.12 to one direct bank edge per execution.
 
-The first implementation may support only one direct production-bank -> target-bank revision while preserving this chain model for future compatibility.
+Neither bank nor question equivalence is inferred from IDs or similarity.
 
 ## 2.15 Section 2 controlling invariant
 
@@ -1877,17 +1881,17 @@ and returns the original historical event unchanged.
 
 Consumers may use this common resolver only when an admitted revision authority is active.
 
-## 5.8 Repository authority surface and registry
+## 5.8 Repository evidence surface and authority registry
 
-The version-1 authority surface is fixed as:
+The version-1 evidence surface is fixed as:
 
 ```text
-content_revision_authority/
+content_revision_evidence/
     manifests/
     reviews/
 ```
 
-Approved manifests are additionally pinned through:
+Approved manifests are pinned through:
 
 ```text
 content_revision_registry.py
@@ -1905,7 +1909,7 @@ known bundled manifest identity
 + exact target bank identity
 ```
 
-Merely placing a JSON file in the authority directory does not make it trusted.
+Merely placing a JSON file in the evidence directory does not make it trusted.
 
 No signing-key/PKI infrastructure is introduced in version 1.
 
@@ -2134,6 +2138,35 @@ The governing safety condition remains:
 ```text
 UNREVIEWED CONTENT CHANGE
 NEVER INHERITS LEARNER AUTHORITY
+```
+
+---
+
+# Spec self-review record
+
+The completed design was reviewed against the required design-quality checks.
+
+```text
+PLACEHOLDER_SCAN = PASS
+- no TODO/TBD/incomplete design sections remain;
+- symbolic manifest values are explicitly defined as generated revision bindings, not unresolved requirements.
+
+INTERNAL_CONSISTENCY = PASS
+- strict baseline fingerprint behavior remains unchanged;
+- direct live-state migration is one edge per execution;
+- multi-hop semantics apply only to validated history lineage in version 1;
+- authority code and evidence storage use distinct filesystem names (`content_revision_authority.py` vs `content_revision_evidence/`).
+
+SCOPE_CHECK = PASS
+- one implementation plan can cover Package A infrastructure;
+- Package B content work and Package C activation remain separately gated follow-on packages.
+
+AMBIGUITY_CHECK = PASS
+- version-1 permitted field changes are answer-choice wording only;
+- prompt/explanations/key/letter mapping/classification fields are unchanged;
+- no manifest means current fail-closed behavior;
+- pre-existing quarantine is not resurrected;
+- production activation requires a later exact-candidate authorization.
 ```
 
 ---
