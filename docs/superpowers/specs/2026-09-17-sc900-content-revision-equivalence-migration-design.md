@@ -4,7 +4,7 @@
 **Repository:** `IXI-2773/Microsoft_SC-900_Test_Learning_Engine`  
 **Design branch:** `design/sc900-content-revision-equivalence-migration-001`  
 **Authoritative design base:** `23d440b6976b9f6bbb3b77285bf0d11effc2513f`  
-**Status:** `INTERIM DESIGN / SECTIONS 1-3 APPROVED / SECTION 4+ PENDING`  
+**Status:** `INTERIM DESIGN / SECTIONS 1-4 APPROVED / FINAL SECTION PENDING`  
 **Implementation authorized:** `NO`
 
 ## Purpose
@@ -1017,15 +1017,693 @@ EXISTING FAIL-CLOSED PATH
 
 ---
 
+# Section 4 — Adversarial Test Matrix and Proof Obligations
+
+## 4.1 Test philosophy
+
+The new continuity path must be proven to be strictly narrower than the existing fail-closed system, not a bypass around it.
+
+Every positive migration test has at least one negative twin.
+
+Example:
+
+```text
+VALID:
+exact source FP
+exact target FP
+exact approved manifest
+-> continuity
+
+NEGATIVE TWIN:
+change one hex digit in target FP
+-> FAIL CLOSED
+```
+
+The new system passes only when every required proof is present simultaneously.
+
+## 4.2 Manifest and schema tests
+
+Required cases:
+
+```text
+S4-001 valid schema + valid canonical hash
+    -> PASS
+
+S4-002 unsupported schema version
+    -> SCHEMA_UNSUPPORTED
+
+S4-003 missing required field
+    -> MISSING_FIELD
+
+S4-004 unknown authority-bearing field
+    -> UNKNOWN_FIELD
+
+S4-005 duplicate JSON object key
+    -> DUPLICATE_JSON_KEY
+
+S4-006 manifest altered after hash computed
+    -> MANIFEST_HASH_MISMATCH
+
+S4-007 equivalent JSON with different whitespace/key order
+    -> same canonical manifest hash
+
+S4-008 user-writable/unregistered manifest
+    -> NO AUTHORITY
+```
+
+This proves that equivalence authority is an exact governed object rather than loosely parsed metadata.
+
+## 4.3 Exact source/target bank binding
+
+The actual banks, not filenames, are authoritative.
+
+Required cases:
+
+```text
+correct source + correct target
+    -> PASS
+
+wrong source file SHA
+    -> FAIL
+
+wrong source content fingerprint
+    -> FAIL
+
+wrong target file SHA
+    -> FAIL
+
+wrong target content fingerprint
+    -> FAIL
+
+same filename but altered contents
+    -> FAIL
+
+454 -> 453 questions
+    -> FAIL
+
+454 -> 455 questions
+    -> FAIL
+
+different canonical question-ID set
+    -> FAIL
+```
+
+A copied or familiar filename confers no migration authority.
+
+## 4.4 Closed-world change-set proof
+
+The validator independently computes the actual changed-question population and requires exact equality with the manifest edge population:
+
+```text
+ACTUAL_CHANGED_IDS
+==
+DECLARED_EDGE_IDS
+```
+
+Required cases:
+
+```text
+declared Q10,Q27,Q91 / actual Q10,Q27,Q91
+    -> PASS
+
+actual also contains Q92
+    -> UNDECLARED_CONTENT_CHANGE
+
+manifest includes unchanged Q93
+    -> EXTRA_EQUIVALENCE_EDGE
+
+Q27 appears twice
+    -> DUPLICATE_EQUIVALENCE_EDGE
+
+missing Q91 edge
+    -> UNDECLARED_CONTENT_CHANGE
+```
+
+No silent extras and no partially declared bank are allowed.
+
+## 4.5 Per-question fingerprint tests
+
+For every declared edge, independently prove exact:
+
+```text
+question_id
+from_content_fingerprint
+to_content_fingerprint
+```
+
+Negative controls:
+
+```text
+correct QID / wrong FROM_FP
+    -> FAIL
+
+correct QID / wrong TO_FP
+    -> FAIL
+
+wrong QID / correct hashes
+    -> FAIL
+
+reversed V2 -> V1 edge
+    -> FAIL
+
+unrelated approved edge
+    -> FAIL
+```
+
+Directionality must be test-proven.
+
+## 4.6 Mechanical invariant tests
+
+For every admitted question, prove that only authorized answer-choice wording changed.
+
+Required invariants:
+
+```text
+canonical ID unchanged
+prompt unchanged
+correct key unchanged
+choice labels unchanged
+letter-to-concept relationship unchanged
+objective unchanged
+domain unchanged
+topics unchanged
+tier unchanged
+Exam eligibility unchanged
+question type unchanged
+explanations unchanged
+all nonpermitted durable fields unchanged
+```
+
+Mutation tests include:
+
+```text
+change only choice wording
+    -> may proceed to semantic gate
+
+change correct A -> B
+    -> CORRECT_KEY_CHANGED
+
+swap B and C
+    -> CHOICE_LETTER_MAPPING_CHANGED
+
+change prompt
+    -> PROMPT_CHANGED
+
+change objective
+    -> OBJECTIVE_CHANGED
+
+CORE -> APPLIED
+    -> TIER_CHANGED
+
+Exam eligible -> excluded
+    -> EXAM_ELIGIBILITY_CHANGED
+
+edit explanation
+    -> NONPERMITTED_FIELD_CHANGED
+```
+
+## 4.7 Semantic-review receipt tests
+
+A mechanically valid edit still fails without exact reviewed semantic evidence.
+
+Required proof:
+
+```text
+review receipt exists
+review receipt hash matches manifest
+review belongs to exact question
+review references exact FROM_FP
+review references exact TO_FP
+A = EQUIVALENT
+B = EQUIVALENT
+C = EQUIVALENT
+D = EQUIVALENT
+official factual authority present
+final disposition = APPROVED_FOR_FULL_CONTINUITY
+```
+
+Negative cases:
+
+```text
+missing receipt
+    -> FAIL
+
+receipt modified after approval
+    -> FAIL
+
+receipt belongs to another QID
+    -> FAIL
+
+one choice = AMBIGUOUS
+    -> FAIL
+
+one choice = SUBSTANTIVELY_CHANGED
+    -> FAIL
+
+authority evidence missing
+    -> FAIL
+```
+
+Runtime never creates or upgrades these approvals.
+
+## 4.8 Existing fail-closed behavior remains intact
+
+Without an admitted equivalence manifest, existing behavior remains authoritative:
+
+```text
+changed question content
+    -> CHANGED_CONTENT
+    -> progress does not attach
+
+changed fingerprint history
+    -> history does not attach
+
+bank fingerprint mismatch
+    -> canonical saved session rejected
+```
+
+Existing adversarial tests proving these properties remain unchanged and must continue to pass.
+
+A new regression explicitly proves:
+
+```text
+NEW FEATURE DISABLED / NO AUTHORITY
+==
+OLD BEHAVIOR
+```
+
+## 4.9 Progress full-continuity tests
+
+Construct a nontrivial source progress record for an admitted edge containing:
+
+```text
+attempt count
+correct/incorrect evidence
+confidence
+mastery/review data
+weak state
+flags/suspension
+Smart Practice state
+```
+
+After migration prove:
+
+```text
+QUESTION_ID = unchanged
+ALL LEARNER VALUES = unchanged
+ACTIVE_FP = FP_V2
+BANK_FP = TARGET_BANK_FP
+ONE lineage receipt appended
+old active FP no longer authoritative
+```
+
+Also prove:
+
+```text
+already quarantined state
+    -> NOT resurrected
+
+unrelated question state
+    -> unchanged
+
+new question state
+    -> not fabricated
+```
+
+## 4.10 Historical immutability tests
+
+Given a historical event with:
+
+```text
+question_id = Q1
+question_content_fingerprint = FP_V1
+selected_texts = old wording
+correct_texts = old wording
+```
+
+after migration prove:
+
+```text
+event FP remains FP_V1
+old selected_texts remain old text
+old correct_texts remain old text
+timestamps unchanged
+correctness unchanged
+confidence unchanged
+response timing unchanged
+```
+
+The event may match the current question through approved lineage, but its persisted historical contents remain unchanged.
+
+## 4.11 History-join tests
+
+Test the equivalence-aware resolver independently:
+
+```text
+same QID + same FP
+    -> MATCH
+
+same QID + approved FP_V1 -> FP_V2
+    -> MATCH
+
+same QID + no approved edge
+    -> NO MATCH
+
+different QID + approved hashes
+    -> NO MATCH
+
+reversed edge only
+    -> NO MATCH
+```
+
+Future chain semantics must also prove:
+
+```text
+V1 -> V2 approved
+V2 -> V3 approved
+event V1 / current V3
+    -> MATCH
+
+V1 -> V2 approved
+V2 -> V3 missing
+    -> NO MATCH
+```
+
+Transitivity is explicit and chain-bound.
+
+## 4.12 Smart Practice and analytics tests
+
+For an admitted revision, prove that prior evidence continues to contribute to the consumers that currently rely on canonical/fingerprint-bound history, including:
+
+```text
+weak-question identification
+review scheduling
+confidence analytics
+question stability
+Smart Practice selection signals
+mastery-related calculations
+```
+
+Then run a negative twin without authority and prove the same old event does not attach.
+
+Text-derived analytics must continue receiving historical V1 text, never substituted V2 wording.
+
+## 4.13 Saved-session positive migration
+
+Create an in-progress canonical source session containing:
+
+```text
+answered question
+unanswered question
+flagged question
+confidence state
+session answer history
+current index
+elapsed time
+builder context
+quests/rewards
+```
+
+Migrate under a valid admitted source -> target manifest.
+
+Required proof:
+
+```text
+ordered question IDs preserved
+answered state preserved
+selected answer letters preserved
+confidence preserved
+history preserved
+current index preserved
+elapsed time preserved
+builder identity preserved
+quests/rewards preserved
+
+bank fingerprint = target
+session signature = recomputed
+restore signature = recomputed
+canonical target filename/path identity = recomputed
+```
+
+Target identities are regenerated, not copied from the source revision.
+
+## 4.14 Saved-session rejection tests
+
+Each of these rejects migration:
+
+```text
+session references removed question
+session references unknown question
+changed question has no edge
+wrong source bank
+wrong target bank
+wrong choice mapping
+changed correct key
+invalid source signature
+invalid restore signature
+invalid builder identity
+partial manifest
+```
+
+There is no partial ordinary-session restore.
+
+## 4.15 Pending-selection test
+
+For an approved changed question with:
+
+```text
+selected = ["B"]
+pending = ["B"]
+answered = false
+```
+
+after migration require:
+
+```text
+selected = []
+pending = []
+answered = false
+```
+
+All unrelated session state remains preserved.
+
+For a completed answer:
+
+```text
+answered = true
+selected = ["B"]
+```
+
+the completed answer remains preserved.
+
+## 4.16 Atomicity and backup tests
+
+Fault injection points include:
+
+```text
+before validation
+after validation
+after backup
+during target serialization
+during target temporary write
+after target write
+before source archival
+after source archival
+```
+
+At every point recovery must produce one of only two acceptable states:
+
+```text
+SOURCE AUTHORITATIVE / TARGET NOT ACTIVE
+```
+
+or:
+
+```text
+VERIFIED TARGET AUTHORITATIVE
+```
+
+Never a half-migrated learner state.
+
+## 4.17 Idempotence tests
+
+Apply the exact same migration twice.
+
+Required:
+
+```text
+attempt counts unchanged
+history count unchanged
+migration receipt count unchanged
+session state unchanged
+no second backup solely because migration was already applied
+no duplicate target session
+```
+
+The second execution resolves to a deterministic no-op such as:
+
+```text
+MIGRATION_ALREADY_APPLIED
+```
+
+## 4.18 Crash-recovery tests
+
+Simulate:
+
+```text
+target written
+source not yet archived
+process dies
+```
+
+On restart:
+
+```text
+verified target
++ matching migration_id
+    -> complete cleanup
+```
+
+But:
+
+```text
+target exists
++ wrong migration_id
+    -> FAIL CLOSED
+    -> preserve both files
+    -> do not overwrite
+```
+
+## 4.19 Quarantine non-resurrection test
+
+Create:
+
+```text
+quarantined_questions[Q1]
+reason = CHANGED_CONTENT
+```
+
+Then provide a new valid V1 -> V2 manifest.
+
+Required:
+
+```text
+Q1 remains quarantined
+```
+
+unless an entirely separate restoration authority is explicitly designed.
+
+## 4.20 Multi-revision chain tests
+
+Even though the initial implementation may support only one direct bank revision per execution, the contract is future-safe.
+
+Test:
+
+```text
+V1 -> V2 valid
+V2 -> V3 valid
+```
+
+and verify that a V1 historical event can contribute at V3 only through both admitted edges.
+
+Negative cases:
+
+```text
+missing middle manifest
+wrong middle bank fingerprint
+branching contradictory lineage
+cycle V2 -> V1
+duplicate path with conflicting authority
+```
+
+Live-state migration may remain deliberately limited to one direct bank edge per execution in version 1.
+
+## 4.21 Answer-length repair proof obligations
+
+Before this architecture may unblock the original leakage repair, the eventual candidate bank must additionally prove:
+
+```text
+QUESTION_COUNT = 454
+QUESTION_ID_SET_CHANGED = NO
+CORRECT_KEYS_CHANGED = 0
+OBJECTIVES_CHANGED = 0
+TIERS_CHANGED = 0
+EXAM_ELIGIBILITY_CHANGED = 0
+
+ALL CONTENT CHANGES =
+DECLARED ANSWER-CHOICE WORDING REVISIONS
+
+ALL DECLARED EDGES =
+SEMANTICALLY APPROVED
+```
+
+The original statistical gates still apply:
+
+```text
+STRICT_LONGEST_CORRECT_RATE < 40%
+UNIQUE_LONGEST_HEURISTIC_SUCCESS < 40%
+NO_DOMAIN > 45%
+NO_MATERIAL_SHORTEST_ANSWER_LEAKAGE
+NO_POSITIONAL_BIAS_SUBSTITUTION
+```
+
+The migration contract cannot be used to excuse poor bank-quality evidence.
+
+## 4.22 Full regression obligations
+
+Before implementation is integration-ready:
+
+```text
+new equivalence tests = PASS
+existing canonical identity tests = PASS
+existing changed-content quarantine tests = PASS
+existing session identity tests = PASS
+existing progress migration tests = PASS
+Smart Practice / analytics tests = PASS
+bank lint = PASS
+installation verification = PASS
+full repository regression suite = PASS
+```
+
+Display-dependent Tk skips remain distinguishable from real failures and cannot conceal non-GUI migration defects.
+
+## 4.23 Section 4 acceptance gate
+
+The architecture is not proven merely because one positive migration works.
+
+Required proof:
+
+```text
+VALID, EXACTLY AUTHORIZED REVISION
+    -> FULL CONTINUITY
+
+EVERY MATERIAL DEVIATION FROM THAT AUTHORITY
+    -> FAIL CLOSED
+
+NO MANIFEST
+    -> CURRENT BEHAVIOR UNCHANGED
+
+FAILED MIGRATION
+    -> SOURCE DATA PRESERVED
+
+SUCCESSFUL MIGRATION
+    -> LEARNER STATE PRESERVED
+       + TARGET IDENTITY CORRECT
+       + HISTORICAL EVIDENCE IMMUTABLE
+       + LINEAGE AUDITABLE
+```
+
+---
+
 # Current design state
 
-Sections 1-3 are approved design authority for the remainder of the brainstorming/specification process.
+Sections 1-4 are approved design authority for the remainder of the brainstorming/specification process.
 
 They are **not** implementation authority.
 
 ```text
-SECTIONS_1_3_RECORDED = YES
-SECTION_4_ADVERSARIAL_TEST_MATRIX = NOT_YET_RECORDED
+SECTIONS_1_4_RECORDED = YES
+SECTION_4_ADVERSARIAL_TEST_MATRIX = APPROVED / RECORDED
 FINAL_SPEC_COMPLETE = NO
 IMPLEMENTATION_PLAN_AUTHORIZED = NO
 IMPLEMENTATION_AUTHORIZED = NO
@@ -1033,4 +1711,4 @@ PRODUCTION_BANK_MUTATION_AUTHORIZED = NO
 MERGE_AUTHORIZED = NO
 ```
 
-The next design section will define adversarial tests and proof obligations before the full specification is considered complete.
+The final design section will define the implementation boundary, component ownership, rollout/activation sequence, and explicit non-goals before the specification is considered complete.
