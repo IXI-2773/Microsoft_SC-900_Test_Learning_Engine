@@ -227,10 +227,31 @@ class RuntimePersistence:
                     )
                 transform_source = existing
             else:
+                leftover = payload
+                leftover_fp = str(leftover.get("bank_fingerprint") or "").strip()
+                if leftover_fp != revision.source_bank_content_fingerprint:
+                    return (
+                        None,
+                        None,
+                        ContentRevisionMigrationError(
+                            MigrationFailureReason.SOURCE_BANK_MISMATCH,
+                            leftover_fp,
+                        ),
+                    )
                 try:
+                    expected = migrate_progress_payload(leftover, target_questions, revision, migrated_at)
                     verified = migrate_progress_payload(existing, target_questions, revision, migrated_at)
                 except ContentRevisionMigrationError as exc:
                     return None, None, exc
+                if expected.status != MigrationStatus.APPLIED:
+                    return (
+                        None,
+                        None,
+                        ContentRevisionMigrationError(
+                            MigrationFailureReason.TARGET_PROGRESS_CONFLICT,
+                            str(source_path),
+                        ),
+                    )
                 if verified.status != MigrationStatus.MIGRATION_ALREADY_APPLIED:
                     return (
                         None,
@@ -240,17 +261,15 @@ class RuntimePersistence:
                             str(target_path),
                         ),
                     )
-                leftover, leftover_error = self._read_json_nonmutating(source_path)
-                if leftover_error is not None or leftover is None:
-                    return None, None, leftover_error
-                leftover_fp = str(leftover.get("bank_fingerprint") or "").strip()
-                if leftover_fp != revision.source_bank_content_fingerprint:
+                if not _progress_payloads_equal_ignoring_retry_migrated_at(
+                    expected.payload, existing, expected.migration_id
+                ):
                     return (
                         None,
                         None,
                         ContentRevisionMigrationError(
                             MigrationFailureReason.TARGET_PROGRESS_CONFLICT,
-                            str(source_path),
+                            str(target_path),
                         ),
                     )
                 archive = None
@@ -380,3 +399,21 @@ class RuntimePersistence:
 def content_revision_archive_path(source_path: Path, migration_id: str, label: str) -> Path:
     source = Path(source_path)
     return source.with_name(f"{str(migration_id).strip()}.{str(label).strip() or 'revision'}.{source.name}")
+
+
+def _progress_payloads_equal_ignoring_retry_migrated_at(
+    expected: dict[str, Any], existing: dict[str, Any], migration_id: str
+) -> bool:
+    return _payload_for_recovery_compare(expected, migration_id) == _payload_for_recovery_compare(
+        existing, migration_id
+    )
+
+
+def _payload_for_recovery_compare(payload: dict[str, Any], migration_id: str) -> str:
+    normalized = json.loads(json.dumps(payload))
+    lineage = normalized.get("content_revision_lineage")
+    if isinstance(lineage, list):
+        for row in lineage:
+            if isinstance(row, dict) and str(row.get("migration_id") or "") == migration_id:
+                row["migrated_at"] = ""
+    return json.dumps(normalized, sort_keys=True, separators=(",", ":"))

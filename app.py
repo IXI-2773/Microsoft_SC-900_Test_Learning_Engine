@@ -2673,9 +2673,9 @@ class TestingEngineApp(
 
     def _apply_registered_content_revision(self, target_bank_path: Path) -> bool:
         result = resolve_registered_revision_for_target(Path(target_bank_path))
+        revision = self._bind_content_revision_authority(result)
         if result is None:
             return False
-        revision = self._bind_content_revision_authority(result)
         if revision is None:
             return True
         return self._migrate_progress_for_admitted_revision(revision)

@@ -261,6 +261,119 @@ class ContentRevisionPersistenceTests(unittest.TestCase):
         assert retry_archive is not None
         self.assertTrue(retry_archive.exists())
 
+    def _verified_target_with_leftover(self, leftover: dict | None = None) -> tuple[bytes, bytes]:
+        original_source = self.source_progress.read_bytes()
+        first_payload, first_archive, first_error = self.persistence.migrate_progress_across_approved_revision(
+            self.source_progress,
+            self.target_progress,
+            self.target_questions,
+            self.revision,
+            "2026-09-17T00:00:00",
+        )
+        self.assertIsNone(first_error)
+        self.assertIsNotNone(first_payload)
+        self.assertIsNotNone(first_archive)
+        if leftover is None:
+            self.source_progress.write_bytes(original_source)
+        else:
+            self.source_progress.write_text(json.dumps(leftover), encoding="utf-8")
+        return self.source_progress.read_bytes(), self.target_progress.read_bytes()
+
+    def _retry_leftover_recovery(self):
+        return self.persistence.migrate_progress_across_approved_revision(
+            self.source_progress,
+            self.target_progress,
+            self.target_questions,
+            self.revision,
+            "2026-09-18T12:00:00",
+        )
+
+    def test_exact_leftover_source_recovery_preserves_target_bytes(self) -> None:
+        original_source, original_target = self._verified_target_with_leftover()
+        payload, archive, error = self._retry_leftover_recovery()
+        self.assertIsNone(error)
+        self.assertIsNotNone(payload)
+        self.assertIsNotNone(archive)
+        self.assertFalse(self.source_progress.exists())
+        self.assertEqual(original_target, self.target_progress.read_bytes())
+        loaded = json.loads(self.target_progress.read_text(encoding="utf-8"))
+        self.assertEqual(1, len(loaded["content_revision_lineage"]))
+        self.assertEqual("2026-09-17T00:00:00", loaded["content_revision_lineage"][0]["migrated_at"])
+        assert archive is not None
+        self.assertTrue(archive.exists())
+        self.assertEqual(original_source, archive.read_bytes())
+
+    def test_leftover_source_with_newer_attempts_is_preserved(self) -> None:
+        leftover = copy.deepcopy(self.progress_payload)
+        leftover["questions"]["keep"] = {**_record(), "attempts": 99}
+        original_source, original_target = self._verified_target_with_leftover(leftover)
+        payload, archive, error = self._retry_leftover_recovery()
+        self.assertIsNone(payload)
+        self.assertIsNone(archive)
+        self.assertIsInstance(error, ContentRevisionMigrationError)
+        self.assertEqual(MigrationFailureReason.TARGET_PROGRESS_CONFLICT, error.reason)
+        self.assertTrue(self.source_progress.exists())
+        self.assertEqual(original_source, self.source_progress.read_bytes())
+        self.assertEqual(original_target, self.target_progress.read_bytes())
+
+    def test_leftover_source_with_newer_history_is_preserved(self) -> None:
+        leftover = copy.deepcopy(self.progress_payload)
+        leftover["history"] = list(leftover["history"]) + [
+            {
+                "question_id": "keep",
+                "question_content_fingerprint": question_content_fingerprint(self.keep_source),
+                "selected_texts": ["later attempt"],
+            }
+        ]
+        original_source, original_target = self._verified_target_with_leftover(leftover)
+        payload, archive, error = self._retry_leftover_recovery()
+        self.assertIsNone(payload)
+        self.assertIsNone(archive)
+        self.assertIsInstance(error, ContentRevisionMigrationError)
+        self.assertEqual(MigrationFailureReason.TARGET_PROGRESS_CONFLICT, error.reason)
+        self.assertTrue(self.source_progress.exists())
+        self.assertEqual(original_source, self.source_progress.read_bytes())
+        self.assertEqual(original_target, self.target_progress.read_bytes())
+
+    def test_malformed_parseable_leftover_source_is_preserved(self) -> None:
+        leftover = copy.deepcopy(self.progress_payload)
+        leftover["history"] = {"0": leftover["history"][0]}
+        original_source, original_target = self._verified_target_with_leftover(leftover)
+        payload, archive, error = self._retry_leftover_recovery()
+        self.assertIsNone(payload)
+        self.assertIsNone(archive)
+        self.assertIsInstance(error, ContentRevisionMigrationError)
+        self.assertEqual(MigrationFailureReason.INVALID_PROGRESS_PAYLOAD, error.reason)
+        self.assertTrue(self.source_progress.exists())
+        self.assertEqual(original_source, self.source_progress.read_bytes())
+        self.assertEqual(original_target, self.target_progress.read_bytes())
+
+    def test_leftover_source_wrong_fingerprint_is_preserved(self) -> None:
+        leftover = copy.deepcopy(self.progress_payload)
+        leftover["bank_fingerprint"] = "e" * 64
+        original_source, original_target = self._verified_target_with_leftover(leftover)
+        payload, archive, error = self._retry_leftover_recovery()
+        self.assertIsNone(payload)
+        self.assertIsNone(archive)
+        self.assertIsInstance(error, ContentRevisionMigrationError)
+        self.assertTrue(self.source_progress.exists())
+        self.assertEqual(original_source, self.source_progress.read_bytes())
+        self.assertEqual(original_target, self.target_progress.read_bytes())
+
+    def test_invalid_target_lineage_with_leftover_source_is_preserved(self) -> None:
+        original_source, _original_target = self._verified_target_with_leftover()
+        loaded = json.loads(self.target_progress.read_text(encoding="utf-8"))
+        loaded["content_revision_lineage"] = []
+        self.target_progress.write_text(json.dumps(loaded), encoding="utf-8")
+        original_target = self.target_progress.read_bytes()
+        payload, archive, error = self._retry_leftover_recovery()
+        self.assertIsNone(payload)
+        self.assertIsNone(archive)
+        self.assertIsInstance(error, ContentRevisionMigrationError)
+        self.assertTrue(self.source_progress.exists())
+        self.assertEqual(original_source, self.source_progress.read_bytes())
+        self.assertEqual(original_target, self.target_progress.read_bytes())
+
 
 class ContentRevisionSessionPersistenceTests(unittest.TestCase):
     def setUp(self) -> None:
@@ -531,6 +644,59 @@ class ContentRevisionAppIntegrationTests(unittest.TestCase):
         self.assertIsNone(self.engine.content_revision_authority)
         self.assertTrue(self.engine.progress_write_blocked)
         self.assertEqual(original, target_progress.read_bytes())
+
+    def _prepare_engine_widgets_for_load(self) -> None:
+        self.engine.domain_combo = mock.MagicMock()
+        self.engine.topic_combo = mock.MagicMock()
+        self.engine.status_combo = mock.MagicMock()
+        self.engine.status_combo.__contains__.return_value = True
+        self.engine.domain_combo.__getitem__.return_value = ["All domains"]
+        self.engine.topic_combo.__getitem__.return_value = ["All topics"]
+        self.engine.status_combo.__getitem__.return_value = ["All questions"]
+        self.engine.domain_filter_var = mock.MagicMock()
+        self.engine.topic_filter_var = mock.MagicMock()
+        self.engine.status_filter_var = mock.MagicMock()
+        self.engine.session_source_var = mock.MagicMock()
+        self.engine.config = {}
+        self.engine.root = mock.MagicMock()
+        self.engine.normalize_status_filter = mock.Mock(return_value="All questions")
+        self.engine.normalize_session_source = mock.Mock(return_value="Full bank")
+
+    def test_unregistered_bank_clears_stale_revision_authority(self) -> None:
+        self.engine.content_revision_authority = self.revision
+        self.assertIs(self.engine.content_revision_authority, self.revision)
+        self.assertFalse(self.engine.progress_write_blocked)
+        bank_b = self.root / "bank_b.json"
+        bank_b.write_text(json.dumps({"title": "b", "questions": self.target_questions}), encoding="utf-8")
+        self._prepare_engine_widgets_for_load()
+        with (
+            mock.patch.object(self.app_module, "load_bank", return_value={"questions": self.target_questions}),
+            mock.patch.object(self.app_module, "resolve_registered_revision_for_target", return_value=None),
+            mock.patch.object(self.engine, "load_progress_if_present") as load_progress,
+            mock.patch.object(self.engine, "_clone_questions", return_value=self.target_questions),
+            mock.patch.object(self.engine, "_reset_runtime_question_state"),
+            mock.patch.object(self.engine, "_rebuild_followup_candidate_index"),
+            mock.patch.object(self.engine, "clear_active_session"),
+            mock.patch.object(self.engine, "invalidate_learning_state"),
+            mock.patch.object(self.engine, "_progress_snapshot_payload", return_value={"questions": {}, "history": []}),
+        ):
+            self.engine.load_from_path(bank_b)
+        load_progress.assert_called()
+        self.assertIsNone(self.engine.content_revision_authority)
+        self.assertFalse(self.engine.progress_write_blocked)
+        mapped = canonical_question_history_map(
+            [
+                {
+                    "question_id": "change",
+                    "question_content_fingerprint": question_content_fingerprint(self.change_source),
+                    "selected_texts": ["old wording"],
+                    "correct_texts": ["alpha"],
+                    "correct": True,
+                }
+            ]
+        )
+        self.assertEqual([], self.engine.revision_aware_history_events(mapped, self.change_target))
+        self.assertEqual(1, len(self.engine._session_discovery_glob_patterns(MODE_PRACTICE)))
 
     def test_incomplete_target_fingerprint_is_verified_not_skipped(self) -> None:
         target_progress = progress_file_path(self.user_data, self.target_bank)
