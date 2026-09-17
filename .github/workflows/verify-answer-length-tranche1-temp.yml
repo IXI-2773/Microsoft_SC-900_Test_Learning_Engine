@@ -1,0 +1,24 @@
+name: Temporary answer-length tranche verification
+
+on:
+  push:
+    branches:
+      - implementation/sc900-answer-length-leakage-tranche1-001
+
+permissions:
+  contents: read
+
+jobs:
+  focused:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run focused tranche tests
+        run: |
+          python -m unittest tests.test_answer_length_audit -v
