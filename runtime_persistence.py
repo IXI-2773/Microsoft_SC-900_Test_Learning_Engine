@@ -8,6 +8,13 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from content_revision_migration import (
+    ContentRevisionMigrationError,
+    MigrationFailureReason,
+    MigrationStatus,
+    migrate_progress_payload,
+    migrate_session_payload,
+)
 from question_identity import (
     ProgressIdentityError,
     migrate_legacy_progress_keys,
@@ -152,3 +159,187 @@ class RuntimePersistence:
     def write_checkpoint(self, path: Path, payload: Any) -> None:
         self.write_json(path, payload)
         logging.info("Saved checkpoint file: %s", path)
+
+    def content_revision_archive_path(self, source_path: Path, migration_id: str, label: str) -> Path:
+        return content_revision_archive_path(source_path, migration_id, label)
+
+    def _read_json_nonmutating(self, path: Path) -> tuple[dict[str, Any] | None, Exception | None]:
+        target = Path(path)
+        try:
+            payload = json.loads(target.read_text(encoding="utf-8"))
+        except Exception as exc:
+            return None, exc
+        if not isinstance(payload, dict):
+            return None, ValueError("JSON object required")
+        return payload, None
+
+    def _archive_source_bytes(self, source_path: Path, migration_id: str, label: str) -> Path:
+        source = Path(source_path)
+        archive = content_revision_archive_path(source, migration_id, label)
+        source_bytes = source.read_bytes()
+        if archive.exists():
+            if archive.read_bytes() != source_bytes:
+                raise OSError("Conflicting content-revision archive already exists.")
+            return archive
+        return self.copy_file(source, archive, label=f"content revision {label} archive")
+
+    def migrate_progress_across_approved_revision(
+        self,
+        source_path: Path,
+        target_path: Path,
+        target_questions,
+        revision,
+        migrated_at: str,
+    ) -> tuple[dict[str, Any] | None, Path | None, Exception | None]:
+        source_path = Path(source_path)
+        target_path = Path(target_path)
+        same_path = source_path.resolve() == target_path.resolve()
+        payload, error = self._read_json_nonmutating(source_path)
+        if error is not None or payload is None:
+            return None, None, error
+        transform_source = payload
+        if target_path.exists() and not same_path:
+            existing, existing_error = self._read_json_nonmutating(target_path)
+            if existing_error is not None or existing is None:
+                return None, None, existing_error
+            existing_fp = str(existing.get("bank_fingerprint") or "").strip()
+            if existing_fp not in {
+                revision.source_bank_content_fingerprint,
+                revision.target_bank_content_fingerprint,
+            }:
+                return None, None, ContentRevisionMigrationError(
+                    MigrationFailureReason.UNEXPECTED_BANK_FINGERPRINT,
+                    existing_fp,
+                )
+            if existing_fp == revision.source_bank_content_fingerprint:
+                if json.dumps(existing, sort_keys=True) != json.dumps(payload, sort_keys=True):
+                    return None, None, ContentRevisionMigrationError(
+                        MigrationFailureReason.TARGET_PROGRESS_CONFLICT,
+                        str(target_path),
+                    )
+                transform_source = existing
+            else:
+                try:
+                    expected = migrate_progress_payload(payload, target_questions, revision, migrated_at)
+                except ContentRevisionMigrationError as exc:
+                    return None, None, exc
+                if json.dumps(existing, sort_keys=True) != json.dumps(expected.payload, sort_keys=True):
+                    return None, None, ContentRevisionMigrationError(
+                        MigrationFailureReason.TARGET_PROGRESS_CONFLICT,
+                        str(target_path),
+                    )
+                archive = None
+                if source_path.exists() and not same_path:
+                    try:
+                        archive = self._archive_source_bytes(source_path, expected.migration_id, "progress")
+                        source_path.unlink()
+                    except OSError as exc:
+                        return expected.payload, archive, exc
+                return existing, archive, None
+        try:
+            result = migrate_progress_payload(transform_source, target_questions, revision, migrated_at)
+        except ContentRevisionMigrationError as exc:
+            return None, None, exc
+        if result.status == MigrationStatus.MIGRATION_ALREADY_APPLIED:
+            return result.payload, None, None
+        try:
+            archive = self._archive_source_bytes(
+                target_path if (target_path.exists() and same_path) else source_path,
+                result.migration_id,
+                "progress",
+            )
+        except OSError as exc:
+            return None, None, exc
+        try:
+            self.write_json(target_path, result.payload)
+        except OSError as exc:
+            return None, archive, exc
+        reread, reread_error = self._read_json_nonmutating(target_path)
+        if reread_error is not None or reread is None:
+            return None, archive, reread_error
+        try:
+            verified = migrate_progress_payload(reread, target_questions, revision, migrated_at)
+        except ContentRevisionMigrationError as exc:
+            return None, archive, exc
+        if verified.status != MigrationStatus.MIGRATION_ALREADY_APPLIED:
+            return None, archive, ContentRevisionMigrationError(
+                MigrationFailureReason.TARGET_PROGRESS_CONFLICT,
+                "target verification failed",
+            )
+        if not same_path and source_path.exists():
+            try:
+                if source_path.resolve() != target_path.resolve():
+                    source_path.unlink()
+            except OSError as exc:
+                return reread, archive, exc
+        return reread, archive, None
+
+    def migrate_session_file_across_approved_revision(
+        self,
+        source_path: Path,
+        target_path: Path,
+        target_questions,
+        revision,
+        target_bank_file: str,
+        *,
+        source_questions=None,
+    ) -> tuple[dict[str, Any] | None, Path | None, Exception | None]:
+        source_path = Path(source_path)
+        target_path = Path(target_path)
+        same_path = source_path.resolve() == target_path.resolve()
+        payload, error = self._read_json_nonmutating(source_path)
+        if error is not None or payload is None:
+            return None, None, error
+        try:
+            expected = migrate_session_payload(
+                payload,
+                target_questions,
+                revision,
+                target_bank_file,
+                source_questions=source_questions,
+            )
+        except ContentRevisionMigrationError as exc:
+            return None, None, exc
+        if target_path.exists() and not same_path:
+            existing, existing_error = self._read_json_nonmutating(target_path)
+            if existing_error is not None or existing is None:
+                return None, None, existing_error
+            if json.dumps(existing, sort_keys=True) != json.dumps(expected.payload, sort_keys=True):
+                return None, None, ContentRevisionMigrationError(
+                    MigrationFailureReason.TARGET_PROGRESS_CONFLICT,
+                    str(target_path),
+                )
+            archive = None
+            try:
+                archive = self._archive_source_bytes(source_path, expected.migration_id, "session")
+                source_path.unlink()
+            except OSError as exc:
+                return existing, archive, exc
+            return existing, archive, None
+        try:
+            archive = self._archive_source_bytes(source_path, expected.migration_id, "session")
+        except OSError as exc:
+            return None, None, exc
+        try:
+            self.write_json(target_path, expected.payload)
+        except OSError as exc:
+            return None, archive, exc
+        reread, reread_error = self._read_json_nonmutating(target_path)
+        if reread_error is not None or reread is None:
+            return None, archive, reread_error
+        if json.dumps(reread, sort_keys=True) != json.dumps(expected.payload, sort_keys=True):
+            return None, archive, ContentRevisionMigrationError(
+                MigrationFailureReason.TARGET_PROGRESS_CONFLICT,
+                "session target verification failed",
+            )
+        if not same_path and source_path.exists():
+            try:
+                source_path.unlink()
+            except OSError as exc:
+                return reread, archive, exc
+        return reread, archive, None
+
+
+def content_revision_archive_path(source_path: Path, migration_id: str, label: str) -> Path:
+    source = Path(source_path)
+    return source.with_name(f"{str(migration_id).strip()}.{str(label).strip() or 'revision'}.{source.name}")
