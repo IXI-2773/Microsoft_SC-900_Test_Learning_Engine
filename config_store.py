@@ -2,7 +2,6 @@ from pathlib import Path
 
 from storage_utils import load_json_or_backup, safe_write_json
 
-
 DEFAULT_CONFIG = {
     'window_geometry': '1500x940',
     'analytics_geometry': '1220x780',
@@ -15,6 +14,7 @@ DEFAULT_CONFIG = {
     'explanation_recall_mode': True,
     'compact_review_mode': True,
     'dense_answers_mode': False,
+    'show_confidence_controls': True,
     'gamification_enabled': True,
     'reward_intensity': 'Standard',
     'celebration_popups': True,
