@@ -28,8 +28,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD^)" = "$PRE_WORKFLOW_HEAD"
-          test "$(git diff --name-only HEAD^ HEAD)" = ".github/workflows/pr32-left-edge-clamp-qa.yml"
+          git merge-base --is-ancestor "$PRE_WORKFLOW_HEAD" HEAD
+          test "$(git diff --name-only "$PRE_WORKFLOW_HEAD" HEAD)" = ".github/workflows/pr32-left-edge-clamp-qa.yml"
           test "$(git rev-parse origin/research/sc900-cand01r3-measurement-001)" = "fc7d32f976c0b4c75658ff67d8d47ebe53d854bb"
           test "$(git rev-parse origin/recovery/publish-exact-history/sc900-v8-20260910)" = "b567d4b74a2f99e50022dd0dafd81ffa75dff0a2"
           test "$(git rev-parse origin/recovery/publish-sc900-v8-exact-history)" = "bbc3bd900b73bde89151dc51706ad62fc69e8196"
@@ -57,27 +57,29 @@ jobs:
           path = Path('tests/test_ui_confidence_controls.py')
           text = path.read_text(encoding='utf-8')
           marker = '    def test_d_anchored_confidence_prompt_is_bounded_to_visible_canvas(self):\n'
-          test = '''    def test_confidence_prompt_clamps_centered_pointer_at_left_viewport_edge(self):
-              app = object.__new__(QuestionFlowMixin)
-              app.root = _Root(pointer_x=125, pointer_y=520)
-              app.content_frame = _GeometryWidget(x=100, y=100, width=700, height=900)
-              app.content_canvas = _CanvasGeometry(
-                  x=100,
-                  y=100,
-                  width=700,
-                  height=260,
-                  visible_top=400,
-              )
-              answer_row = _GeometryWidget(x=120, y=500, width=650, height=50)
-              prompt = _GeometryWidget(width=1, height=1, requested_width=240, requested_height=90)
-
-              x, y = app._position_feedback_popover(prompt, answer_row)
-
-              self.assertEqual(12, x)
-              self.assertGreaterEqual(y, 410)
-              self.assertLessEqual(y, 450)
-
-          '''
+          lines = [
+              '    def test_confidence_prompt_clamps_centered_pointer_at_left_viewport_edge(self):',
+              '        app = object.__new__(QuestionFlowMixin)',
+              '        app.root = _Root(pointer_x=125, pointer_y=520)',
+              '        app.content_frame = _GeometryWidget(x=100, y=100, width=700, height=900)',
+              '        app.content_canvas = _CanvasGeometry(',
+              '            x=100,',
+              '            y=100,',
+              '            width=700,',
+              '            height=260,',
+              '            visible_top=400,',
+              '        )',
+              '        answer_row = _GeometryWidget(x=120, y=500, width=650, height=50)',
+              '        prompt = _GeometryWidget(width=1, height=1, requested_width=240, requested_height=90)',
+              '',
+              '        x, y = app._position_feedback_popover(prompt, answer_row)',
+              '',
+              '        self.assertEqual(12, x)',
+              '        self.assertGreaterEqual(y, 410)',
+              '        self.assertLessEqual(y, 450)',
+              '',
+          ]
+          test = '\n'.join(lines) + '\n'
           if text.count(marker) != 1:
               raise SystemExit('expected D regression marker not found exactly once')
           path.write_text(text.replace(marker, test + marker), encoding='utf-8')
@@ -105,17 +107,19 @@ jobs:
 
           path = Path('app_question_flow_mixin.py')
           text = path.read_text(encoding='utf-8')
-          old = '''                    centered_x = pointer_x - int(pop_w / 2)
-                      pointer_candidates = [
-                          (centered_x, pointer_y + 12),
-                          (centered_x, pointer_y - pop_h - 12),
-          '''
-          new = '''                    centered_x = pointer_x - int(pop_w / 2)
-                      bounded_centered_x = min(max(min_x, centered_x), max_x)
-                      pointer_candidates = [
-                          (bounded_centered_x, pointer_y + 12),
-                          (bounded_centered_x, pointer_y - pop_h - 12),
-          '''
+          old = (
+              '                    centered_x = pointer_x - int(pop_w / 2)\n'
+              '                    pointer_candidates = [\n'
+              '                        (centered_x, pointer_y + 12),\n'
+              '                        (centered_x, pointer_y - pop_h - 12),\n'
+          )
+          new = (
+              '                    centered_x = pointer_x - int(pop_w / 2)\n'
+              '                    bounded_centered_x = min(max(min_x, centered_x), max_x)\n'
+              '                    pointer_candidates = [\n'
+              '                        (bounded_centered_x, pointer_y + 12),\n'
+              '                        (bounded_centered_x, pointer_y - pop_h - 12),\n'
+          )
           if text.count(old) != 1:
               raise SystemExit('expected centered-pointer block not found exactly once')
           path.write_text(text.replace(old, new), encoding='utf-8')
