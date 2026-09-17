@@ -392,6 +392,9 @@ class TestingEngineApp(
         self.explanation_recall_var = tk.BooleanVar(value=bool(self.config.get("explanation_recall_mode", True)))
         self.compact_review_var = tk.BooleanVar(value=bool(self.config.get("compact_review_mode", True)))
         self.dense_answers_var = tk.BooleanVar(value=bool(self.config.get("dense_answers_mode", False)))
+        self.show_confidence_controls_var = tk.BooleanVar(
+            value=bool(self.config.get("show_confidence_controls", True))
+        )
         self.gamification_enabled_var = tk.BooleanVar(value=bool(self.config.get("gamification_enabled", True)))
         self.celebration_popups_var = tk.BooleanVar(value=bool(self.config.get("celebration_popups", True)))
         self.reward_sounds_var = tk.BooleanVar(value=bool(self.config.get("reward_sounds", True)))
@@ -599,6 +602,7 @@ class TestingEngineApp(
             "explanation_recall_mode": self.explanation_recall_var.get(),
             "compact_review_mode": self.compact_review_var.get(),
             "dense_answers_mode": self.dense_answers_var.get(),
+            "show_confidence_controls": self.show_confidence_controls_var.get(),
             "gamification_enabled": self.gamification_enabled_var.get(),
             "reward_intensity": self.reward_intensity_var.get(),
             "celebration_popups": self.celebration_popups_var.get(),
@@ -735,6 +739,7 @@ class TestingEngineApp(
         self.explanation_recall_var.set(self.config.get("explanation_recall_mode", True))
         self.compact_review_var.set(self.config.get("compact_review_mode", True))
         self.dense_answers_var.set(self.config.get("dense_answers_mode", False))
+        self.show_confidence_controls_var.set(self.config.get("show_confidence_controls", True))
         self.gamification_enabled_var.set(self.config.get("gamification_enabled", True))
         self.reward_intensity_var.set(self.config.get("reward_intensity", "Standard"))
         self.celebration_popups_var.set(self.config.get("celebration_popups", True))
@@ -748,6 +753,7 @@ class TestingEngineApp(
         self.status_filter_var.set(self.normalize_status_filter(self.config["last_status"]))
         self.general_explanation_expanded = True
         self.root.geometry(self.config["window_geometry"])
+        self.last_render_snapshot = None
         self.refresh_question_list()
         self.render_question()
         messagebox.showinfo("Reset preferences", "Preferences were reset.")
@@ -878,6 +884,16 @@ class TestingEngineApp(
             activebackground=LIGHT_BLUE,
             anchor="w",
             command=lambda: (self.save_app_config(), self.render_question()),
+        ).pack(fill="x", pady=(0, 8))
+        tk.Checkbutton(
+            sess,
+            text="Show confidence controls",
+            variable=self.show_confidence_controls_var,
+            bg=LIGHT_BLUE,
+            fg=TEXT,
+            activebackground=LIGHT_BLUE,
+            anchor="w",
+            command=self.on_confidence_controls_change,
         ).pack(fill="x", pady=(0, 8))
         row = tk.Frame(sess, bg=LIGHT_BLUE)
         row.pack(fill="x")

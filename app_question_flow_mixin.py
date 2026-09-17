@@ -108,12 +108,16 @@ class QuestionFlowMixin:
     def _position_feedback_popover(self, popover, anchor):
         popover.update_idletasks()
         host = self.content_frame
-        pop_w = popover.winfo_width()
-        pop_h = popover.winfo_height()
+        pop_w = max(popover.winfo_width(), popover.winfo_reqwidth())
+        pop_h = max(popover.winfo_height(), popover.winfo_reqheight())
         host_w = max(host.winfo_width(), self.content_canvas.winfo_width())
-        host_h = max(host.winfo_height(), self.content_canvas.winfo_height())
+        viewport_top = int(self.content_canvas.canvasy(0))
+        viewport_bottom = viewport_top + self.content_canvas.winfo_height()
         if anchor is None or not getattr(anchor, "winfo_exists", lambda: False)():
-            return max(20, int((host_w - pop_w) / 2)), max(20, int((host_h - pop_h) / 5))
+            return (
+                max(20, int((host_w - pop_w) / 2)),
+                max(viewport_top + 20, int(viewport_top + (self.content_canvas.winfo_height() - pop_h) / 5)),
+            )
 
         ax = anchor.winfo_rootx() - host.winfo_rootx()
         ay = anchor.winfo_rooty() - host.winfo_rooty()
@@ -126,11 +130,24 @@ class QuestionFlowMixin:
             (ax, ay - pop_h - 10),
         ]
         for x, y in candidates:
-            if 12 <= x <= host_w - pop_w - 12 and 12 <= y <= host_h - pop_h - 12:
+            if (
+                12 <= x <= host_w - pop_w - 12
+                and viewport_top + 12 <= y <= viewport_bottom - pop_h - 12
+            ):
                 return x, y
         x = min(max(12, candidates[0][0]), max(12, host_w - pop_w - 12))
-        y = min(max(12, candidates[0][1]), max(12, host_h - pop_h - 12))
+        y = min(
+            max(viewport_top + 12, candidates[0][1]),
+            max(viewport_top + 12, viewport_bottom - pop_h - 12),
+        )
         return x, y
+
+    def _confidence_controls_enabled(self):
+        preference = getattr(self, "show_confidence_controls_var", None)
+        return True if preference is None else bool(preference.get())
+
+    def _confidence_review_controls_visible(self, *, show_exam_feedback):
+        return bool(show_exam_feedback and self._confidence_controls_enabled())
 
     def _feedback_popover_active(self):
         popover = getattr(self, "answer_feedback_popover", None)
@@ -143,17 +160,21 @@ class QuestionFlowMixin:
         self.answer_feedback_popover = None
         self.answer_feedback_buttons = []
 
+    def _question_for_feedback_request(self, request):
+        qid = str(request.get("question_id") or "")
+        q = next((item for item in self.questions if canonical_question_id(item) == qid), None)
+        if q is None:
+            qnum = request.get("question_number")
+            q = next((item for item in self.questions if item.get("question_number") == qnum), None)
+        return q
+
     def _complete_feedback_choice(self, confidence):
         request = dict(getattr(self, "pending_feedback_request", None) or {})
         self.pending_feedback_request = None
         self._destroy_feedback_popover()
         if not request:
             return
-        qid = str(request.get("question_id") or "")
-        q = next((item for item in self.questions if canonical_question_id(item) == qid), None)
-        if q is None:
-            qnum = request.get("question_number")
-            q = next((item for item in self.questions if item.get("question_number") == qnum), None)
+        q = self._question_for_feedback_request(request)
         if q is None:
             return
         observed = require_observed_confidence(confidence)
@@ -389,13 +410,29 @@ class QuestionFlowMixin:
     def _begin_confidence_capture(self, q: QuestionRuntimeState, selected: list[str], anchor_widget=None):
         selected = list(selected)
         q["pending"] = selected
-        if self._should_suppress_confidence_capture(q):
+        self.last_render_snapshot = None
+        self.render_question()
+        if self._should_suppress_confidence_capture(q) or not self._confidence_controls_enabled():
             is_correct = set(selected) == set(q.get("correct") or [])
             self._record_answer(
                 q, selected, anchor_widget=anchor_widget, feedback_override=unobserved_feedback(is_correct)
             )
             return
         self._show_feedback_popover(q, selected, anchor_widget=anchor_widget)
+
+    def on_confidence_controls_change(self):
+        if not self._confidence_controls_enabled():
+            request = dict(getattr(self, "pending_feedback_request", None) or {})
+            self.pending_feedback_request = None
+            self._destroy_feedback_popover()
+            q = self._question_for_feedback_request(request) if request else None
+            if q is not None:
+                selected = list(request.get("selected", []))
+                is_correct = set(selected) == set(q.get("correct") or [])
+                self._record_answer(q, selected, feedback_override=unobserved_feedback(is_correct))
+        self.save_app_config()
+        self.last_render_snapshot = None
+        self.render_question()
 
     def complete_explanation_recall(self):
         if not self.questions:

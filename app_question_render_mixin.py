@@ -261,7 +261,7 @@ class QuestionRenderMixin:
             else:
                 self.status_label.configure(text="Review this one", bg="#fff0f0", fg=RED)
             self.status_label.pack(fill="x", pady=(0, 8))
-            if show_exam_feedback:
+            if self._confidence_review_controls_visible(show_exam_feedback=show_exam_feedback):
                 current_conf = str(q.get("last_confidence") or "")
                 palette = {
                     "Sure": ("#e7f7ee", "#1d6e3d"),
