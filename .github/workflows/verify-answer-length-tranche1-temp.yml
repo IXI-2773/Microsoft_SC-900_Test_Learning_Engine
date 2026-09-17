@@ -23,3 +23,57 @@ jobs:
         run: |
           python -m unittest tests.test_answer_length_audit -v
           python -m unittest tests.test_bank_revision_guard -v
+      - name: Verify bank and reproduce baseline audit twice
+        run: |
+          python -m tools.lint_bank
+          python -m tools.verify_installation
+          sha256sum sc900_bank_v8_final.json
+          python -m tools.answer_length_audit --bank sc900_bank_v8_final.json --json-out /tmp/sc900-answer-length-audit-1.json --markdown-out /tmp/sc900-answer-length-audit.md
+          python -m tools.answer_length_audit --bank sc900_bank_v8_final.json --json-out /tmp/sc900-answer-length-audit-2.json
+          cmp /tmp/sc900-answer-length-audit-1.json /tmp/sc900-answer-length-audit-2.json
+          sha256sum /tmp/sc900-answer-length-audit-1.json /tmp/sc900-answer-length-audit-2.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('/tmp/sc900-answer-length-audit-1.json').read_text(encoding='utf-8'))
+          summary = {
+              'question_count': report['question_count'],
+              'analyzable_count': report['analyzable_count'],
+              'strict_longest_correct_count': report['strict_longest_correct_count'],
+              'strict_longest_correct_rate': report['strict_longest_correct_rate'],
+              'correct_among_longest_count': report['correct_among_longest_count'],
+              'correct_among_longest_rate': report['correct_among_longest_rate'],
+              'unique_longest_question_count': report['unique_longest_question_count'],
+              'unique_longest_heuristic_success_count': report['unique_longest_heuristic_success_count'],
+              'unique_longest_heuristic_success_rate': report['unique_longest_heuristic_success_rate'],
+              'strict_shortest_correct_rate': report['strict_shortest_correct_rate'],
+              'unique_shortest_heuristic_success_rate': report['unique_shortest_heuristic_success_rate'],
+              'correct_letter_distribution': report['correct_letter_distribution'],
+              'most_common_answer_letter_rate': report['most_common_answer_letter_rate'],
+              'mean_correct_characters': report['mean_correct_characters'],
+              'mean_max_distractor_characters': report['mean_max_distractor_characters'],
+              'per_domain': report['per_domain'],
+              'top_outliers': [
+                  {
+                      'question_id': row['question_id'],
+                      'question_number': row['question_number'],
+                      'domain': row['domain'],
+                      'correct_letter': row['correct_letter'],
+                      'correct_characters': row['correct_characters'],
+                      'max_distractor_characters': row['max_distractor_characters'],
+                      'absolute_gap': row['absolute_gap'],
+                      'relative_gap': row['relative_gap'],
+                  }
+                  for row in report['longest_outliers'][:60]
+              ],
+          }
+          print('ANSWER_LENGTH_BASELINE_SUMMARY=' + json.dumps(summary, sort_keys=True))
+          PY
+      - name: Upload baseline audit artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sc900-answer-length-baseline
+          path: |
+            /tmp/sc900-answer-length-audit-1.json
+            /tmp/sc900-answer-length-audit.md
+          if-no-files-found: error
