@@ -131,6 +131,26 @@ class ConfidenceControlRegressionTests(unittest.TestCase):
         self.assertGreaterEqual(y, 410)
         self.assertLessEqual(y, 450)
 
+    def test_confidence_prompt_clamps_centered_pointer_at_left_viewport_edge(self):
+        app = object.__new__(QuestionFlowMixin)
+        app.root = _Root(pointer_x=125, pointer_y=520)
+        app.content_frame = _GeometryWidget(x=100, y=100, width=700, height=900)
+        app.content_canvas = _CanvasGeometry(
+            x=100,
+            y=100,
+            width=700,
+            height=260,
+            visible_top=400,
+        )
+        answer_row = _GeometryWidget(x=120, y=500, width=650, height=50)
+        prompt = _GeometryWidget(width=1, height=1, requested_width=240, requested_height=90)
+
+        x, y = app._position_feedback_popover(prompt, answer_row)
+
+        self.assertEqual(12, x)
+        self.assertGreaterEqual(y, 410)
+        self.assertLessEqual(y, 450)
+
     def test_d_anchored_confidence_prompt_is_bounded_to_visible_canvas(self):
         app = object.__new__(QuestionFlowMixin)
         app.root = _Root(pointer_x=0, pointer_y=0)

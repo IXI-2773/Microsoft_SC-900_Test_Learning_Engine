@@ -147,9 +147,10 @@ class QuestionFlowMixin:
                     pointer_x = pointer_root_x - host.winfo_rootx()
                     pointer_y = pointer_root_y - host.winfo_rooty()
                     centered_x = pointer_x - int(pop_w / 2)
+                    bounded_centered_x = min(max(min_x, centered_x), max_x)
                     pointer_candidates = [
-                        (centered_x, pointer_y + 12),
-                        (centered_x, pointer_y - pop_h - 12),
+                        (bounded_centered_x, pointer_y + 12),
+                        (bounded_centered_x, pointer_y - pop_h - 12),
                         (pointer_x + 12, pointer_y + 12),
                         (pointer_x - pop_w - 12, pointer_y + 12),
                         (pointer_x + 12, pointer_y - pop_h - 12),
