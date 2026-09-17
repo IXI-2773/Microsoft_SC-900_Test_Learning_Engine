@@ -4,7 +4,7 @@
 **Repository:** `IXI-2773/Microsoft_SC-900_Test_Learning_Engine`  
 **Design branch:** `design/sc900-content-revision-equivalence-migration-001`  
 **Authoritative design base:** `23d440b6976b9f6bbb3b77285bf0d11effc2513f`  
-**Status:** `INTERIM DESIGN / SECTIONS 1-4 APPROVED / FINAL SECTION PENDING`  
+**Status:** `FINAL DESIGN / SECTIONS 1-5 APPROVED / USER WRITTEN-SPEC REVIEW PENDING`  
 **Implementation authorized:** `NO`
 
 ## Purpose
@@ -422,15 +422,13 @@ json.dumps(
 
 Continuity authority must not come from a user-writable runtime directory or arbitrary downloaded file.
 
-Approved manifest/review material is release-controlled repository/package content, conceptually under a dedicated authority surface such as:
+Approved manifest/review material is release-controlled repository/package content under the Section 5 authority surface:
 
 ```text
 content_revision_authority/
     manifests/
     reviews/
 ```
-
-The exact final path will be chosen during the implementation plan.
 
 Runtime does not provide a user override such as “trust this changed bank.”
 
@@ -1695,20 +1693,469 @@ SUCCESSFUL MIGRATION
 
 ---
 
-# Current design state
+# Section 5 — Component Ownership, Implementation Boundary, and Rollout
 
-Sections 1-4 are approved design authority for the remainder of the brainstorming/specification process.
+## 5.1 Existing strict identity layer remains intact
 
-They are **not** implementation authority.
+`question_identity.py` remains the strict baseline authority for canonical question identity, durable content projection/fingerprinting, changed-content quarantine, and the existing strict history matcher.
+
+Its default semantics remain unchanged. In particular, version 1 does not add a permissive flag such as:
 
 ```text
-SECTIONS_1_4_RECORDED = YES
-SECTION_4_ADVERSARIAL_TEST_MATRIX = APPROVED / RECORDED
-FINAL_SPEC_COMPLETE = NO
+allow_changed_content = true
+```
+
+The design invariant is:
+
+```text
+NO REVISION AUTHORITY
+==
+CURRENT PRODUCTION BEHAVIOR
+```
+
+## 5.2 New pure revision-authority module
+
+Create:
+
+```text
+content_revision_authority.py
+```
+
+This module owns deterministic authority validation only:
+
+- manifest schema/version validation;
+- finite admission reason domain;
+- duplicate-key-safe manifest parsing/canonical hashing;
+- review-artifact hashing;
+- exact source/target bank validation;
+- closed-world changed-ID comparison;
+- mechanical invariant validation;
+- directed edge validation;
+- admitted lineage indexing/path resolution;
+- immutable admission result objects.
+
+It must not mutate progress, sessions, banks, or user files. It must not depend on GUI state, network access, or runtime model/LLM judgment.
+
+Conceptual API surface:
+
+```text
+validate_revision_manifest(...)
+admit_content_revision(...)
+approved_edge(...)
+approved_lineage(...)
+history_fingerprint_is_equivalent(...)
+```
+
+## 5.3 New pure migration-transform module
+
+Create:
+
+```text
+content_revision_migration.py
+```
+
+This module accepts only an already-admitted revision authority and owns in-memory transformation semantics:
+
+```text
+migrate_progress_payload(...)
+migrate_session_payload(...)
+resolve_history_for_revision(...)
+derive_migration_id(...)
+validate_migrated_progress(...)
+validate_migrated_session(...)
+```
+
+Responsibility separation is fixed:
+
+```text
+content_revision_authority.py
+    -> decides WHETHER continuity is authorized
+
+content_revision_migration.py
+    -> decides HOW admitted state is transformed
+
+runtime_persistence.py
+    -> decides HOW transformed state is safely persisted
+```
+
+## 5.4 RuntimePersistence remains the progress I/O owner
+
+`RuntimePersistence` remains responsible for load/backup/safe-write sequencing.
+
+The implementation adds an explicit operation conceptually named:
+
+```text
+migrate_progress_across_approved_revision(...)
+```
+
+rather than making ordinary `load_progress_with_identity_migration(...)` permissive.
+
+Required sequence:
+
+```text
+load source
+    -> strict source validation
+    -> exact revision admission validation
+    -> pure in-memory migration transform
+    -> complete target validation
+    -> source backup
+    -> safe/atomic target write
+    -> re-read + verify
+```
+
+Ordinary loading remains strict and unchanged when no revision authority is present.
+
+## 5.5 Session-store identity remains strict by default
+
+The existing canonical session bank-fingerprint check remains authoritative.
+
+The implementation adds an explicit cross-revision operation conceptually named:
+
+```text
+migrate_session_across_approved_revision(...)
+```
+
+It implements the Section 3 rules without weakening ordinary `migrate_session_snapshot(...)` behavior:
+
+- preserve completed answer state;
+- preserve canonical question order;
+- preserve historical events;
+- clear pending selections on changed unanswered questions;
+- bind target bank fingerprint;
+- regenerate session/restore signatures;
+- validate the resulting target snapshot.
+
+Without an admitted revision, ordinary strict session behavior remains unchanged.
+
+## 5.6 App integration remains orchestration-only
+
+`app_session_persistence_mixin.py` remains responsible for session discovery and high-level restore orchestration, but it does not become the semantic or migration-policy authority.
+
+The flow is:
+
+```text
+candidate saved session found
+        |
+        v
+same bank?
+   YES -> existing path
+   NO
+        |
+        v
+exact bundled admitted revision available?
+   NO  -> existing fail-closed path
+   YES -> explicit approved migration
+              |
+              v
+         verify target
+              |
+              v
+         resume target
+```
+
+Policy remains in the authority/migration modules, not GUI/application code.
+
+## 5.7 One common revision-aware history resolver
+
+Smart Practice, analytics, game logic, and session building must not each implement independent equivalence logic.
+
+A single shared resolver is introduced, conceptually:
+
+```text
+history_events_for_question_revision_aware(...)
+```
+
+It performs:
+
+```text
+strict current-fingerprint match
+OR
+exact approved directed-lineage match
+```
+
+and returns the original historical event unchanged.
+
+Consumers may use this common resolver only when an admitted revision authority is active.
+
+## 5.8 Repository authority surface and registry
+
+The version-1 authority surface is fixed as:
+
+```text
+content_revision_authority/
+    manifests/
+    reviews/
+```
+
+Approved manifests are additionally pinned through:
+
+```text
+content_revision_registry.py
+```
+
+The registry maps a known bundled manifest identity to its expected canonical SHA-256.
+
+Runtime authority therefore requires all of:
+
+```text
+known bundled manifest identity
++ expected registered canonical hash
++ valid manifest payload hash
++ exact source bank identity
++ exact target bank identity
+```
+
+Merely placing a JSON file in the authority directory does not make it trusted.
+
+No signing-key/PKI infrastructure is introduced in version 1.
+
+## 5.9 Implementation-facing test ownership
+
+The implementation plan should use focused test surfaces, expected to include at least:
+
+```text
+tests/test_content_revision_authority.py
+tests/test_content_revision_migration.py
+tests/test_content_revision_app_integration.py
+```
+
+Existing canonical identity, progress migration, session identity, Smart Practice, analytics, and adversarial tests remain regression authority and are not replaced.
+
+The implementation plan may split these new test files further for maintainability, but it may not collapse the proof obligations from Section 4.
+
+## 5.10 Three-package integration boundary
+
+The work is divided into three separately reviewable packages.
+
+### Package A — migration infrastructure
+
+Contains only:
+
+```text
+authority schema/validator
+lineage resolver
+pure migration transforms
+progress/session integration
+adversarial tests
+existing-regression validation
+```
+
+Hard boundary:
+
+```text
+PRODUCTION QUESTION WORDING CHANGES = 0
+PRODUCTION BANK ACTIVATION = NO
+```
+
+Package A proves the mechanism independently of real production content changes.
+
+### Package B — answer-length candidate and semantic evidence
+
+Only after Package A passes.
+
+Contains:
+
+```text
+candidate bank
+Microsoft Learn semantic verification
+per-question review receipts
+equivalence manifest
+answer-length before/after metrics
+bank-integrity evidence
+```
+
+Hard boundary:
+
+```text
+DEFAULT PRODUCTION BANK ACTIVATION = NO
+```
+
+Package B proves that the candidate is semantically admissible and actually satisfies the leakage-repair gates without activating it.
+
+### Package C — controlled production activation
+
+Only after Packages A and B independently pass and the operator explicitly authorizes activation of the exact reviewed candidate.
+
+Contains:
+
+```text
+default-bank switch / candidate promotion
+final migration registration
+full regression
+Windows QA build
+production EXE refresh
+post-build verification
+```
+
+No activation authorization transfers to a later candidate SHA/hash.
+
+## 5.11 Relationship to the stopped answer-length Tranche 1 branch
+
+The existing branch remains evidence authority:
+
+```text
+implementation/sc900-answer-length-leakage-tranche1-001
+HEAD = 628e0c7ca952b9d63e9d23f9363be2e36b257975
+```
+
+Its finding remains valid:
+
+```text
+ordinary wording mutation
+-> CHANGED_CONTENT
+-> rewrite blocked
+```
+
+The new architecture does not erase that result. Instead:
+
+```text
+Tranche 1 proved the blocker
+    -> this package creates governed continuity authority
+    -> Package A must pass
+    -> only then may answer-length candidate work resume
+```
+
+## 5.12 Version-1 direct-edge limitation
+
+Live-state migration version 1 supports one direct bank edge per execution:
+
+```text
+SOURCE BANK -> TARGET BANK
+```
+
+History resolution may understand a complete approved multi-revision lineage such as:
+
+```text
+V1 -> V2 -> V3
+```
+
+but version 1 does not perform automatic multi-hop live-state migration in one operation.
+
+## 5.13 Activation sequence
+
+The rollout sequence is fixed:
+
+```text
+1. Complete design specification.
+2. Self-review design specification.
+3. User approves final written specification.
+4. Write detailed implementation plan.
+5. Implement Package A test-first.
+6. Run adversarial + full regression gates.
+7. Review Package A.
+8. Only then resume answer-length candidate work.
+9. Generate candidate bank.
+10. Perform Microsoft Learn semantic review.
+11. Generate review receipts + exact manifest.
+12. Validate Section 2 admission.
+13. Run answer-length statistical gates.
+14. Run learner-history/session migration tests against candidate.
+15. Review Package B.
+16. STOP for explicit production-activation authorization.
+17. Package C activates only the exact approved candidate.
+18. Full CI + Windows QA + EXE verification.
+19. Merge only with explicit authorization.
+```
+
+There is no automatic transition from candidate success to production activation.
+
+## 5.14 Rollback boundary
+
+Before activation, rollback is trivial because the current production bank remains active.
+
+After activation, migration provenance and source backups remain available. However, equivalence edges are directional:
+
+```text
+V1 -> V2
+```
+
+does not imply:
+
+```text
+V2 -> V1
+```
+
+Software/bank rollback may be operationally possible, but learner-state reverse migration requires separate explicit authority or a separately approved preservation strategy.
+
+## 5.15 Explicit non-goals
+
+Version 1 does not implement:
+
+```text
+generic arbitrary question editing
+prompt rewriting
+explanation rewriting
+answer-key changes
+answer-letter reordering
+new/deleted question continuity
+objective/domain/tier migration
+arbitrary quarantine resurrection
+automatic semantic comparison
+LLM-based runtime equivalence
+runtime web access
+user-imported equivalence manifests
+"trust this revision" UI
+cryptographic signing/key infrastructure
+multi-hop live-state migration in one operation
+automatic reverse migration
+PR #13 changes
+recovery-ref changes
+unrelated repository refactoring
+```
+
+If any of these becomes necessary, the architecture must be explicitly extended rather than implicitly stretched.
+
+## 5.16 Final architecture invariant
+
+```text
+STRICT QUESTION IDENTITY
+        |
+        +---- identical content ------------------> ordinary continuity
+        |
+        +---- changed content --------------------+
+                                                  |
+                                  exact governed revision?
+                                      /          \
+                                    NO            YES
+                                    |              |
+                             FAIL CLOSED      admitted edge
+                                                   |
+                              +--------------------+--------------------+
+                              |                    |                    |
+                           progress             history              session
+                              |                    |                    |
+                       preserve state       preserve event       preserve state
+                       advance binding      original FP/text     regenerate ID
+                       record lineage       lineage-aware join   target bank FP
+```
+
+The governing safety condition remains:
+
+```text
+UNREVIEWED CONTENT CHANGE
+NEVER INHERITS LEARNER AUTHORITY
+```
+
+---
+
+# Final design state
+
+Sections 1-5 are the approved architecture for the content-revision equivalence migration contract.
+
+This document is final **design authority**, not implementation authority.
+
+```text
+SECTIONS_1_5_RECORDED = YES
+FINAL_SPEC_COMPLETE = YES
+SPEC_SELF_REVIEW = PASS
+USER_WRITTEN_SPEC_REVIEW = PENDING
 IMPLEMENTATION_PLAN_AUTHORIZED = NO
 IMPLEMENTATION_AUTHORIZED = NO
 PRODUCTION_BANK_MUTATION_AUTHORIZED = NO
+PRODUCTION_ACTIVATION_AUTHORIZED = NO
+PR13_MODIFIED = NO
+RECOVERY_REFS_MODIFIED = NO
 MERGE_AUTHORIZED = NO
 ```
 
-The final design section will define the implementation boundary, component ownership, rollout/activation sequence, and explicit non-goals before the specification is considered complete.
+The next permitted step after user approval of this committed written specification is to invoke the implementation-planning workflow. No code, candidate-bank wording changes, activation, EXE rebuild, or merge is authorized by this design document alone.
