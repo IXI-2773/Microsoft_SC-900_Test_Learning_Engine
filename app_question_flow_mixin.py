@@ -108,39 +108,66 @@ class QuestionFlowMixin:
     def _position_feedback_popover(self, popover, anchor):
         popover.update_idletasks()
         host = self.content_frame
+        canvas = self.content_canvas
         pop_w = max(popover.winfo_width(), popover.winfo_reqwidth())
         pop_h = max(popover.winfo_height(), popover.winfo_reqheight())
-        host_w = max(host.winfo_width(), self.content_canvas.winfo_width())
-        viewport_top = int(self.content_canvas.canvasy(0))
-        viewport_bottom = viewport_top + self.content_canvas.winfo_height()
-        if anchor is None or not getattr(anchor, "winfo_exists", lambda: False)():
+        viewport_left = max(0, canvas.winfo_rootx() - host.winfo_rootx())
+        viewport_right = viewport_left + canvas.winfo_width()
+        viewport_top = int(canvas.canvasy(0))
+        viewport_bottom = viewport_top + canvas.winfo_height()
+        min_x = viewport_left + 12
+        max_x = max(min_x, viewport_right - pop_w - 12)
+        min_y = viewport_top + 12
+        max_y = max(min_y, viewport_bottom - pop_h - 12)
+
+        def fits(x, y):
+            return min_x <= x <= max_x and min_y <= y <= max_y
+
+        anchor_exists = anchor is not None and getattr(anchor, "winfo_exists", lambda: False)()
+        if not anchor_exists:
             return (
-                max(20, int((host_w - pop_w) / 2)),
-                max(viewport_top + 20, int(viewport_top + (self.content_canvas.winfo_height() - pop_h) / 5)),
+                min(max(min_x, int((viewport_left + viewport_right - pop_w) / 2)), max_x),
+                min(max(min_y, int(viewport_top + (canvas.winfo_height() - pop_h) / 5)), max_y),
             )
 
-        ax = anchor.winfo_rootx() - host.winfo_rootx()
-        ay = anchor.winfo_rooty() - host.winfo_rooty()
+        ax_root = anchor.winfo_rootx()
+        ay_root = anchor.winfo_rooty()
         aw = anchor.winfo_width()
         ah = anchor.winfo_height()
-        candidates = [
-            (ax + aw + 10, ay + max(0, int((ah - pop_h) / 2))),
+        ax = ax_root - host.winfo_rootx()
+        ay = ay_root - host.winfo_rooty()
+
+        pointer_candidates = []
+        root = getattr(self, "root", None)
+        if root is not None:
+            try:
+                pointer_root_x = root.winfo_pointerx()
+                pointer_root_y = root.winfo_pointery()
+                if ax_root <= pointer_root_x <= ax_root + aw and ay_root <= pointer_root_y <= ay_root + ah:
+                    pointer_x = pointer_root_x - host.winfo_rootx()
+                    pointer_y = pointer_root_y - host.winfo_rooty()
+                    pointer_candidates = [
+                        (pointer_x + 12, pointer_y + 12),
+                        (pointer_x - pop_w - 12, pointer_y + 12),
+                        (pointer_x + 12, pointer_y - pop_h - 12),
+                        (pointer_x - pop_w - 12, pointer_y - pop_h - 12),
+                    ]
+            except (AttributeError, tk.TclError):
+                pointer_candidates = []
+
+        anchor_candidates = [
             (ax, ay + ah + 10),
+            (ax + aw + 10, ay + max(0, int((ah - pop_h) / 2))),
             (ax - pop_w - 10, ay + max(0, int((ah - pop_h) / 2))),
             (ax, ay - pop_h - 10),
         ]
+        candidates = pointer_candidates + anchor_candidates
         for x, y in candidates:
-            if (
-                12 <= x <= host_w - pop_w - 12
-                and viewport_top + 12 <= y <= viewport_bottom - pop_h - 12
-            ):
+            if fits(x, y):
                 return x, y
-        x = min(max(12, candidates[0][0]), max(12, host_w - pop_w - 12))
-        y = min(
-            max(viewport_top + 12, candidates[0][1]),
-            max(viewport_top + 12, viewport_bottom - pop_h - 12),
-        )
-        return x, y
+
+        x, y = candidates[0]
+        return min(max(min_x, x), max_x), min(max(min_y, y), max_y)
 
     def _confidence_controls_enabled(self):
         preference = getattr(self, "show_confidence_controls_var", None)
