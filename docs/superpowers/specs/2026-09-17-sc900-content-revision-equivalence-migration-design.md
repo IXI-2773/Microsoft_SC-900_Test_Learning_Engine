@@ -1,158 +1,92 @@
-# SC-900 Content-Revision Equivalence Migration Design
+# SC-900 Content-Revision Equivalence Migration — Final Reconciled Design
 
-**Work ID:** `SC900-CONTENT-REVISION-EQUIVALENCE-MIGRATION-001`  
-**Repository:** `IXI-2773/Microsoft_SC-900_Test_Learning_Engine`  
-**Design branch:** `design/sc900-content-revision-equivalence-migration-001`  
-**Authoritative design base:** `23d440b6976b9f6bbb3b77285bf0d11effc2513f`  
-**Status:** `FINAL DESIGN / SECTIONS 1-5 APPROVED / USER WRITTEN-SPEC REVIEW PENDING`  
-**Implementation authorized:** `NO`
+**Work ID:** `SC900-CONTENT-REVISION-EQUIVALENCE-MIGRATION-001`
 
-## Purpose
+**Repository:** `IXI-2773/Microsoft_SC-900_Test_Learning_Engine`
 
-The answer-length leakage repair proved that wording-only changes to durable question content currently change the per-question content fingerprint, quarantine prior learner progress as `CHANGED_CONTENT`, and invalidate canonical saved-session bank identity. That fail-closed behavior is intentional and must remain the default.
+**Design branch:** `design/sc900-content-revision-equivalence-migration-001`
 
-This design introduces a separate, explicit continuity authority for a narrow class of already-reviewed, meaning-preserving wording revisions. It does **not** weaken the existing content fingerprint, canonical question identity, changed-content quarantine, or saved-session bank-fingerprint protections.
+**Implementation base:** `23d440b6976b9f6bbb3b77285bf0d11effc2513f`
 
-The selected policy is:
+**Status:** FINAL / USER-APPROVED / PRE-IMPLEMENTATION
 
-```text
-CONTINUITY_POLICY = FULL_CONTINUITY
-```
+This document is the single authoritative design for Package A. It incorporates the approved Sections 1–5 and the pre-execution review corrections. The former review-errata document is historical only after reconciliation and no longer overrides this spec.
 
-Full continuity is permitted only through an exact, governed, hash-bound equivalence admission. Unknown or unreviewed content changes continue to fail closed.
+## Scope and non-authorization
 
-## Global design boundaries
+This design authorizes only Package A infrastructure planning/execution after an implementation plan is followed. It does **not** authorize:
 
-This design does not authorize:
+- production question wording changes;
+- production bank activation;
+- production equivalence manifests/review evidence;
+- EXE rebuild;
+- PR #13 modification or merge;
+- protected recovery-ref/tag modification;
+- merge to `main`.
 
-- answer-length question rewrites yet;
-- production-bank activation;
-- mutation of the current production bank;
-- weakening `question_content_fingerprint`;
-- question-ID-only continuity;
-- fuzzy or probabilistic runtime semantic matching;
-- an `allow_changed_content=True` bypass;
-- resurrection of arbitrary pre-existing quarantined learner state;
-- answer-key changes;
-- choice-letter remapping;
-- PR #13 mutation or merge;
-- recovery-ref mutation;
-- production EXE changes;
-- merge of any implementation package.
-
-The runtime must remain fail closed unless all conditions described below are satisfied.
+The current production bank must remain byte-for-byte unchanged in Package A.
 
 ---
 
-# Section 1 — Core Full-Continuity Equivalence Architecture
+# Section 1 — Full-Continuity Equivalence Architecture
 
-## 1.1 Existing identity remains authoritative
+## 1.1 Problem
 
-The existing durable-content fingerprint remains unchanged. It continues to bind meaning-bearing question content and to detect content mutation.
+Current learner-history safety is intentionally fail-closed. Question content is bound by durable fingerprints. A same-ID question whose durable content changes is treated as `CHANGED_CONTENT`, so prior learner state does not silently attach to revised content. Canonical saved sessions also bind to the exact bank fingerprint.
 
-The normal rule remains:
+That behavior blocks safe wording-only repairs, including the answer-length leakage repair, even when the intended proposition and answer authority are unchanged.
 
-```text
-SAME CONTENT FINGERPRINT
-    -> continuity under existing architecture
+The new contract must permit continuity only for an explicitly reviewed, exact, meaning-preserving revision while retaining all existing strict behavior for every unapproved content change.
 
-DIFFERENT CONTENT FINGERPRINT
-    -> CHANGED_CONTENT quarantine / bank-session mismatch
-```
+## 1.2 Selected continuity policy
 
-The new system adds a narrow exception authority layered **on top** of this rule. It does not redefine what counts as durable content.
+`FULL_CONTINUITY` is the approved policy.
 
-## 1.2 Separate directed equivalence ledger
+For an exact reviewed wording-only revision, prior progress, history-derived learning signals, mastery/confidence state, Smart Practice evidence, and compatible saved-session state may continue across the revision.
 
-The fundamental continuity authority is an explicit directed edge:
+Continuity is authorized only through an exact directed source->target equivalence edge. There is no fuzzy similarity, ID-only fallback, runtime LLM judgment, or inferred reverse equivalence.
 
-```text
-QUESTION_ID
-FROM_CONTENT_FINGERPRINT
-TO_CONTENT_FINGERPRINT
-```
+## 1.3 Exact directed equivalence edges
 
-Conceptually:
+Each changed question is represented by:
 
 ```text
-question version V1
-      |
-      | APPROVED_SEMANTIC_EQUIVALENCE
-      v
-question version V2
+question_id
+from_content_fingerprint
+to_content_fingerprint
 ```
 
-An approved `V1 -> V2` edge does not automatically authorize `V2 -> V1`.
+Edges are directional. `V1 -> V2` does not imply `V2 -> V1`.
 
-For multiple revisions:
+A historical event from `V1` may be recognized at `V3` only when the complete approved chain exists:
 
 ```text
 V1 -> V2 -> V3
 ```
 
-continuity from V1 to V3 is permitted only when the complete directed lineage is independently valid. No transitive equivalence is inferred merely from question ID, lexical similarity, answer key, or model judgment.
+Version-1 live-state migration remains limited to one direct bank edge per execution.
 
-## 1.3 Runtime semantic inference is forbidden
+## 1.4 Historical events are immutable
 
-Runtime code must never decide that two questions “look equivalent.”
-
-Forbidden runtime authorities include:
-
-- string similarity;
-- embeddings;
-- LLM judgment;
-- unchanged canonical ID alone;
-- unchanged correct letter alone;
-- unchanged objective alone;
-- “both are wrong distractors” reasoning;
-- heuristic matching.
-
-Runtime may only consume an already-admitted exact equivalence edge and verify its hashes and identities.
-
-## 1.4 Historical events remain immutable
-
-Historical learner events preserve the exact content identity and answer text the learner actually experienced.
-
-An event created under V1 remains bound to V1:
+Historical events retain their original:
 
 ```text
-question_id = Q1
-question_content_fingerprint = FP_V1
-selected_texts = texts actually seen at V1
-correct_texts = texts actually authoritative at V1
+question_content_fingerprint
+selected_texts
+correct_texts
+correctness
+confidence
+timing
+context/timestamps
 ```
 
-Migration must not rewrite historical-event fingerprints from `FP_V1` to `FP_V2` and must not rewrite the old selected/correct text to the new wording.
+Migration never rewrites old events to pretend they occurred under the target wording.
 
-Instead, consumers that need current-question history may use an explicit equivalence-aware join:
+## 1.5 Full semantic equivalence covers every answer choice
 
-```text
-event FP == current FP
-    -> normal match
+Full continuity requires preservation of the proposition represented by every choice, not merely preservation of the correct letter.
 
-event FP != current FP
-    -> exact approved lineage from event FP to current FP?
-         YES -> eligible historical match
-         NO  -> no match
-```
-
-This preserves auditability while allowing approved continuity.
-
-## 1.5 Every answer choice must preserve semantics
-
-Full continuity requires semantic equivalence for every choice, not only for the correct answer.
-
-For each option label A/B/C/D:
-
-```text
-CHOICE_SEMANTICS = EQUIVALENT
-```
-
-must be explicitly reviewed.
-
-A distractor cannot be replaced with a different wrong concept merely because both answers are incorrect. Previous learner mistakes and analytics may depend on which proposition was selected.
-
-Therefore the contract requires:
+For a changed question:
 
 ```text
 PROMPT_MEANING_PRESERVED = YES
@@ -162,178 +96,98 @@ CHOICE_B_SEMANTICS_PRESERVED = YES
 CHOICE_C_SEMANTICS_PRESERVED = YES
 CHOICE_D_SEMANTICS_PRESERVED = YES
 DISTRACTOR_ROLE_PRESERVED = YES
-EXPLANATION_MEANING_PRESERVED = YES
 ```
 
-For the first contract, Section 2 narrows the actual permitted field changes further.
+A distractor may not be replaced by a different wrong concept simply because it remains wrong.
 
-## 1.6 Choice-letter mapping is stable in version 1
+## 1.6 Letter mapping and correct key remain stable
 
-The first equivalence contract requires:
+Version 1 requires:
 
 ```text
-CHOICE_LABEL_SET_UNCHANGED = YES
 CHOICE_LETTER_MAPPING_UNCHANGED = YES
 CORRECT_KEY_UNCHANGED = YES
 ```
 
-An old B concept must remain the revised B concept. Reordering concepts across letters is not admitted in this version, even if the proposition texts are otherwise equivalent.
+No choice reordering or cross-letter concept remapping is admitted.
 
-This requirement protects in-progress session state that persists selected/pending answer letters.
+## 1.7 Progress may rebind, with lineage
 
-## 1.7 Progress may rebind with lineage
+For an admitted revision, active learner metrics remain intact while the active question-content binding advances to the target fingerprint.
 
-For an approved edge:
-
-```text
-Q1 / FP_V1
-     |
-     | approved equivalence
-     v
-Q1 / FP_V2
-```
-
-the current active learner record may preserve accumulated state while its active content binding advances to `FP_V2`.
-
-Preserved state includes, where present:
-
-- attempts;
-- correctness counts;
-- mastery/weakness state;
-- confidence evidence;
-- review/due state;
-- Smart Practice state;
-- flags/suspension state;
-- other accumulated learner metrics.
-
-The migration also records immutable lineage such as:
+Migration provenance is append-only and records at least:
 
 ```text
 question_id
 from_fingerprint
 to_fingerprint
-equivalence_manifest_sha256
+manifest_sha256
 migration_id
+migrated_at
 ```
 
-Full continuity must not erase evidence that the learner state originated under prior wording.
+Previously quarantined state is not automatically resurrected.
 
-## 1.8 Saved sessions require bank-level authorization
+## 1.8 Saved sessions use stricter migration
 
-Canonical saved sessions are bound to a whole-bank fingerprint. A changed bank therefore needs a governed source-bank -> target-bank migration, not a per-question bypass.
+A saved session may migrate only when every referenced question still exists and is either fingerprint-identical or covered by the exact admitted edge, with stable answer-letter mapping and correct key.
 
-A saved session may migrate only when:
+The target session receives a new bank fingerprint and regenerated canonical session/restore signatures. Old historical answer events stay bound to the content actually experienced.
 
-1. the exact source and target banks match the admitted manifest;
-2. every referenced canonical question still exists;
-3. every referenced question is either fingerprint-identical or linked by an approved equivalence path;
-4. choice labels/mappings remain stable;
-5. correct keys remain stable;
-6. session/builder identity remains otherwise valid.
+## 1.9 Exact bank binding
 
-Unapproved bank differences continue to fail closed.
-
-## 1.9 Existing strict functions remain strict by default
-
-Existing strict identity behavior must not be changed into a permissive optional mode.
-
-The architecture must not introduce a generic bypass such as:
+Every equivalence package binds the exact source and target banks:
 
 ```text
-allow_changed_content = true
+SOURCE_BANK_FILENAME
+SOURCE_BANK_FILE_SHA256
+SOURCE_BANK_CONTENT_FINGERPRINT
+TARGET_BANK_FILENAME
+TARGET_BANK_FILE_SHA256
+TARGET_BANK_CONTENT_FINGERPRINT
+QUESTION_EQUIVALENCE_EDGES[]
+MANIFEST_SHA256
 ```
 
-Instead, approved-revision behavior is exposed through an explicit, narrow revision authority and migration path. Existing changed-content adversarial protections remain valid when no admitted revision authority is supplied.
+No new signing/PKI system is required. Repository-controlled hash-bound evidence is sufficient for this application.
 
-## 1.10 Section 1 controlling invariant
+## 1.10 Existing strict APIs stay strict
+
+The existing baseline behavior remains authoritative. Do not introduce a generic bypass such as `allow_changed_content=True`.
+
+Conceptual new APIs are explicit:
 
 ```text
-SAME FINGERPRINT
-    -> existing continuity
-
-DIFFERENT FINGERPRINT
-+ same canonical question
-+ exact approved directed equivalence edge/chain
-+ unchanged answer authority
-+ unchanged choice-letter mapping
-+ preserved choice propositions
-+ exact bank-revision authority where required
-    -> FULL CONTINUITY
-
-OTHERWISE
-    -> existing fail-closed behavior
+validate_content_revision_manifest(...)
+admit_content_revision(...)
+migrate_progress_across_approved_revision(...)
+migrate_session_across_approved_revision(...)
+history_event_matches_approved_revision(...)
 ```
+
+Without an admitted revision, existing `CHANGED_CONTENT` and session-bank mismatch behavior is unchanged.
 
 ---
 
-# Section 2 — Exact Equivalence Manifest and Fail-Closed Admission
+# Section 2 — Exact Manifest and Fail-Closed Admission
 
-## 2.1 Manifest scope
+## 2.1 Manifest model
 
-The manifest is closed-world, hash-bound, and specific to one exact source-bank -> target-bank revision.
-
-Conceptual top-level shape:
-
-```json
-{
-  "schema_version": 1,
-  "manifest_kind": "sc900_content_revision_equivalence",
-  "work_id": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001",
-  "continuity_policy": "FULL_CONTINUITY",
-  "source_bank": {
-    "filename": "sc900_bank_v8_final.json",
-    "file_sha256": "SOURCE_BANK_FILE_SHA256",
-    "content_fingerprint": "SOURCE_BANK_CONTENT_FINGERPRINT",
-    "question_count": 454
-  },
-  "target_bank": {
-    "filename": "TARGET_BANK_FILENAME",
-    "file_sha256": "TARGET_BANK_FILE_SHA256",
-    "content_fingerprint": "TARGET_BANK_CONTENT_FINGERPRINT",
-    "question_count": 454
-  },
-  "permitted_change_class": "WORDING_ONLY_LENGTH_REBALANCE",
-  "edges": [],
-  "payload_sha256": "CANONICAL_MANIFEST_PAYLOAD_SHA256"
-}
-```
-
-The symbolic digest/filename values above define the required bindings; the implementation populates them with the exact generated values for each admitted revision.
-
-The final implementation schema may use typed objects or equivalent field names, but it must preserve the semantics and proof obligations in this design.
-
-## 2.2 Version-1 permitted change surface
-
-For the first equivalence contract, only answer-choice wording may change:
+The governed manifest contains:
 
 ```text
-choices[A]
-choices[B]
-choices[C]
-choices[D]
+schema_version = 1
+manifest_kind = sc900_content_revision_equivalence
+work_id
+continuity_policy = FULL_CONTINUITY
+source_bank { filename, file_sha256, content_fingerprint, question_count }
+target_bank { filename, file_sha256, content_fingerprint, question_count }
+permitted_change_class = WORDING_ONLY_LENGTH_REBALANCE
+edges[]
+payload_sha256
 ```
 
-All other meaning-bearing or classification fields remain unchanged for continuity admission, including:
-
-```text
-canonical question ID
-prompt
-correct answer letters
-choice-letter/concept association
-question type
-objective code
-domain
-topics
-exam calibration tier
-exam eligibility
-study-focus metadata
-```
-
-The existing explanations are also held unchanged in version 1. If a wording edit makes an explanation inaccurate or inconsistent, that question is excluded from the equivalence tranche rather than expanding this contract.
-
-## 2.3 Per-question edge
-
-Each changed question has exactly one direct edge for the source/target revision:
+Each edge contains:
 
 ```text
 question_id
@@ -352,129 +206,105 @@ review_artifact_sha256
 authority_refs[]
 ```
 
-Manifest booleans are assertions/evidence metadata. They are not trusted in place of recomputation. Mechanical invariants are independently recomputed from source and target banks.
+Manifest booleans are evidence metadata only. The validator independently recomputes the actual invariants from the banks.
 
-## 2.4 Per-choice semantic review
+## 2.2 Version-1 permitted change surface
 
-Each changed choice must be classified as semantically equivalent.
-
-An acceptable edit may shorten or normalize wording while preserving the same proposition.
-
-A different product, capability, condition, scope, exception, or distractor concept is not equivalent merely because it remains incorrect.
-
-Admission requires:
+Only keyed answer-choice wording may differ:
 
 ```text
-ALL_CHANGED_CHOICES = EQUIVALENT
-CORRECT_PROPOSITION = EQUIVALENT
-DISTRACTOR_PROPOSITIONS = EQUIVALENT
+choices[A]
+choices[B]
+choices[C]
+choices[D]
 ```
 
-Any `AMBIGUOUS`, `SUBSTANTIVELY_CHANGED`, or `UNVERIFIED` choice rejects that question edge.
+All other question fields must remain unchanged for continuity admission.
 
-## 2.5 Review artifacts
-
-Each changed question receives a separate human-auditable review artifact containing at least:
+Repository-real calibration fields are:
 
 ```text
-question_id
-before choice text A-D
-after choice text A-D
-per-choice semantic disposition
-correct key before
-correct key after
-authority references
-disposition
+exam_calibration_tier
+exam_simulation_eligible
 ```
 
-The main manifest stores the SHA-256 of each review artifact. Changing an approved review artifact therefore invalidates manifest admission.
+`study_focus` is also immutable but is not a substitute for `exam_calibration_tier`.
 
-For SC-900 factual claims, Microsoft Learn remains the factual authority. If current official authority is insufficient to establish a safe meaning-preserving revision, that question is excluded rather than forced through admission.
-
-## 2.6 Canonical manifest hashing
-
-The manifest payload is hashed deterministically after parse and validation, not by relying on pretty-print formatting.
-
-Required properties:
+Version 1 specifically requires the following to remain unchanged:
 
 ```text
-UTF-8
-JSON parsed successfully
-duplicate object keys rejected
-supported JSON types only
-lexicographic object-key order
-compact deterministic serialization
-SHA-256
+canonical question ID
+question_number
+prompt
+correct answer letters
+choice-label set
+choice-letter/concept association
+question_type
+objective_code
+domain
+topics
+exam_calibration_tier
+exam_simulation_eligible
+study_focus
+chapter
+subtitle
+general_explanation
+choice_explanations
+reasoning_steps
+calibration_version
+all other non-choice durable/runtime/classification fields
 ```
 
-Conceptually equivalent canonical serialization:
+If answer wording would require an explanation change, that question is excluded from the tranche.
 
-```python
-json.dumps(
-    payload,
-    ensure_ascii=False,
-    sort_keys=True,
-    separators=(",", ":"),
-)
-```
+## 2.3 Global invariant checking occurs before edge admission
 
-`payload_sha256` is calculated over the canonical manifest payload excluding the self-referential `payload_sha256` field.
+The validator compares **every** canonical source/target question pair, not only fingerprint-different questions.
 
-## 2.7 Trusted origin
+This is required because the existing content fingerprint can be blind to some keyed-choice permutations or classification/runtime fields.
 
-Continuity authority must not come from a user-writable runtime directory or arbitrary downloaded file.
-
-Approved manifest/review material is release-controlled repository/package content under the Section 5 evidence surface:
+Mandatory global checks include:
 
 ```text
-content_revision_evidence/
-    manifests/
-    reviews/
+canonical ID unchanged
+correct key unchanged
+choice-label set unchanged
+prompt unchanged
+question type unchanged
+objective_code unchanged
+domain unchanged
+topics unchanged
+exam_calibration_tier unchanged
+exam_simulation_eligible unchanged
+study_focus unchanged
+explanations unchanged
+all other non-choice fields unchanged
 ```
 
-The evidence directory is intentionally distinct from the `content_revision_authority.py` module name.
+Specific finite reasons are used where defined; otherwise `NONPERMITTED_FIELD_CHANGED`.
 
-Runtime does not provide a user override such as “trust this changed bank.”
+### Choice-permutation protection
 
-## 2.8 Global admission algorithm
-
-Before learner state may cross source -> target:
-
-```text
-1. Validate manifest schema.
-2. Validate manifest canonical payload hash.
-3. Hash actual source bank file.
-4. Hash actual target bank file.
-5. Compute actual source/target bank content fingerprints.
-6. Require exact manifest source/target bank matches.
-7. Require source question count = 454.
-8. Require target question count = 454.
-9. Require identical canonical question-ID sets.
-10. Compare every source question to its target question.
-```
-
-For every question:
+Even when:
 
 ```text
 SOURCE_FP == TARGET_FP
-    -> no equivalence edge required
-
-SOURCE_FP != TARGET_FP
-    -> exactly one manifest edge required with exact:
-       question_id
-       from_content_fingerprint
-       to_content_fingerprint
 ```
 
-Zero matching edges fails.
+if keyed choices differ in a way that remaps concepts across letters, admission fails:
 
-Duplicate/conflicting matching edges fail.
+```text
+SOURCE_FP == TARGET_FP
+AND source["choices"] != target["choices"]
+AND change is a cross-letter permutation/remap
+    -> CHOICE_LETTER_MAPPING_CHANGED
+```
 
-An equivalence edge for a question whose fingerprint did not actually change fails.
+A pure B/C text swap therefore cannot hide behind fingerprint equality.
 
-## 2.9 Closed-world changed-question set
+## 2.4 Closed-world changed-question set
 
-The manifest must describe exactly the actual changed-question population:
+After global invariant checking, compute the actual fingerprint-different question set and require:
 
 ```text
 ACTUAL_CHANGED_QUESTION_ID_SET
@@ -482,52 +312,157 @@ ACTUAL_CHANGED_QUESTION_ID_SET
 MANIFEST_EDGE_QUESTION_ID_SET
 ```
 
-An undeclared changed question rejects the entire revision.
+An undeclared content change rejects the revision. An edge for an unchanged question also rejects the revision. No partial bank migration is admitted.
 
-An extra manifest edge for an unchanged question also rejects the entire revision.
+## 2.5 Bank-level metadata is immutable in version 1
 
-No partial migration is admitted.
+The source and target bank JSON objects are compared after duplicate-safe parsing. All top-level bank content other than the `questions` array must be semantically equal.
 
-## 2.10 Mechanical edge validation
+Formatting/whitespace differences are irrelevant. A changed bank title, version, or other top-level metadata fails `NONPERMITTED_FIELD_CHANGED`.
 
-For every changed question the validator independently proves:
+## 2.6 Review artifacts
 
-```text
-QUESTION_ID_UNCHANGED = YES
-QUESTION_ID_UNIQUE = YES
-CORRECT_KEY_UNCHANGED = YES
-CHOICE_LABEL_SET_UNCHANGED = YES
-CHOICE_LETTER_MAPPING_UNCHANGED = YES
-PROMPT_UNCHANGED = YES
-OBJECTIVE_UNCHANGED = YES
-DOMAIN_UNCHANGED = YES
-TOPICS_UNCHANGED = YES
-TIER_UNCHANGED = YES
-EXAM_ELIGIBILITY_UNCHANGED = YES
-QUESTION_TYPE_UNCHANGED = YES
-ONLY_PERMITTED_FIELDS_CHANGED = YES
-```
-
-The source/target bank data, not the manifest assertion, decides each mechanical invariant.
-
-## 2.11 Semantic admission
-
-Every changed question additionally requires:
+Every changed question receives a separate review artifact containing at least:
 
 ```text
-SEMANTIC_REVIEW_STATUS = APPROVED
-REVIEW_ARTIFACT_HASH = VALID
-ALL_CHOICES = EQUIVALENT
-OFFICIAL_AUTHORITY = PRESENT
+question_id
+from_content_fingerprint
+to_content_fingerprint
+before choices A-D
+after choices A-D
+semantic_review A-D
+correct_key_before
+correct_key_after
+authority_refs[]
+disposition = APPROVED_FOR_FULL_CONTINUITY
 ```
 
-If any changed question fails semantic review, the bank-level revision is rejected. The repair process may remove the uncertain question from the candidate, regenerate the candidate and manifest, and re-run admission.
+The manifest stores the raw SHA-256 of each review artifact.
 
-## 2.12 Finite failure domain
+Review JSON uses the same duplicate-key-safe parser as manifest JSON. Duplicate authority-bearing keys fail closed rather than using last-key-wins behavior.
 
-Admission failures are machine-readable, finite reasons rather than arbitrary free-form success states.
+## 2.7 Microsoft Learn authority syntax
 
-Initial reason domain:
+For SC-900 semantic approval, both the manifest edge and its bound review artifact must contain at least one normalized authority reference beginning with:
+
+```text
+https://learn.microsoft.com/
+```
+
+Runtime does not fetch the URL. This is deterministic syntax validation only.
+
+Empty refs or non-Microsoft-only refs fail `AUTHORITY_EVIDENCE_MISSING`.
+
+## 2.8 Canonical manifest hashing
+
+Manifest hashing is based on parsed canonical JSON, not pretty-printing:
+
+```text
+UTF-8
+duplicate keys rejected
+supported JSON types only
+lexicographic object-key order
+compact deterministic serialization
+SHA-256
+```
+
+Conceptually:
+
+```python
+json.dumps(payload_without_payload_sha256, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+```
+
+Bank and review `file_sha256` values use raw file bytes.
+
+## 2.9 Governed evidence paths
+
+Runtime authority material is release-controlled under:
+
+```text
+content_revision_evidence/
+    manifests/
+    reviews/
+```
+
+Registry paths and `review_artifact` paths must be nonempty relative paths contained under the intended governed root. Absolute paths and `..` traversal are rejected before reading.
+
+User-writable runtime directories and arbitrary downloaded files do not confer authority.
+
+## 2.10 Registered runtime source/target filenames must differ in version 1
+
+The version-1 runtime resolver locates the source bank beside the installed target bank. Therefore:
+
+```text
+source_bank.filename != target_bank.filename
+```
+
+is mandatory for registered runtime migration.
+
+Package B/C must keep the exact source bank file available beside the target bank during the migration window. Same-filename migration requires a future separately designed source-evidence location.
+
+## 2.11 Exact source/target admission algorithm
+
+Admission order is deterministic:
+
+```text
+1. Parse manifest duplicate-safely.
+2. Validate schema/types/unknown/missing fields.
+3. Validate canonical manifest hash.
+4. Validate authority/evidence path containment.
+5. Read/parse source and target bank JSON duplicate-safely.
+6. Validate raw source/target file SHA-256.
+7. Require source question count = 454.
+8. Require target question count = 454.
+9. Validate canonical question-ID uniqueness and identical ID sets.
+10. Compare top-level bank metadata excluding questions.
+11. Compare all global per-question non-choice and letter-mapping invariants.
+12. Compute source/target bank content fingerprints.
+13. Require exact manifest bank content fingerprints.
+14. Compute actual fingerprint-different question-ID set.
+15. Require exact equality with edge-ID set.
+16. Validate exact edge from/to fingerprints.
+17. Validate review artifact existence/hash/schema/exact before-after binding.
+18. Require every A-D semantic disposition = EQUIVALENT.
+19. Require Microsoft Learn authority syntax.
+20. Admit the complete bank revision only if every edge passes.
+```
+
+## 2.12 Duplicate-safe parsing domain
+
+Duplicate-key protection applies to:
+
+- manifest JSON;
+- review artifacts;
+- bank JSON used as admission authority.
+
+Malformed/wrong-type authority structures fail deterministically rather than relying on Python truthiness or coercion.
+
+Required shape checks include:
+
+```text
+edges is a list
+bank objects are mappings
+question_count is an integer
+choice_semantics is exact A-D mapping
+authority_refs is a list of strings
+boolean assertion fields are literal booleans
+review before/after are exact A-D mappings
+review semantic_review is exact A-D mapping
+hash/fingerprint fields are nonblank valid hex
+```
+
+## 2.13 Finite failure domain
+
+The admission result is:
+
+```text
+status = PASS | FAIL
+reasons = finite ordered tuple/list
+```
+
+There is no `PASS_WITH_WARNING`.
+
+Initial reasons include:
 
 ```text
 SCHEMA_UNSUPPORTED
@@ -563,957 +498,360 @@ SEMANTIC_REVIEW_HASH_MISMATCH
 SEMANTIC_EQUIVALENCE_NOT_APPROVED
 CHOICE_SEMANTICS_CHANGED
 AUTHORITY_EVIDENCE_MISSING
+UNREGISTERED_MANIFEST
+REGISTRY_HASH_MISMATCH
+LINEAGE_INCOMPLETE
+LINEAGE_CONFLICT
 ```
 
-The validator returns conceptually:
+Missing/unreadable registered evidence maps deterministically:
 
 ```text
-status = PASS | FAIL
-reasons = finite ordered list
+registered manifest absent/unreadable -> REGISTRY_HASH_MISMATCH
+source bank absent/unreadable          -> SOURCE_BANK_FILE_HASH_MISMATCH
+target bank absent/unreadable          -> TARGET_BANK_FILE_HASH_MISMATCH
+review artifact absent/unreadable      -> SEMANTIC_REVIEW_MISSING
+unsafe authority path                  -> SCHEMA_UNSUPPORTED
 ```
 
-There is no `PASS_WITH_WARNING` continuity admission state.
-
-## 2.13 Atomic bank-level decision
-
-The bank revision is admitted only when all required edges pass.
-
-Forbidden behavior:
-
-```text
-48 questions migrated
-2 questions quarantined
-continue anyway
-```
-
-Required behavior:
-
-```text
-ALL REQUIRED EDGES PASS
-    -> manifest admitted
-
-ANY REQUIRED EDGE FAILS
-    -> manifest rejected
-       existing CHANGED_CONTENT/session mismatch behavior remains authoritative
-```
-
-## 2.14 Revision-chain semantics
-
-Manifests are directed bank-revision edges:
-
-```text
-BANK V8 --M1--> BANK V9
-BANK V9 --M2--> BANK V10
-```
-
-A V8 historical event may be recognized at V10 only through validation of the complete approved chain. Version-1 live-state migration itself remains limited by Section 5.12 to one direct bank edge per execution.
-
-Neither bank nor question equivalence is inferred from IDs or similarity.
-
-## 2.15 Section 2 controlling invariant
-
-```text
-FULL_CONTINUITY_AUTHORIZATION =
-    EXACT SOURCE BANK
-  + EXACT TARGET BANK
-  + EXACT DECLARED CHANGE SET
-  + EXACT FROM/TO QUESTION FINGERPRINTS
-  + UNCHANGED ANSWER AUTHORITY
-  + UNCHANGED CHOICE LETTER MAPPING
-  + ALL CHOICE PROPOSITIONS SEMANTICALLY EQUIVALENT
-  + HASH-BOUND REVIEW EVIDENCE
-  + MICROSOFT LEARN AUTHORITY
-  + VALID MANIFEST HASH
-```
-
-Anything less provides no equivalence authority and therefore falls back to existing fail-closed behavior.
+Underlying detail may be retained for logs, but the external reason remains finite.
 
 ---
 
 # Section 3 — Runtime Migration Semantics
 
-## 3.1 Admission and migration are separate responsibilities
+## 3.1 Admission and migration are separate
 
 ```text
 ADMISSION DECIDES WHETHER CONTINUITY IS ALLOWED.
 MIGRATION DOES NOT RE-JUDGE SEMANTICS.
 ```
 
-Runtime migration accepts only a manifest/revision authority that has already passed Section 2 validation.
+Runtime receives only an `AdmittedRevision` object.
 
-## 3.2 Active progress: preserve learner state, advance binding
-
-For an admitted edge:
+Runtime state contract:
 
 ```text
-Q1 / FP_V1
-     |
-     | approved equivalence
-     v
-Q1 / FP_V2
+self.content_revision_authority: AdmittedRevision | None
 ```
 
-the active progress record preserves accumulated learner state while the active question-content binding advances to `FP_V2`.
+An `AdmissionResult` must never be stored as runtime authority.
 
-Preserved values include, where present:
-
-- attempts;
-- correct/incorrect counts;
-- mastery;
-- confidence evidence;
-- weak-question state;
-- review scheduling/due state;
-- Smart Practice state;
-- flags/suspension state;
-- other accumulated learning metrics.
-
-The progress payload's active bank fingerprint advances from the exact source bank to the exact target bank.
-
-The migration appends provenance such as:
+Handling is:
 
 ```text
-content_revision_migrations[]:
-  question_id
-  from_fingerprint
-  to_fingerprint
-  manifest_sha256
-  migration_id
-  timestamp
+None -> no authority
+FAIL -> authority remains None; fail closed for attempted registered migration
+PASS -> require result.admitted; store only result.admitted
 ```
 
-This provenance records that full continuity was explicitly authorized rather than pretending all state originated under the target wording.
+## 3.2 Source-bank loading must restore target global registration
 
-## 3.3 Existing quarantine is not automatically resurrected
+`question_bank.load_bank()` registers the loaded bank globally for progress identity. Reading a source bank during target authority resolution must not leave the source bank registered.
 
-Version 1 distinguishes active source state from previously quarantined state.
+Required pattern:
 
 ```text
-ACTIVE SOURCE RECORD
-+ approved edge
-    -> eligible for preservation/rebind
-
-ALREADY QUARANTINED RECORD
-    -> remains quarantined
+capture current target questions
+try:
+    load source bank
+finally:
+    register target questions again
 ```
 
-Restoring arbitrary pre-existing quarantine is outside this package and would require a separate governed restoration contract.
+The restoration must occur even if source loading fails.
 
-## 3.4 Historical learner events remain immutable
+## 3.3 Active progress migration
 
-Historical events retain:
+For a source-bound progress payload:
 
 ```text
-original question_content_fingerprint
-original selected_texts
-original correct_texts
-original correctness/confidence/timing/context
+payload.bank_fingerprint == revision.source_bank_content_fingerprint
 ```
 
-Migration does not rewrite old event fingerprints or old text.
-
-This preserves what the learner actually experienced.
-
-## 3.5 Explicit equivalence-aware history resolver
-
-The existing strict history matcher remains strict.
-
-Approved cross-revision history is resolved through a separate explicit equivalence-aware path, conceptually:
+requirements are strict:
 
 ```text
-history_event_matches_approved_revision(event, current_question, admitted_revision)
+unchanged active question -> stored FP equals common source/target FP
+changed active question   -> stored FP equals edge.from exactly
 ```
 
-Decision:
+A source-bank payload that already contains `edge.to` for a changed active question is a conflicting partial state and fails `SOURCE_PROGRESS_FINGERPRINT_MISMATCH`.
+
+Only a payload already bound to the exact target bank may enter the idempotent target-verification path.
+
+Migration preserves learner metrics, changes only active fingerprint/bank binding, appends immutable migration provenance, leaves historical events untouched, and does not resurrect quarantined records.
+
+## 3.4 Unexpected target progress state fails closed
+
+If a target progress file exists and its bank fingerprint is neither exact source nor exact target:
 
 ```text
-event.question_id != current.question_id
-    -> NO MATCH
-
-event.fp == current.fp
-    -> MATCH
-
-event.fp != current.fp
-    -> complete exact approved lineage event.fp -> current.fp?
-         YES -> MATCH
-         NO  -> NO MATCH
+FAIL CLOSED
+preserve target and source
+progress_write_blocked = true
+no fallthrough to ordinary target content-epoch migration
 ```
 
-This avoids weakening the default strict matcher.
+If both source and target progress files exist, source never overwrites target unless the target itself is verified as exact source-bound state under the admitted revision.
 
-## 3.6 Smart Practice, analytics and other history consumers
+## 3.5 Explicit migration reads are non-mutating
 
-When an admitted revision is active, history consumers that currently use fingerprint-bound question history may use the equivalence-aware resolver.
+Explicit content-revision migration must not use ordinary helpers that rename malformed JSON to `.bad.json`.
 
-Approved old events may continue contributing to:
-
-- weakness detection;
-- confidence calibration;
-- mastery estimation;
-- due/review scheduling;
-- Smart Practice selection;
-- analytics and learning signals.
-
-Historical text-derived analytics must continue to analyze the historical text stored in the event. They do not substitute current target-bank wording for old `selected_texts` or `correct_texts`.
-
-Thus:
+Progress/session migration reads source bytes/text directly and parses non-mutatingly. On malformed/unreadable input:
 
 ```text
-IDENTITY JOIN
-    -> may follow approved lineage
-
-EVENT CONTENT
-    -> remains historical
+source path remains present
+source bytes remain unchanged
+error is returned/fail-closed
 ```
 
-## 3.7 Saved-session migration preconditions
+Ordinary non-revision loading may retain current quarantine behavior.
 
-Canonical saved sessions may cross source-bank -> target-bank only when every referenced question satisfies:
+## 3.6 Historical joins
+
+Existing strict history matching remains unchanged.
+
+The revision-aware resolver first attempts the strict match. If strict match fails, it requires:
 
 ```text
 same canonical question ID
-AND
-(
-    same fingerprint
-    OR
-    exact approved equivalence path
-)
-AND
-same choice-letter mapping
-AND
-same correct key
+nonblank historical fingerprint
+complete exact directed lineage from historical FP to current FP
 ```
 
-Any referenced question failure rejects the entire saved-session migration.
+Without authority, behavior is identical to the current strict path.
 
-There is no partial ordinary-session restore.
+## 3.7 All direct history consumers must be covered
 
-## 3.8 Session state preserved
+Revision-aware history applies consistently to history consumers, including:
 
-Because Section 2 prohibits answer-letter remapping, admitted saved-session migration may preserve:
+- analytics;
+- game/reward stability paths;
+- session builder / Smart Practice paths;
+- `TestingEngineApp.question_volatility(...)` in `app.py`;
+- other direct strict-history consumers discovered during implementation.
 
-- ordered canonical question IDs;
-- session question order;
-- completed selected letters;
-- completed answer state;
-- flags;
-- confidence;
-- miss reason;
-- elapsed time;
-- current index;
-- session quests;
-- Smart Practice state;
-- session rewards;
-- checkpoint state;
-- session answer history;
-- builder context and other compatible runtime state.
+The strict function in `question_identity.py` is not weakened.
 
-Historical session-answer events remain bound to the revision actually experienced.
+## 3.8 Saved-session migration
 
-## 3.9 Target session identity is regenerated
+A canonical source session is strictly validated against the source bank. The migrated target session:
 
-The following source-session identity values are not copied unchanged:
+- preserves ordered question IDs and compatible state;
+- preserves completed selections;
+- clears pending/selected state only for changed unanswered questions;
+- preserves historical session-answer events unchanged;
+- binds target bank fingerprint;
+- regenerates `session_signature` and `restore_signature`;
+- receives the target canonical filename/path.
+
+## 3.9 Session idempotence and recovery do not depend on a stored migration ID
+
+Current `SessionSnapshot` does not store a content-revision migration ID, and Package A does not expand that schema.
+
+If a target session already exists:
 
 ```text
-bank_fingerprint
-session_signature
-restore_signature
-canonical session filename/path identity
+1. derive migration_id from admitted revision
+2. strictly validate source session
+3. recompute exact expected migrated target payload from source + revision
+4. read/strictly validate existing target non-mutatingly
+5. compare normalized existing target to expected migrated target
+6. exact equality -> already applied / finish source archival cleanup
+7. any difference -> conflict; preserve both; fail closed
 ```
 
-Migration conceptually performs:
+Archive filenames may include the derived migration-ID prefix.
+
+## 3.10 Transactional persistence
+
+Progress migration:
 
 ```text
-VALID SOURCE SESSION
-        |
-        v
-verify admitted source -> target revision
-        |
-        v
-copy admissible learner/session state
-        |
-        v
-bind TARGET BANK FINGERPRINT
-        |
-        v
-recompute session signature
-        |
-        v
-recompute restore signature
-        |
-        v
-write new canonical target session
+read non-mutatingly
+validate
+transform in memory
+validate target
+archive source
+safe/atomic write target
+re-read and verify target
 ```
 
-The old signatures deliberately authenticate the source-bank identity and therefore cannot simply be copied to the target revision.
-
-## 3.10 Unanswered and pending questions
-
-An unanswered question with no active selection simply renders the admitted target wording after migration.
-
-For a changed question with an incomplete pending selection:
+Session migration:
 
 ```text
-answered = false
-pending/selected != empty
+read non-mutatingly
+validate
+build exact target in memory
+validate target identity/signatures
+write target safely
+re-read and verify
+archive source
+remove source from resumable surface only after verified target
 ```
 
-version 1 clears the local pending/selected state for that question only.
+A failed authorized migration must not be reclassified as corrupt ordinary JSON and moved aside.
 
-Reason: the learner began an uncommitted interaction while viewing old wording. Restarting that one question under target wording is safer than silently converting an incomplete epistemic event.
+## 3.11 Idempotence
 
-Therefore:
+Progress migration uses a deterministic migration ID derived from:
 
 ```text
-COMPLETED ANSWER
-    -> preserve
-
-UNANSWERED + NO SELECTION
-    -> preserve blank state
-
-UNANSWERED + PENDING SELECTION + CHANGED QUESTION
-    -> clear local pending/selected state only
+manifest_sha256
+source_bank_content_fingerprint
+target_bank_content_fingerprint
 ```
 
-No completed learner-history event is lost by this rule.
+A fully verified target-bound progress payload returns a deterministic no-op and does not duplicate attempts, history, lineage, or backups.
 
-## 3.11 Progress persistence is transactional
-
-Progress migration is designed as:
-
-```text
-1. Read source payload.
-2. Validate source payload and admitted revision.
-3. Produce complete target payload in memory.
-4. Validate complete target payload.
-5. Back up source.
-6. Atomically replace/install target state.
-7. Re-read target and verify.
-```
-
-The source remains authoritative until the complete target has been validated.
-
-## 3.12 Session persistence is transactional
-
-Because target canonical session identity changes, session migration is designed as:
-
-```text
-1. Read source session.
-2. Validate source session and complete migration eligibility.
-3. Build complete target session in memory.
-4. Validate target bank identity/signatures.
-5. Write target temporary file.
-6. Re-read and verify target temporary file.
-7. Atomically install target canonical path.
-8. Archive source session as migrated.
-```
-
-The source session is never deleted before verified target installation.
-
-## 3.13 Source-session disposition
-
-After successful target-session verification:
-
-```text
-source session -> migration archive/backup
-new target session -> active canonical session
-```
-
-The old source session is removed from the ordinary resumable-session search surface so it is not repeatedly encountered as a bank mismatch.
-
-Explicit approved migration occurs before ordinary mismatch/quarantine handling for that exact admitted revision.
-
-## 3.14 Idempotence
-
-Migration must be idempotent.
-
-A deterministic migration identity is derived from exact revision authority, conceptually:
-
-```text
-migration_id = sha256(
-    source_bank_content_fingerprint
-    + target_bank_content_fingerprint
-    + manifest_sha256
-)
-```
-
-If the exact migration has already been applied:
-
-```text
-MIGRATION_ALREADY_APPLIED
-    -> verified no-op
-```
-
-The system must not duplicate attempts, history, lineage receipts, sessions, or analytics evidence.
-
-## 3.15 Crash recovery
-
-Crash behavior is fail closed.
-
-### Crash before verified target installation
-
-Source remains authoritative.
-
-### Verified target exists but source archival was interrupted
-
-On restart:
-
-```text
-verified target
-+ identical migration_id
-    -> finish source archival/cleanup
-```
-
-### Conflicting target exists
-
-```text
-target exists
-+ migration identity/content conflict
-    -> FAIL CLOSED
-    -> preserve both artifacts
-    -> no automatic overwrite
-```
-
-## 3.16 Runtime does not perform semantic review
-
-Runtime only verifies deterministic authority:
-
-```text
-manifest admitted?
-exact bank identities?
-exact question fingerprints?
-exact edge/lineage present?
-```
-
-All semantic review occurs before runtime admission.
-
-## 3.17 Section 3 terminal behavior
-
-For an admitted revision:
-
-```text
-PROGRESS =
-FULL CONTINUITY
-+ TARGET ACTIVE FINGERPRINT
-+ IMMUTABLE MIGRATION LINEAGE
-
-HISTORY =
-IMMUTABLE
-+ EQUIVALENCE-AWARE JOIN
-
-SMART PRACTICE / ANALYTICS =
-OLD EVENTS MAY CONTRIBUTE THROUGH APPROVED LINEAGE
-
-COMPLETED SESSION ANSWERS =
-PRESERVED
-
-PENDING SELECTION ON CHANGED QUESTION =
-LOCAL RESET
-
-SAVED SESSION BANK IDENTITY =
-REBOUND TO TARGET
-+ SIGNATURES REGENERATED
-
-FAILED / INCOMPLETE REVISION =
-EXISTING FAIL-CLOSED PATH
-```
+Saved-session idempotence is established by exact expected-target equality as described above.
 
 ---
 
-# Section 4 — Adversarial Test Matrix and Proof Obligations
+# Section 4 — Adversarial Proof Obligations
 
-## 4.1 Test philosophy
+Package A is not proven by a positive migration alone. Every positive case receives a negative twin.
 
-The new continuity path must be proven to be strictly narrower than the existing fail-closed system, not a bypass around it.
+## 4.1 Authority/schema tests
 
-Every positive migration test has at least one negative twin.
-
-Example:
+Required coverage includes:
 
 ```text
-VALID:
-exact source FP
-exact target FP
-exact approved manifest
--> continuity
-
-NEGATIVE TWIN:
-change one hex digit in target FP
--> FAIL CLOSED
+valid canonical manifest -> PASS
+unsupported schema -> SCHEMA_UNSUPPORTED
+missing field -> MISSING_FIELD
+unknown field -> UNKNOWN_FIELD
+duplicate manifest key -> DUPLICATE_JSON_KEY
+duplicate review key -> DUPLICATE_JSON_KEY
+duplicate bank authority key -> DUPLICATE_JSON_KEY
+manifest tamper after hash -> MANIFEST_HASH_MISMATCH
+JSON key order/whitespace change -> same canonical manifest hash
+wrong field types -> SCHEMA_UNSUPPORTED
+blank/malformed hashes -> SCHEMA_UNSUPPORTED
+unsafe absolute/../ evidence paths -> SCHEMA_UNSUPPORTED
 ```
 
-The new system passes only when every required proof is present simultaneously.
-
-## 4.2 Manifest and schema tests
-
-Required cases:
+## 4.2 Exact bank tests
 
 ```text
-S4-001 valid schema + valid canonical hash
-    -> PASS
-
-S4-002 unsupported schema version
-    -> SCHEMA_UNSUPPORTED
-
-S4-003 missing required field
-    -> MISSING_FIELD
-
-S4-004 unknown authority-bearing field
-    -> UNKNOWN_FIELD
-
-S4-005 duplicate JSON object key
-    -> DUPLICATE_JSON_KEY
-
-S4-006 manifest altered after hash computed
-    -> MANIFEST_HASH_MISMATCH
-
-S4-007 equivalent JSON with different whitespace/key order
-    -> same canonical manifest hash
-
-S4-008 user-writable/unregistered manifest
-    -> NO AUTHORITY
+correct source+target -> PASS
+wrong source raw SHA -> SOURCE_BANK_FILE_HASH_MISMATCH
+wrong target raw SHA -> TARGET_BANK_FILE_HASH_MISMATCH
+wrong source fingerprint -> SOURCE_BANK_FINGERPRINT_MISMATCH
+wrong target fingerprint -> TARGET_BANK_FINGERPRINT_MISMATCH
+source/target count != 454 -> QUESTION_COUNT_MISMATCH
+duplicate canonical ID -> DUPLICATE_QUESTION_ID
+different ID set -> QUESTION_ID_SET_MISMATCH
+bank top-level metadata change -> NONPERMITTED_FIELD_CHANGED
+same runtime source/target filename -> fail closed for registered runtime resolution
 ```
 
-This proves that equivalence authority is an exact governed object rather than loosely parsed metadata.
-
-## 4.3 Exact source/target bank binding
-
-The actual banks, not filenames, are authoritative.
-
-Required cases:
+## 4.3 Closed-world/global-invariant tests
 
 ```text
-correct source + correct target
-    -> PASS
-
-wrong source file SHA
-    -> FAIL
-
-wrong source content fingerprint
-    -> FAIL
-
-wrong target file SHA
-    -> FAIL
-
-wrong target content fingerprint
-    -> FAIL
-
-same filename but altered contents
-    -> FAIL
-
-454 -> 453 questions
-    -> FAIL
-
-454 -> 455 questions
-    -> FAIL
-
-different canonical question-ID set
-    -> FAIL
+undeclared changed question -> UNDECLARED_CONTENT_CHANGE
+edge for unchanged question -> EXTRA_EQUIVALENCE_EDGE
+duplicate edge -> DUPLICATE_EQUIVALENCE_EDGE
+wrong edge FROM -> FROM_FINGERPRINT_MISMATCH
+wrong edge TO -> TO_FINGERPRINT_MISMATCH
+correct key change -> CORRECT_KEY_CHANGED
+choice-label change -> CHOICE_LABEL_SET_CHANGED
+B/C keyed swap even with equal fingerprint -> CHOICE_LETTER_MAPPING_CHANGED
+prompt change -> PROMPT_CHANGED
+objective change -> OBJECTIVE_CHANGED
+domain change -> DOMAIN_CHANGED
+topics change -> TOPICS_CHANGED
+exam_calibration_tier change -> TIER_CHANGED
+exam_simulation_eligible change -> EXAM_ELIGIBILITY_CHANGED
+question_type change -> QUESTION_TYPE_CHANGED
+study_focus/reasoning_steps/calibration_version/explanation/other non-choice change -> NONPERMITTED_FIELD_CHANGED
 ```
 
-A copied or familiar filename confers no migration authority.
-
-## 4.4 Closed-world change-set proof
-
-The validator independently computes the actual changed-question population and requires exact equality with the manifest edge population:
+## 4.4 Semantic-review tests
 
 ```text
-ACTUAL_CHANGED_IDS
-==
-DECLARED_EDGE_IDS
+missing review -> SEMANTIC_REVIEW_MISSING
+review SHA mismatch -> SEMANTIC_REVIEW_HASH_MISMATCH
+review QID/from/to mismatch -> SEMANTIC_EQUIVALENCE_NOT_APPROVED
+before/after choices mismatch -> SEMANTIC_EQUIVALENCE_NOT_APPROVED
+correct keys mismatch -> SEMANTIC_EQUIVALENCE_NOT_APPROVED
+choice AMBIGUOUS/SUBSTANTIVELY_CHANGED -> CHOICE_SEMANTICS_CHANGED
+missing Microsoft Learn authority -> AUTHORITY_EVIDENCE_MISSING
+non-Microsoft-only authority -> AUTHORITY_EVIDENCE_MISSING
+review disposition not approved -> SEMANTIC_EQUIVALENCE_NOT_APPROVED
+manifest review status not approved -> SEMANTIC_EQUIVALENCE_NOT_APPROVED
 ```
 
-Required cases:
+## 4.5 Global-registration safety tests
+
+After successful and failed source-bank authority resolution, the globally registered progress-identity bank remains the target bank.
+
+## 4.6 Progress tests
+
+Prove:
 
 ```text
-declared Q10,Q27,Q91 / actual Q10,Q27,Q91
-    -> PASS
-
-actual also contains Q92
-    -> UNDECLARED_CONTENT_CHANGE
-
-manifest includes unchanged Q93
-    -> EXTRA_EQUIVALENCE_EDGE
-
-Q27 appears twice
-    -> DUPLICATE_EQUIVALENCE_EDGE
-
-missing Q91 edge
-    -> UNDECLARED_CONTENT_CHANGE
+learner metrics preserved
+active target fingerprint advanced
+history deep-equal to source
+quarantine deep-equal to source
+lineage appended once
+source-bound changed record already at edge.to -> fail partial-state conflict
+unexpected target bank fingerprint -> fail closed
+pre-existing quarantine not resurrected
+second application -> verified no-op
+malformed migration source remains byte-for-byte in place
 ```
 
-No silent extras and no partially declared bank are allowed.
-
-## 4.5 Per-question fingerprint tests
-
-For every declared edge, independently prove exact:
+## 4.7 History tests
 
 ```text
-question_id
-from_content_fingerprint
-to_content_fingerprint
+strict same FP match
+approved old->new match
+no authority -> no cross-revision match
+different ID -> no match
+reverse-only edge -> no match
+complete chain -> match
+missing middle -> no match
+returned event retains old text/fingerprint
+failed AdmissionResult cannot act as authority
+question_volatility uses approved lineage when authority active
 ```
 
-Negative controls:
+## 4.8 Saved-session tests
+
+Prove:
 
 ```text
-correct QID / wrong FROM_FP
-    -> FAIL
-
-correct QID / wrong TO_FP
-    -> FAIL
-
-wrong QID / correct hashes
-    -> FAIL
-
-reversed V2 -> V1 edge
-    -> FAIL
-
-unrelated approved edge
-    -> FAIL
+completed changed answer preserved
+changed unanswered pending selection locally reset
+unchanged/flagged/reward/quest/builder/current-index/elapsed state preserved
+session-answer history immutable
+target bank/signatures/path regenerated
+source mismatch -> fail
+unknown target question -> fail
+no edge -> fail
+invalid source signatures -> fail
+malformed source remains in place
+existing exact expected target -> idempotent recovery
+existing different target -> preserve both, fail closed
 ```
 
-Directionality must be test-proven.
+## 4.9 Persistence/crash tests
 
-## 4.6 Mechanical invariant tests
-
-For every admitted question, prove that only authorized answer-choice wording changed.
-
-Required invariants:
+Fault-inject around:
 
 ```text
-canonical ID unchanged
-prompt unchanged
-correct key unchanged
-choice labels unchanged
-letter-to-concept relationship unchanged
-objective unchanged
-domain unchanged
-topics unchanged
-tier unchanged
-Exam eligibility unchanged
-question type unchanged
-explanations unchanged
-all nonpermitted durable fields unchanged
+archive creation
+serialization
+safe write
+target verification
+source cleanup
 ```
 
-Mutation tests include:
-
-```text
-change only choice wording
-    -> may proceed to semantic gate
-
-change correct A -> B
-    -> CORRECT_KEY_CHANGED
-
-swap B and C
-    -> CHOICE_LETTER_MAPPING_CHANGED
-
-change prompt
-    -> PROMPT_CHANGED
-
-change objective
-    -> OBJECTIVE_CHANGED
-
-CORE -> APPLIED
-    -> TIER_CHANGED
-
-Exam eligible -> excluded
-    -> EXAM_ELIGIBILITY_CHANGED
-
-edit explanation
-    -> NONPERMITTED_FIELD_CHANGED
-```
-
-## 4.7 Semantic-review receipt tests
-
-A mechanically valid edit still fails without exact reviewed semantic evidence.
-
-Required proof:
-
-```text
-review receipt exists
-review receipt hash matches manifest
-review belongs to exact question
-review references exact FROM_FP
-review references exact TO_FP
-A = EQUIVALENT
-B = EQUIVALENT
-C = EQUIVALENT
-D = EQUIVALENT
-official factual authority present
-final disposition = APPROVED_FOR_FULL_CONTINUITY
-```
-
-Negative cases:
-
-```text
-missing receipt
-    -> FAIL
-
-receipt modified after approval
-    -> FAIL
-
-receipt belongs to another QID
-    -> FAIL
-
-one choice = AMBIGUOUS
-    -> FAIL
-
-one choice = SUBSTANTIVELY_CHANGED
-    -> FAIL
-
-authority evidence missing
-    -> FAIL
-```
-
-Runtime never creates or upgrades these approvals.
-
-## 4.8 Existing fail-closed behavior remains intact
-
-Without an admitted equivalence manifest, existing behavior remains authoritative:
-
-```text
-changed question content
-    -> CHANGED_CONTENT
-    -> progress does not attach
-
-changed fingerprint history
-    -> history does not attach
-
-bank fingerprint mismatch
-    -> canonical saved session rejected
-```
-
-Existing adversarial tests proving these properties remain unchanged and must continue to pass.
-
-A new regression explicitly proves:
-
-```text
-NEW FEATURE DISABLED / NO AUTHORITY
-==
-OLD BEHAVIOR
-```
-
-## 4.9 Progress full-continuity tests
-
-Construct a nontrivial source progress record for an admitted edge containing:
-
-```text
-attempt count
-correct/incorrect evidence
-confidence
-mastery/review data
-weak state
-flags/suspension
-Smart Practice state
-```
-
-After migration prove:
-
-```text
-QUESTION_ID = unchanged
-ALL LEARNER VALUES = unchanged
-ACTIVE_FP = FP_V2
-BANK_FP = TARGET_BANK_FP
-ONE lineage receipt appended
-old active FP no longer authoritative
-```
-
-Also prove:
-
-```text
-already quarantined state
-    -> NOT resurrected
-
-unrelated question state
-    -> unchanged
-
-new question state
-    -> not fabricated
-```
-
-## 4.10 Historical immutability tests
-
-Given a historical event with:
-
-```text
-question_id = Q1
-question_content_fingerprint = FP_V1
-selected_texts = old wording
-correct_texts = old wording
-```
-
-after migration prove:
-
-```text
-event FP remains FP_V1
-old selected_texts remain old text
-old correct_texts remain old text
-timestamps unchanged
-correctness unchanged
-confidence unchanged
-response timing unchanged
-```
-
-The event may match the current question through approved lineage, but its persisted historical contents remain unchanged.
-
-## 4.11 History-join tests
-
-Test the equivalence-aware resolver independently:
-
-```text
-same QID + same FP
-    -> MATCH
-
-same QID + approved FP_V1 -> FP_V2
-    -> MATCH
-
-same QID + no approved edge
-    -> NO MATCH
-
-different QID + approved hashes
-    -> NO MATCH
-
-reversed edge only
-    -> NO MATCH
-```
-
-Future chain semantics must also prove:
-
-```text
-V1 -> V2 approved
-V2 -> V3 approved
-event V1 / current V3
-    -> MATCH
-
-V1 -> V2 approved
-V2 -> V3 missing
-    -> NO MATCH
-```
-
-Transitivity is explicit and chain-bound.
-
-## 4.12 Smart Practice and analytics tests
-
-For an admitted revision, prove that prior evidence continues to contribute to the consumers that currently rely on canonical/fingerprint-bound history, including:
-
-```text
-weak-question identification
-review scheduling
-confidence analytics
-question stability
-Smart Practice selection signals
-mastery-related calculations
-```
-
-Then run a negative twin without authority and prove the same old event does not attach.
-
-Text-derived analytics must continue receiving historical V1 text, never substituted V2 wording.
-
-## 4.13 Saved-session positive migration
-
-Create an in-progress canonical source session containing:
-
-```text
-answered question
-unanswered question
-flagged question
-confidence state
-session answer history
-current index
-elapsed time
-builder context
-quests/rewards
-```
-
-Migrate under a valid admitted source -> target manifest.
-
-Required proof:
-
-```text
-ordered question IDs preserved
-answered state preserved
-selected answer letters preserved
-confidence preserved
-history preserved
-current index preserved
-elapsed time preserved
-builder identity preserved
-quests/rewards preserved
-
-bank fingerprint = target
-session signature = recomputed
-restore signature = recomputed
-canonical target filename/path identity = recomputed
-```
-
-Target identities are regenerated, not copied from the source revision.
-
-## 4.14 Saved-session rejection tests
-
-Each of these rejects migration:
-
-```text
-session references removed question
-session references unknown question
-changed question has no edge
-wrong source bank
-wrong target bank
-wrong choice mapping
-changed correct key
-invalid source signature
-invalid restore signature
-invalid builder identity
-partial manifest
-```
-
-There is no partial ordinary-session restore.
-
-## 4.15 Pending-selection test
-
-For an approved changed question with:
-
-```text
-selected = ["B"]
-pending = ["B"]
-answered = false
-```
-
-after migration require:
-
-```text
-selected = []
-pending = []
-answered = false
-```
-
-All unrelated session state remains preserved.
-
-For a completed answer:
-
-```text
-answered = true
-selected = ["B"]
-```
-
-the completed answer remains preserved.
-
-## 4.16 Atomicity and backup tests
-
-Fault injection points include:
-
-```text
-before validation
-after validation
-after backup
-during target serialization
-during target temporary write
-after target write
-before source archival
-after source archival
-```
-
-At every point recovery must produce one of only two acceptable states:
+Only acceptable terminal states are:
 
 ```text
 SOURCE AUTHORITATIVE / TARGET NOT ACTIVE
@@ -1527,363 +865,91 @@ VERIFIED TARGET AUTHORITATIVE
 
 Never a half-migrated learner state.
 
-## 4.17 Idempotence tests
+## 4.10 Existing regression wall
 
-Apply the exact same migration twice.
-
-Required:
+Without an admitted revision:
 
 ```text
-attempt counts unchanged
-history count unchanged
-migration receipt count unchanged
-session state unchanged
-no second backup solely because migration was already applied
-no duplicate target session
+changed content -> CHANGED_CONTENT
+changed-fingerprint history -> does not attach
+bank-mismatched canonical saved session -> rejected
 ```
 
-The second execution resolves to a deterministic no-op such as:
-
-```text
-MIGRATION_ALREADY_APPLIED
-```
-
-## 4.18 Crash-recovery tests
-
-Simulate:
-
-```text
-target written
-source not yet archived
-process dies
-```
-
-On restart:
-
-```text
-verified target
-+ matching migration_id
-    -> complete cleanup
-```
-
-But:
-
-```text
-target exists
-+ wrong migration_id
-    -> FAIL CLOSED
-    -> preserve both files
-    -> do not overwrite
-```
-
-## 4.19 Quarantine non-resurrection test
-
-Create:
-
-```text
-quarantined_questions[Q1]
-reason = CHANGED_CONTENT
-```
-
-Then provide a new valid V1 -> V2 manifest.
-
-Required:
-
-```text
-Q1 remains quarantined
-```
-
-unless an entirely separate restoration authority is explicitly designed.
-
-## 4.20 Multi-revision chain tests
-
-Even though the initial implementation may support only one direct bank revision per execution, the contract is future-safe.
-
-Test:
-
-```text
-V1 -> V2 valid
-V2 -> V3 valid
-```
-
-and verify that a V1 historical event can contribute at V3 only through both admitted edges.
-
-Negative cases:
-
-```text
-missing middle manifest
-wrong middle bank fingerprint
-branching contradictory lineage
-cycle V2 -> V1
-duplicate path with conflicting authority
-```
-
-Live-state migration may remain deliberately limited to one direct bank edge per execution in version 1.
-
-## 4.21 Answer-length repair proof obligations
-
-Before this architecture may unblock the original leakage repair, the eventual candidate bank must additionally prove:
-
-```text
-QUESTION_COUNT = 454
-QUESTION_ID_SET_CHANGED = NO
-CORRECT_KEYS_CHANGED = 0
-OBJECTIVES_CHANGED = 0
-TIERS_CHANGED = 0
-EXAM_ELIGIBILITY_CHANGED = 0
-
-ALL CONTENT CHANGES =
-DECLARED ANSWER-CHOICE WORDING REVISIONS
-
-ALL DECLARED EDGES =
-SEMANTICALLY APPROVED
-```
-
-The original statistical gates still apply:
-
-```text
-STRICT_LONGEST_CORRECT_RATE < 40%
-UNIQUE_LONGEST_HEURISTIC_SUCCESS < 40%
-NO_DOMAIN > 45%
-NO_MATERIAL_SHORTEST_ANSWER_LEAKAGE
-NO_POSITIONAL_BIAS_SUBSTITUTION
-```
-
-The migration contract cannot be used to excuse poor bank-quality evidence.
-
-## 4.22 Full regression obligations
-
-Before implementation is integration-ready:
-
-```text
-new equivalence tests = PASS
-existing canonical identity tests = PASS
-existing changed-content quarantine tests = PASS
-existing session identity tests = PASS
-existing progress migration tests = PASS
-Smart Practice / analytics tests = PASS
-bank lint = PASS
-installation verification = PASS
-full repository regression suite = PASS
-```
-
-Display-dependent Tk skips remain distinguishable from real failures and cannot conceal non-GUI migration defects.
-
-## 4.23 Section 4 acceptance gate
-
-The architecture is not proven merely because one positive migration works.
-
-Required proof:
-
-```text
-VALID, EXACTLY AUTHORIZED REVISION
-    -> FULL CONTINUITY
-
-EVERY MATERIAL DEVIATION FROM THAT AUTHORITY
-    -> FAIL CLOSED
-
-NO MANIFEST
-    -> CURRENT BEHAVIOR UNCHANGED
-
-FAILED MIGRATION
-    -> SOURCE DATA PRESERVED
-
-SUCCESSFUL MIGRATION
-    -> LEARNER STATE PRESERVED
-       + TARGET IDENTITY CORRECT
-       + HISTORICAL EVIDENCE IMMUTABLE
-       + LINEAGE AUDITABLE
-```
+Existing canonical identity/session/adversarial tests must continue to pass unchanged.
 
 ---
 
-# Section 5 — Component Ownership, Implementation Boundary, and Rollout
+# Section 5 — Component Ownership and Rollout
 
-## 5.1 Existing strict identity layer remains intact
+## 5.1 Existing strict identity layer
 
-`question_identity.py` remains the strict baseline authority for canonical question identity, durable content projection/fingerprinting, changed-content quarantine, and the existing strict history matcher.
+`question_identity.py` remains the strict baseline authority and is intentionally not modified for generic equivalence acceptance.
 
-Its default semantics remain unchanged. In particular, version 1 does not add a permissive flag such as:
+## 5.2 New pure authority module
 
-```text
-allow_changed_content = true
-```
-
-The design invariant is:
+`content_revision_authority.py` owns:
 
 ```text
-NO REVISION AUTHORITY
-==
-CURRENT PRODUCTION BEHAVIOR
+manifest/review schema validation
+canonical manifest hash
+finite admission reasons
+exact source/target bank validation
+global non-choice/letter-mapping invariants
+closed-world changed-ID proof
+review binding and Microsoft Learn syntax checks
+immutable admitted edges
+lineage traversal
 ```
 
-## 5.2 New pure revision-authority module
+It is deterministic and performs no learner-state mutation.
 
-Create:
+## 5.3 New pure migration module
+
+`content_revision_migration.py` owns:
 
 ```text
-content_revision_authority.py
+migration_id derivation
+progress transform
+session transform
+revision-aware history matching/filtering
+idempotence target verification
 ```
 
-This module owns deterministic authority validation only:
+It receives only an `AdmittedRevision`.
 
-- manifest schema/version validation;
-- finite admission reason domain;
-- duplicate-key-safe manifest parsing/canonical hashing;
-- review-artifact hashing;
-- exact source/target bank validation;
-- closed-world changed-ID comparison;
-- mechanical invariant validation;
-- directed edge validation;
-- admitted lineage indexing/path resolution;
-- immutable admission result objects.
+## 5.4 Registry module
 
-It must not mutate progress, sessions, banks, or user files. It must not depend on GUI state, network access, or runtime model/LLM judgment.
+`content_revision_registry.py` owns the code-controlled registry and registered-target resolver.
 
-Conceptual API surface:
+Package A production registry remains exactly empty.
 
-```text
-validate_revision_manifest(...)
-admit_content_revision(...)
-approved_edge(...)
-approved_lineage(...)
-history_fingerprint_is_equivalent(...)
-```
+Registered evidence resolution must:
 
-## 5.3 New pure migration-transform module
+- enforce contained relative paths;
+- require distinct source/target filenames;
+- validate registered canonical manifest hash before use;
+- restore target progress-identity registration after any source-bank load attempt;
+- map missing/unreadable evidence to finite reasons.
 
-Create:
+## 5.5 RuntimePersistence remains I/O owner
 
-```text
-content_revision_migration.py
-```
+`runtime_persistence.py` owns archive/write/re-read/verification mechanics for explicit approved migration. Explicit migration source reads are non-mutating.
 
-This module accepts only an already-admitted revision authority and owns in-memory transformation semantics:
+Ordinary loading/quarantine helpers remain available for non-revision behavior.
 
-```text
-migrate_progress_payload(...)
-migrate_session_payload(...)
-resolve_history_for_revision(...)
-derive_migration_id(...)
-validate_migrated_progress(...)
-validate_migrated_session(...)
-```
+## 5.6 App integration stays thin
 
-Responsibility separation is fixed:
+`app.py` and persistence/session mixins orchestrate an already-admitted revision. They do not perform semantic review.
 
-```text
-content_revision_authority.py
-    -> decides WHETHER continuity is authorized
+`self.content_revision_authority` stores only `AdmittedRevision | None`.
 
-content_revision_migration.py
-    -> decides HOW admitted state is transformed
+## 5.7 Common history resolver
 
-runtime_persistence.py
-    -> decides HOW transformed state is safely persisted
-```
+All revision-aware consumers call the common resolver rather than duplicating equivalence logic. This includes analytics, game/reward stability, Smart Practice/session builder, and the direct `question_volatility` path.
 
-## 5.4 RuntimePersistence remains the progress I/O owner
+## 5.8 Evidence surface
 
-`RuntimePersistence` remains responsible for load/backup/safe-write sequencing.
-
-The implementation adds an explicit operation conceptually named:
-
-```text
-migrate_progress_across_approved_revision(...)
-```
-
-rather than making ordinary `load_progress_with_identity_migration(...)` permissive.
-
-Required sequence:
-
-```text
-load source
-    -> strict source validation
-    -> exact revision admission validation
-    -> pure in-memory migration transform
-    -> complete target validation
-    -> source backup
-    -> safe/atomic target write
-    -> re-read + verify
-```
-
-Ordinary loading remains strict and unchanged when no revision authority is present.
-
-## 5.5 Session-store identity remains strict by default
-
-The existing canonical session bank-fingerprint check remains authoritative.
-
-The implementation adds an explicit cross-revision operation conceptually named:
-
-```text
-migrate_session_across_approved_revision(...)
-```
-
-It implements the Section 3 rules without weakening ordinary `migrate_session_snapshot(...)` behavior:
-
-- preserve completed answer state;
-- preserve canonical question order;
-- preserve historical events;
-- clear pending selections on changed unanswered questions;
-- bind target bank fingerprint;
-- regenerate session/restore signatures;
-- validate the resulting target snapshot.
-
-Without an admitted revision, ordinary strict session behavior remains unchanged.
-
-## 5.6 App integration remains orchestration-only
-
-`app_session_persistence_mixin.py` remains responsible for session discovery and high-level restore orchestration, but it does not become the semantic or migration-policy authority.
-
-The flow is:
-
-```text
-candidate saved session found
-        |
-        v
-same bank?
-   YES -> existing path
-   NO
-        |
-        v
-exact bundled admitted revision available?
-   NO  -> existing fail-closed path
-   YES -> explicit approved migration
-              |
-              v
-         verify target
-              |
-              v
-         resume target
-```
-
-Policy remains in the authority/migration modules, not GUI/application code.
-
-## 5.7 One common revision-aware history resolver
-
-Smart Practice, analytics, game logic, and session building must not each implement independent equivalence logic.
-
-A single shared resolver is introduced, conceptually:
-
-```text
-history_events_for_question_revision_aware(...)
-```
-
-It performs:
-
-```text
-strict current-fingerprint match
-OR
-exact approved directed-lineage match
-```
-
-and returns the original historical event unchanged.
-
-Consumers may use this common resolver only when an admitted revision authority is active.
-
-## 5.8 Repository evidence surface and authority registry
-
-The version-1 evidence surface is fixed as:
+Governed release evidence lives under:
 
 ```text
 content_revision_evidence/
@@ -1891,118 +957,38 @@ content_revision_evidence/
     reviews/
 ```
 
-Approved manifests are pinned through:
+Package A adds no production manifest or review file.
 
-```text
-content_revision_registry.py
-```
-
-The registry maps a known bundled manifest identity to its expected canonical SHA-256.
-
-Runtime authority therefore requires all of:
-
-```text
-known bundled manifest identity
-+ expected registered canonical hash
-+ valid manifest payload hash
-+ exact source bank identity
-+ exact target bank identity
-```
-
-Merely placing a JSON file in the evidence directory does not make it trusted.
-
-No signing-key/PKI infrastructure is introduced in version 1.
-
-## 5.9 Implementation-facing test ownership
-
-The implementation plan should use focused test surfaces, expected to include at least:
-
-```text
-tests/test_content_revision_authority.py
-tests/test_content_revision_migration.py
-tests/test_content_revision_app_integration.py
-```
-
-Existing canonical identity, progress migration, session identity, Smart Practice, analytics, and adversarial tests remain regression authority and are not replaced.
-
-The implementation plan may split these new test files further for maintainability, but it may not collapse the proof obligations from Section 4.
-
-## 5.10 Three-package integration boundary
-
-The work is divided into three separately reviewable packages.
+## 5.9 Package decomposition
 
 ### Package A — migration infrastructure
 
-Contains only:
-
-```text
-authority schema/validator
-lineage resolver
-pure migration transforms
-progress/session integration
-adversarial tests
-existing-regression validation
-```
-
-Hard boundary:
-
-```text
-PRODUCTION QUESTION WORDING CHANGES = 0
-PRODUCTION BANK ACTIVATION = NO
-```
-
-Package A proves the mechanism independently of real production content changes.
-
-### Package B — answer-length candidate and semantic evidence
-
-Only after Package A passes.
-
 Contains:
 
 ```text
-candidate bank
-Microsoft Learn semantic verification
-per-question review receipts
-equivalence manifest
-answer-length before/after metrics
-bank-integrity evidence
+authority parser/validator
+registry/lineage
+progress/session transforms
+transactional persistence
+runtime orchestration
+history-consumer integration
+adversarial tests
+quality/regression verification
 ```
 
-Hard boundary:
+Production question wording changes = 0.
 
-```text
-DEFAULT PRODUCTION BANK ACTIVATION = NO
-```
+### Package B — candidate bank and semantic evidence
 
-Package B proves that the candidate is semantically admissible and actually satisfies the leakage-repair gates without activating it.
+Requires separate plan/authorization. It may create candidate wording, Microsoft Learn review receipts, manifest, and leakage metrics, but does not activate production by itself.
 
 ### Package C — controlled production activation
 
-Only after Packages A and B independently pass and the operator explicitly authorizes activation of the exact reviewed candidate.
+Requires separate explicit authorization and exact candidate identity. It owns activation, final full regression, Windows QA build, and production EXE refresh.
 
-Contains:
+## 5.10 Relationship to stopped answer-length Tranche 1
 
-```text
-default-bank switch / candidate promotion
-final migration registration
-full regression
-Windows QA build
-production EXE refresh
-post-build verification
-```
-
-No activation authorization transfers to a later candidate SHA/hash.
-
-## 5.11 Relationship to the stopped answer-length Tranche 1 branch
-
-The existing branch remains evidence authority:
-
-```text
-implementation/sc900-answer-length-leakage-tranche1-001
-HEAD = 628e0c7ca952b9d63e9d23f9363be2e36b257975
-```
-
-Its finding remains valid:
+The prior Tranche-1 result remains valid:
 
 ```text
 ordinary wording mutation
@@ -2010,78 +996,9 @@ ordinary wording mutation
 -> rewrite blocked
 ```
 
-The new architecture does not erase that result. Instead:
+Package A creates the governed continuity mechanism. It does not retroactively erase the blocker or mutate production content.
 
-```text
-Tranche 1 proved the blocker
-    -> this package creates governed continuity authority
-    -> Package A must pass
-    -> only then may answer-length candidate work resume
-```
-
-## 5.12 Version-1 direct-edge limitation
-
-Live-state migration version 1 supports one direct bank edge per execution:
-
-```text
-SOURCE BANK -> TARGET BANK
-```
-
-History resolution may understand a complete approved multi-revision lineage such as:
-
-```text
-V1 -> V2 -> V3
-```
-
-but version 1 does not perform automatic multi-hop live-state migration in one operation.
-
-## 5.13 Activation sequence
-
-The rollout sequence is fixed:
-
-```text
-1. Complete design specification.
-2. Self-review design specification.
-3. User approves final written specification.
-4. Write detailed implementation plan.
-5. Implement Package A test-first.
-6. Run adversarial + full regression gates.
-7. Review Package A.
-8. Only then resume answer-length candidate work.
-9. Generate candidate bank.
-10. Perform Microsoft Learn semantic review.
-11. Generate review receipts + exact manifest.
-12. Validate Section 2 admission.
-13. Run answer-length statistical gates.
-14. Run learner-history/session migration tests against candidate.
-15. Review Package B.
-16. STOP for explicit production-activation authorization.
-17. Package C activates only the exact approved candidate.
-18. Full CI + Windows QA + EXE verification.
-19. Merge only with explicit authorization.
-```
-
-There is no automatic transition from candidate success to production activation.
-
-## 5.14 Rollback boundary
-
-Before activation, rollback is trivial because the current production bank remains active.
-
-After activation, migration provenance and source backups remain available. However, equivalence edges are directional:
-
-```text
-V1 -> V2
-```
-
-does not imply:
-
-```text
-V2 -> V1
-```
-
-Software/bank rollback may be operationally possible, but learner-state reverse migration requires separate explicit authority or a separately approved preservation strategy.
-
-## 5.15 Explicit non-goals
+## 5.11 Version-1 limits and non-goals
 
 Version 1 does not implement:
 
@@ -2093,102 +1010,78 @@ answer-key changes
 answer-letter reordering
 new/deleted question continuity
 objective/domain/tier migration
-arbitrary quarantine resurrection
-automatic semantic comparison
-LLM-based runtime equivalence
+quarantine resurrection
+runtime semantic comparison
 runtime web access
-user-imported equivalence manifests
-"trust this revision" UI
-cryptographic signing/key infrastructure
+user-imported authority
+trust-this-revision UI
+signing-key/PKI infrastructure
 multi-hop live-state migration in one operation
 automatic reverse migration
+same-filename registered runtime source/target migration
 PR #13 changes
 recovery-ref changes
-unrelated repository refactoring
+unrelated refactoring
 ```
 
-If any of these becomes necessary, the architecture must be explicitly extended rather than implicitly stretched.
-
-## 5.16 Final architecture invariant
+## 5.12 Rollout sequence
 
 ```text
-STRICT QUESTION IDENTITY
-        |
-        +---- identical content ------------------> ordinary continuity
-        |
-        +---- changed content --------------------+
-                                                  |
-                                  exact governed revision?
-                                      /          \
-                                    NO            YES
-                                    |              |
-                             FAIL CLOSED      admitted edge
-                                                   |
-                              +--------------------+--------------------+
-                              |                    |                    |
-                           progress             history              session
-                              |                    |                    |
-                       preserve state       preserve event       preserve state
-                       advance binding      original FP/text     regenerate ID
-                       record lineage       lineage-aware join   target bank FP
+1. Read this spec and the reconciled Package-A implementation plan from the exact design head.
+2. Start implementation from exact main SHA 23d440b6976b9f6bbb3b77285bf0d11effc2513f.
+3. Implement Package A test-first on an isolated branch/worktree.
+4. Keep production registry empty and production bank unchanged.
+5. Run focused adversarial tests and existing identity/session regression wall.
+6. Run full repository tests/quality/bank lint/installation verification.
+7. Record exact observed verification evidence.
+8. Stop for external review.
+9. Do not begin Package B without separate authorization.
 ```
 
-The governing safety condition remains:
+## 5.13 Final governing invariant
 
 ```text
-UNREVIEWED CONTENT CHANGE
-NEVER INHERITS LEARNER AUTHORITY
+SAME CONTENT
+    -> ordinary strict continuity
+
+DIFFERENT CONTENT
++ exact admitted directed equivalence
++ exact source/target banks
++ exact declared change set
++ global non-choice and letter-mapping invariants
++ all choice propositions semantically equivalent
++ hash-bound review evidence
++ Microsoft Learn authority
+    -> FULL CONTINUITY
+
+ANY MISSING OR CONFLICTING CONDITION
+    -> EXISTING FAIL-CLOSED BEHAVIOR
 ```
 
----
-
-# Spec self-review record
-
-The completed design was reviewed against the required design-quality checks.
+The core safety rule remains:
 
 ```text
-PLACEHOLDER_SCAN = PASS
-- no TODO/TBD/incomplete design sections remain;
-- symbolic manifest values are explicitly defined as generated revision bindings, not unresolved requirements.
-
-INTERNAL_CONSISTENCY = PASS
-- strict baseline fingerprint behavior remains unchanged;
-- direct live-state migration is one edge per execution;
-- multi-hop semantics apply only to validated history lineage in version 1;
-- authority code and evidence storage use distinct filesystem names (`content_revision_authority.py` vs `content_revision_evidence/`).
-
-SCOPE_CHECK = PASS
-- one implementation plan can cover Package A infrastructure;
-- Package B content work and Package C activation remain separately gated follow-on packages.
-
-AMBIGUITY_CHECK = PASS
-- version-1 permitted field changes are answer-choice wording only;
-- prompt/explanations/key/letter mapping/classification fields are unchanged;
-- no manifest means current fail-closed behavior;
-- pre-existing quarantine is not resurrected;
-- production activation requires a later exact-candidate authorization.
+UNREVIEWED CONTENT CHANGE NEVER INHERITS LEARNER AUTHORITY
 ```
 
 ---
 
-# Final design state
+# Reconciliation status
 
-Sections 1-5 are the approved architecture for the content-revision equivalence migration contract.
-
-This document is final **design authority**, not implementation authority.
+The pre-execution review findings have been incorporated into this specification. No separate errata layer is required to interpret the architecture.
 
 ```text
-SECTIONS_1_5_RECORDED = YES
-FINAL_SPEC_COMPLETE = YES
-SPEC_SELF_REVIEW = PASS
-USER_WRITTEN_SPEC_REVIEW = PENDING
-IMPLEMENTATION_PLAN_AUTHORIZED = NO
-IMPLEMENTATION_AUTHORIZED = NO
-PRODUCTION_BANK_MUTATION_AUTHORIZED = NO
+ARCHITECTURE_REOPENED = NO
+PACKAGE_A_SCOPE_CHANGED = NO
+FAIL_CLOSED_POLICY_WEAKENED = NO
+PRODUCTION_CONTENT_AUTHORIZED = NO
 PRODUCTION_ACTIVATION_AUTHORIZED = NO
+EXE_REBUILD_AUTHORIZED = NO
 PR13_MODIFIED = NO
 RECOVERY_REFS_MODIFIED = NO
 MERGE_AUTHORIZED = NO
-```
 
-The next permitted step after user approval of this committed written specification is to invoke the implementation-planning workflow. No code, candidate-bank wording changes, activation, EXE rebuild, or merge is authorized by this design document alone.
+FINAL_SPEC_COMPLETE = YES
+USER_WRITTEN_SPEC_APPROVED = YES
+IMPLEMENTATION_PLAN_REQUIRED = YES
+```
