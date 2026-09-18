@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Assess resources against security controls and recommend posture improvements",
+    "B": "Issue authentication tokens to users",
+    "C": "Store TLS private keys",
+    "D": "Preserve documents for a legal case"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/security-policy-concept"
+  ],
+  "before": {
+    "A": "Evaluate resources against desired security controls and identify actions that can improve posture",
+    "B": "Issue authentication tokens to users",
+    "C": "Store TLS private keys",
+    "D": "Preserve documents for a legal case"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "0796110dbc75ca1d2ba024af74ec598430889f2159fe803475ce67ae87c223ac",
+  "question_id": "sc900_p2_q029",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "070cb9e2c6a2f85dc9defc28f6e34ffb344504873c9d5bdb4c89f80ca87312c7"
+}

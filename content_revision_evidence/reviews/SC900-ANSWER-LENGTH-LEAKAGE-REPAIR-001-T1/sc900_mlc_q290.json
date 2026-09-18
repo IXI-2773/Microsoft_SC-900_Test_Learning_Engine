@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Data loss prevention",
+    "B": "Insider Risk Management for patterns of risky user activity",
+    "C": "eDiscovery",
+    "D": "Microsoft Entra Temporary Access Pass"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/insider-risk-management"
+  ],
+  "before": {
+    "A": "Data loss prevention",
+    "B": "Insider Risk Management, which looks for risky user behavior patterns, not only a single DLP match",
+    "C": "eDiscovery",
+    "D": "Microsoft Entra Temporary Access Pass"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "b27a5e123168759ad95533d18cb5c2d5501d278ebba4cad27aa4896d6ae12607",
+  "question_id": "sc900_mlc_q290",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "e9f462af0d4d9cb72d66d42775d366e3e0e026234b54ce163dda4ea825beca6d"
+}

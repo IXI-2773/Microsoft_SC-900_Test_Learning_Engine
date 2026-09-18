@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Persist with content and apply protections such as encryption or markings",
+    "B": "They are NSG 5-tuple rules",
+    "C": "Data loss prevention",
+    "D": "They are TAP codes"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/sensitivity-labels"
+  ],
+  "before": {
+    "A": "They can persist with content and apply protection such as encryption or markings",
+    "B": "They are NSG 5-tuple rules",
+    "C": "Data loss prevention",
+    "D": "They are TAP codes"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "5dd4ef0b38e68960f61b74225617e835b5a0b66cc44550283a044eb153df7ba1",
+  "question_id": "sc900_mlc_q187",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "c3fe62f281ac4e41a7835f203dfb210eef6bfa4134746aad1412390168ef56d7"
+}

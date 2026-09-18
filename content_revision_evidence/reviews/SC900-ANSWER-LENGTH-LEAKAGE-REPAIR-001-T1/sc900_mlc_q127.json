@@ -1,0 +1,34 @@
+{
+  "after": {
+    "A": "They are identical",
+    "B": "Sentinel issues FIDO2 keys",
+    "C": "Sentinel provides SIEM/SOAR; Defender for Cloud protects cloud posture and workloads",
+    "D": "Defender for Cloud is only eDiscovery"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/sentinel/overview",
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction"
+  ],
+  "before": {
+    "A": "They are identical",
+    "B": "Sentinel issues FIDO2 keys",
+    "C": "Sentinel is SIEM/SOAR across many data sources; Defender for Cloud is cloud posture and workload protection",
+    "D": "Defender for Cloud is only eDiscovery"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "f6ae8c50f62c214b50c4767500d1ab16e898d08beb0af9e78034daefbd04495c",
+  "question_id": "sc900_mlc_q127",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "2125dc6202acde71339bdc541b724b77572ab7405cb66c3e6ea30f6dc4a780ed"
+}

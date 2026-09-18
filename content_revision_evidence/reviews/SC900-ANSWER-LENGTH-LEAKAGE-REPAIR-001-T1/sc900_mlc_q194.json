@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Compliance Manager",
+    "B": "Microsoft Purview portal",
+    "C": "Microsoft Defender portal",
+    "D": "Review Microsoft trust and compliance documentation"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/get-started-with-service-trust-portal"
+  ],
+  "before": {
+    "A": "Compliance Manager",
+    "B": "Microsoft Purview portal",
+    "C": "Microsoft Defender portal",
+    "D": "Customers use it to review Microsoft trust and compliance documentation"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "4bcbee510a63afc7dca55d073e00ade39b74c34b5a8d5ca502ef4bd3e47292da",
+  "question_id": "sc900_mlc_q194",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "2d290a5c6b8a6e7f6452dc08b41531b8474f955e3c4940421f240cc9992887f7"
+}

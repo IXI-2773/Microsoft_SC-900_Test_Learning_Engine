@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Manage compliance assessments and improvement actions",
+    "B": "Service Trust Portal",
+    "C": "Compliance score",
+    "D": "Microsoft Purview Audit"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/compliance-manager"
+  ],
+  "before": {
+    "A": "It helps the customer manage their own compliance assessments and improvement actions",
+    "B": "Service Trust Portal",
+    "C": "Compliance score",
+    "D": "Microsoft Purview Audit"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "db41801497d27e6569848a39c748bff6ca34cf8a7c23b7834a39a82693594564",
+  "question_id": "sc900_mlc_q183",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "51dd9e1affa52e45280d8a62625e819e889db85c8799ffb88429447aa4741ed6"
+}

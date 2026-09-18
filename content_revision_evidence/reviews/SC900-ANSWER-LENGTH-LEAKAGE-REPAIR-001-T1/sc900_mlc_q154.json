@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Mitigating SYN floods",
+    "B": "Issuing FIDO2 keys",
+    "C": "Hosting RDP jump boxes",
+    "D": "Assess controls and track compliance improvements"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/compliance-manager"
+  ],
+  "before": {
+    "A": "Mitigating SYN floods",
+    "B": "Issuing FIDO2 keys",
+    "C": "Hosting RDP jump boxes",
+    "D": "Assessing controls and tracking improvement actions against regulatory templates"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "f02f29c3eb3ad4091cc864e31f7ebdad4495cc6cafe3466a988fdc849243daea",
+  "question_id": "sc900_mlc_q154",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "b08df763abc0043ed2b17f2d2f78bab2217a925f0c9c48cef51f984ee6a4ed28"
+}

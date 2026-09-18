@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Segment private networks and control traffic between workloads",
+    "B": "Network security groups for distributed subnet and NIC traffic filtering",
+    "C": "Azure Firewall",
+    "D": "Azure Bastion"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview"
+  ],
+  "before": {
+    "A": "It isolates private address spaces so traffic between workloads can be controlled",
+    "B": "Network security groups",
+    "C": "Azure Firewall",
+    "D": "Azure Bastion"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "859b0d7f4c299e2e59345c239d030a0ee4e34a461080845f0bb0253156da5450",
+  "question_id": "sc900_mlc_q135",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "d1ad1f02930c6c9a93af108cdf5b94503f5cde9016f030b13feac9bf2ded9fe1"
+}

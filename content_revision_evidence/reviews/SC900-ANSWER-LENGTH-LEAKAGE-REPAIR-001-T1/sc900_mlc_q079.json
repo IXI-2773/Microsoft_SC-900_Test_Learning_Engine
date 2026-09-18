@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Automatic multifactor authentication for every network packet",
+    "B": "Segmentation that controls traffic between resource groups",
+    "C": "Legal hold on email",
+    "D": "Banned-password enforcement"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview"
+  ],
+  "before": {
+    "A": "Automatic MFA for every packet",
+    "B": "Network segmentation so communication can be controlled between groups of resources",
+    "C": "Legal hold on email",
+    "D": "Banned-password enforcement"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "fc597859b53386e2bbc786c2f6bb3954fc06ae60a36cdf9dba4a0e63cc7f0beb",
+  "question_id": "sc900_mlc_q079",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "2699b39d0ea62787b524ead2a2d4bf87bec05fce1d04a1f230ff991d8f11993e"
+}

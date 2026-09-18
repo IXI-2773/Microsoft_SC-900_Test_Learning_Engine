@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Microsoft Purview Audit",
+    "B": "Find, preserve, and export content for legal investigations",
+    "C": "Insider Risk Management",
+    "D": "Data loss prevention"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/ediscovery"
+  ],
+  "before": {
+    "A": "Microsoft Purview Audit",
+    "B": "It helps find, hold, and export content for investigations and legal matters",
+    "C": "Insider Risk Management",
+    "D": "Data loss prevention"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "7665ce751f5c9f3b7087d47e7111a1323467c56bbc8e6a36073b202643086e61",
+  "question_id": "sc900_mlc_q192",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "7b6f539bebf9f76f149c694c57be16d1affd617389d768b4823cf01e200d528f"
+}

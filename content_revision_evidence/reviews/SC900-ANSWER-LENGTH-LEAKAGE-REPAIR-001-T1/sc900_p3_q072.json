@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "User identities",
+    "B": "Workload identities",
+    "C": "Managed identities for Azure service workloads",
+    "D": "A Microsoft Entra external or guest identity"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/external-id/external-identities-overview"
+  ],
+  "before": {
+    "A": "User identities",
+    "B": "Workload identities",
+    "C": "Managed identities",
+    "D": "An external or guest identity in Microsoft Entra ID"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "bb9d53fe7fe95683eff7588dfc06f4068a0da19c84754f6704adf3546492bfd3",
+  "question_id": "sc900_p3_q072",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "dfa497ff6892acac6c0c9f252c14a17d3d23d365af1dedb07a561eae78a7c71b"
+}

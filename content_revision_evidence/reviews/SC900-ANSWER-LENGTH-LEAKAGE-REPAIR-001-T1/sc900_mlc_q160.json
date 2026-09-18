@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Declare content as records with retention and disposition controls",
+    "B": "Issue TAP codes",
+    "C": "Filter NSG traffic",
+    "D": "Hunt in Sentinel"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/records-management"
+  ],
+  "before": {
+    "A": "Declare items as records and apply regulatory keep-and-disposition rules that users cannot casually override",
+    "B": "Issue TAP codes",
+    "C": "Filter NSG traffic",
+    "D": "Hunt in Sentinel"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "8e8269e844694946e828f837fc1cc246543efb1c76d240ec533877d9e7290a65",
+  "question_id": "sc900_mlc_q160",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "ae4e05876cbd731ee118abe37d467d8d771b73e99fa202b5fd410adecedfc78d"
+}

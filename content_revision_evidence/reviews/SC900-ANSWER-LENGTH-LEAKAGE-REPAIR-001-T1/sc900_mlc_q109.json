@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Recommendations from the assigned regulatory standard",
+    "B": "A FIDO2 registration for passwordless authentication",
+    "C": "Regulations",
+    "D": "Industry standards"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/security-policy-concept"
+  ],
+  "before": {
+    "A": "Recommendations generated from the assigned standard",
+    "B": "A FIDO2 registration",
+    "C": "Regulations",
+    "D": "Industry standards"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "9ef32293d723c1ef634726063cf15239416d437dd47ac857320fe4b9bcf4ae47",
+  "question_id": "sc900_mlc_q109",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "943aedb1b7d9562348dcc7e1f5aecd90c5397440aa4c0ce2e0b011034ac1dc43"
+}

@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Data loss prevention",
+    "B": "eDiscovery",
+    "C": "Microsoft Purview Audit",
+    "D": "Identify and investigate potentially risky internal user activity"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/insider-risk-management"
+  ],
+  "before": {
+    "A": "Data loss prevention",
+    "B": "eDiscovery",
+    "C": "Microsoft Purview Audit",
+    "D": "It is designed to identify potentially risky internal user activities with privacy-aware investigation"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "912bc76852b964af4a484ebcc16d8989f412800cd41015c6c65fc99554f3509a",
+  "question_id": "sc900_mlc_q191",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "479376a55cf0cfce8a0273a9143d49dceba2cdbca3ca512f81b1975f8d1f452e"
+}

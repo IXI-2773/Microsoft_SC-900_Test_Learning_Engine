@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Microsoft Defender for Endpoint",
+    "B": "Active Directory signals collected by domain-controller or AD FS sensors",
+    "C": "Microsoft Entra ID Protection",
+    "D": "Microsoft Defender for Cloud Apps"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/defender-for-identity/what-is"
+  ],
+  "before": {
+    "A": "Microsoft Defender for Endpoint",
+    "B": "From Active Directory environment signals, commonly via sensors aligned to domain controllers or AD FS",
+    "C": "Microsoft Entra ID Protection",
+    "D": "Microsoft Defender for Cloud Apps"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "a932f483c0369d9002f0a44e0fa40dc33dfbd1b0bca0d159cae392580bf1653b",
+  "question_id": "sc900_mlc_q273",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "ef8fd55c37ac889083314e3c59a71ac24c08591613cb07545a5a66f43fdb0ff4"
+}

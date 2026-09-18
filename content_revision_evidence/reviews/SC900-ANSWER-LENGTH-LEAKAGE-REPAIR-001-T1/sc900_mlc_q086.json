@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Correlate security logs and alerts for detection and investigation",
+    "B": "Issue FIDO2 credentials",
+    "C": "Declare items as records",
+    "D": "Assign Entra roles"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/sentinel/overview"
+  ],
+  "before": {
+    "A": "Collect and correlate security logs and alerts for detection and investigation",
+    "B": "Issue FIDO2 credentials",
+    "C": "Declare items as records",
+    "D": "Assign Entra roles"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "2eb409391715de5585fefce34abf74ad7741415e65d0cc71aac446ffe4fc7d85",
+  "question_id": "sc900_mlc_q086",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "9fee7ac45522e051d198fe9670d123541f9e1e9410dcb03db377fefa50c016e5"
+}

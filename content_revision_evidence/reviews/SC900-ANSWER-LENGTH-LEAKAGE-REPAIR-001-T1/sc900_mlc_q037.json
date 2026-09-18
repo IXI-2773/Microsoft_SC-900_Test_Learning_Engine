@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Only NSGs and firewalls",
+    "B": "Only sensitivity labels",
+    "C": "Only Sentinel workbooks",
+    "D": "Users, workloads, devices, and agent identities"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types/"
+  ],
+  "before": {
+    "A": "Only NSGs and firewalls",
+    "B": "Only sensitivity labels",
+    "C": "Only Sentinel workbooks",
+    "D": "Users, workload/application identities, devices, and agent identities"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "bcc81f5389c80c1fdd98e6cee5940407f78efc038a4a3a5542045a8433dcd0bb",
+  "question_id": "sc900_mlc_q037",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "1ca8974c56f6c6c0b123895044757e792fa621dfd61a0de2f9ebc63c4953e685"
+}

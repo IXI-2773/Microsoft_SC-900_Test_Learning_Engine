@@ -1,0 +1,69 @@
+{
+  "analyzable_single_answer": 449,
+  "baseline": {
+    "strict_longest_correct": {
+      "count": 291,
+      "denominator": 449,
+      "rate": 0.6481069042316259
+    },
+    "strict_shortest_correct": {
+      "count": 47,
+      "denominator": 449,
+      "rate": 0.10467706013363029
+    },
+    "unique_longest_heuristic": {
+      "denominator": 431,
+      "rate": 0.6751740139211136,
+      "successes": 291
+    },
+    "unique_shortest_heuristic": {
+      "denominator": 425,
+      "rate": 0.11058823529411765,
+      "successes": 47
+    }
+  },
+  "candidate": {
+    "strict_longest_correct": {
+      "count": 287,
+      "denominator": 449,
+      "rate": 0.6391982182628062
+    },
+    "strict_shortest_correct": {
+      "count": 47,
+      "denominator": 449,
+      "rate": 0.10467706013363029
+    },
+    "unique_longest_heuristic": {
+      "denominator": 431,
+      "rate": 0.665893271461717,
+      "successes": 287
+    },
+    "unique_shortest_heuristic": {
+      "denominator": 425,
+      "rate": 0.11058823529411765,
+      "successes": 47
+    }
+  },
+  "candidate_bank": "sc900_bank_v8_length_rebalanced_t1.json",
+  "closure_result": "PASS",
+  "delta": {
+    "strict_longest_correct_count": -4,
+    "strict_longest_correct_rate": -0.008908685968819663,
+    "strict_shortest_correct_count": 0,
+    "strict_shortest_correct_rate": 0.0,
+    "unique_longest_heuristic_rate": -0.009280742459396696,
+    "unique_longest_heuristic_successes": -4,
+    "unique_shortest_heuristic_rate": 0.0,
+    "unique_shortest_heuristic_successes": 0
+  },
+  "question_count": 454,
+  "skipped_question_ids": [
+    "sc900_mlc_q148",
+    "sc900_mlc_q202",
+    "sc900_mlc_q214",
+    "sc900_mlc_q285",
+    "sc900_mlc_q289"
+  ],
+  "source_bank": "sc900_bank_v8_final.json",
+  "work_id": "SC900-PACKAGE-B-TRANCHE1-TASK5-REAL-CANDIDATE-CONTINUITY-LEAKAGE-001"
+}

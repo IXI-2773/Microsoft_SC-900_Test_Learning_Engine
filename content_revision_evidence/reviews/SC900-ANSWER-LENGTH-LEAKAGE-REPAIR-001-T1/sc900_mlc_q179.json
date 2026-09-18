@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Microsoft Entra ID",
+    "B": "Microsoft Entra Domain Services",
+    "C": "AD DS is on-premises; Entra ID is Microsoft's cloud identity service",
+    "D": "Entra ID is only DDoS Protection"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts/"
+  ],
+  "before": {
+    "A": "Microsoft Entra ID",
+    "B": "Microsoft Entra Domain Services",
+    "C": "AD DS is the traditional on-premises directory; Entra ID is Microsoft's cloud identity service",
+    "D": "Entra ID is only DDoS Protection"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "f6b2040893a83a84d56f37efaa146acf6c0f3b0b9dec589911cec20c88bb8211",
+  "question_id": "sc900_mlc_q179",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "d518033fb14680a3ca7d7f722c0957362e8727a9685b1e23c3461dca9292cf16"
+}
