@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Content explorer shows where classified items are; Activity explorer shows labeled-content activity",
+    "B": "Content explorer creates DLP policies; Activity explorer creates retention labels",
+    "C": "Content explorer issues Microsoft Entra roles; Activity explorer activates PIM",
+    "D": "Both explorers replace Microsoft Purview sensitivity labels"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/data-classification-activity-explorer"
+  ],
+  "before": {
+    "A": "Content explorer shows where classified items are; Activity explorer shows what is happening to labeled or classified content",
+    "B": "Content explorer creates DLP policies; Activity explorer creates retention labels",
+    "C": "Content explorer issues Entra roles; Activity explorer activates PIM",
+    "D": "Both explorers replace sensitivity labels"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "8e99e29eb0a76eafe5ad5b3aaab174c6f82077811347c9449dde1d8f9e2eed72",
+  "question_id": "sc900_mlc_q157",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "6b2d9f524269c73b3984c6e5d8b55fad6dfa43933d731c1382921ab0ce5a04db"
+}

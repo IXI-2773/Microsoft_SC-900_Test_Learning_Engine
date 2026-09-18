@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "NSGs decrypt TLS traffic and therefore already block SQL injection",
+    "B": "An allow-443 NSG is equivalent to Microsoft Entra ID Protection risk policies",
+    "C": "NSGs filter ports and addresses; they do not inspect HTTP payloads the way a WAF does",
+    "D": "SQL injection is remediated only by Service Trust Portal audit reports"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+  ],
+  "before": {
+    "A": "NSGs decrypt TLS and therefore already block injection",
+    "B": "An allow-443 NSG is equivalent to Microsoft Entra ID Protection",
+    "C": "NSGs filter ports and addresses; they do not inspect HTTP application payloads the way a WAF does",
+    "D": "SQL injection is remediated only by Service Trust Portal reports"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "c14d80c1f802997722793771bf0a49cd8d93b3f32aff9c90cfb66abf4649ba59",
+  "question_id": "sc900_mlc_q248",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "b1e95f43a4e7e120fab2ee612cb40a916726f2b3cffa479d564900327c533ba2"
+}

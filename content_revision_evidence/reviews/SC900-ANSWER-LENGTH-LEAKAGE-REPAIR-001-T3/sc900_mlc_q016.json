@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Microsoft takes on more of the platform while the customer still owns data and identities",
+    "B": "The customer becomes responsible for Microsoft's physical datacenter hosts",
+    "C": "Identity management disappears as a customer responsibility under SaaS",
+    "D": "Encryption is no longer allowed for customer data in SaaS"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/security/fundamentals/shared-responsibility"
+  ],
+  "before": {
+    "A": "Microsoft typically takes on more of the underlying platform while the customer still owns data and identities",
+    "B": "The customer becomes responsible for Microsoft's physical hosts",
+    "C": "Identity management disappears",
+    "D": "Encryption is no longer allowed"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "c1c29ae01210af179da3d6ec0bd3eddb38ea4ea819d922660ac842fbbd432567",
+  "question_id": "sc900_mlc_q016",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "bf466c2d1a8d3bf749de187e8247ea563d1b31f7bac99c3e5763b750b84d4127"
+}

@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Workload identities are guest users who must complete MFA every hour",
+    "B": "Workload identities represent apps or services, not a person who interactively signs in",
+    "C": "Application identities are Purview sensitivity labels attached to service principals",
+    "D": "Only user accounts can be granted Azure RBAC roles; applications cannot have identities"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/architecture/architecture"
+  ],
+  "before": {
+    "A": "Workload identities are guest users who must complete MFA every hour",
+    "B": "Workload or application identities represent apps or services, not a person who interactively signs in",
+    "C": "Application identities are sensitivity labels attached to service principals",
+    "D": "Only user accounts can be granted Azure RBAC roles; apps cannot have identities"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "fc943fb7e84bf711a83cc3977cc8bf6872f935238e231aaee3d689b1bdb4a89a",
+  "question_id": "sc900_mlc_q236",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "9f570aaeea4043e46af82c490888c04e303f8d5ddbf722d9b5ff77fdbb919b9a"
+}

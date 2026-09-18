@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Entitlement management is only for Global Administrators, and PIM is only for guest password reset",
+    "B": "Entitlement management packages project access; PIM activates privileged directory or Azure roles just in time",
+    "C": "Both capabilities are Azure Web Application Firewall policies with different names",
+    "D": "PIM publishes sensitivity labels, and entitlement management is a DDoS plan"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/id-governance/identity-governance-overview"
+  ],
+  "before": {
+    "A": "Entitlement management is only for Global Administrators, and PIM is only for guest password reset",
+    "B": "Entitlement management packages project access for users; PIM activates privileged directory or Azure roles just in time",
+    "C": "Both capabilities are Azure WAF policies with different names",
+    "D": "PIM publishes sensitivity labels, and entitlement management is a DDoS plan"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "c22f0142a14d82c8fd3de2a8473973a8ba9f1bf8eabdd73dd3de832ccdbde593",
+  "question_id": "sc900_mlc_q228",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "bdd806f78feadabfa5b124ae18caf4d5f13335601b303a6c6a724cab9665fa90"
+}

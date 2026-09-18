@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Because SaaS applications cannot use encryption in transit or at rest",
+    "B": "Because a trusted office network no longer surrounds access requests",
+    "C": "Because passwords are no longer used for any Microsoft Entra sign-in",
+    "D": "Because Azure cannot deploy network firewalls or NSGs"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts/"
+  ],
+  "before": {
+    "A": "Because SaaS apps cannot use encryption",
+    "B": "Because a single trusted office network no longer surrounds every access request",
+    "C": "Because passwords are no longer used anywhere",
+    "D": "Because firewalls cannot be deployed in Azure"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "c886b4f84b617c3babcd644750abb6015a769dca8c012caa5880c404e82f6efd",
+  "question_id": "sc900_mlc_q006",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "f827e27fcf92fa116ca83a10c6d252bd743752e020d7aa2a51fecfedd6259b9c"
+}

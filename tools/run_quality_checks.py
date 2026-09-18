@@ -42,6 +42,7 @@ QUALITY_TARGETS = [
     "tools/audit_answer_length.py",
     "tools/build_package_b_tranche1.py",
     "tools/build_package_b_tranche2.py",
+    "tools/build_package_b_tranche3.py",
 ]
 
 

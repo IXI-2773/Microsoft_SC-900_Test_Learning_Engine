@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "The Defender portal is the only place to declare records and manage Azure VMs",
+    "B": "The Purview portal investigates Defender endpoint process trees",
+    "C": "Defender portal for XDR, Purview portal for compliance, Azure portal for resource security",
+    "D": "The Azure portal is Microsoft's only Purview eDiscovery console"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/defender-xdr/microsoft-365-defender-portal"
+  ],
+  "before": {
+    "A": "The Defender portal is the only place to declare records and manage Azure VMs",
+    "B": "The Purview portal investigates endpoint process trees",
+    "C": "Microsoft Defender portal for XDR operations, Purview portal for compliance, Azure portal for Azure resource security",
+    "D": "The Azure portal is Microsoft's only eDiscovery console"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "1684a5f15e4b540affd26f677845aeb43116dfbcb4671f40a00dbbedb98966cf",
+  "question_id": "sc900_mlc_q266",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "8d71d06000854cf263bdda247f418f7eeb9f9bcd829533614be893df10cddefb"
+}

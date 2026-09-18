@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "eDiscovery hold preserves legal-matter content; retention is a keep-or-delete schedule",
+    "B": "Retention holds are the only way to respond to a legal lawsuit",
+    "C": "eDiscovery hold is a Microsoft Entra Conditional Access grant control",
+    "D": "A lawsuit is preserved only by Azure Firewall network filtering"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/ediscovery"
+  ],
+  "before": {
+    "A": "eDiscovery hold preserves content for a legal matter; retention is a lifecycle keep-or-delete schedule",
+    "B": "Retention holds are the only way to respond to a lawsuit",
+    "C": "eDiscovery hold is a Conditional Access grant control",
+    "D": "A lawsuit is preserved only by Azure Firewall"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "ab3c905452d1ed5196f6e7e1c64487359943e602e12c4a1c9c1e31c5fcef9488",
+  "question_id": "sc900_mlc_q291",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "38c5f4d830cd2d328fb66f689d7acdc2460c2ebd40d7604f3b56571ec02617fc"
+}

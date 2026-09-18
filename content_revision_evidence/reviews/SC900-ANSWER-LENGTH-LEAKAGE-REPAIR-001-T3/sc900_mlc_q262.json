@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Defender for Office 365 is the CASB that inventories unsanctioned SaaS",
+    "B": "Defender for Cloud Apps detonates mailbox attachments as Safe Attachments",
+    "C": "Defender for Cloud Apps for CASB/SaaS; Defender for Office 365 for email and collaboration",
+    "D": "Microsoft Defender for Office 365 is the only control needed for both problems"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/defender-cloud-apps/what-is-defender-for-cloud-apps"
+  ],
+  "before": {
+    "A": "Defender for Office 365 is the CASB that inventories unsanctioned SaaS",
+    "B": "Defender for Cloud Apps detonates mailbox attachments as Safe Attachments",
+    "C": "Defender for Cloud Apps for the CASB/SaaS problem; Defender for Office 365 for email and collaboration threats",
+    "D": "Microsoft Defender for Office 365"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "ce86ed7d03dd7b7e3323348b9cd09d37252f1c9fa07e0a68c08a46164ee188c5",
+  "question_id": "sc900_mlc_q262",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "0ab2582d89253d9a83460e383aa3e2bf1b904042a7404c64212d93bf749d76b3"
+}

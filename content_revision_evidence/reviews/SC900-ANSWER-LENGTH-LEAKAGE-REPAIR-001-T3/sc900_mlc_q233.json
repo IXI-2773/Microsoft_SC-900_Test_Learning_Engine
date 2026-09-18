@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "SMS one-time codes are more phishing-resistant than FIDO2 keys",
+    "B": "SMS codes are Purview retention labels, and FIDO2 keys are NSG rules",
+    "C": "FIDO2 keys are phishing-resistant; SMS codes are easier to intercept or phish",
+    "D": "Phishing resistance is measured only by Microsoft Purview Compliance Manager score"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-authentication-methods"
+  ],
+  "before": {
+    "A": "SMS one-time codes are more phishing-resistant than FIDO2 keys",
+    "B": "SMS codes are retention labels, and FIDO2 keys are NSG rules",
+    "C": "FIDO2 security keys are phishing-resistant possession methods; SMS codes are easier to intercept or phish",
+    "D": "Phishing resistance is measured only by compliance score"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "9f3ab07d0df0909b3a837ce61ba54caa34e4bbe4a43a9cce58e8c610d3e3ca17",
+  "question_id": "sc900_mlc_q233",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "e6bdfa0897ffbb573cbba1c59119808c74465ec3fd80eee48f797e5d3fc30664"
+}

@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Because Key Vault stores secrets, keys, and certificates with access control",
+    "B": "Because Key Vault classifies Microsoft 365 email as records",
+    "C": "Because Key Vault is a Microsoft Sentinel SIEM workspace for log analytics and detections",
+    "D": "Because Key Vault issues Temporary Access Pass credentials"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure/"
+  ],
+  "before": {
+    "A": "Because Key Vault is designed as a managed store for secrets, keys, and certificates with access control",
+    "B": "Because Key Vault classifies Microsoft 365 email as records",
+    "C": "Because Key Vault is a SIEM",
+    "D": "Because Key Vault issues Temporary Access Pass credentials"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "ac7f1c29a7355a426616b690e1696f6d7b40c94a65bc5b2a9f7408cb02980728",
+  "question_id": "sc900_p3_q097",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "c9f1153294328e1140f4044cafa07cd4c4db7ce7071bdf6475ffceb9f25a89ba"
+}
