@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import copy
 import json
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -61,6 +63,7 @@ EDGE_FIELDS = {
     "review_artifact_sha256",
     "authority_refs",
 }
+REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 
 
 def _question(index: int) -> dict[str, Any]:
@@ -428,6 +431,130 @@ class PackageBTranche1BuilderTests(unittest.TestCase):
 
     def test_builder_is_in_repository_quality_targets(self) -> None:
         self.assertIn("tools/build_package_b_tranche1.py", QUALITY_TARGETS)
+
+
+class PackageBTranche1CliTests(unittest.TestCase):
+    def _materialize_package(self, root: Path) -> tuple[Path, Path, Path, Path, Path]:
+        source_path = root / "source_bank.json"
+        semantic_path = root / "semantic_review.json"
+        candidate_path = root / "candidate_bank.json"
+        review_root = root / "reviews"
+        manifest_path = root / "manifest.json"
+        source_payload = _bank()
+        _write_json(source_path, source_payload)
+        questions = source_payload["questions"]
+        _write_json(
+            semantic_path,
+            {
+                "work_id": WORK_ID,
+                "source_bank": source_path.name,
+                "candidate_bank": candidate_path.name,
+                "review_queue": [
+                    _edit_row(questions[1]),
+                    {
+                        "question_id": questions[2]["id"],
+                        "disposition": "SKIP",
+                        "review_note": "No wording change is needed.",
+                    },
+                    _edit_row(questions[0]),
+                ],
+            },
+        )
+        return source_path, semantic_path, candidate_path, review_root, manifest_path
+
+    def _run_cli(
+        self,
+        source_path: Path,
+        semantic_path: Path,
+        candidate_path: Path,
+        review_root: Path,
+        manifest_path: Path,
+        *,
+        include_manifest: bool = True,
+    ) -> subprocess.CompletedProcess[str]:
+        command = [
+            sys.executable,
+            "-m",
+            "tools.build_package_b_tranche1",
+            "--source-bank",
+            str(source_path),
+            "--semantic-review",
+            str(semantic_path),
+            "--candidate-bank",
+            str(candidate_path),
+            "--review-root",
+            str(review_root),
+        ]
+        if include_manifest:
+            command.extend(["--manifest", str(manifest_path)])
+        return subprocess.run(command, cwd=REPOSITORY_ROOT, check=False, capture_output=True, text=True)
+
+    def test_cli_builds_an_admissible_synthetic_package_and_prints_summary(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            paths = self._materialize_package(Path(temporary_directory))
+            source_path, _, candidate_path, review_root, manifest_path = paths
+
+            completed = self._run_cli(*paths)
+
+            self.assertEqual(0, completed.returncode, completed.stderr)
+            summary = json.loads(completed.stdout)
+            self.assertEqual(
+                json.dumps(summary, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
+                completed.stdout,
+            )
+            self.assertEqual("PASS", summary["admission_status"])
+            self.assertEqual(["sc900_syn_001", "sc900_syn_002"], summary["edited_question_ids"])
+            self.assertEqual(2, summary["review_count"])
+            self.assertTrue(candidate_path.exists())
+            self.assertTrue(manifest_path.exists())
+            for question_id in summary["edited_question_ids"]:
+                self.assertTrue(
+                    (review_root / "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T1" / f"{question_id}.json").exists()
+                )
+
+            source = _read_json(source_path)
+            candidate = _read_json(candidate_path)
+            admission = admit_content_revision(
+                _read_json(manifest_path),
+                source_questions=source["questions"],
+                target_questions=candidate["questions"],
+                source_bank_path=source_path,
+                target_bank_path=candidate_path,
+                review_root=review_root,
+            )
+            self.assertEqual(AdmissionStatus.PASS, admission.status)
+
+    def test_cli_summary_is_deterministic_for_equivalent_clean_roots(self) -> None:
+        with tempfile.TemporaryDirectory() as first_directory, tempfile.TemporaryDirectory() as second_directory:
+            first = self._run_cli(*self._materialize_package(Path(first_directory)))
+            second = self._run_cli(*self._materialize_package(Path(second_directory)))
+
+            self.assertEqual(0, first.returncode, first.stderr)
+            self.assertEqual(0, second.returncode, second.stderr)
+            self.assertEqual(first.stdout, second.stdout)
+            self.assertEqual(json.loads(first.stdout), json.loads(second.stdout))
+
+    def test_cli_returns_nonzero_and_no_manifest_for_invalid_semantic_review(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            paths = self._materialize_package(Path(temporary_directory))
+            semantic_review = _read_json(paths[1])
+            semantic_review["review_queue"][0]["semantic_review"]["A"] = "CHANGED"
+            _write_json(paths[1], semantic_review)
+
+            completed = self._run_cli(*paths)
+
+            self.assertEqual(2, completed.returncode)
+            self.assertTrue(completed.stderr.strip())
+            self.assertFalse(paths[4].exists())
+
+    def test_cli_requires_all_arguments(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            paths = self._materialize_package(Path(temporary_directory))
+
+            completed = self._run_cli(*paths, include_manifest=False)
+
+            self.assertNotEqual(0, completed.returncode)
+            self.assertIn("--manifest", completed.stderr)
 
 
 if __name__ == "__main__":

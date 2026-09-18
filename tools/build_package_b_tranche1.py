@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import argparse
 import copy
 import json
+import sys
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
@@ -391,3 +393,34 @@ def build_package_b_tranche1(
         "review_count": len(edits),
         "admission_status": admission.status.value,
     }
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="Build deterministic Package-B tranche-1 evidence.")
+    parser.add_argument("--source-bank", required=True, type=Path)
+    parser.add_argument("--semantic-review", required=True, type=Path)
+    parser.add_argument("--candidate-bank", required=True, type=Path)
+    parser.add_argument("--review-root", required=True, type=Path)
+    parser.add_argument("--manifest", required=True, type=Path)
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
+    try:
+        summary = build_package_b_tranche1(
+            args.source_bank,
+            args.semantic_review,
+            args.candidate_bank,
+            args.review_root,
+            args.manifest,
+        )
+    except PackageBTranche1BuildError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+    sys.stdout.write(json.dumps(summary, ensure_ascii=False, sort_keys=True, indent=2) + "\n")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
