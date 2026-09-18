@@ -16,6 +16,7 @@ QUALITY_TARGETS = [
     "content_revision_authority.py",
     "content_revision_migration.py",
     "content_revision_registry.py",
+    "answer_length_audit.py",
     "save_queue.py",
     "render_cache.py",
     "session_models.py",
@@ -38,6 +39,7 @@ QUALITY_TARGETS = [
     "ingestion/adapter.py",
     "tools/extract_sc900_pdf.py",
     "tools/import_sc900_pdf.py",
+    "tools/audit_answer_length.py",
 ]
 
 

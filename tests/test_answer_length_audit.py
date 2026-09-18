@@ -1,8 +1,14 @@
 import copy
+import hashlib
 import json
+import subprocess
+import sys
+import tempfile
 import unittest
+from pathlib import Path
 
 from answer_length_audit import audit_questions, ranked_strict_longest_outliers
+from question_identity import bank_content_fingerprint
 
 
 class AnswerLengthAuditTests(unittest.TestCase):
@@ -197,6 +203,106 @@ class AnswerLengthAuditTests(unittest.TestCase):
         for _ in range(5):
             self.assertEqual(audit_questions(self.fixtures), first_audit)
             self.assertEqual(ranked_strict_longest_outliers(self.fixtures), first_ranking)
+
+
+class AnswerLengthAuditCliTests(unittest.TestCase):
+    def setUp(self):
+        self.questions = [
+            {
+                "id": "q-cli-alpha",
+                "domain": "alpha",
+                "choices": {"A": "long correct", "B": "brief", "C": "short", "D": "tiny"},
+                "correct": ["A"],
+            },
+            {
+                "id": "q-cli-beta",
+                "domain": "beta",
+                "choices": {"A": "one", "B": "two", "C": "three", "D": "four"},
+                "correct": ["D"],
+            },
+        ]
+
+    def run_cli(self, bank_path: Path, output_path: Path) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "tools.audit_answer_length",
+                "--bank",
+                str(bank_path),
+                "--json-out",
+                str(output_path),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+    def test_cli_writes_exact_deterministic_hash_bound_audit_payload(self):
+        raw_bank = (
+            json.dumps({"questions": self.questions}, ensure_ascii=False, indent=1) + "\n"
+        ).encode("utf-8")
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            bank_path = root / "bank.json"
+            first_output = root / "first" / "audit.json"
+            second_output = root / "second" / "audit.json"
+            bank_path.write_bytes(raw_bank)
+
+            first = self.run_cli(bank_path, first_output)
+            second = self.run_cli(bank_path, second_output)
+
+            self.assertEqual(first.returncode, 0, first.stderr)
+            self.assertEqual(second.returncode, 0, second.stderr)
+            self.assertEqual(bank_path.read_bytes(), raw_bank)
+            first_bytes = first_output.read_bytes()
+            self.assertEqual(first_bytes, second_output.read_bytes())
+            self.assertTrue(first_bytes.endswith(b"\n"))
+            payload = json.loads(first_bytes)
+            expected_audit = audit_questions(self.questions)
+            self.assertEqual(
+                set(payload),
+                {*expected_audit, "bank_file_sha256", "bank_content_fingerprint"},
+            )
+            for key, expected_value in expected_audit.items():
+                self.assertEqual(payload[key], expected_value)
+            self.assertEqual(payload["bank_file_sha256"], hashlib.sha256(raw_bank).hexdigest())
+            self.assertEqual(
+                payload["bank_content_fingerprint"],
+                bank_content_fingerprint(self.questions),
+            )
+            json.dumps(payload, allow_nan=False)
+
+    def test_cli_rejects_invalid_banks_without_writing_a_report(self):
+        invalid_cases = {
+            "malformed_json": b"{not-json\n",
+            "top_level_not_object": b"[]\n",
+            "missing_questions": b"{}\n",
+            "questions_not_list": b'{"questions": {}}\n',
+        }
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            for case_name, bank_bytes in invalid_cases.items():
+                with self.subTest(case=case_name):
+                    bank_path = root / f"{case_name}.json"
+                    output_path = root / f"{case_name}-report.json"
+                    bank_path.write_bytes(bank_bytes)
+
+                    completed = self.run_cli(bank_path, output_path)
+
+                    self.assertNotEqual(completed.returncode, 0)
+                    self.assertFalse(output_path.exists())
+
+    def test_cli_rejects_nonexistent_bank_without_writing_a_report(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            bank_path = root / "does-not-exist.json"
+            output_path = root / "report.json"
+
+            completed = self.run_cli(bank_path, output_path)
+
+            self.assertNotEqual(completed.returncode, 0)
+            self.assertFalse(output_path.exists())
 
 
 if __name__ == "__main__":
