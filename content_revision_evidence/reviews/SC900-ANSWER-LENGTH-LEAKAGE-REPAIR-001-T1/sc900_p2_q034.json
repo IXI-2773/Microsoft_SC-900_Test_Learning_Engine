@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Replace all Azure network controls",
+    "B": "Manage document retention schedules",
+    "C": "Provide cloud billing forecasts",
+    "D": "Correlate Defender signals for unified detection, investigation, and response"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/defender-xdr/microsoft-365-defender"
+  ],
+  "before": {
+    "A": "Replace all Azure network controls",
+    "B": "Manage document retention schedules",
+    "C": "Provide cloud billing forecasts",
+    "D": "Correlate signals across Defender services to support unified detection, incidents, investigation, and response"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "3792c11453343e8814aef2d58ef064c693bdf4ce92f803179c3898afc3b751f0",
+  "question_id": "sc900_p2_q034",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "fd2e9ad6facb0dd2de6e943431169334a11f6ec352bdd43a15d37732462f8c03"
+}

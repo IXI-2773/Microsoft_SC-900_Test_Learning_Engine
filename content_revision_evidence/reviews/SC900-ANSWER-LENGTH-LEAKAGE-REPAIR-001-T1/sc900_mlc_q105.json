@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Network security groups",
+    "B": "Azure Firewall",
+    "C": "Azure DDoS Protection",
+    "D": "Secure VM access over RDP or SSH without public target ports"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+  ],
+  "before": {
+    "A": "Network security groups",
+    "B": "Azure Firewall",
+    "C": "Azure DDoS Protection",
+    "D": "It provides secure VM management without opening public RDP/SSH ports on the target VMs"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "67d96fae12c5e6113ab893d04a3a603b22adebc23965b6954bf87454b0630cca",
+  "question_id": "sc900_mlc_q105",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "c32aa1eb2369a9b6487ee9d0f2d4c3e3f6fbbfd23fbfc964c1e96be7c33827de"
+}

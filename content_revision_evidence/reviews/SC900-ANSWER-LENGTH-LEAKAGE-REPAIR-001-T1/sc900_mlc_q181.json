@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Compliance Manager",
+    "B": "Service Trust Portal",
+    "C": "Data loss prevention",
+    "D": "Transparency and protection of customer data"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/privacy/"
+  ],
+  "before": {
+    "A": "Compliance Manager",
+    "B": "Service Trust Portal",
+    "C": "Data loss prevention",
+    "D": "They include commitments such as transparency and protection of customer data"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "b882304c819b09c30f9df3e73acb97ab9d69e0160d8816d43a4cd58912830006",
+  "question_id": "sc900_mlc_q181",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "4e0d4e508e37eae8ec74a988b72557a6c9abfa3e720dd60abbc6d8596f8400ca"
+}

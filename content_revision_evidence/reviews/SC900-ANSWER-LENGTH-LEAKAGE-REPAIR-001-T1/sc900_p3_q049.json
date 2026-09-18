@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Encryption or content markings configured by the sensitivity label",
+    "B": "An Azure network security group",
+    "C": "A DDoS protection plan",
+    "D": "A Microsoft Entra custom domain"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/sensitivity-labels"
+  ],
+  "before": {
+    "A": "Protection settings such as encryption or marking, according to the label configuration",
+    "B": "An Azure network security group",
+    "C": "A DDoS protection plan",
+    "D": "A Microsoft Entra custom domain"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "30dcdba212ee4e81655b4d7d09c4d792315f8af5b457df2a7527e33e8b2a16d9",
+  "question_id": "sc900_p3_q049",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "835987f5d483480181790ae3325482a29252b1ee98d4d49a2b09c2aa6d22b180"
+}

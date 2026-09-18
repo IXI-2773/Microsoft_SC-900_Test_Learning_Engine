@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "How long content is retained or when it is deleted",
+    "B": "Whether an Azure virtual machine has a public IP address",
+    "C": "Whether MFA is required",
+    "D": "Whether a WAF rule is OWASP"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/retention"
+  ],
+  "before": {
+    "A": "How long content is kept or deleted to meet business or legal requirements",
+    "B": "Whether a VM has a public IP",
+    "C": "Whether MFA is required",
+    "D": "Whether a WAF rule is OWASP"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "2a5e1ee234021b14d489a8fac335b0db07d521e641760340d4ca446dedec3ae2",
+  "question_id": "sc900_mlc_q161",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "1af7490a3c4e1ada4646c871d830433b410781e70a2fd8bbd9883122be5e92c1"
+}

@@ -1,0 +1,910 @@
+{
+  "candidate_bank": "sc900_bank_v8_length_rebalanced_t1.json",
+  "review_queue": [
+    {
+      "after": {
+        "A": "Declare content as records with retention and disposition controls",
+        "B": "Issue TAP codes",
+        "C": "Filter NSG traffic",
+        "D": "Hunt in Sentinel"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/records-management"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q160",
+      "review_note": "Shortens the correct purpose statement while preserving records declaration, retention, and disposition; B-D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "disposition": "SKIP",
+      "question_id": "sc900_mlc_q173",
+      "review_note": "The Audit-versus-DLP distinction depends on detection, prevention, and policy-mode qualifiers; shortening it further could materially change the prevention claim."
+    },
+    {
+      "after": {
+        "A": "Data loss prevention",
+        "B": "eDiscovery",
+        "C": "Microsoft Purview Audit",
+        "D": "Identify and investigate potentially risky internal user activity"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/insider-risk-management"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q191",
+      "review_note": "Removes redundant framing while preserving identification and investigation of potentially risky internal activity; A-C and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Sensitivity labels",
+        "B": "DLP policies for sensitive information shared in Teams",
+        "C": "Retention policies",
+        "D": "Insider Risk Management"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/dlp-microsoft-teams"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q286",
+      "review_note": "Condenses the correct choice while preserving DLP application to sensitive information shared in Teams; A, C, D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "DLP is only a directory role",
+        "B": "Labels classify and protect content; DLP restricts risky sharing",
+        "C": "Sensitivity labels",
+        "D": "Retention policies"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/sensitivity-labels",
+        "https://learn.microsoft.com/en-us/purview/dlp-learn-about-dlp"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q169",
+      "review_note": "Preserves the classification/protection versus risky-sharing distinction while removing redundant wording; A, C, D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Active Directory Domain Services",
+        "B": "Microsoft Entra Domain Services",
+        "C": "Entra ID is cloud identity; AD DS is an on-premises directory",
+        "D": "Microsoft Entra External ID"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types/"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p3_q043",
+      "review_note": "Preserves the cloud-versus-on-premises directory distinction in a shorter form; A, B, D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "NSGs replace Entra ID",
+        "B": "NSGs declare records",
+        "C": "NSGs issue passkeys",
+        "D": "NSGs filter subnet or NIC traffic alongside Azure Firewall"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview",
+        "https://learn.microsoft.com/en-us/azure/firewall/overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q143",
+      "review_note": "Preserves distributed subnet/NIC filtering alongside centralized firewall protection; A-C and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Compliance Manager",
+        "B": "Service Trust Portal",
+        "C": "Data loss prevention",
+        "D": "Transparency and protection of customer data"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/privacy/"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q181",
+      "review_note": "Removes introductory filler while preserving the same privacy commitments; A-C and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "disposition": "SKIP",
+      "question_id": "sc900_mlc_q070",
+      "review_note": "The cloud identity-risk versus on-premises Active Directory threat distinction requires both product scopes and the lateral-movement example; safe compression is uncertain."
+    },
+    {
+      "after": {
+        "A": "Network security groups",
+        "B": "Azure Firewall",
+        "C": "Azure DDoS Protection",
+        "D": "Secure VM access over RDP or SSH without public target ports"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q105",
+      "review_note": "Preserves secure RDP/SSH VM management without exposed target ports while removing redundant wording; A-C and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Manage compliance assessments and improvement actions",
+        "B": "Service Trust Portal",
+        "C": "Compliance score",
+        "D": "Microsoft Purview Audit"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/compliance-manager"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q183",
+      "review_note": "Preserves the customer-facing Compliance Manager assessment and improvement-action purpose; B-D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Opening RDP to the internet",
+        "B": "Recertifying guest users",
+        "C": "Mitigating UDP floods with Azure DDoS Protection",
+        "D": "Data integrity and authenticity through digital signatures"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q177",
+      "review_note": "Condenses the correct proposition to the integrity and authenticity properties supplied by digital signatures; C clarifies the same UDP-flood mitigation distractor, while A, B and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Mitigating SYN floods",
+        "B": "Issuing FIDO2 keys",
+        "C": "Hosting RDP jump boxes",
+        "D": "Assess controls and track compliance improvements"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/compliance-manager"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q154",
+      "review_note": "Preserves assessment of controls and tracking compliance improvements; A-C and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "disposition": "SKIP",
+      "question_id": "sc900_mlc_q116",
+      "review_note": "The CASB versus CSPM and workload-protection comparison relies on all stated product-scope qualifiers; removing them could blur the tested distinction."
+    },
+    {
+      "after": {
+        "A": "Discover and classify sensitive data across its locations",
+        "B": "It is a VPN replacement",
+        "C": "It issues Entra roles",
+        "D": "Sensitivity labels"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/data-classification-overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q184",
+      "review_note": "Preserves discovery of sensitive data and where it resides while removing conversational filler; B-D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "User identities",
+        "B": "Workload identities",
+        "C": "External identities for partner and customer collaboration",
+        "D": "Managed identities"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types/"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q218",
+      "review_note": "Preserves the external-identity type and partner/customer collaboration scope; A, B, D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Segment private networks and control traffic between workloads",
+        "B": "Network security groups for distributed subnet and NIC traffic filtering",
+        "C": "Azure Firewall",
+        "D": "Azure Bastion"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q135",
+      "review_note": "Preserves private network isolation, segmentation, and workload traffic control; B clarifies the same network-security-group distractor, while C, D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Hashing a file to check integrity",
+        "B": "Creating an Azure public IP address",
+        "C": "Set policies, responsibilities, and oversight for security and compliance",
+        "D": "Issuing a Temporary Access Pass"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p3_q091",
+      "review_note": "Removes organizational filler while preserving governance through policies, responsibilities, and oversight; A, B, D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "disposition": "SKIP",
+      "question_id": "sc900_mlc_q085",
+      "review_note": "The workload-protection versus CSPM distinction depends on the threat-detection, running-workload, and configuration-posture qualifiers; no safe material shortening was established."
+    },
+    {
+      "after": {
+        "A": "Microsoft Purview Audit",
+        "B": "Find, preserve, and export content for legal investigations",
+        "C": "Insider Risk Management",
+        "D": "Data loss prevention"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/ediscovery"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q192",
+      "review_note": "Preserves eDiscovery search, preservation, export, and legal-investigation scope; A, C, D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Azure Firewall",
+        "B": "Protect web apps from HTTP attacks such as injection and XSS",
+        "C": "Azure DDoS Protection",
+        "D": "Azure Bastion for managed RDP and SSH access"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/web-application-firewall/overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q134",
+      "review_note": "Preserves web-application protection from HTTP-layer injection and XSS attacks; D clarifies the same Azure Bastion distractor, while A, C and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Correlate security logs and alerts for detection and investigation",
+        "B": "Issue FIDO2 credentials",
+        "C": "Declare items as records",
+        "D": "Assign Entra roles"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/sentinel/overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q086",
+      "review_note": "Preserves SIEM collection/correlation for detection and investigation while removing redundancy; B-D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Replace all Azure network controls",
+        "B": "Manage document retention schedules",
+        "C": "Provide cloud billing forecasts",
+        "D": "Correlate Defender signals for unified detection, investigation, and response"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-xdr/microsoft-365-defender"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p2_q034",
+      "review_note": "Preserves cross-Defender correlation and the unified detection, investigation, and response workflow; A-C and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Persist with content and apply protections such as encryption or markings",
+        "B": "They are NSG 5-tuple rules",
+        "C": "Data loss prevention",
+        "D": "They are TAP codes"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/sensitivity-labels"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q187",
+      "review_note": "Preserves label persistence and configured encryption or marking protections; B-D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Microsoft Defender for Endpoint",
+        "B": "Microsoft Defender for Office 365",
+        "C": "It is a TAP authentication method",
+        "D": "An XDR suite, not an identity provider that replaces Entra ID"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-xdr/microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/entra/fundamentals/whatis"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q129",
+      "review_note": "Preserves Defender XDR product type and the contrast with Entra ID as identity provider; A-C and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Microsoft Defender for Endpoint",
+        "B": "Active Directory signals collected by domain-controller or AD FS sensors",
+        "C": "Microsoft Entra ID Protection",
+        "D": "Microsoft Defender for Cloud Apps"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-for-identity/what-is"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q273",
+      "review_note": "Preserves the Active Directory signal source and domain-controller or AD FS sensor collection path; A, C, D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Only NSGs and firewalls",
+        "B": "Only sensitivity labels",
+        "C": "Only Sentinel workbooks",
+        "D": "Users, workloads, devices, and agent identities"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types/"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q037",
+      "review_note": "Removes the application parenthetical while preserving the listed identity categories; A-C and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Microsoft Entra ID",
+        "B": "Microsoft Entra Domain Services",
+        "C": "AD DS is on-premises; Entra ID is Microsoft's cloud identity service",
+        "D": "Entra ID is only DDoS Protection"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts/"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q179",
+      "review_note": "Preserves the on-premises AD DS versus cloud Entra ID distinction in a shorter form; A, B, D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Data loss prevention",
+        "B": "They both assign Entra roles",
+        "C": "Policies cover locations broadly; labels apply to individual items",
+        "D": "Records management"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/retention"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q170",
+      "review_note": "Preserves the broad location scope of retention policies versus item-level retention labels; A, B, D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Compliance Manager",
+        "B": "Microsoft Purview portal",
+        "C": "Microsoft Defender portal",
+        "D": "Privacy and trust documentation in the Service Trust Portal"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/get-started-with-service-trust-portal"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p3_q060",
+      "review_note": "Preserves the Service Trust Portal and its privacy/trust documentation purpose; A-C and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "It is a Global Administrator role",
+        "B": "A time-limited passcode for sign-in and authentication-method registration",
+        "C": "It is a DLP location",
+        "D": "It is a Sentinel table"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/howto-authentication-temporary-access-pass"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q063",
+      "review_note": "Preserves Temporary Access Pass duration, sign-in use, and authentication-method registration scope; A, C, D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "They are identical",
+        "B": "Sentinel issues FIDO2 keys",
+        "C": "Sentinel provides SIEM/SOAR; Defender for Cloud protects cloud posture and workloads",
+        "D": "Defender for Cloud is only eDiscovery"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/sentinel/overview",
+        "https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q127",
+      "review_note": "Preserves the SIEM/SOAR versus cloud-posture and workload-protection scopes while tightening the comparison; A, B, D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "disposition": "SKIP",
+      "question_id": "sc900_mlc_q253",
+      "review_note": "The posture/misconfiguration versus runtime-threat distinction is already compact for the scenario and further shortening could make the public-exposure classification ambiguous."
+    },
+    {
+      "after": {
+        "A": "It replaces all identity authentication",
+        "B": "It classifies sensitive files",
+        "C": "It provides DLP for email",
+        "D": "Managed RDP/SSH access without a public IP on each target VM"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p2_q025",
+      "review_note": "Preserves managed RDP/SSH connectivity without per-target public IP exposure; A-C and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Compliance Manager",
+        "B": "Microsoft Purview portal",
+        "C": "Microsoft Defender portal",
+        "D": "Review Microsoft trust and compliance documentation"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/get-started-with-service-trust-portal"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q194",
+      "review_note": "Preserves the customer use of Service Trust Portal to review Microsoft trust and compliance documentation; A-C and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "NSGs classify Microsoft 365 documents",
+        "B": "WAF assigns Microsoft Entra directory roles",
+        "C": "NSGs filter network traffic by IP and port; WAF inspects HTTP requests",
+        "D": "NSGs publish Service Trust Portal reports"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview",
+        "https://learn.microsoft.com/en-us/azure/web-application-firewall/overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p3_q095",
+      "review_note": "Preserves the network-property filtering versus HTTP application-request inspection distinction; A, B, D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Encryption or content markings configured by the sensitivity label",
+        "B": "An Azure network security group",
+        "C": "A DDoS protection plan",
+        "D": "A Microsoft Entra custom domain"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/sensitivity-labels"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p3_q049",
+      "review_note": "Preserves the configured sensitivity-label protections of encryption and content markings; B-D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Access reviews",
+        "B": "Entitlement management",
+        "C": "Microsoft Entra ID Protection",
+        "D": "Role-activation settings that require MFA and justification"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q225",
+      "review_note": "Preserves PIM activation settings for MFA and justification while removing optional filler; A-C and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "A FIDO2 credential",
+        "B": "A desired security baseline that drives recommendations",
+        "C": "A legal hold",
+        "D": "A Bastion shareable link"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/defender-for-cloud/security-policy-concept"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q099",
+      "review_note": "Preserves the policy/standard baseline and recommendation-generation relationship; A, C, D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Automatic multifactor authentication for every network packet",
+        "B": "Segmentation that controls traffic between resource groups",
+        "C": "Legal hold on email",
+        "D": "Banned-password enforcement"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q079",
+      "review_note": "Preserves network segmentation and controlled communication between resource groups; A clarifies the same automatic-MFA distractor, while C, D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "disposition": "SKIP",
+      "question_id": "sc900_mlc_q075",
+      "review_note": "The possession-factor wording depends on the certificate being held on a device or smart card; shortening it risks overstating certificates generally."
+    },
+    {
+      "after": {
+        "A": "Assess resources against security controls and recommend posture improvements",
+        "B": "Issue authentication tokens to users",
+        "C": "Store TLS private keys",
+        "D": "Preserve documents for a legal case"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/defender-for-cloud/security-policy-concept"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p2_q029",
+      "review_note": "Preserves resource assessment against desired controls and resulting posture-improvement actions; B-D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "User identities",
+        "B": "Workload identities",
+        "C": "Managed identities for Azure service workloads",
+        "D": "A Microsoft Entra external or guest identity"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/external-id/external-identities-overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p3_q072",
+      "review_note": "Preserves the external/guest identity category in Microsoft Entra ID; C clarifies the same managed-identity distractor, while A, B and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Data loss prevention",
+        "B": "Insider Risk Management for patterns of risky user activity",
+        "C": "eDiscovery",
+        "D": "Microsoft Entra Temporary Access Pass"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/insider-risk-management"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q290",
+      "review_note": "Preserves selection of Insider Risk Management and its pattern-based risky-user-activity scope; A, C, D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "How long content is retained or when it is deleted",
+        "B": "Whether an Azure virtual machine has a public IP address",
+        "C": "Whether MFA is required",
+        "D": "Whether a WAF rule is OWASP"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/retention"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q161",
+      "review_note": "Preserves retention duration and deletion timing for business or legal needs; B clarifies the same virtual-machine public-IP distractor, while C, D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "They are both Azure Firewall SKUs",
+        "B": "Endpoint recertifies guests",
+        "C": "Endpoint protects devices with EDR; Office 365 protects email and collaboration",
+        "D": "Office 365 stores VM secrets"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-endpoint",
+        "https://learn.microsoft.com/en-us/defender-office-365/mdo-about"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q115",
+      "review_note": "Preserves the device/EDR versus email-and-collaboration protection scopes; A, B, D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "disposition": "SKIP",
+      "question_id": "sc900_mlc_q155",
+      "review_note": "The Compliance Manager score versus Defender for Cloud secure-score comparison needs both product and measurement scopes; safe compression without ambiguity was not established."
+    },
+    {
+      "after": {
+        "A": "Recommendations from the assigned regulatory standard",
+        "B": "A FIDO2 registration for passwordless authentication",
+        "C": "Regulations",
+        "D": "Industry standards"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/defender-for-cloud/security-policy-concept"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q109",
+      "review_note": "Removes redundant generation wording while preserving recommendations originating from the assigned standard; B clarifies the same FIDO2-registration distractor, while C, D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Data loss prevention policies",
+        "B": "Content explorer shows data locations; Activity explorer shows historical actions",
+        "C": "Sensitivity labels",
+        "D": "Because both tools assign privileged Entra roles"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/data-classification-content-explorer",
+        "https://learn.microsoft.com/en-us/purview/data-classification-activity-explorer"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p3_q038",
+      "review_note": "Preserves the current-content-location versus historical-activity distinction between the two explorers; A, C, D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Entra roles manage directory administration; Azure RBAC manages Azure resources",
+        "B": "They are identical and always assigned together",
+        "C": "Azure RBAC replaces MFA",
+        "D": "Entra roles only apply to printers"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/custom-overview",
+        "https://learn.microsoft.com/en-us/azure/role-based-access-control/overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q030",
+      "review_note": "Preserves the directory-administration versus Azure-resource authorization scopes while tightening the wording; B-D and the correct key remain unchanged.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    }
+  ],
+  "source_bank": "sc900_bank_v8_final.json",
+  "work_id": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001 / PACKAGE-B / TRANCHE-1"
+}

@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "A FIDO2 credential",
+    "B": "A desired security baseline that drives recommendations",
+    "C": "A legal hold",
+    "D": "A Bastion shareable link"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/security-policy-concept"
+  ],
+  "before": {
+    "A": "A FIDO2 credential",
+    "B": "The desired configuration baseline used to generate recommendations",
+    "C": "A legal hold",
+    "D": "A Bastion shareable link"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "b4ac882e07225a6863ce29300f770e431805ff94796752c587554fb81f952172",
+  "question_id": "sc900_mlc_q099",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "f0f06be2ec206b42340e0af63cffe26d9034bbc1daf1b0fde6732626fba67943"
+}

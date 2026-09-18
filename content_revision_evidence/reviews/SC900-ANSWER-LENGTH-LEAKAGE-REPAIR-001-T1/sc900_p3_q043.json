@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Active Directory Domain Services",
+    "B": "Microsoft Entra Domain Services",
+    "C": "Entra ID is cloud identity; AD DS is an on-premises directory",
+    "D": "Microsoft Entra External ID"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types/"
+  ],
+  "before": {
+    "A": "Active Directory Domain Services",
+    "B": "Microsoft Entra Domain Services",
+    "C": "Microsoft Entra ID is the cloud identity service, while Active Directory Domain Services is an on-premises directory service",
+    "D": "Microsoft Entra External ID"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "9935f43f3d98680d5ee5497df2149498e70d46899798abc6e2791636e623dfef",
+  "question_id": "sc900_p3_q043",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "506c2b7f080dc7dea0aef37a8cb062d49f07edda01125e21b6ce560b319f2e4d"
+}

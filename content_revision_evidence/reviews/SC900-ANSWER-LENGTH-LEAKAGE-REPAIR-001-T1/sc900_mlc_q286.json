@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Sensitivity labels",
+    "B": "DLP policies for sensitive information shared in Teams",
+    "C": "Retention policies",
+    "D": "Insider Risk Management"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/dlp-microsoft-teams"
+  ],
+  "before": {
+    "A": "Sensitivity labels",
+    "B": "Data loss prevention policies that detect and restrict sensitive sharing in locations such as Teams",
+    "C": "Retention policies",
+    "D": "Insider Risk Management"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "8ae70a7fb15dc226cf0dc67b5ddb1989827ecf5753a94b32ab5261979428af6f",
+  "question_id": "sc900_mlc_q286",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "ed168c194da75d589ab3fff434f3c679967cc14718d4c3543ed80b02f82df629"
+}

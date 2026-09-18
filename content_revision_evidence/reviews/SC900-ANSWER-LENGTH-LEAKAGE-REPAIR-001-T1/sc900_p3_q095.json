@@ -1,0 +1,34 @@
+{
+  "after": {
+    "A": "NSGs classify Microsoft 365 documents",
+    "B": "WAF assigns Microsoft Entra directory roles",
+    "C": "NSGs filter network traffic by IP and port; WAF inspects HTTP requests",
+    "D": "NSGs publish Service Trust Portal reports"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview",
+    "https://learn.microsoft.com/en-us/azure/web-application-firewall/overview"
+  ],
+  "before": {
+    "A": "NSGs classify Microsoft 365 documents",
+    "B": "WAF assigns Microsoft Entra directory roles",
+    "C": "NSGs filter traffic mainly by network properties such as IP address and port, while WAF inspects HTTP application requests",
+    "D": "NSGs publish Service Trust Portal reports"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "0b01c1ab2f7c9c4d084e5c0e1770aee290ad7835ca81f6bc83f7a04b3fa9ed3b",
+  "question_id": "sc900_p3_q095",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "39e075a5312db1cb0fdcea1ac9a7f3d7c8c2d360dbbbf1ed95457cef64d2f0ed"
+}

@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Access reviews",
+    "B": "Entitlement management",
+    "C": "Microsoft Entra ID Protection",
+    "D": "Role-activation settings that require MFA and justification"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure"
+  ],
+  "before": {
+    "A": "Access reviews",
+    "B": "Entitlement management",
+    "C": "Microsoft Entra ID Protection",
+    "D": "Activation settings that can require multifactor authentication and justification"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "91b72fb153db1b3374036cc227b3f87fca3b337b383fc3a504b80755f9871d77",
+  "question_id": "sc900_mlc_q225",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "a890daba456a03ab34b2246c0d89a96006b4a0d91f1e80903454e92614d70256"
+}

@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "It replaces all identity authentication",
+    "B": "It classifies sensitive files",
+    "C": "It provides DLP for email",
+    "D": "Managed RDP/SSH access without a public IP on each target VM"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+  ],
+  "before": {
+    "A": "It replaces all identity authentication",
+    "B": "It classifies sensitive files",
+    "C": "It provides DLP for email",
+    "D": "It provides managed RDP/SSH connectivity without requiring each target VM to expose a public IP for that access"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "581161f9a03a677a6d13e3b3c14a0f40c4ef237381d68e4fcbf74f9142985192",
+  "question_id": "sc900_p2_q025",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "e9e468329f50e70337320fb94a10e2cb60e7e415ec319d48039b77206860a9d7"
+}

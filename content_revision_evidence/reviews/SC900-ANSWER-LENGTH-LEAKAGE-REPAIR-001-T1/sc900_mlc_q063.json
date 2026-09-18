@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "It is a Global Administrator role",
+    "B": "A time-limited passcode for sign-in and authentication-method registration",
+    "C": "It is a DLP location",
+    "D": "It is a Sentinel table"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/howto-authentication-temporary-access-pass"
+  ],
+  "before": {
+    "A": "It is a Global Administrator role",
+    "B": "It is a time-limited passcode for sign-in and method registration, not a standing directory role",
+    "C": "It is a DLP location",
+    "D": "It is a Sentinel table"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "6f87fdd19c706da43e116ea650e88dc95d35de6587559f2681f068fd23247b37",
+  "question_id": "sc900_mlc_q063",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "8a130ce1b1a89ca9309a42b36af15b0240e581e76470232365f0e3b6b1f2d532"
+}

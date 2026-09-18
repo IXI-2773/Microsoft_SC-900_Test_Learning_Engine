@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Hashing a file to check integrity",
+    "B": "Creating an Azure public IP address",
+    "C": "Set policies, responsibilities, and oversight for security and compliance",
+    "D": "Issuing a Temporary Access Pass"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/"
+  ],
+  "before": {
+    "A": "Hashing a file to check integrity",
+    "B": "Creating an Azure public IP address",
+    "C": "Establishing policies, responsibilities, and oversight so the organization can manage security and compliance objectives",
+    "D": "Issuing a Temporary Access Pass"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "147b7f27e12276363973d8ec280188512e1b86fe95eebbad0a6760bd00a3c293",
+  "question_id": "sc900_p3_q091",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "9f5f7d3bd4187d4db49a2f8fa1784fd1d3d4f606cb9518ffe8439e05d17c1890"
+}

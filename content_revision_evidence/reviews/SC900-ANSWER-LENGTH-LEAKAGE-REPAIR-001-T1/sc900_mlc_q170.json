@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Data loss prevention",
+    "B": "They both assign Entra roles",
+    "C": "Policies cover locations broadly; labels apply to individual items",
+    "D": "Records management"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/retention"
+  ],
+  "before": {
+    "A": "Data loss prevention",
+    "B": "They both assign Entra roles",
+    "C": "A policy applies broadly to a location; a label can be applied to individual items",
+    "D": "Records management"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "cd00f91c28ea11b63b317aeedd76cc2ac0c69fec93bfed79e162361789b4019e",
+  "question_id": "sc900_mlc_q170",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "166e08e72b320566ea7664872d70a71821759c9f5f1ec4b2e5040f268052e8e7"
+}

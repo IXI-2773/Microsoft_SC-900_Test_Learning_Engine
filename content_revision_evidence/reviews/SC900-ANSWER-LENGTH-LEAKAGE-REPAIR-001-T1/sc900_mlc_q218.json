@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "User identities",
+    "B": "Workload identities",
+    "C": "External identities for partner and customer collaboration",
+    "D": "Managed identities"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types/"
+  ],
+  "before": {
+    "A": "User identities",
+    "B": "Workload identities",
+    "C": "External or guest identities for partner and customer collaboration",
+    "D": "Managed identities"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "ddc551097a5f4b9b56c24f51d02bfe58f7aefd6a43a53502be7377820cb31f09",
+  "question_id": "sc900_mlc_q218",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "d5cccc3dda182b492a6a2ffa16605d9b35b72dcce3a3bbcf01044d9e01b68836"
+}

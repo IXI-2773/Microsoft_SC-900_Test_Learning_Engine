@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Discover and classify sensitive data across its locations",
+    "B": "It is a VPN replacement",
+    "C": "It issues Entra roles",
+    "D": "Sensitivity labels"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/data-classification-overview"
+  ],
+  "before": {
+    "A": "It helps the organization understand what sensitive data it has and where it lives",
+    "B": "It is a VPN replacement",
+    "C": "It issues Entra roles",
+    "D": "Sensitivity labels"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "e7520a6c5d6d1154e0be2f3adc9c0f0f62741ced184516f4b0ce7798873642b3",
+  "question_id": "sc900_mlc_q184",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "424be2b54150fe79634192a976bb25647e534d2971ff47c3835805cf9b9f48f1"
+}
