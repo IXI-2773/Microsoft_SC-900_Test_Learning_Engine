@@ -40,6 +40,7 @@ QUALITY_TARGETS = [
     "tools/extract_sc900_pdf.py",
     "tools/import_sc900_pdf.py",
     "tools/audit_answer_length.py",
+    "tools/build_package_b_tranche1.py",
 ]
 
 
