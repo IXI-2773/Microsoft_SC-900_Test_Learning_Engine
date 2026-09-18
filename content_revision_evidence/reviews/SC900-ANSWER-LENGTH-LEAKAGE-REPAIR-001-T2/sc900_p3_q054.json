@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "So Azure DDoS Protection can assign Microsoft Purview sensitivity labels",
+    "B": "So each kind of actor that signs in or calls APIs can be authenticated and authorized",
+    "C": "So Microsoft Purview eDiscovery can replace Conditional Access",
+    "D": "So Azure network security groups can issue FIDO2 passkeys"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/fundamentals/whatis"
+  ],
+  "before": {
+    "A": "So Azure DDoS Protection can assign sensitivity labels",
+    "B": "So each kind of actor that signs in or calls APIs can be authenticated and authorized appropriately",
+    "C": "So eDiscovery can replace Conditional Access",
+    "D": "So network security groups can issue passkeys"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "a91ddb76e724ae14620eeda557e47f54aa43b363a817c5c8ba77095f9f4e3889",
+  "question_id": "sc900_p3_q054",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "b74424ad2b52f3c632f69a544db2221f097a227a8491b9560266bab8704243db"
+}

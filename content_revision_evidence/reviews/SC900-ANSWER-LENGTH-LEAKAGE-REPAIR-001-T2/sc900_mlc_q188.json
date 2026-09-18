@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "DLP is Azure DDoS Protection for public IPs",
+    "B": "DLP is Microsoft Entra Privileged Identity Management for role activation",
+    "C": "DLP helps prevent inappropriate sharing of sensitive information",
+    "D": "DLP is Azure Key Vault secret storage"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/dlp-learn-about-dlp"
+  ],
+  "before": {
+    "A": "DLP is Azure DDoS Protection",
+    "B": "DLP is Privileged Identity Management",
+    "C": "DLP helps prevent sensitive information from being shared inappropriately",
+    "D": "DLP is Key Vault"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "2cd43ada3797e58d14fec3abdbbc03063dace313be20af9515478d1afc3fe649",
+  "question_id": "sc900_mlc_q188",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "cc8ebb543e31e0132664430437195f555bc7838c93cbc4e4b57e96ffd369edb2"
+}

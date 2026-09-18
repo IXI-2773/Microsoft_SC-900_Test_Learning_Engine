@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "A DDoS mitigation policy attached to an Azure public IP",
+    "B": "A Purview retention label that encrypts packets",
+    "C": "A dedicated cloud identity boundary that represents an organization and holds directory objects",
+    "D": "A Microsoft Sentinel automation playbook that replaces the need for identities"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/fundamentals/whatis"
+  ],
+  "before": {
+    "A": "A DDoS mitigation policy attached to a public IP",
+    "B": "A Purview retention label that encrypts packets",
+    "C": "A dedicated cloud identity boundary that represents an organization and holds its directory objects",
+    "D": "A Sentinel playbook that replaces the need for identities"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "dcd2bc1e3c3a7ab55b8e7923a6144826d924a71573cd1ea49cb16b90e59423b2",
+  "question_id": "sc900_mlc_q217",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "4d277a9e3a77ceedebd0c2d018dc6ed2f32148a509e7c45ba4b0deffd2e2aa63"
+}

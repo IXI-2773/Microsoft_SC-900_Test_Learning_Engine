@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Compliance: showing required policies and controls were followed",
+    "B": "Policies that state the organization's required rules",
+    "C": "Only issuing a Microsoft Entra Temporary Access Pass",
+    "D": "Standards that define expected requirements"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/training/modules/describe-basic-compliance-capabilities/"
+  ],
+  "before": {
+    "A": "Compliance: demonstrating that required policies and controls were actually followed",
+    "B": "Policies",
+    "C": "Only issuing a Temporary Access Pass",
+    "D": "Standards"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "62769c1f5b889ce013ef7610255a8b929f462aecfb5c78e335c76cf28d835b94",
+  "question_id": "sc900_mlc_q216",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "540292c602ce997b7b2048d06f08cb90ea22a74a5db64d2f99580fae8a717d15"
+}

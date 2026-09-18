@@ -1,0 +1,34 @@
+{
+  "after": {
+    "A": "Privacy principles are a Compliance Manager assessment-score formula",
+    "B": "Privacy principles are Microsoft data-handling commitments; Compliance Manager tracks customer assessment improvement actions",
+    "C": "Compliance Manager is Microsoft's public privacy statement document",
+    "D": "Both are Azure DDoS Protection SKUs"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/privacy/",
+    "https://learn.microsoft.com/en-us/purview/compliance-manager"
+  ],
+  "before": {
+    "A": "Privacy principles are a Compliance Manager score formula",
+    "B": "Privacy principles are Microsoft's data-handling commitments; Compliance Manager tracks customer improvement actions against assessments",
+    "C": "Compliance Manager is Microsoft's public privacy statement",
+    "D": "Both are Azure DDoS Protection SKUs"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "3fac00e9223b61720bbaa8c6eaeb16d2f4bedb477b9a907cbaec2c5d29f86448",
+  "question_id": "sc900_mlc_q278",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "bb965e83b7d3905374aa1ee481202b7e3e136c1d5c2c59331b3a4061dd5c5fb5"
+}

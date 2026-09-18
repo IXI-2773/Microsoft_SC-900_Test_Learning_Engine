@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Cloud services no longer require authorization checks for users",
+    "B": "Identity replaces the need to protect data",
+    "C": "Only on-premises users have identities",
+    "D": "Users can access cloud resources from many networks, so access decisions must strongly protect identities"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/fundamentals/what-is-identity-access-management"
+  ],
+  "before": {
+    "A": "Cloud services no longer require authorization checks",
+    "B": "Identity replaces the need to protect data",
+    "C": "Only on-premises users have identities",
+    "D": "Users can access cloud resources from many networks and locations, so access decisions must strongly protect identities"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "9fe70d13e734875386d920a7d4d21b7df633599096d1e09d9911ae07508aa9ce",
+  "question_id": "sc900_p2_q004",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "0b8950b99fdf8f09e5d1bdfa5ea147a98649924addc6181cee0112e6a5018c3b"
+}

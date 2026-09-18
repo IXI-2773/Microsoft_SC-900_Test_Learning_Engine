@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "PIM can require approval and a time limit to activate a privileged role",
+    "B": "PIM is a replacement for Azure virtual networks",
+    "C": "PIM classifies credit-card data in emails as a data-loss-prevention tool",
+    "D": "PIM is only an Azure WAF managed rule set"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure"
+  ],
+  "before": {
+    "A": "PIM can require approval and a time limit when activating a privileged role",
+    "B": "PIM is a replacement for virtual networks",
+    "C": "PIM classifies credit-card data in emails",
+    "D": "PIM is only a WAF managed rule set"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "d081fc31d5dfa3202bd9e9a30fa76fe7af338f7f0ce12da85f152036490c0aa3",
+  "question_id": "sc900_mlc_q059",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "0704b878145fb2ac366f40edcf1638862db1d4cc47639f2d0afd6da0a5203e86"
+}

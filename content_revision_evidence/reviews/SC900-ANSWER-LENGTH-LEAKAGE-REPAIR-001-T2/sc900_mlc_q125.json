@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Microsoft Defender XDR unified incident investigation across workloads",
+    "B": "Helps improve cloud security posture and can add workload protection",
+    "C": "It is only a Purview records repository",
+    "D": "Microsoft Sentinel cloud SIEM workspace"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction"
+  ],
+  "before": {
+    "A": "Microsoft Defender XDR",
+    "B": "It helps improve cloud security posture and can add workload threat protection",
+    "C": "It is only a records repository",
+    "D": "Microsoft Sentinel"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "212351dc1fec8d3e531f6bf78bb5afe2e0278893a92a1d8cf11541b1991e0e99",
+  "question_id": "sc900_mlc_q125",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "a120eb9f3b9d482cf605bef7860804e5bdd55d213072674fefdbc1135f114758"
+}

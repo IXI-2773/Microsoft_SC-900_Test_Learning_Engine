@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "CSPM is Microsoft's EDR agent and replaces Microsoft Defender for Endpoint",
+    "B": "CSPM assesses configuration posture; detecting running threats is workload protection or endpoint detection",
+    "C": "CSPM is only a retention label",
+    "D": "CSPM issues FIDO2 keys to virtual machines"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction"
+  ],
+  "before": {
+    "A": "CSPM is Microsoft's EDR agent and replaces Defender for Endpoint",
+    "B": "CSPM assesses configuration posture; detecting running threats on a workload is cloud workload protection or endpoint detection",
+    "C": "CSPM is only a retention label",
+    "D": "CSPM issues FIDO2 keys to virtual machines"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "97f2b74c0b6f05b8a795594497dcd96777a1217626cee279513a6559cd9522e8",
+  "question_id": "sc900_mlc_q267",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "f8f2da3039523b8e5e5d8d868805f9e71b9abfede91f3c68d341f55287fe9b48"
+}

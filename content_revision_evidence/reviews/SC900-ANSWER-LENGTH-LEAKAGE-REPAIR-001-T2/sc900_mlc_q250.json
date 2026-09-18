@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "A VPN is the Microsoft service that opens RDP on every Azure public IP",
+    "B": "Bastion is an identity provider, and a VPN is a sensitivity label",
+    "C": "Bastion and VPN are both names for Microsoft Entra Conditional Access",
+    "D": "Bastion is a managed TLS jump host for RDP/SSH; a VPN extends network connectivity rather than replacing that jump host"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+  ],
+  "before": {
+    "A": "A VPN is the Microsoft service that opens RDP on every public IP",
+    "B": "Bastion is an identity provider, and a VPN is a sensitivity label",
+    "C": "Bastion and VPN are both names for Microsoft Entra Conditional Access",
+    "D": "Bastion provides managed RDP/SSH over TLS to VMs without exposing RDP/SSH ports; a VPN extends network connectivity rather than replacing that managed jump host"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "1b6922e56d457d8194a6d398b366dd1f4782ff49e87f56bc61568967ddeb37a2",
+  "question_id": "sc900_mlc_q250",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "6a222aa2ac3dc71b3eb454e9ceab0d80450a52b85f14f13cc1bf2202b442bcfb"
+}

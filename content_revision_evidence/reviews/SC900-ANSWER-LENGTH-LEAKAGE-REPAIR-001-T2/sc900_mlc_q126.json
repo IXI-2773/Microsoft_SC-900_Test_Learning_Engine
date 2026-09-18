@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "It is Microsoft's only cloud identity provider",
+    "B": "It adds threat protection for running cloud workloads beyond configuration scoring",
+    "C": "Cloud security posture management that scores configuration against standards",
+    "D": "Microsoft Defender for Endpoint device EDR"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction"
+  ],
+  "before": {
+    "A": "It is Microsoft's only identity provider",
+    "B": "It adds threat protection for running cloud workloads beyond configuration scoring",
+    "C": "Cloud security posture management",
+    "D": "Microsoft Defender for Endpoint"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "0ef54dc249e1db1e6451d6c37e1bdcd81ac8f82528283a026a7d75a9fb6f062f",
+  "question_id": "sc900_mlc_q126",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "60a222dd5e3215f7925e16667b084247148ccc84f4ae6bb7f85450effcb15b33"
+}

@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "It provides browser-based SSH to Azure virtual machines",
+    "B": "It stores cryptographic keys for applications in a vault",
+    "C": "It provides a unified experience for investigation and response across Defender capabilities",
+    "D": "It calculates Microsoft Purview Compliance Manager scores"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/defender-xdr/microsoft-365-defender"
+  ],
+  "before": {
+    "A": "It provides browser-based SSH to Azure VMs",
+    "B": "It stores cryptographic keys for applications",
+    "C": "It provides a unified experience for security investigation and response across Defender capabilities",
+    "D": "It calculates Microsoft Purview compliance scores"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "5806c99e478a201db9fb9f57c3e386588b43292525fec3239442fbd34ccd8f41",
+  "question_id": "sc900_p1_q047",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "85e774cb6fd104c64e82c95b85accfe01d3b0f6591b855a56f542e38b4a6d492"
+}

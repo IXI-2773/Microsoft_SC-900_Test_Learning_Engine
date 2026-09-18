@@ -1,0 +1,693 @@
+{
+  "analyzable_single_answer": 449,
+  "baseline": {
+    "strict_longest_correct": {
+      "count": 287,
+      "denominator": 449,
+      "rate": 0.6391982182628062
+    },
+    "strict_shortest_correct": {
+      "count": 47,
+      "denominator": 449,
+      "rate": 0.10467706013363029
+    },
+    "unique_longest_heuristic": {
+      "denominator": 431,
+      "rate": 0.665893271461717,
+      "successes": 287
+    },
+    "unique_shortest_heuristic": {
+      "denominator": 425,
+      "rate": 0.11058823529411765,
+      "successes": 47
+    }
+  },
+  "candidate": {
+    "strict_longest_correct": {
+      "count": 270,
+      "denominator": 449,
+      "rate": 0.6013363028953229
+    },
+    "strict_shortest_correct": {
+      "count": 47,
+      "denominator": 449,
+      "rate": 0.10467706013363029
+    },
+    "unique_longest_heuristic": {
+      "denominator": 428,
+      "rate": 0.6308411214953271,
+      "successes": 270
+    },
+    "unique_shortest_heuristic": {
+      "denominator": 423,
+      "rate": 0.1111111111111111,
+      "successes": 47
+    }
+  },
+  "candidate_bank": "sc900_bank_v8_length_rebalanced_t2.json",
+  "closure_result": "PASS",
+  "correct_letter_counts": {
+    "A": 106,
+    "B": 114,
+    "C": 116,
+    "D": 113
+  },
+  "crossing_by_mechanism": {
+    "BOTH": 13,
+    "CORRECT_ONLY": 0,
+    "DISTRACTOR_ONLY": 4
+  },
+  "delta": {
+    "strict_longest_correct_count": -17,
+    "strict_longest_correct_rate": -0.03786191536748329,
+    "strict_shortest_correct_count": 0,
+    "strict_shortest_correct_rate": 0.0,
+    "unique_longest_heuristic_rate": -0.035052149966389834,
+    "unique_longest_heuristic_successes": -17,
+    "unique_shortest_heuristic_rate": 0.0005228758169934511,
+    "unique_shortest_heuristic_successes": 0
+  },
+  "distractor_growth": {
+    "count": 49,
+    "max": 39,
+    "mean": 19.367346938775512,
+    "values": [
+      23,
+      34,
+      33,
+      37,
+      31,
+      31,
+      24,
+      11,
+      37,
+      39,
+      37,
+      37,
+      28,
+      33,
+      35,
+      38,
+      36,
+      17,
+      21,
+      3,
+      1,
+      4,
+      3,
+      12,
+      10,
+      15,
+      10,
+      10,
+      27,
+      22,
+      10,
+      28,
+      8,
+      10,
+      22,
+      9,
+      25,
+      9,
+      13,
+      38,
+      18,
+      7,
+      8,
+      18,
+      0,
+      5,
+      5,
+      11,
+      6
+    ]
+  },
+  "domain_strict_longest": {
+    "microsoft_compliance_solutions": {
+      "count": 64,
+      "denominator": 102,
+      "rate": 0.6274509803921569
+    },
+    "microsoft_entra": {
+      "count": 73,
+      "denominator": 125,
+      "rate": 0.584
+    },
+    "microsoft_security_solutions": {
+      "count": 102,
+      "denominator": 163,
+      "rate": 0.6257668711656442
+    },
+    "security_compliance_identity": {
+      "count": 31,
+      "denominator": 59,
+      "rate": 0.5254237288135594
+    }
+  },
+  "edit_count": 49,
+  "edit_yield": [
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 23,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q012",
+      "source_correct_chars": 133,
+      "source_max_distractor_chars": 58,
+      "target_correct_chars": 104,
+      "target_max_distractor_chars": 81
+    },
+    {
+      "crossed_strict_longest": true,
+      "distractor_growth": 34,
+      "mechanism": "DISTRACTOR_ONLY",
+      "question_id": "sc900_mlc_q034",
+      "source_correct_chars": 64,
+      "source_max_distractor_chars": 34,
+      "target_correct_chars": 64,
+      "target_max_distractor_chars": 68
+    },
+    {
+      "crossed_strict_longest": true,
+      "distractor_growth": 33,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q041",
+      "source_correct_chars": 70,
+      "source_max_distractor_chars": 30,
+      "target_correct_chars": 62,
+      "target_max_distractor_chars": 63
+    },
+    {
+      "crossed_strict_longest": true,
+      "distractor_growth": 37,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q054",
+      "source_correct_chars": 74,
+      "source_max_distractor_chars": 30,
+      "target_correct_chars": 62,
+      "target_max_distractor_chars": 67
+    },
+    {
+      "crossed_strict_longest": true,
+      "distractor_growth": 31,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q059",
+      "source_correct_chars": 75,
+      "source_max_distractor_chars": 41,
+      "target_correct_chars": 71,
+      "target_max_distractor_chars": 72
+    },
+    {
+      "crossed_strict_longest": true,
+      "distractor_growth": 31,
+      "mechanism": "DISTRACTOR_ONLY",
+      "question_id": "sc900_mlc_q074",
+      "source_correct_chars": 61,
+      "source_max_distractor_chars": 30,
+      "target_correct_chars": 61,
+      "target_max_distractor_chars": 61
+    },
+    {
+      "crossed_strict_longest": true,
+      "distractor_growth": 24,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q089",
+      "source_correct_chars": 78,
+      "source_max_distractor_chars": 35,
+      "target_correct_chars": 59,
+      "target_max_distractor_chars": 59
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 11,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q097",
+      "source_correct_chars": 98,
+      "source_max_distractor_chars": 49,
+      "target_correct_chars": 90,
+      "target_max_distractor_chars": 60
+    },
+    {
+      "crossed_strict_longest": true,
+      "distractor_growth": 37,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q122",
+      "source_correct_chars": 81,
+      "source_max_distractor_chars": 39,
+      "target_correct_chars": 76,
+      "target_max_distractor_chars": 76
+    },
+    {
+      "crossed_strict_longest": true,
+      "distractor_growth": 39,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q125",
+      "source_correct_chars": 78,
+      "source_max_distractor_chars": 31,
+      "target_correct_chars": 68,
+      "target_max_distractor_chars": 70
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 37,
+      "mechanism": "DISTRACTOR_ONLY",
+      "question_id": "sc900_mlc_q126",
+      "source_correct_chars": 82,
+      "source_max_distractor_chars": 40,
+      "target_correct_chars": 82,
+      "target_max_distractor_chars": 77
+    },
+    {
+      "crossed_strict_longest": true,
+      "distractor_growth": 37,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q137",
+      "source_correct_chars": 71,
+      "source_max_distractor_chars": 34,
+      "target_correct_chars": 67,
+      "target_max_distractor_chars": 71
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 28,
+      "mechanism": "DISTRACTOR_ONLY",
+      "question_id": "sc900_mlc_q138",
+      "source_correct_chars": 73,
+      "source_max_distractor_chars": 36,
+      "target_correct_chars": 73,
+      "target_max_distractor_chars": 64
+    },
+    {
+      "crossed_strict_longest": true,
+      "distractor_growth": 33,
+      "mechanism": "DISTRACTOR_ONLY",
+      "question_id": "sc900_mlc_q140",
+      "source_correct_chars": 64,
+      "source_max_distractor_chars": 33,
+      "target_correct_chars": 64,
+      "target_max_distractor_chars": 66
+    },
+    {
+      "crossed_strict_longest": true,
+      "distractor_growth": 35,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q141",
+      "source_correct_chars": 70,
+      "source_max_distractor_chars": 33,
+      "target_correct_chars": 60,
+      "target_max_distractor_chars": 68
+    },
+    {
+      "crossed_strict_longest": true,
+      "distractor_growth": 38,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q182",
+      "source_correct_chars": 68,
+      "source_max_distractor_chars": 28,
+      "target_correct_chars": 58,
+      "target_max_distractor_chars": 66
+    },
+    {
+      "crossed_strict_longest": true,
+      "distractor_growth": 36,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q188",
+      "source_correct_chars": 73,
+      "source_max_distractor_chars": 37,
+      "target_correct_chars": 64,
+      "target_max_distractor_chars": 73
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 17,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q216",
+      "source_correct_chars": 84,
+      "source_max_distractor_chars": 36,
+      "target_correct_chars": 64,
+      "target_max_distractor_chars": 53
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 21,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q217",
+      "source_correct_chars": 99,
+      "source_max_distractor_chars": 57,
+      "target_correct_chars": 95,
+      "target_max_distractor_chars": 78
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 3,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q221",
+      "source_correct_chars": 131,
+      "source_max_distractor_chars": 72,
+      "target_correct_chars": 120,
+      "target_max_distractor_chars": 75
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 1,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q250",
+      "source_correct_chars": 160,
+      "source_max_distractor_chars": 69,
+      "target_correct_chars": 119,
+      "target_max_distractor_chars": 70
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 4,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q252",
+      "source_correct_chars": 142,
+      "source_max_distractor_chars": 66,
+      "target_correct_chars": 114,
+      "target_max_distractor_chars": 70
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 3,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q254",
+      "source_correct_chars": 120,
+      "source_max_distractor_chars": 59,
+      "target_correct_chars": 107,
+      "target_max_distractor_chars": 62
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 12,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q257",
+      "source_correct_chars": 157,
+      "source_max_distractor_chars": 73,
+      "target_correct_chars": 140,
+      "target_max_distractor_chars": 85
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 10,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q267",
+      "source_correct_chars": 127,
+      "source_max_distractor_chars": 64,
+      "target_correct_chars": 107,
+      "target_max_distractor_chars": 74
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 15,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q277",
+      "source_correct_chars": 143,
+      "source_max_distractor_chars": 70,
+      "target_correct_chars": 141,
+      "target_max_distractor_chars": 85
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 10,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q278",
+      "source_correct_chars": 136,
+      "source_max_distractor_chars": 58,
+      "target_correct_chars": 125,
+      "target_max_distractor_chars": 68
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 10,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q280",
+      "source_correct_chars": 109,
+      "source_max_distractor_chars": 56,
+      "target_correct_chars": 100,
+      "target_max_distractor_chars": 66
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 27,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q288",
+      "source_correct_chars": 75,
+      "source_max_distractor_chars": 35,
+      "target_correct_chars": 66,
+      "target_max_distractor_chars": 62
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 22,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q295",
+      "source_correct_chars": 93,
+      "source_max_distractor_chars": 51,
+      "target_correct_chars": 87,
+      "target_max_distractor_chars": 73
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 10,
+      "mechanism": "BOTH",
+      "question_id": "sc900_mlc_q300",
+      "source_correct_chars": 124,
+      "source_max_distractor_chars": 54,
+      "target_correct_chars": 93,
+      "target_max_distractor_chars": 64
+    },
+    {
+      "crossed_strict_longest": true,
+      "distractor_growth": 28,
+      "mechanism": "BOTH",
+      "question_id": "sc900_p1_q033",
+      "source_correct_chars": 69,
+      "source_max_distractor_chars": 39,
+      "target_correct_chars": 66,
+      "target_max_distractor_chars": 67
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 8,
+      "mechanism": "BOTH",
+      "question_id": "sc900_p1_q047",
+      "source_correct_chars": 101,
+      "source_max_distractor_chars": 49,
+      "target_correct_chars": 92,
+      "target_max_distractor_chars": 57
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 10,
+      "mechanism": "BOTH",
+      "question_id": "sc900_p2_q004",
+      "source_correct_chars": 119,
+      "source_max_distractor_chars": 53,
+      "target_correct_chars": 105,
+      "target_max_distractor_chars": 63
+    },
+    {
+      "crossed_strict_longest": true,
+      "distractor_growth": 22,
+      "mechanism": "BOTH",
+      "question_id": "sc900_p2_q005",
+      "source_correct_chars": 81,
+      "source_max_distractor_chars": 38,
+      "target_correct_chars": 57,
+      "target_max_distractor_chars": 60
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 9,
+      "mechanism": "BOTH",
+      "question_id": "sc900_p2_q011",
+      "source_correct_chars": 102,
+      "source_max_distractor_chars": 45,
+      "target_correct_chars": 96,
+      "target_max_distractor_chars": 54
+    },
+    {
+      "crossed_strict_longest": true,
+      "distractor_growth": 25,
+      "mechanism": "BOTH",
+      "question_id": "sc900_p2_q013",
+      "source_correct_chars": 86,
+      "source_max_distractor_chars": 46,
+      "target_correct_chars": 68,
+      "target_max_distractor_chars": 71
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 9,
+      "mechanism": "BOTH",
+      "question_id": "sc900_p2_q020",
+      "source_correct_chars": 107,
+      "source_max_distractor_chars": 49,
+      "target_correct_chars": 95,
+      "target_max_distractor_chars": 58
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 13,
+      "mechanism": "BOTH",
+      "question_id": "sc900_p3_q002",
+      "source_correct_chars": 169,
+      "source_max_distractor_chars": 80,
+      "target_correct_chars": 114,
+      "target_max_distractor_chars": 93
+    },
+    {
+      "crossed_strict_longest": true,
+      "distractor_growth": 38,
+      "mechanism": "DISTRACTOR_ONLY",
+      "question_id": "sc900_p3_q034",
+      "source_correct_chars": 67,
+      "source_max_distractor_chars": 36,
+      "target_correct_chars": 67,
+      "target_max_distractor_chars": 74
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 18,
+      "mechanism": "BOTH",
+      "question_id": "sc900_p3_q039",
+      "source_correct_chars": 158,
+      "source_max_distractor_chars": 64,
+      "target_correct_chars": 152,
+      "target_max_distractor_chars": 82
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 7,
+      "mechanism": "BOTH",
+      "question_id": "sc900_p3_q047",
+      "source_correct_chars": 102,
+      "source_max_distractor_chars": 49,
+      "target_correct_chars": 93,
+      "target_max_distractor_chars": 56
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 8,
+      "mechanism": "BOTH",
+      "question_id": "sc900_p3_q050",
+      "source_correct_chars": 111,
+      "source_max_distractor_chars": 56,
+      "target_correct_chars": 105,
+      "target_max_distractor_chars": 64
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 18,
+      "mechanism": "BOTH",
+      "question_id": "sc900_p3_q054",
+      "source_correct_chars": 99,
+      "source_max_distractor_chars": 54,
+      "target_correct_chars": 85,
+      "target_max_distractor_chars": 72
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 0,
+      "mechanism": "BOTH",
+      "question_id": "sc900_p3_q057",
+      "source_correct_chars": 119,
+      "source_max_distractor_chars": 58,
+      "target_correct_chars": 101,
+      "target_max_distractor_chars": 58
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 5,
+      "mechanism": "BOTH",
+      "question_id": "sc900_p3_q067",
+      "source_correct_chars": 149,
+      "source_max_distractor_chars": 66,
+      "target_correct_chars": 129,
+      "target_max_distractor_chars": 71
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 5,
+      "mechanism": "BOTH",
+      "question_id": "sc900_p3_q086",
+      "source_correct_chars": 100,
+      "source_max_distractor_chars": 45,
+      "target_correct_chars": 91,
+      "target_max_distractor_chars": 50
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 11,
+      "mechanism": "BOTH",
+      "question_id": "sc900_p3_q090",
+      "source_correct_chars": 157,
+      "source_max_distractor_chars": 67,
+      "target_correct_chars": 128,
+      "target_max_distractor_chars": 78
+    },
+    {
+      "crossed_strict_longest": false,
+      "distractor_growth": 6,
+      "mechanism": "BOTH",
+      "question_id": "sc900_p3_q099",
+      "source_correct_chars": 148,
+      "source_max_distractor_chars": 69,
+      "target_correct_chars": 137,
+      "target_max_distractor_chars": 75
+    }
+  ],
+  "max_domain_strict_longest": {
+    "after": {
+      "count": 64,
+      "denominator": 102,
+      "domain": "microsoft_compliance_solutions",
+      "rate": 0.6274509803921569
+    },
+    "before": {
+      "count": 108,
+      "denominator": 163,
+      "domain": "microsoft_security_solutions",
+      "rate": 0.6625766871165644
+    }
+  },
+  "mechanism_counts": {
+    "BOTH": 43,
+    "CORRECT_ONLY": 0,
+    "DISTRACTOR_ONLY": 6
+  },
+  "question_count": 454,
+  "skip_count": 1,
+  "skipped_audit_question_ids": [
+    "sc900_mlc_q148",
+    "sc900_mlc_q202",
+    "sc900_mlc_q214",
+    "sc900_mlc_q285",
+    "sc900_mlc_q289"
+  ],
+  "skipped_review_question_ids": [
+    "sc900_mlc_q046"
+  ],
+  "source_bank": "sc900_bank_v8_length_rebalanced_t1.json",
+  "strict_longest_crossed_question_ids": [
+    "sc900_mlc_q034",
+    "sc900_mlc_q041",
+    "sc900_mlc_q054",
+    "sc900_mlc_q059",
+    "sc900_mlc_q074",
+    "sc900_mlc_q089",
+    "sc900_mlc_q122",
+    "sc900_mlc_q125",
+    "sc900_mlc_q137",
+    "sc900_mlc_q140",
+    "sc900_mlc_q141",
+    "sc900_mlc_q182",
+    "sc900_mlc_q188",
+    "sc900_p1_q033",
+    "sc900_p2_q005",
+    "sc900_p2_q013",
+    "sc900_p3_q034"
+  ],
+  "work_id": "SC900-PACKAGE-B-TRANCHE2-TASK5-REAL-CANDIDATE-CONTINUITY-LEAKAGE-001"
+}

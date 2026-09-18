@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Store application encryption keys in a vault",
+    "B": "Filter network packets between subnets using security groups",
+    "C": "Verify identity and issue tokens used by relying services",
+    "D": "Classify documents for retention labeling"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/fundamentals/what-is-identity-access-management"
+  ],
+  "before": {
+    "A": "Store application encryption keys",
+    "B": "Filter network packets between subnets",
+    "C": "Verify identity and issue or supply identity information used by relying services",
+    "D": "Classify documents for retention"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "78659b25e445272edb4cdc54b42707d64d92c02ed14a3c1d21eedfc1d89bd77e",
+  "question_id": "sc900_p2_q005",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "aa0f065b8c4838af18f0f2212c84b9cf9251ccc1f7e3422d88be5b31bd7093f3"
+}

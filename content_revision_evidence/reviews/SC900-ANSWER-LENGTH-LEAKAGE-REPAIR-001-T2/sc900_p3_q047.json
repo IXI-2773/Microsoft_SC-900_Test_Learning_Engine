@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Microsoft Entra ID is uninstalled from the entire tenant",
+    "B": "All sensitivity labels are deleted",
+    "C": "Cloud security posture can improve because the resource moves closer to the assigned standard",
+    "D": "Azure DDoS Protection is disabled"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/security-policy-concept"
+  ],
+  "before": {
+    "A": "Microsoft Entra ID is uninstalled from the tenant",
+    "B": "All sensitivity labels are deleted",
+    "C": "The cloud security posture can improve because the resource is brought closer to the assigned standard",
+    "D": "Azure DDoS Protection is disabled"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "440722a54f00cee9985c771708b33b49ce26fe52ee073379ec4dcac09a993586",
+  "question_id": "sc900_p3_q047",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "56a5ada1e2b4d3f526e33df5782a33f03d2f34e34f36ca0e9d3600508981380c"
+}

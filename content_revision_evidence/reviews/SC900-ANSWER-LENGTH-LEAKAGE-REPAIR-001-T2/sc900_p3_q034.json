@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "A username typed twice as the only proof",
+    "B": "A password plus a one-time code from a registered authenticator app",
+    "C": "Two passwords for the same user account",
+    "D": "A display name plus an email address, both knowledge-type identity details"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-mfa-howitworks"
+  ],
+  "before": {
+    "A": "A username typed twice",
+    "B": "A password plus a one-time code from a registered authenticator app",
+    "C": "Two passwords for the same account",
+    "D": "A display name plus an email address"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "7f66b61b8f3b1f9fcf53e8f67bb78ae8b248240a696d06fcfe0e530c09370483",
+  "question_id": "sc900_p3_q034",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "76a8c6783d5b10f4462e318b26168b16773ca68b2eb09c42968be59ee63dab93"
+}

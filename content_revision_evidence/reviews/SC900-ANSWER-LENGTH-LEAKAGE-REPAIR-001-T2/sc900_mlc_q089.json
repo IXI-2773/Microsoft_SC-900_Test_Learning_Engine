@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Only public IP addresses assigned to Azure virtual machines",
+    "B": "Only Service Trust Portal trust documents",
+    "C": "Only network security group flow logs",
+    "D": "Correlated detection and response across Defender workloads"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/defender-xdr/microsoft-365-defender"
+  ],
+  "before": {
+    "A": "Only Azure VM public IPs",
+    "B": "Only Service Trust Portal documents",
+    "C": "Only NSG flow logs",
+    "D": "Correlated detection and response across multiple Microsoft Defender workloads"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "7c8f4b1b18191f724ec33334958e83f18064f29cd5fdfd06a95fdf2733e0ca90",
+  "question_id": "sc900_mlc_q089",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "263efc85075dec35cbae4e148d4d1f85821021eb591950247137ffd7acf1d059"
+}

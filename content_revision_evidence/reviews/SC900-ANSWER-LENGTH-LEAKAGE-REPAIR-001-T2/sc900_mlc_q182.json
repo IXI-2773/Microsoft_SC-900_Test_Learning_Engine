@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Microsoft Entra admin center for directory identity administration",
+    "B": "Workspace for Purview compliance and data-governance tools",
+    "C": "It is Microsoft Entra Temporary Access Pass",
+    "D": "Microsoft Defender portal for XDR incidents"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/purview"
+  ],
+  "before": {
+    "A": "Microsoft Entra admin center",
+    "B": "It is the workspace for Purview compliance and data-governance tools",
+    "C": "It is Temporary Access Pass",
+    "D": "Microsoft Defender portal"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "bfedc3d0b8a42de45c114cb55d923232ad5c0b573a0d55e2706efcb396e669b8",
+  "question_id": "sc900_mlc_q182",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "3207769a461a1329297791f221c286bbef9a72656b23b09e09f80e4cc04783e3"
+}

@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "CSPM is Defender for Office 365 mailbox anti-phishing protection",
+    "B": "CSPM is Microsoft Entra guest access recertification",
+    "C": "CSPM continuously assesses cloud configuration against security standards",
+    "D": "CSPM is Azure Bastion RDP jump-hosting"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction"
+  ],
+  "before": {
+    "A": "CSPM is mailbox anti-phishing",
+    "B": "CSPM is guest access recertification",
+    "C": "CSPM continuously assesses cloud configuration against security standards",
+    "D": "CSPM is RDP jump-hosting"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "165f1955978a2b165b310a39b3cbed103a6be669eae1cc339b5590850d6d4b61",
+  "question_id": "sc900_mlc_q138",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "1743338422408ca6338906fcc7c90de9ae712a889cffe952f1939a196c438d00"
+}
