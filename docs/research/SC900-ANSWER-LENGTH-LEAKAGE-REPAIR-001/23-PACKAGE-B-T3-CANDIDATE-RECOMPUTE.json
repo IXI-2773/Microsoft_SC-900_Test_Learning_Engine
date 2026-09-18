@@ -1,0 +1,237 @@
+{
+  "identity": {
+    "authorized_start_head": "400b7846189e6b12b599a4dcdd1da7ae2b321408",
+    "expected_source_bank_fingerprint": "83a8644cce462cf231f2c795746ab4d8ca1d71246fea8fbfb2982ddc7961f8a2",
+    "expected_source_bank_sha256": "d4cb07c1c6fe15b52553af2893b445b85d957b7a074b0747b75ca0f11cbf977b",
+    "final_sha256": "177a4fb5f8a874ffe4dda6b69e3d1c03dbdad1f5db5a174a990eb8b5a0e5927c",
+    "identity_match": true,
+    "source_bank": "sc900_bank_v8_length_rebalanced_t3.json",
+    "source_bank_fingerprint": "83a8644cce462cf231f2c795746ab4d8ca1d71246fea8fbfb2982ddc7961f8a2",
+    "source_bank_sha256": "d4cb07c1c6fe15b52553af2893b445b85d957b7a074b0747b75ca0f11cbf977b",
+    "source_branch": "implementation/sc900-content-revision-equivalence-migration-B-tranche3-001",
+    "start_head": "400b7846189e6b12b599a4dcdd1da7ae2b321408",
+    "t1_sha256": "45ee43c9ced0d50c790c4b637ddc3d585526830a3dec32251b904d9d06e4c7e8",
+    "t2_fingerprint": "34b5278570d89ab17ce09dfda891be0ab31a2b4e134b4727a10ed9b65a2b1f8b",
+    "t2_sha256": "9c208309483aba1f1881e33a2be85a175548498c51854ef9c04adc075b760800",
+    "t3_external_review_disposition": {
+      "package_b_complete": false,
+      "package_b_target_reached": false,
+      "registry": {},
+      "runtime_bank": "sc900_bank_v8_final.json",
+      "state": "IMPLEMENTED_UNMERGED",
+      "t4_implementation_authorized_by_t3": false
+    },
+    "work_id": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-TRANCHE4-CLOSURE-DESIGN"
+  },
+  "independent_audit": {
+    "analyzable_single_answer": 449,
+    "correct_among_longest": {
+      "count": 274,
+      "denominator": 449,
+      "rate": 0.6102449888641426
+    },
+    "correct_letter_counts": {
+      "A": 106,
+      "B": 114,
+      "C": 116,
+      "D": 113
+    },
+    "domains": {
+      "microsoft_compliance_solutions": {
+        "strict_longest_correct": {
+          "count": 59,
+          "denominator": 102,
+          "rate": 0.5784313725490197
+        },
+        "strict_shortest_correct": {
+          "count": 13,
+          "denominator": 102,
+          "rate": 0.12745098039215685
+        },
+        "unique_longest_heuristic": {
+          "denominator": 94,
+          "rate": 0.6276595744680851,
+          "successes": 59
+        }
+      },
+      "microsoft_entra": {
+        "strict_longest_correct": {
+          "count": 70,
+          "denominator": 125,
+          "rate": 0.56
+        },
+        "strict_shortest_correct": {
+          "count": 13,
+          "denominator": 125,
+          "rate": 0.104
+        },
+        "unique_longest_heuristic": {
+          "denominator": 120,
+          "rate": 0.5833333333333334,
+          "successes": 70
+        }
+      },
+      "microsoft_security_solutions": {
+        "strict_longest_correct": {
+          "count": 98,
+          "denominator": 163,
+          "rate": 0.6012269938650306
+        },
+        "strict_shortest_correct": {
+          "count": 14,
+          "denominator": 163,
+          "rate": 0.08588957055214724
+        },
+        "unique_longest_heuristic": {
+          "denominator": 156,
+          "rate": 0.6282051282051282,
+          "successes": 98
+        }
+      },
+      "security_compliance_identity": {
+        "strict_longest_correct": {
+          "count": 29,
+          "denominator": 59,
+          "rate": 0.4915254237288136
+        },
+        "strict_shortest_correct": {
+          "count": 7,
+          "denominator": 59,
+          "rate": 0.11864406779661017
+        },
+        "unique_longest_heuristic": {
+          "denominator": 55,
+          "rate": 0.5272727272727272,
+          "successes": 29
+        }
+      }
+    },
+    "question_count": 454,
+    "skipped_question_ids": [
+      "sc900_mlc_q148",
+      "sc900_mlc_q202",
+      "sc900_mlc_q214",
+      "sc900_mlc_q285",
+      "sc900_mlc_q289"
+    ],
+    "strict_longest_correct": {
+      "count": 256,
+      "denominator": 449,
+      "rate": 0.5701559020044543
+    },
+    "strict_shortest_correct": {
+      "count": 47,
+      "denominator": 449,
+      "rate": 0.10467706013363029
+    },
+    "unique_longest_heuristic": {
+      "denominator": 425,
+      "rate": 0.6023529411764705,
+      "successes": 256
+    },
+    "unique_shortest_heuristic": {
+      "denominator": 421,
+      "rate": 0.11163895486935867,
+      "successes": 47
+    }
+  },
+  "matches_verified_t3_baseline": {
+    "domain_compliance_59_102": true,
+    "domain_entra_70_125": true,
+    "domain_sci_29_59": true,
+    "domain_security_98_163": true,
+    "strict_longest_256_of_449": true,
+    "strict_shortest_47": true,
+    "unique_longest_256_of_425": true,
+    "unique_shortest_47_of_421": true
+  },
+  "t3_execution": {
+    "both": "10 crossings / 25 edits",
+    "crossings": 14,
+    "distractor_only": "4 crossings / 4 edits",
+    "edit": 29,
+    "fresh": "11 crossings / 26 reviewed",
+    "protected_skip_confirmed": true,
+    "queue": 36,
+    "second_pass": "3 crossings / 10 reviewed",
+    "skip": 7,
+    "skip_ids": [
+      "sc900_mlc_q288",
+      "sc900_mlc_q126",
+      "sc900_mlc_q109",
+      "sc900_mlc_q216",
+      "sc900_p3_q054",
+      "sc900_mlc_q295",
+      "sc900_mlc_q217"
+    ]
+  },
+  "target_distance": {
+    "DOMAIN_MINIMUM_REDUCTION_SUM": 56,
+    "STRICT_REMAINING_REQUIRED_REDUCTION": 77,
+    "STRICT_TARGET_MAX_COUNT": 179,
+    "UNIQUE_AT_DENOM_425": {
+      "FIXED_DENOMINATOR_REDUCTION": 87,
+      "UNIQUE_TARGET_MAX_COUNT": 169
+    },
+    "do_not_add_domain_sum_to_global": true,
+    "domains": {
+      "microsoft_compliance_solutions": {
+        "current": 59,
+        "max_passing": 45,
+        "min_reduction": 14,
+        "n": 102
+      },
+      "microsoft_entra": {
+        "current": 70,
+        "max_passing": 56,
+        "min_reduction": 14,
+        "n": 125
+      },
+      "microsoft_security_solutions": {
+        "current": 98,
+        "max_passing": 73,
+        "min_reduction": 25,
+        "n": 163
+      },
+      "security_compliance_identity": {
+        "current": 29,
+        "max_passing": 26,
+        "min_reduction": 3,
+        "n": 59
+      }
+    },
+    "unique_dynamic": {
+      "ALL_TO_SHORTER": {
+        "crossings_needed": 87,
+        "feasible": true,
+        "resulting_if_needed": {
+          "denominator": 425.0,
+          "rate": 0.3976470588235294,
+          "successes": 169
+        },
+        "tie_share": 0.0
+      },
+      "HIGHER_TIE_SHARE": {
+        "crossings_needed": 108,
+        "feasible": true,
+        "resulting_if_needed": {
+          "denominator": 371.0,
+          "rate": 0.39892183288409705,
+          "successes": 148
+        },
+        "tie_share": 0.5
+      },
+      "T3_STYLE_TIE_MIX": {
+        "crossings_needed": 95,
+        "feasible": true,
+        "resulting_if_needed": {
+          "denominator": 404.64285714285717,
+          "rate": 0.39788172992056486,
+          "successes": 161
+        },
+        "tie_share": 0.21428571428571427
+      }
+    }
+  },
+  "work_id": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-TRANCHE4-CLOSURE-DESIGN"
+}
