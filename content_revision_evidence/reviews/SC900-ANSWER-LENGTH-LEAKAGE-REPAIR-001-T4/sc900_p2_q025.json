@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Microsoft Entra ID authenticates and authorizes identities",
+    "B": "Microsoft Purview classifies and labels sensitive information",
+    "C": "Microsoft Purview DLP detects and restricts risky sharing in email",
+    "D": "Managed RDP/SSH access without a public IP on each target VM"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+  ],
+  "before": {
+    "A": "It replaces all identity authentication",
+    "B": "It classifies sensitive files",
+    "C": "It provides DLP for email",
+    "D": "Managed RDP/SSH access without a public IP on each target VM"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "e9e468329f50e70337320fb94a10e2cb60e7e415ec319d48039b77206860a9d7",
+  "question_id": "sc900_p2_q025",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "f7fc4a146d676d9c9913788fd29aeb41abfaebe13ffbb9afef00d4efcd339d4e"
+}

@@ -1,0 +1,34 @@
+{
+  "after": {
+    "A": "Sensitivity labels classify content and can apply protection such as encryption or markings",
+    "B": "Service Trust Portal provides Microsoft audit reports, certifications, and trust documentation",
+    "C": "Azure public IP addresses provide internet-reachable addressing to Azure resources",
+    "D": "Requiring approval, MFA, or justification before a privileged role is activated"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-how-to-change-default-settings",
+    "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-how-to-activate-role"
+  ],
+  "before": {
+    "A": "Replacing NSGs with sensitivity labels",
+    "B": "Publishing Microsoft's Service Trust Portal audit reports",
+    "C": "Creating Azure public IP addresses",
+    "D": "Requiring approval, MFA, or justification before a privileged role is activated"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "7e277bbfd9da86e6e9b6982017835610ee5c6fb3d7471f41f613b60a162e941d",
+  "question_id": "sc900_p3_q064",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "bf47d23fa56b173a7d4e87d5dab269af25d4074d9b11e4995614ebc1160d75f3"
+}

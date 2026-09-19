@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Defender for Identity detects identity threats involving Active Directory",
+    "B": "Access reviews recertify whether users still need Microsoft Entra access",
+    "C": "It provides endpoint detection and response for devices",
+    "D": "Azure Key Vault stores application secrets, keys, and certificates"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-endpoint"
+  ],
+  "before": {
+    "A": "Microsoft Defender for Identity",
+    "B": "It recertifies Entra groups",
+    "C": "It provides endpoint detection and response for devices",
+    "D": "It stores app secrets as its primary purpose"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "45f2e29ab4e32736622ea761d7baf93c068cf54d03ef84b5860f7630c8ddae7a",
+  "question_id": "sc900_mlc_q131",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "4fc839f895ce709e1760c729d087064dfbae668a9a0eee695ba69131b30fb436"
+}

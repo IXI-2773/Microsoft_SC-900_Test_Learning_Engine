@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "A shared public IP exposes internet connectivity but does not create workload isolation",
+    "B": "Separate VNets or subnets with controlled connectivity",
+    "C": "A Temporary Access Pass is an Entra authentication credential, not a network boundary",
+    "D": "Compliance score measures progress on improvement actions, not network segmentation"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview"
+  ],
+  "before": {
+    "A": "A single shared public IP for both",
+    "B": "Separate virtual networks or subnets with controlled connectivity",
+    "C": "A Temporary Access Pass",
+    "D": "A compliance score"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "91b5914b71f48890f0276b9f758b1985e230be48fa64168da89e8ab91af00aa7",
+  "question_id": "sc900_mlc_q104",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "8adc39253c25d6804fc5d11a76c63ab1c2b167fd026b4a20514f8a008e514b46"
+}

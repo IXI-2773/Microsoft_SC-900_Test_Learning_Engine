@@ -1,0 +1,34 @@
+{
+  "after": {
+    "A": "Classification automatically prevents external sharing as soon as sensitive information is detected",
+    "B": "A sensitive information type encrypts matching content when classification finds it",
+    "C": "Classification finds sensitive items; encryption requires a separate protection control",
+    "D": "Content explorer automatically encrypts every sensitive item it lists"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/sensitive-information-type-learn-about",
+    "https://learn.microsoft.com/en-us/purview/sensitivity-labels"
+  ],
+  "before": {
+    "A": "Nothing further; classification always encrypts matching files",
+    "B": "Azure DDoS Protection",
+    "C": "Protection controls such as sensitivity labels that act on the classified items",
+    "D": "Deleting every file that contains a match"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "bcac354cf36cd8452b98eb8eb84665fb75fd21aee3b92beb15bbe860ddad6de4",
+  "question_id": "sc900_mlc_q283",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "6e3ed7e898a46f5c987784c5afaae9d346efa043875694596b5055df0259b256"
+}

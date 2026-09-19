@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Purview eDiscovery holds, searches, and exports content for legal matters",
+    "B": "Azure Firewall application rules control allowed outbound web destinations and protocols",
+    "C": "Passwordless phone sign-in with Microsoft Authenticator",
+    "D": "Compliance Manager improvement actions help organizations improve compliance posture"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/howto-authentication-passwordless-phone"
+  ],
+  "before": {
+    "A": "A Microsoft Purview eDiscovery hold",
+    "B": "An Azure Firewall application rule",
+    "C": "Passwordless phone sign-in with Microsoft Authenticator",
+    "D": "A compliance score improvement action"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "adb208ae21d52243cd9aca35efa6a85ba469fd90cc12f4e639d0fbd3ef53dc45",
+  "question_id": "sc900_p3_q023",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "0db4ec496acde4fee09762b419be5a43215a886444f406200db29af59a74c8e1"
+}

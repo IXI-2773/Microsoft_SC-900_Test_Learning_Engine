@@ -1,0 +1,34 @@
+{
+  "after": {
+    "A": "Identity risks such as leaked credentials and anonymized sign-ins",
+    "B": "Defender for Cloud recommendations flag cloud-resource posture issues such as missing encryption",
+    "C": "Retention-label conflicts are content-governance issues in Microsoft Purview",
+    "D": "Azure Firewall telemetry reports network activity, not identity-risk detections"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/id-protection/overview-identity-protection",
+    "https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks"
+  ],
+  "before": {
+    "A": "Identity risks such as leaked credentials or sign-ins from anonymized networks",
+    "B": "Missing Azure Disk Encryption recommendations only",
+    "C": "SharePoint retention-label conflicts only",
+    "D": "Azure Firewall port-scan counters only"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "cbbeb2ec8b23ae111fa99183f945be22a003ffe46c521e8d6e0c4b07fadd8c3a",
+  "question_id": "sc900_p3_q093",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "07f71c7701188b34fa09a14f18cddfcad4a171795aad911cb1d66a607e44bf9d"
+}

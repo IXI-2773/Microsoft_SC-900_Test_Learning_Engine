@@ -1,0 +1,34 @@
+{
+  "after": {
+    "A": "Entra roles manage directory administration; Azure RBAC manages Azure resources",
+    "B": "Microsoft Entra roles are assigned at Azure subscription and resource-group scopes",
+    "C": "Azure RBAC manages directory users and groups rather than Azure resource permissions",
+    "D": "Microsoft Entra roles and Azure RBAC are interchangeable authorization systems for the same resources"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/custom-overview",
+    "https://learn.microsoft.com/en-us/azure/role-based-access-control/overview"
+  ],
+  "before": {
+    "A": "Entra roles manage directory administration; Azure RBAC manages Azure resources",
+    "B": "They are identical and always assigned together",
+    "C": "Azure RBAC replaces MFA",
+    "D": "Entra roles only apply to printers"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "0dead5f4bac69ba1d5e3ddcbe8f8da81dd050a5987b7d68f139d52abcf230488",
+  "question_id": "sc900_mlc_q030",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "fc1095e99644e930565ceb7dfad33dbab389debd9e459d33fff7092ce789481e"
+}

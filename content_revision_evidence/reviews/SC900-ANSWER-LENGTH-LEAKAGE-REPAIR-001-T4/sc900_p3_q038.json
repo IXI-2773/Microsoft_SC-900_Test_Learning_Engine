@@ -1,0 +1,34 @@
+{
+  "after": {
+    "A": "DLP policies detect sensitive information and can restrict risky sharing",
+    "B": "Content explorer shows data locations; Activity explorer shows historical actions",
+    "C": "Sensitivity labels classify content and can apply protection such as encryption",
+    "D": "Microsoft Entra privileged roles grant administrative permissions in the directory"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/data-classification-content-explorer",
+    "https://learn.microsoft.com/en-us/purview/data-classification-activity-explorer"
+  ],
+  "before": {
+    "A": "Data loss prevention policies",
+    "B": "Content explorer shows data locations; Activity explorer shows historical actions",
+    "C": "Sensitivity labels",
+    "D": "Because both tools assign privileged Entra roles"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "a895ab23f69ec05399aea09f8e9ca1eb6c728d6a19e98342a4afbe9a64231a2c",
+  "question_id": "sc900_p3_q038",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "cf91f8d128ecce5417a7f35f9e893ac8420a49972881edeb2a0db5e544d37ee4"
+}

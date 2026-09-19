@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Compliance Manager improvement actions",
+    "B": "It helps prioritize remaining Compliance Manager improvement actions",
+    "C": "Service Trust Portal provides Microsoft audit reports and trust documentation",
+    "D": "Defender for Cloud secure score summarizes cloud security posture"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/compliance-manager-scoring"
+  ],
+  "before": {
+    "A": "Compliance Manager improvement actions",
+    "B": "It helps prioritize remaining Compliance Manager improvement actions",
+    "C": "Service Trust Portal audit reports",
+    "D": "Defender for Cloud secure score"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "375ad08bbed2bca04182f71296e81e0f6cfedc473aadd33b0f623a5af831030f",
+  "question_id": "sc900_mlc_q195",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "223acd7590e1107cfa3e7a6e39e49c0ca8d2c2e2f82c72ee6a07ed8e8f393be1"
+}

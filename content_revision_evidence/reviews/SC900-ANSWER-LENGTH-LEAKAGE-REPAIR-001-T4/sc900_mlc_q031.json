@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Global Administrator is an Azure resource role for VM power-state operations",
+    "B": "Microsoft Entra roles are assigned to groups but not to individual administrators",
+    "C": "Assigning Global Administrator automatically removes a user's other Entra role assignments",
+    "D": "Entra RBAC lets you assign only the directory role the job requires"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/best-practices"
+  ],
+  "before": {
+    "A": "Because Global Administrator cannot sign in to Microsoft 365",
+    "B": "Because roles cannot be assigned in Entra ID",
+    "C": "Because encryption forbids administrators",
+    "D": "Because Entra RBAC supports assigning only the directory role needed for the job"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "0dd0346aaad991b0b278cd094f1266d6e62a4cd09247aa1b094b0b75a2f85037",
+  "question_id": "sc900_mlc_q031",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "2d5786f51067df5ee0fb252de8e2359cadab968654442ffb5441e5d93710a409"
+}

@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Azure DDoS Protection mitigates large-scale network attacks",
+    "B": "Azure public IPs provide internet-reachable addresses to resources",
+    "C": "More of the recommended improvement actions are implemented",
+    "D": "Disabling MFA weakens sign-in assurance rather than increasing compliance progress"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/compliance-manager-scoring"
+  ],
+  "before": {
+    "A": "A larger DDoS attack was absorbed",
+    "B": "More public IPs were assigned",
+    "C": "More of the recommended improvement actions are implemented",
+    "D": "MFA was disabled"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "c2b8de81812b3723e484ecda5cdf674506b6f8e6810b104958b3db3926fe5220",
+  "question_id": "sc900_mlc_q180",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "77a9bd038f2aa671d183d3b2739b9c1dda820ace687c7952700c228e06f82f2b"
+}

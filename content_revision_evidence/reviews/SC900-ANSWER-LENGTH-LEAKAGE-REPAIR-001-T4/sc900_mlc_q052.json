@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Web Application Firewall inspects HTTP/S requests for web application threats",
+    "B": "Defender for Cloud assesses cloud security posture and recommends remediation",
+    "C": "eDiscovery preserves, searches, and exports content for legal matters",
+    "D": "Using one identity across on-premises directories and cloud apps"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/hybrid/whatis-hybrid-identity"
+  ],
+  "before": {
+    "A": "Blocking SQL injection at a web gateway",
+    "B": "Scoring cloud misconfigurations",
+    "C": "Holding email for legal discovery",
+    "D": "Using one identity across on-premises directories and cloud apps"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "4733cb50b8ff9d5fda1866bd0b50c5442e98d3cc71f6685b1ea9eba1fd5041f3",
+  "question_id": "sc900_mlc_q052",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "5b3ae252e1efc74cadde2b4f1f26f4ecf372a40706d52cac08369fff934aff99"
+}

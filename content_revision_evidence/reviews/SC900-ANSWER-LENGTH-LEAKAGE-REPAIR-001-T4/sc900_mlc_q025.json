@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Authorization controls what an authenticated identity may access",
+    "B": "NSGs filter network traffic with allow and deny rules rather than encrypting it",
+    "C": "Service Trust Portal provides Microsoft audit and trust documentation",
+    "D": "A stolen password is insufficient when another factor is required"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-mfa-howitworks"
+  ],
+  "before": {
+    "A": "It removes the need to authorize access",
+    "B": "It encrypts every NSG rule",
+    "C": "It publishes Service Trust Portal reports",
+    "D": "A stolen password alone is not enough if another factor is required"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "ef4c27936b352a21a713e273c9e882c4f9461d48e47b0a26d62679c9538f7fe9",
+  "question_id": "sc900_mlc_q025",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "ded2b05c2b6eff7b2f66fd52c8f7c545fa04b3e1cd7fe646668d7f21f8ea9639"
+}

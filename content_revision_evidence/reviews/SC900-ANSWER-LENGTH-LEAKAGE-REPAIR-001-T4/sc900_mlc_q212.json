@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Governance sets direction, risk assesses uncertainty, compliance checks adherence",
+    "B": "Policies document rules and expectations set through governance",
+    "C": "Risk management replaces the need for any compliance evidence",
+    "D": "Standards set direction, risk checks adherence, and compliance estimates uncertainty"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/6-describe-compliance-concepts"
+  ],
+  "before": {
+    "A": "Governance sets direction, risk assesses uncertainty, and compliance checks adherence",
+    "B": "Policies",
+    "C": "Risk management replaces the need for any compliance evidence",
+    "D": "Standards"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "141ccc80e2819c914c50c1528c10957724ba0264cb66769456c5c3564409f4c4",
+  "question_id": "sc900_mlc_q212",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "9d22123b05f6114450734028688897521ac30dc5e348709fb4bbdecb6e84ed30"
+}

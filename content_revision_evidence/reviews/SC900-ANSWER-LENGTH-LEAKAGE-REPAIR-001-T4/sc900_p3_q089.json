@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Progress against recommended improvement actions, not legal certification",
+    "B": "Microsoft Authenticator supports authentication methods such as passwordless sign-in",
+    "C": "Azure DDoS Protection mitigates large-scale network attacks against Azure resources",
+    "D": "Shared responsibility still divides duties between provider and customer"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/compliance-manager-scoring"
+  ],
+  "before": {
+    "A": "A measurement of progress against recommended improvement actions, not a legal certification by itself",
+    "B": "A Microsoft Entra authentication method",
+    "C": "A DDoS mitigation policy",
+    "D": "A replacement for customer responsibility under the shared responsibility model"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "3d7226510e2e1f8c148e371f72da05853c638f7fd40167684c381039e5b63995",
+  "question_id": "sc900_p3_q089",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "18bb9764a36fb555bdfb50a2e92c3a1f51e12817ae3b45c86b9b3488cdb65603"
+}

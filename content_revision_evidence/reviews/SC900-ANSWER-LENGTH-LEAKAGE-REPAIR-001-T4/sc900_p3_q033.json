@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "A grant control that can require MFA before access is granted",
+    "B": "A DLP policy detects sensitive content and can restrict risky sharing in Exchange Online",
+    "C": "A DDoS mitigation policy for public IP addresses",
+    "D": "A retention label policy for SharePoint"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-grant"
+  ],
+  "before": {
+    "A": "A grant control that can require additional conditions before access is allowed",
+    "B": "A data-loss-prevention policy for Exchange Online",
+    "C": "A DDoS mitigation policy for public IP addresses",
+    "D": "A retention label policy for SharePoint"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "6199f9dc3c91c04255f308e5b8c7f97e5ba1e34327c333c2abcbb08ed5894042",
+  "question_id": "sc900_p3_q033",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "3f688d541eefd618ef163334db408ab86d4371ee21d37de300a502826a077bb8"
+}

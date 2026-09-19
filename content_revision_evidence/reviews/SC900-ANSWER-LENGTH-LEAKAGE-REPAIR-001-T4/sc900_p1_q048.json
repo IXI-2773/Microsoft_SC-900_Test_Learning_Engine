@@ -1,0 +1,34 @@
+{
+  "after": {
+    "A": "Compliance Manager improvement actions that contribute points when completed",
+    "B": "A guaranteed certification that the organization is legally compliant",
+    "C": "Service Trust Portal audit reports about Microsoft services and controls",
+    "D": "Progress in completing recommended compliance improvement actions"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/compliance-manager",
+    "https://learn.microsoft.com/en-us/purview/compliance-manager-scoring"
+  ],
+  "before": {
+    "A": "Compliance Manager improvement actions",
+    "B": "A guaranteed certification that the organization is legally compliant",
+    "C": "Service Trust Portal audit reports",
+    "D": "A measure that helps track progress in completing recommended compliance improvement actions"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "1b1e1adde16f63c405c7262dee944e70dea55dfa7fd036d76697509c53c2091b",
+  "question_id": "sc900_p1_q048",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "486015a1e42a7e062eb06b9d1bca43a6b3a18efee9933a6ff38c6503fb71ef91"
+}

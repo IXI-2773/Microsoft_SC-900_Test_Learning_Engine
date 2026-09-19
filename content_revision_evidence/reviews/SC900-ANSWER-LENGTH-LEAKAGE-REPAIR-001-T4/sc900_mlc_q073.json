@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Guest operating-system patching is an IaaS maintenance task, not an access-review outcome",
+    "B": "Privileged Identity Management eligible-role activation provides time-bound privileged access",
+    "C": "Entitlement management access packages bundle resources and access policies for governed requests",
+    "D": "They can remove access that is no longer justified after reviewers decide"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/id-governance/access-reviews-overview"
+  ],
+  "before": {
+    "A": "They patch guest operating systems in IaaS",
+    "B": "Privileged Identity Management eligible-role activation",
+    "C": "Entitlement management access packages",
+    "D": "They can remove access that is no longer justified after reviewers decide"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "df7c64ce7f077d9a62e0a27cbf6b89530f34a26c354962e4ef44e34e59068370",
+  "question_id": "sc900_mlc_q073",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "499d19f5e8857f602bcf535121b37e5fb1586bc5566156be0a599eacc179062a"
+}

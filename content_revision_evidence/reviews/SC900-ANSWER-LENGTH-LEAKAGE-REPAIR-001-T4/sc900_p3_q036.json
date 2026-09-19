@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Only Azure virtual network subnets",
+    "B": "Only on-premises Active Directory domain controllers",
+    "C": "Only Azure Key Vault secrets",
+    "D": "Teams, SharePoint, and OneDrive"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/defender-office-365/mdo-about"
+  ],
+  "before": {
+    "A": "Only Azure virtual network subnets",
+    "B": "Only on-premises Active Directory domain controllers",
+    "C": "Only Azure Key Vault secrets",
+    "D": "Collaboration workloads such as Microsoft Teams, SharePoint, and OneDrive"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "703d9fe6fbb430f04525b53157d5209bb9f8cfa439d53ae60e6940349ab5149c",
+  "question_id": "sc900_p3_q036",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "59c3c7941bb9da2beb4549e006036aed7452a84e629583043236d8ad90967d38"
+}

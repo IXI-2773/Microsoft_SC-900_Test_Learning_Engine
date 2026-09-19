@@ -1,0 +1,35 @@
+{
+  "after": {
+    "A": "Content explorer blocks outbound credit-card numbers as its primary job",
+    "B": "Explorers provide visibility; DLP policies can restrict risky sharing",
+    "C": "Activity explorer declares records automatically",
+    "D": "Azure Firewall application rules control network destinations, not Purview data activity"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/data-classification-content-explorer",
+    "https://learn.microsoft.com/en-us/purview/data-classification-activity-explorer",
+    "https://learn.microsoft.com/en-us/purview/dlp-learn-about-dlp"
+  ],
+  "before": {
+    "A": "Content explorer blocks outbound credit-card numbers as its primary job",
+    "B": "Explorers provide visibility; DLP policies detect and help prevent risky sharing",
+    "C": "Activity explorer declares records automatically",
+    "D": "Both explorers are Azure Firewall application rules"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "d5841bf5534ec15af9ae175ee978856a49eaa217ad0e9a56041ab29f6f027dc6",
+  "question_id": "sc900_mlc_q284",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "1053180e96dd24245442faa081950395e6f0a90ba5e7825e25a73cf51138d60c"
+}
