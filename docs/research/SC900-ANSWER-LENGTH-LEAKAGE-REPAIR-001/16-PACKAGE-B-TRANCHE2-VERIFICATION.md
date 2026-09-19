@@ -11,7 +11,7 @@
 | --- | --- |
 | T1 source bank file | `45ee43c9ced0d50c790c4b637ddc3d585526830a3dec32251b904d9d06e4c7e8` |
 | T1 source content fingerprint | `e0b4394b6faa8d0f9053291521b2dd83983e84990f1a169a25ab745694a7aabb` |
-| T2 candidate bank file | `9c208309483aba1f1881e33a2be85a175548498c51854ef9c04adc075b760800` |
+| T2 candidate bank file | `c53ba19ee26992643969d546a73da5aa8396041ebe4e138f6b30db637756aa65` |
 | T2 candidate content fingerprint | `34b5278570d89ab17ce09dfda891be0ab31a2b4e134b4727a10ed9b65a2b1f8b` |
 | T2 manifest payload | `2f04ae1d2d22bdea1a8b96d470691700d59ea119bf34fb02d686d423b93bc571` |
 | Production `sc900_bank_v8_final.json` | `177a4fb5f8a874ffe4dda6b69e3d1c03dbdad1f5db5a174a990eb8b5a0e5927c` |

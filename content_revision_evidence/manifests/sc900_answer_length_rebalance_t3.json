@@ -19,7 +19,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_mlc_q006",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q006.json",
-      "review_artifact_sha256": "9e0d23ec6c3d8c1384da9c14a42e321b0e8942b6205b6855494bc2933e18781e",
+      "review_artifact_sha256": "6694b23543ffe2a59f44e3d4672343ee3a5190edf40fec36d8b96ea50029b8f2",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "f827e27fcf92fa116ca83a10c6d252bd743752e020d7aa2a51fecfedd6259b9c"
@@ -42,7 +42,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_mlc_q016",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q016.json",
-      "review_artifact_sha256": "e43b107592de8a51729e4f3e2142e77d57f125e8764cd5cac1f22d7d3ed540e6",
+      "review_artifact_sha256": "dde61a123eb029c819fe4f12cade9a871826fef4a04ea65b74176f647eabf172",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "bf466c2d1a8d3bf749de187e8247ea563d1b31f7bac99c3e5763b750b84d4127"
@@ -65,7 +65,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_mlc_q056",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q056.json",
-      "review_artifact_sha256": "08cff1d5ebf5500b71d7ec3b2a5ac6e058d3cf70c070bbf9ccfc6e7e3c399953",
+      "review_artifact_sha256": "5e75a98f120a26a16e193099dc1daa2a0bc2f166e9ed58315d595c0c21925dee",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "6169aab981b188f2f6d2f5411107084f8da3f2e87e43dbf6eeb7de5cc0ba680d"
@@ -88,7 +88,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_mlc_q124",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q124.json",
-      "review_artifact_sha256": "06e345edceb854ec9cdec964264b437128f3d85ca64aeb2a813dd668798a8893",
+      "review_artifact_sha256": "eb070ab3f60c6052cecb031af0026dec1813e42a28b3c519741c39cc4fc2b5c7",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "214078b0dd998f8e9765e2c1aa51f8c0db915747882ab7b547fcc76e110e9e17"
@@ -111,7 +111,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_mlc_q134",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q134.json",
-      "review_artifact_sha256": "1dcc2be929f74ce29bbb6f961308526b9eb1f75969cb4eecff251c81e719a000",
+      "review_artifact_sha256": "f267ab410634191d62e3fa3a0701cd1c417f864b15a0a8d51a89cd5d687fe4f3",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "52e65e68f42f1a166bfd088c9eccdf5ec53785a83b22c60b1b5ba4100d037e27"
@@ -134,7 +134,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_mlc_q138",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q138.json",
-      "review_artifact_sha256": "e6108c8424ad870349d3bdf98ba747c603effac55b7a5122563799dfe93009b9",
+      "review_artifact_sha256": "2e5bf7259736d4a779cd17ea3584716bddba2bd546449e1bc3352706edce4565",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "b5ede2df9008cd05743c87158e6adc8a839a5b16d734d1572d058d70a563d96d"
@@ -157,7 +157,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_mlc_q157",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q157.json",
-      "review_artifact_sha256": "2aeffedb382c4a5ea36c2ff726d6e693dfee29e9fcbb55d8c1bc52072458981b",
+      "review_artifact_sha256": "c179c7b656b074500568a539317e05d460f7632ba5469c71229e57f298a808c9",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "6b2d9f524269c73b3984c6e5d8b55fad6dfa43933d731c1382921ab0ce5a04db"
@@ -180,7 +180,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_mlc_q165",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q165.json",
-      "review_artifact_sha256": "1db02779c8da064e0350369e32426372d6ebd539fe5a23fe654e064ecf13b7cf",
+      "review_artifact_sha256": "57582684dd26a31028c65051b06f1ba9b8fec1f78879e99d8e975317b7608e63",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "5ad378be2c31485bfefdbab204b52362cd3ad621a7af7fee0e8eea6f5ce7d237"
@@ -203,7 +203,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_mlc_q177",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q177.json",
-      "review_artifact_sha256": "66a9d81f6903bddc0c56df3521d6f19c7ad121341fc8cb86e0f524126319dc91",
+      "review_artifact_sha256": "205b07cf24188eacb8b3204e720d7444f87c95129cb417fec5da92fba90de2ea",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "199506084777b4fc8294c9a5e40b22761c1d4890cfd651f4714c8774db5311b1"
@@ -226,7 +226,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_mlc_q228",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q228.json",
-      "review_artifact_sha256": "9c73b731bbe51ea0bf25dc829b2d8b5bc0c64e7c18d29aa83982f2f5a82914e2",
+      "review_artifact_sha256": "d953c7e1d95fb09868a433c1ca93c8ed11d765a1986ddc89ae98ebbc4cc26cba",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "bdd806f78feadabfa5b124ae18caf4d5f13335601b303a6c6a724cab9665fa90"
@@ -249,7 +249,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_mlc_q229",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q229.json",
-      "review_artifact_sha256": "777e1fcdb225d7992870d3a15dc58f2190b717127a8141dd21ef4c934aff3b50",
+      "review_artifact_sha256": "292d3a3d597ebaa3f7bff0709459fcae92c67bffedececf3a1431764b53e8731",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "993478e6bbb8cc4680c49a3bc1696fb7e627c2a3dc7a20bb8a460511af7e082a"
@@ -272,7 +272,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_mlc_q233",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q233.json",
-      "review_artifact_sha256": "0c28b757c11effda26df165bc63d765cd801332a056784c5d46e6d066f2d5b26",
+      "review_artifact_sha256": "8316091e1c66cb11c7fbe06914bad73bdb26fd150bacddf8192d8f8f569add6c",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "e6bdfa0897ffbb573cbba1c59119808c74465ec3fd80eee48f797e5d3fc30664"
@@ -295,7 +295,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_mlc_q236",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q236.json",
-      "review_artifact_sha256": "081a041aa5f1478ff2cb1ac3c28f7cb20a1ce224779e33cc983dee79548c04ce",
+      "review_artifact_sha256": "e3ab5ddc89859b16e5b76c77fcd57619518ed1ce5d0bd45ca83bf6a7234217ff",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "9f570aaeea4043e46af82c490888c04e303f8d5ddbf722d9b5ff77fdbb919b9a"
@@ -318,7 +318,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_mlc_q248",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q248.json",
-      "review_artifact_sha256": "11a61a4bdc65ac6de02beb98989ab2b64632d4fb3e390cc4d01585ce72ff945f",
+      "review_artifact_sha256": "6a1b1170c165781e339a55d8088f30d7b0b2b1bc91a796c4afcb9083ce1695ff",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "b1e95f43a4e7e120fab2ee612cb40a916726f2b3cffa479d564900327c533ba2"
@@ -341,7 +341,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_mlc_q262",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q262.json",
-      "review_artifact_sha256": "b8432ce41641259864c8e218c2d7709da684a88e1fba3e43eb4715852f1b8469",
+      "review_artifact_sha256": "a00e5d4fb2af8c0adf1d08c578702bd6bf8d360f49d5d69ba1b7c077ec1a13c7",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "0ab2582d89253d9a83460e383aa3e2bf1b904042a7404c64212d93bf749d76b3"
@@ -364,7 +364,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_mlc_q266",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q266.json",
-      "review_artifact_sha256": "ec9fc7e4568d96b98f176aff06a372af8ccb4359e9d105e738900e2e29b91493",
+      "review_artifact_sha256": "167a2ceb0fd4a8755a3d5d1e51a0afb91fa954af19299ab5b8563bc7ff00a54c",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "8d71d06000854cf263bdda247f418f7eeb9f9bcd829533614be893df10cddefb"
@@ -387,7 +387,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_mlc_q270",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q270.json",
-      "review_artifact_sha256": "d736353afbf769300e62b2a13338d9716849dee9ce5082c9314a5529984518f5",
+      "review_artifact_sha256": "6b93802b85f98e84844ee1becdd9c03dfca5e96a0806e891275c4b02bb09f876",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "d90e9bd275824f2e898b77a5299035ad559a21571e64f17299fbe356264bc8f5"
@@ -410,7 +410,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_mlc_q279",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q279.json",
-      "review_artifact_sha256": "2fc8ac6f7e12836d7a67ce33bbd5da049f3ea631210671fff2cb0fd4f84cbfa9",
+      "review_artifact_sha256": "f4e7db7f3a29bac6684b308134f15b451c8779688e31aeb33861ec176d39149c",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "195877faaacb58b00020c4bf6b34edbbb8d4c92e93338d743ed4fd9ef8bd0e73"
@@ -433,7 +433,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_mlc_q281",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q281.json",
-      "review_artifact_sha256": "d19b235fe2ec37443e39624d55e45624899322b9ec3a74b587cd37a59f8ed5d4",
+      "review_artifact_sha256": "516eaf312faf9fa6494ffed8d04e67765a8341e6f51f272f7c88f12dfc7ffa47",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "ecd8a575d86ebda03d5b604733b3804e6f709bb93eb8193ac4a7a552739c1e01"
@@ -456,7 +456,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_mlc_q282",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q282.json",
-      "review_artifact_sha256": "3bed1e224c019753c6132a76b78e3ec2c80a18cbb6a85e6a3e136cd14ac94e53",
+      "review_artifact_sha256": "6ee344061cf059ceaa52e7c4c9ccbc4fa01f0114c6403ad2358550f73d74d7e7",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "faf87233dc7e9ad028c6a9a8c9d4feb352608bc768d0d4cc6791ca717c6c48bb"
@@ -479,7 +479,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_mlc_q287",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q287.json",
-      "review_artifact_sha256": "93f32e41daa9ae54be57d9225f79921a9878da5eb25c053ac9867b51849eb831",
+      "review_artifact_sha256": "f00eec0d86fe444781b645e5cfa0599a3e9e0052dee443592e4a570adeed3238",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "be841050acb09c43b90b7d682b3975db2c40776e1d300bac0c2932dfd553dbde"
@@ -502,7 +502,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_mlc_q291",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q291.json",
-      "review_artifact_sha256": "2fce0a9c12be3fb40e0f1b7acdd5ac77738492f3f7146e83462b5e4703d3a38b",
+      "review_artifact_sha256": "4a7d21450eda72243c5317ed92fcc428915586651069258a2a89ffa987e31973",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "38c5f4d830cd2d328fb66f689d7acdc2460c2ebd40d7604f3b56571ec02617fc"
@@ -525,7 +525,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_mlc_q296",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q296.json",
-      "review_artifact_sha256": "7ca85240b529af91a329b94aa830bfeb23e5d5776098fd833fab4f73025c85c5",
+      "review_artifact_sha256": "728d2bc1da9578cde9f8756741ef00adbf89f5aa42bd898f01f334fd3d521e51",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "225af66b070eff4f2306120af0b5c40d76056abb867f278d755160336ca73dc5"
@@ -548,7 +548,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_mlc_q299",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q299.json",
-      "review_artifact_sha256": "2df8703d770ca1d632c90af30d57137bfe51e95dfdb404c7248dcfd1ec926310",
+      "review_artifact_sha256": "7f9ace2e40b345958544d0862169e64003b4e9bad7390344fe610dbe98fba929",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "98ec59d55f4f85e862d0c5e1234019ba8548cbdf8a034ec164b7e05969870422"
@@ -571,7 +571,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_p3_q006",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_p3_q006.json",
-      "review_artifact_sha256": "cc39e363ca56aa79e1232b6e0f4ae6acef925cb8342f916cd08d962c6b0c70e8",
+      "review_artifact_sha256": "ce31723cbf3aea7b66568926f4b3744a100674ac54f8d405ee7c2282513a0afc",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "90f19e5438bd31655fe4073a697106f31b3d26e6aa1e59ada77f8bdbaa047a54"
@@ -594,7 +594,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_p3_q015",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_p3_q015.json",
-      "review_artifact_sha256": "f8c9301126f61fee2fdb2406462b41042007785910155dcc23b96b97a947c444",
+      "review_artifact_sha256": "f49583094c5506f08ea2233215ad4d16940c8f1712746090e619bb51a0db185e",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "e940b0ee4deba9b7a090e1314624375d4571b8ea477d209ef8863952e1078901"
@@ -617,7 +617,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_p3_q062",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_p3_q062.json",
-      "review_artifact_sha256": "dddd502b1fb2de8360d39b127b7dd7862d074566e8b0643399563b835e76718e",
+      "review_artifact_sha256": "3b287929fb4f5d15743b7f3944c5878e5fcfe4079f264b6a68c82e8b63efe410",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "fbcf9ffdb556d37be1197a398e64f1b4890287658513003ca52fc5dfd347dd0c"
@@ -640,7 +640,7 @@
       "prompt_unchanged": true,
       "question_id": "sc900_p3_q070",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_p3_q070.json",
-      "review_artifact_sha256": "39dcf4654bda01cf323e223c36d0635d01b298e846db835dcf1cf131d49ea884",
+      "review_artifact_sha256": "2d5f7425b7c75a76e73c8e4f12e81eea069b2733695c4519583abc2e7b133f90",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "216fffba2ea1fcff680f75ae85b4eb9b2f56487f2b5e0d4b487d36fe3456eca7"
@@ -663,25 +663,25 @@
       "prompt_unchanged": true,
       "question_id": "sc900_p3_q097",
       "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_p3_q097.json",
-      "review_artifact_sha256": "1f58bcd60d8c9ea270c2f07bd8d5af677c663cac2bf2f42663e387ba5788fe7e",
+      "review_artifact_sha256": "0b69d49abaab92dbff946c1029636125fc155eeca440a22fda15bef13bda8053",
       "review_status": "APPROVED",
       "tier_unchanged": true,
       "to_content_fingerprint": "c9f1153294328e1140f4044cafa07cd4c4db7ce7071bdf6475ffceb9f25a89ba"
     }
   ],
   "manifest_kind": "sc900_content_revision_equivalence",
-  "payload_sha256": "d89a6708b08f2afc5bfc3a30cbd4c5708b6022acbacdb3a91db360d12c18c2ea",
+  "payload_sha256": "4b9eab410da68bd348b4ae40946cf54a45b1da98bf04d68baaf6a57e3de15338",
   "permitted_change_class": "WORDING_ONLY_LENGTH_REBALANCE",
   "schema_version": 1,
   "source_bank": {
     "content_fingerprint": "34b5278570d89ab17ce09dfda891be0ab31a2b4e134b4727a10ed9b65a2b1f8b",
-    "file_sha256": "9c208309483aba1f1881e33a2be85a175548498c51854ef9c04adc075b760800",
+    "file_sha256": "c53ba19ee26992643969d546a73da5aa8396041ebe4e138f6b30db637756aa65",
     "filename": "sc900_bank_v8_length_rebalanced_t2.json",
     "question_count": 454
   },
   "target_bank": {
     "content_fingerprint": "83a8644cce462cf231f2c795746ab4d8ca1d71246fea8fbfb2982ddc7961f8a2",
-    "file_sha256": "d4cb07c1c6fe15b52553af2893b445b85d957b7a074b0747b75ca0f11cbf977b",
+    "file_sha256": "0b0cdf3bf4c8b7885acf0b3b19381dd9f19ee38944fc6af6934b11b5b14588bd",
     "filename": "sc900_bank_v8_length_rebalanced_t3.json",
     "question_count": 454
   },

@@ -10,9 +10,9 @@
 
 | Artifact | SHA-256 / fingerprint |
 | --- | --- |
-| T2 source bank file | `9c208309483aba1f1881e33a2be85a175548498c51854ef9c04adc075b760800` |
+| T2 source bank file | `c53ba19ee26992643969d546a73da5aa8396041ebe4e138f6b30db637756aa65` |
 | T2 source content fingerprint | `34b5278570d89ab17ce09dfda891be0ab31a2b4e134b4727a10ed9b65a2b1f8b` |
-| T3 candidate bank file | `d4cb07c1c6fe15b52553af2893b445b85d957b7a074b0747b75ca0f11cbf977b` |
+| T3 candidate bank file | `0b0cdf3bf4c8b7885acf0b3b19381dd9f19ee38944fc6af6934b11b5b14588bd` |
 | T3 candidate content fingerprint | `83a8644cce462cf231f2c795746ab4d8ca1d71246fea8fbfb2982ddc7961f8a2` |
 | T3 manifest payload | `d89a6708b08f2afc5bfc3a30cbd4c5708b6022acbacdb3a91db360d12c18c2ea` |
 | Production `sc900_bank_v8_final.json` | `177a4fb5f8a874ffe4dda6b69e3d1c03dbdad1f5db5a174a990eb8b5a0e5927c` |

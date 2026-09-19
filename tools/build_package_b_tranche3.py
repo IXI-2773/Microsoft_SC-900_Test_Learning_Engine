@@ -23,6 +23,7 @@ from content_revision_authority import (
     canonical_manifest_sha256,
     sha256_file,
 )
+from package_b_canonical_json import write_canonical_package_b_json
 from question_identity import (
     bank_content_fingerprint,
     canonical_question_id,
@@ -34,7 +35,7 @@ T1_SOURCE_BANK_FILENAME = "sc900_bank_v8_length_rebalanced_t1.json"
 T2_SOURCE_BANK_FILENAME = "sc900_bank_v8_length_rebalanced_t2.json"
 T3_CANDIDATE_BANK_FILENAME = "sc900_bank_v8_length_rebalanced_t3.json"
 PRODUCTION_BANK_FILENAME = "sc900_bank_v8_final.json"
-EXPECTED_T2_SOURCE_SHA256 = "9c208309483aba1f1881e33a2be85a175548498c51854ef9c04adc075b760800"
+EXPECTED_T2_SOURCE_SHA256 = "c53ba19ee26992643969d546a73da5aa8396041ebe4e138f6b30db637756aa65"
 T1_SKIP_QUESTION_IDS = frozenset(
     {
         "sc900_mlc_q173",
@@ -113,9 +114,7 @@ def _load_json_object(path: Path, label: str) -> dict[str, Any]:
 
 
 def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
-    serialized = json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(serialized, encoding="utf-8")
+    write_canonical_package_b_json(path, payload)
 
 
 def _nonblank(value: Any) -> bool:

@@ -23,6 +23,7 @@ from content_revision_authority import (
     canonical_manifest_sha256,
     sha256_file,
 )
+from package_b_canonical_json import write_canonical_package_b_json
 from question_identity import (
     bank_content_fingerprint,
     canonical_question_id,
@@ -58,9 +59,7 @@ def _load_json_object(path: Path, label: str) -> dict[str, Any]:
 
 
 def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
-    serialized = json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(serialized, encoding="utf-8")
+    write_canonical_package_b_json(path, payload)
 
 
 def _nonblank(value: Any) -> bool:
