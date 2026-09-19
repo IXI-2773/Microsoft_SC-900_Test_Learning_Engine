@@ -64,6 +64,67 @@ def derive_migration_id(revision: AdmittedRevision) -> str:
     return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
 
 
+# These aliases are intentionally closed over the exact post-canonicalization
+# revision bindings. They permit only the two known provenance-only rebinding
+# events and never authorize a new semantic transition or future hash change.
+_KNOWN_PROVENANCE_EQUIVALENT_MIGRATION_IDENTITIES: dict[
+    tuple[str, str, str, str, str, str, str], frozenset[tuple[str, str]]
+] = {
+    (
+        "646ad8ba5a7ccb0ae7f369b019b482fcd3212495ff0ce893aaecf0ceb5237cbe",
+        "sc900_bank_v8_length_rebalanced_t1.json",
+        "45ee43c9ced0d50c790c4b637ddc3d585526830a3dec32251b904d9d06e4c7e8",
+        "e0b4394b6faa8d0f9053291521b2dd83983e84990f1a169a25ab745694a7aabb",
+        "sc900_bank_v8_length_rebalanced_t2.json",
+        "c53ba19ee26992643969d546a73da5aa8396041ebe4e138f6b30db637756aa65",
+        "34b5278570d89ab17ce09dfda891be0ab31a2b4e134b4727a10ed9b65a2b1f8b",
+    ): frozenset(
+        {
+            (
+                "2f04ae1d2d22bdea1a8b96d470691700d59ea119bf34fb02d686d423b93bc571",
+                "24d7b56a36067bd74f000d15c2cf74810c1f575ba248a522b934450408ca6458",
+            )
+        }
+    ),
+    (
+        "4b9eab410da68bd348b4ae40946cf54a45b1da98bf04d68baaf6a57e3de15338",
+        "sc900_bank_v8_length_rebalanced_t2.json",
+        "c53ba19ee26992643969d546a73da5aa8396041ebe4e138f6b30db637756aa65",
+        "34b5278570d89ab17ce09dfda891be0ab31a2b4e134b4727a10ed9b65a2b1f8b",
+        "sc900_bank_v8_length_rebalanced_t3.json",
+        "0b0cdf3bf4c8b7885acf0b3b19381dd9f19ee38944fc6af6934b11b5b14588bd",
+        "83a8644cce462cf231f2c795746ab4d8ca1d71246fea8fbfb2982ddc7961f8a2",
+    ): frozenset(
+        {
+            (
+                "d89a6708b08f2afc5bfc3a30cbd4c5708b6022acbacdb3a91db360d12c18c2ea",
+                "7dd60b6dc130e4c8a16d3c117c832da737c0293957a350f3027826ababe268e2",
+            )
+        }
+    ),
+}
+
+
+def _revision_lineage_identity(revision: AdmittedRevision) -> tuple[str, str, str, str, str, str, str]:
+    return (
+        revision.manifest_sha256,
+        revision.source_bank_filename,
+        revision.source_bank_file_sha256,
+        revision.source_bank_content_fingerprint,
+        revision.target_bank_filename,
+        revision.target_bank_file_sha256,
+        revision.target_bank_content_fingerprint,
+    )
+
+
+def accepted_migration_lineage_identities(revision: AdmittedRevision) -> frozenset[tuple[str, str]]:
+    canonical = (revision.manifest_sha256, derive_migration_id(revision))
+    historical = _KNOWN_PROVENANCE_EQUIVALENT_MIGRATION_IDENTITIES.get(
+        _revision_lineage_identity(revision), frozenset()
+    )
+    return frozenset({canonical, *historical})
+
+
 def _as_revisions(
     revision_or_sequence: AdmittedRevision | Sequence[AdmittedRevision] | None,
 ) -> tuple[AdmittedRevision, ...]:
@@ -210,16 +271,26 @@ def _verify_target_progress(
         for row in lineage
         if isinstance(row, Mapping)
     }
-    for row in expected:
-        key = (
-            row["question_id"],
-            row["from_fingerprint"],
-            row["to_fingerprint"],
-            row["manifest_sha256"],
-            row["migration_id"],
+    if expected:
+        accepted_identities = accepted_migration_lineage_identities(revision)
+        complete_identity_found = any(
+            all(
+                (
+                    row["question_id"],
+                    row["from_fingerprint"],
+                    row["to_fingerprint"],
+                    manifest_sha256,
+                    accepted_migration_id,
+                )
+                in actual_keys
+                for row in expected
+            )
+            for manifest_sha256, accepted_migration_id in accepted_identities
         )
-        if key not in actual_keys:
-            raise ContentRevisionMigrationError(MigrationFailureReason.TARGET_PROGRESS_CONFLICT, row["question_id"])
+        if not complete_identity_found:
+            raise ContentRevisionMigrationError(
+                MigrationFailureReason.TARGET_PROGRESS_CONFLICT, expected[0]["question_id"]
+            )
     return PayloadMigrationResult(
         copy.deepcopy(dict(payload)), False, MigrationStatus.MIGRATION_ALREADY_APPLIED, migration_id
     )
