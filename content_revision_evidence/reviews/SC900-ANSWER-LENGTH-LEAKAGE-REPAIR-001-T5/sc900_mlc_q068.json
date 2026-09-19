@@ -1,0 +1,34 @@
+{
+  "after": {
+    "A": "Lifecycle Workflows recertify standing access; access reviews automate joiner and leaver tasks",
+    "B": "Lifecycle Workflows automate joiner/mover/leaver tasks; access reviews recertify access",
+    "C": "Lifecycle Workflows replace Privileged Identity Management; access reviews replace Conditional Access",
+    "D": "Both capabilities are Microsoft Entra ID Protection risk policies"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/id-governance/what-are-lifecycle-workflows",
+    "https://learn.microsoft.com/en-us/entra/id-governance/access-reviews-overview"
+  ],
+  "before": {
+    "A": "Lifecycle Workflows recertify standing access; access reviews automate joiner and leaver tasks",
+    "B": "Lifecycle Workflows automate joiner/mover/leaver tasks; access reviews recertify whether access is still needed",
+    "C": "Lifecycle Workflows replace Privileged Identity Management; access reviews replace Conditional Access",
+    "D": "Both capabilities are Microsoft Entra ID Protection risk policies"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "82ebfc0c449e5613d00c23fd0c1becb1a2ba61fcfbe79cfd5e82c7547e61ff4c",
+  "question_id": "sc900_mlc_q068",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "6bfdff0acb352815a5a3461009a8d66afa3c8c5773462b478076e7addf88491c"
+}

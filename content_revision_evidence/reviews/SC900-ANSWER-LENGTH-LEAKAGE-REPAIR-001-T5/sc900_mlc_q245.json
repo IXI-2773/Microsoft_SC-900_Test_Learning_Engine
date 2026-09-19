@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Microsoft Entra access reviews",
+    "B": "Privileged Identity Management alerts for privileged role activations",
+    "C": "Azure Key Vault, which stores secrets, keys, and certificates",
+    "D": "Purview Content explorer"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/key-vault/general/overview"
+  ],
+  "before": {
+    "A": "Microsoft Entra access reviews",
+    "B": "Privileged Identity Management activation alerts",
+    "C": "Azure Key Vault, which stores secrets, keys, and certificates",
+    "D": "Purview Content explorer"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "a2845c1956c0dca6c9af972faf47f36b9a2a0f47ee99ef23552ceb8a30e3e2a7",
+  "question_id": "sc900_mlc_q245",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "1b5ea1dfde303ba2b5793df5d48e3a099d380a9b5e73faf01fa2e6371e1e6117"
+}

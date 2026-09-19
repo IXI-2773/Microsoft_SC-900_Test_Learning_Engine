@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Azure DDoS Protection",
+    "B": "Azure Firewall for network traffic filtering",
+    "C": "Temporary Access Pass",
+    "D": "Insider Risk Management"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/insider-risk-management"
+  ],
+  "before": {
+    "A": "Azure DDoS Protection",
+    "B": "Azure Firewall",
+    "C": "Temporary Access Pass",
+    "D": "Insider Risk Management"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "5c58112569a97c06d1a96de0252b972b03f8a4b81dec41cf8fdb2ef1f873e2ce",
+  "question_id": "sc900_mlc_q162",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "77577b5da940abc7dd997679b4b9b3e679be731037bc97669f45a6353a28ca70"
+}

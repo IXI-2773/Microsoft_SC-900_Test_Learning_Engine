@@ -8,15 +8,23 @@ from pathlib import Path
 from unittest.mock import patch
 
 from question_identity import bank_content_fingerprint
-from tools import build_package_b_tranche1, build_package_b_tranche2, build_package_b_tranche3, build_package_b_tranche4
+from tools import (
+    build_package_b_tranche1,
+    build_package_b_tranche2,
+    build_package_b_tranche3,
+    build_package_b_tranche4,
+    build_package_b_tranche5,
+)
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 T2_CANDIDATE = REPOSITORY_ROOT / "sc900_bank_v8_length_rebalanced_t2.json"
 T3_CANDIDATE = REPOSITORY_ROOT / "sc900_bank_v8_length_rebalanced_t3.json"
 T4_CANDIDATE = REPOSITORY_ROOT / "sc900_bank_v8_length_rebalanced_t4.json"
+T5_CANDIDATE = REPOSITORY_ROOT / "sc900_bank_v8_length_rebalanced_t5.json"
 T2_MANIFEST = REPOSITORY_ROOT / "content_revision_evidence/manifests/sc900_answer_length_rebalance_t2.json"
 T3_MANIFEST = REPOSITORY_ROOT / "content_revision_evidence/manifests/sc900_answer_length_rebalance_t3.json"
 T4_MANIFEST = REPOSITORY_ROOT / "content_revision_evidence/manifests/sc900_answer_length_rebalance_t4.json"
+T5_MANIFEST = REPOSITORY_ROOT / "content_revision_evidence/manifests/sc900_answer_length_rebalance_t5.json"
 
 T2_CANONICAL_FILE_SHA256 = "c53ba19ee26992643969d546a73da5aa8396041ebe4e138f6b30db637756aa65"
 T3_CANONICAL_FILE_SHA256 = "0b0cdf3bf4c8b7885acf0b3b19381dd9f19ee38944fc6af6934b11b5b14588bd"
@@ -44,6 +52,11 @@ class PackageBCanonicalByteRegressionTests(unittest.TestCase):
             (T2_CANDIDATE, T2_CANONICAL_FILE_SHA256, T2_CONTENT_FINGERPRINT),
             (T3_CANDIDATE, T3_CANONICAL_FILE_SHA256, T3_CONTENT_FINGERPRINT),
             (T4_CANDIDATE, T4_CANONICAL_FILE_SHA256, T4_CONTENT_FINGERPRINT),
+            (
+                T5_CANDIDATE,
+                _raw_sha256(T5_CANDIDATE.read_bytes()),
+                bank_content_fingerprint(json.loads(T5_CANDIDATE.read_bytes().decode("utf-8"))["questions"]),
+            ),
         )
         for path, expected_lf_sha256, expected_fingerprint in cases:
             with self.subTest(path=path.name):
@@ -82,8 +95,9 @@ class PackageBCanonicalByteRegressionTests(unittest.TestCase):
                 build_package_b_tranche3._write_json(root / "t3.json", payload)
                 build_package_b_tranche1._write_json(root / "t1.json", payload)
                 build_package_b_tranche4._write_json(root / "t4.json", payload)
+                build_package_b_tranche5._write_json(root / "t5.json", payload)
 
-            for path in (root / "t1.json", root / "t2.json", root / "t3.json", root / "t4.json"):
+            for path in (root / "t1.json", root / "t2.json", root / "t3.json", root / "t4.json", root / "t5.json"):
                 with self.subTest(path=path.name):
                     raw = path.read_bytes()
                     self.assertNotIn(b"\r\n", raw)
@@ -119,11 +133,25 @@ class PackageBCanonicalByteRegressionTests(unittest.TestCase):
                 root / "reviews",
                 root / "t4-manifest.json",
             )
+            t5_path = root / T5_CANDIDATE.name
+            t5_summary = build_package_b_tranche5.build_package_b_tranche5(
+                t4_path,
+                research_root / "31-PACKAGE-B-TRANCHE5-SEMANTIC-REVIEW.json",
+                t5_path,
+                root / "reviews",
+                root / "t5-manifest.json",
+            )
 
             for path, expected_sha256, expected_fingerprint, summary in (
                 (t2_path, T2_CANONICAL_FILE_SHA256, T2_CONTENT_FINGERPRINT, t2_summary),
                 (t3_path, T3_CANONICAL_FILE_SHA256, T3_CONTENT_FINGERPRINT, t3_summary),
                 (t4_path, T4_CANONICAL_FILE_SHA256, T4_CONTENT_FINGERPRINT, t4_summary),
+                (
+                    t5_path,
+                    _raw_sha256(T5_CANDIDATE.read_bytes()),
+                    bank_content_fingerprint(json.loads(T5_CANDIDATE.read_text(encoding="utf-8"))["questions"]),
+                    t5_summary,
+                ),
             ):
                 with self.subTest(path=path.name):
                     raw = path.read_bytes()
@@ -160,3 +188,42 @@ class PackageBCanonicalByteRegressionTests(unittest.TestCase):
             self.assertFalse(candidate_path.exists())
             message = str(ctx.exception)
             self.assertTrue("CRLF" in message or "raw-SHA mismatch" in message or "SHA-256" in message)
+
+    def test_t4_crlf_source_is_rejected_by_t5_builder_without_fingerprint_override(self) -> None:
+        research_root = REPOSITORY_ROOT / "docs/research/SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001"
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            source_path = root / T4_CANDIDATE.name
+            crlf_bytes = T4_CANDIDATE.read_bytes().replace(b"\n", b"\r\n")
+            source_path.write_bytes(crlf_bytes)
+            self.assertNotEqual(T4_CANONICAL_FILE_SHA256, _raw_sha256(crlf_bytes))
+            self.assertEqual(
+                T4_CONTENT_FINGERPRINT,
+                bank_content_fingerprint(json.loads(crlf_bytes.decode("utf-8"))["questions"]),
+            )
+            candidate_path = root / T5_CANDIDATE.name
+            with self.assertRaises(ValueError) as ctx:
+                build_package_b_tranche5.build_package_b_tranche5(
+                    source_path,
+                    research_root / "31-PACKAGE-B-TRANCHE5-SEMANTIC-REVIEW.json",
+                    candidate_path,
+                    root / "reviews",
+                    root / "t5-manifest.json",
+                )
+            self.assertFalse(candidate_path.exists())
+            message = str(ctx.exception)
+            self.assertTrue("CRLF" in message or "raw-SHA mismatch" in message or "SHA-256" in message)
+
+    def test_frozen_t5_manifest_binds_canonical_t4_and_generated_t5_bytes(self) -> None:
+        t4_manifest = json.loads(T4_MANIFEST.read_text(encoding="utf-8"))
+        t5_manifest = json.loads(T5_MANIFEST.read_text(encoding="utf-8"))
+        t5_bytes = T5_CANDIDATE.read_bytes()
+        t5_fingerprint = bank_content_fingerprint(json.loads(t5_bytes.decode("utf-8"))["questions"])
+        self.assertEqual(T4_CANONICAL_FILE_SHA256, t5_manifest["source_bank"]["file_sha256"])
+        self.assertEqual(T4_CONTENT_FINGERPRINT, t5_manifest["source_bank"]["content_fingerprint"])
+        self.assertEqual(t4_manifest["target_bank"]["file_sha256"], t5_manifest["source_bank"]["file_sha256"])
+        self.assertEqual(_raw_sha256(t5_bytes), t5_manifest["target_bank"]["file_sha256"])
+        self.assertEqual(t5_fingerprint, t5_manifest["target_bank"]["content_fingerprint"])
+        self.assertNotIn("alias", json.dumps(t5_manifest))
+        self.assertNotIn(b"\r\n", t5_bytes)
+        self.assertTrue(t5_bytes.endswith(b"\n"))

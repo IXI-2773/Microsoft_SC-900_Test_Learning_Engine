@@ -1,0 +1,1234 @@
+{
+  "candidate_bank": "sc900_bank_v8_length_rebalanced_t5.json",
+  "review_queue": [
+    {
+      "after": {
+        "A": "Azure Firewall filters network traffic; Azure WAF inspects HTTP requests",
+        "B": "Azure WAF is the only service that can filter virtual-network TCP flows in a hub",
+        "C": "Azure Firewall recertifies guest users, and WAF issues MFA challenges",
+        "D": "Firewall and WAF are both Microsoft Defender for Identity sensors"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/firewall/overview",
+        "https://learn.microsoft.com/en-us/azure/web-application-firewall/overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q246",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "User risk from Identity Protection only, with no location condition",
+        "B": "Device compliance as the only possible signal",
+        "C": "Access reviews of the payroll group",
+        "D": "A named network location in the Conditional Access policy"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-assignment-network"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q223",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Cloud workload protection for runtime threats",
+        "B": "Mailbox safe links",
+        "C": "Cloud Security Posture Management",
+        "D": "Microsoft Defender for Endpoint"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/defender-for-cloud/concept-cloud-security-posture-management",
+        "https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q108",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Data loss prevention",
+        "B": "eDiscovery search and export for legal matters",
+        "C": "Audit logging of user and admin activities",
+        "D": "Insider Risk Management"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/audit-solutions-overview",
+        "https://learn.microsoft.com/en-us/purview/edisc-get-started",
+        "https://learn.microsoft.com/en-us/purview/edisc-features-components"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q292",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Automating joiner, mover, and leaver tasks across the user lifecycle",
+        "B": "Mitigating a SYN flood",
+        "C": "Storing TLS certificates",
+        "D": "Asking owners to recertify who still needs a security group"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/access-reviews-overview",
+        "https://learn.microsoft.com/en-us/entra/id-governance/what-are-lifecycle-workflows"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q044",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Azure DDoS Protection",
+        "B": "Azure Firewall for network traffic filtering",
+        "C": "Azure Web Application Firewall",
+        "D": "Network security groups"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/web-application-firewall/overview",
+        "https://learn.microsoft.com/en-us/azure/ddos-protection/ddos-protection-overview",
+        "https://learn.microsoft.com/en-us/azure/firewall/overview",
+        "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q078",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Azure Bastion",
+        "B": "Temporary Access Pass",
+        "C": "Network security groups for traffic filtering",
+        "D": "The Service Trust Portal"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/get-started-with-service-trust-portal"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q151",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "A Purview DLP rule",
+        "B": "A Sentinel playbook",
+        "C": "A passkey (FIDO2) on a security key",
+        "D": "A Compliance Manager improvement action"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/how-to-enable-passkey-fido2",
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-authentication-methods"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q024",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "It is Microsoft's email anti-phishing service",
+        "B": "It recertifies guest access",
+        "C": "It publishes SOC reports",
+        "D": "It stores secrets, keys, and certificates"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/key-vault/general/overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q106",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Azure DDoS Protection",
+        "B": "Azure Firewall for network traffic filtering",
+        "C": "Temporary Access Pass",
+        "D": "Insider Risk Management"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/insider-risk-management"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q162",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Hybrid identity connects on-premises identities to Entra ID and cloud apps",
+        "B": "Hybrid identity requires deleting Active Directory Domain Services on day one",
+        "C": "Hybrid identity is a Purview eDiscovery case type",
+        "D": "Hybrid identity replaces encryption"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/hybrid/whatis-hybrid-identity"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q038",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Assign Azure Firewall rules",
+        "B": "Microsoft Purview Audit for user and admin activity",
+        "C": "Create NSGs",
+        "D": "Search, hold, review, and export it"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/edisc-get-started",
+        "https://learn.microsoft.com/en-us/purview/edisc-features-components",
+        "https://learn.microsoft.com/en-us/purview/audit-solutions-overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q199",
+      "review_note": "Apply the adversarially revised A-D strings exactly; do not fall back to the earlier draft. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Microsoft Defender for Endpoint",
+        "B": "Microsoft Defender for Office 365",
+        "C": "Microsoft Defender for Identity for identity attack detection",
+        "D": "Azure DDoS Protection"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-office-365/mdo-about",
+        "https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-endpoint",
+        "https://learn.microsoft.com/en-us/defender-for-identity/what-is"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p1_q018",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Assign Global Administrator and then hide the billing blade in the portal",
+        "B": "Assign Azure Firewall Contributor, which includes password reset",
+        "C": "Assign the Password Administrator role instead of Global Administrator",
+        "D": "Assign Compliance Manager assessor, which resets Entra passwords"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/best-practices",
+        "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/permissions-reference"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q237",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Cloud security posture management",
+        "B": "Cloud workload protection for runtime threats",
+        "C": "Microsoft Defender for Endpoint",
+        "D": "Microsoft Sentinel"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/defender-for-cloud/concept-cloud-security-posture-management",
+        "https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p3_q037",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Reviewing improvement actions without implementing them",
+        "B": "Completing applicable improvement actions",
+        "C": "Increasing the number of guest users",
+        "D": "Disabling audit logging"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/compliance-manager",
+        "https://learn.microsoft.com/en-us/purview/compliance-manager-improvement-actions"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p2_q043",
+      "review_note": "Apply the adversarially revised A-D strings exactly; do not fall back to the earlier draft. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Safe Links replaces Safe Attachments, so file detonation is never needed",
+        "B": "Both features are Azure Firewall DNAT rules",
+        "C": "Safe Attachments checks files; Safe Links checks URLs at click time",
+        "D": "Safe Attachments is a Conditional Access named location"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-office-365/safe-attachments-about",
+        "https://learn.microsoft.com/en-us/defender-office-365/safe-links-about"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q260",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Retention policies and retention labels",
+        "B": "Data loss prevention for risky sharing controls",
+        "C": "Records management for governing declared records",
+        "D": "Sensitivity labels"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/retention",
+        "https://learn.microsoft.com/en-us/purview/dlp-learn-about-dlp",
+        "https://learn.microsoft.com/en-us/purview/records-management",
+        "https://learn.microsoft.com/en-us/purview/sensitivity-labels"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p1_q049",
+      "review_note": "Apply the adversarially revised A-D strings exactly; do not fall back to the earlier draft. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Azure Bastion",
+        "B": "Retention labels",
+        "C": "Service Trust Portal for Microsoft audit reports",
+        "D": "Microsoft Entra ID Protection"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-protection/overview-identity-protection",
+        "https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q036",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Microsoft Entra access reviews",
+        "B": "Privileged Identity Management alerts for privileged role activations",
+        "C": "Azure Key Vault, which stores secrets, keys, and certificates",
+        "D": "Purview Content explorer"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/key-vault/general/overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q245",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Data loss prevention for detecting risky sharing",
+        "B": "Retention labels",
+        "C": "Data classification",
+        "D": "Sensitivity label policies"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/sensitivity-labels",
+        "https://learn.microsoft.com/en-us/purview/create-sensitivity-labels"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q168",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Lifecycle Workflows recertify standing access; access reviews automate joiner and leaver tasks",
+        "B": "Lifecycle Workflows automate joiner/mover/leaver tasks; access reviews recertify access",
+        "C": "Lifecycle Workflows replace Privileged Identity Management; access reviews replace Conditional Access",
+        "D": "Both capabilities are Microsoft Entra ID Protection risk policies"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/what-are-lifecycle-workflows",
+        "https://learn.microsoft.com/en-us/entra/id-governance/access-reviews-overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q068",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Microsoft Defender for Identity for identity attack detection",
+        "B": "Microsoft Defender for Endpoint",
+        "C": "Microsoft Entra Cloud Sync or Connect Sync",
+        "D": "Privileged Identity Management"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/hybrid/cloud-sync/what-is-cloud-sync",
+        "https://learn.microsoft.com/en-us/entra/identity/hybrid/connect/whatis-azure-ad-connect"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q263",
+      "review_note": "Apply the adversarially revised A-D strings exactly; do not fall back to the earlier draft. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Microsoft Sentinel for security investigation and response",
+        "B": "Network Security Groups",
+        "C": "Privileged Identity Management",
+        "D": "Sensitivity labels and policies"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/sensitivity-labels"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p1_q020",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Security information and event management for security analytics",
+        "B": "Data residency",
+        "C": "Microsoft Entra role-based access control (RBAC)",
+        "D": "Data loss prevention"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/best-practices"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p1_q023",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Lifecycle Workflows",
+        "B": "Service Trust Portal for Microsoft audit reports",
+        "C": "Microsoft Defender Vulnerability Management",
+        "D": "Azure Bastion"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-vulnerability-management/defender-vulnerability-management"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q094",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Microsoft Purview Audit for user and admin activity",
+        "B": "Microsoft Purview eDiscovery",
+        "C": "Insider Risk Management",
+        "D": "Data loss prevention"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/edisc-get-started",
+        "https://learn.microsoft.com/en-us/purview/edisc-features-components"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p3_q030",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Microsoft Entra access reviews",
+        "B": "Microsoft Purview Content explorer",
+        "C": "Threat intelligence filtering",
+        "D": "Sensitivity label publishing"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/firewall/threat-intel",
+        "https://learn.microsoft.com/en-us/azure/firewall/overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p3_q035",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Mitigate volumetric DDoS",
+        "B": "Activate eligible privileged roles just in time",
+        "C": "Classify content and can apply protection",
+        "D": "Open RDP ports"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/sensitivity-labels"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q158",
+      "review_note": "Apply the adversarially revised A-D strings exactly; do not fall back to the earlier draft. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Assigning public IP addresses to Azure virtual machines",
+        "B": "Disabling authentication",
+        "C": "Just-in-time privileged-role activation",
+        "D": "Publishing ISO reports"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure",
+        "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-how-to-activate-role"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q042",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Microsoft Defender for Identity for identity attack detection",
+        "B": "Microsoft Defender for Cloud Apps",
+        "C": "Microsoft Defender for Endpoint",
+        "D": "Azure Firewall"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-cloud-apps/what-is-defender-for-cloud-apps",
+        "https://learn.microsoft.com/en-us/defender-for-identity/what-is"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p1_q038",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Microsoft Defender XDR email workloads",
+        "B": "Azure virtual network segmentation",
+        "C": "Microsoft Entra ID Governance capabilities",
+        "D": "Microsoft Purview records-management capabilities"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/identity-governance-overview",
+        "https://learn.microsoft.com/en-us/entra/id-governance/entitlement-management-overview",
+        "https://learn.microsoft.com/en-us/entra/id-governance/access-reviews-overview",
+        "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure",
+        "https://learn.microsoft.com/en-us/entra/id-governance/what-are-lifecycle-workflows"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q240",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Microsoft Defender for Cloud Apps",
+        "B": "Azure DDoS Protection for network-layer attacks",
+        "C": "Azure Key Vault",
+        "D": "Privileged Identity Management"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-cloud-apps/what-is-defender-for-cloud-apps"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q139",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Scrubbing volumetric network floods",
+        "B": "Creating access packages that users can request",
+        "C": "Scanning endpoints for malware",
+        "D": "Service Trust Portal for Microsoft audit reports"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/entitlement-management-overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q057",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Azure Key Vault",
+        "B": "Microsoft Defender for Office 365",
+        "C": "Microsoft Entra Domain Services for managed domain services",
+        "D": "Azure Bastion"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-office-365/mdo-about",
+        "https://learn.microsoft.com/en-us/defender-office-365/safe-attachments-about",
+        "https://learn.microsoft.com/en-us/defender-office-365/safe-links-about"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p3_q026",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Active Directory Domain Services",
+        "B": "Microsoft Entra ID is Microsoft's cloud IAM service",
+        "C": "Microsoft Entra Domain Services is a managed domain service",
+        "D": "Microsoft Entra External ID"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/fundamentals/whatis",
+        "https://learn.microsoft.com/en-us/entra/identity/domain-services/overview",
+        "https://learn.microsoft.com/en-us/entra/external-id/external-identities-overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q051",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Microsoft Defender XDR",
+        "B": "Microsoft Sentinel, a SIEM and security platform",
+        "C": "Microsoft Defender portal",
+        "D": "Microsoft Purview portal"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-xdr/microsoft-365-defender-portal",
+        "https://learn.microsoft.com/en-us/defender-xdr/microsoft-365-defender",
+        "https://learn.microsoft.com/en-us/azure/sentinel/overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q120",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Compliance Manager",
+        "B": "Azure Key Vault for secrets and certificates",
+        "C": "Network Security Groups",
+        "D": "Access reviews"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p1_q015",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Microsoft Entra custom banned password list",
+        "B": "Self-service password reset for account recovery",
+        "C": "Defender TI WHOIS lookup",
+        "D": "Multifactor authentication"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-password-ban-bad"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q065",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Network security groups for subnet traffic rules",
+        "B": "Virtual networks and subnets",
+        "C": "Azure Firewall",
+        "D": "Azure Bastion"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview",
+        "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p2_q021",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "A passkey (FIDO2) on a security key",
+        "B": "A Microsoft Purview retention label",
+        "C": "An Azure network security group rule",
+        "D": "A Service Trust Portal audit report"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/how-to-enable-passkey-fido2",
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-authentication-methods"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p3_q013",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Microsoft Defender for Office 365",
+        "B": "Azure Bastion",
+        "C": "Azure Key Vault",
+        "D": "Network security groups for network traffic filtering"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-office-365/mdo-about"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q090",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Because the fingerprint replaces authorization",
+        "B": "Self-service password reset",
+        "C": "It uses two authentication factor categories",
+        "D": "Password protection"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-mfa-howitworks",
+        "https://learn.microsoft.com/en-us/entra/identity-platform/authentication-vs-authorization"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q040",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Grant access based on network location without evaluating identity, device, or risk",
+        "B": "Disable authentication after a user is on a VPN",
+        "C": "Replace encryption with network location checks",
+        "D": "Verify explicitly and use least privilege, regardless of network location"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/security/zero-trust/zero-trust-overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q003",
+      "review_note": "Apply the adversarially revised A-D strings exactly; do not fall back to the earlier draft. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Azure Web Application Firewall",
+        "B": "Azure Bastion",
+        "C": "Azure Firewall for network traffic filtering",
+        "D": "Azure DDoS Protection"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/web-application-firewall/overview",
+        "https://learn.microsoft.com/en-us/azure/firewall/overview",
+        "https://learn.microsoft.com/en-us/azure/ddos-protection/ddos-protection-overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p2_q024",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Protect the confidentiality of stored data",
+        "B": "To replace multifactor authentication",
+        "C": "To create a SIEM incident automatically",
+        "D": "Service Trust Portal for Microsoft audit reports"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/security/fundamentals/encryption-atrest",
+        "https://learn.microsoft.com/en-us/azure/security/fundamentals/encryption-overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q013",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Microsoft Purview",
+        "B": "Microsoft Sentinel",
+        "C": "Microsoft Defender for Cloud",
+        "D": "Microsoft Entra ID for cloud identity management"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction",
+        "https://learn.microsoft.com/en-us/azure/defender-for-cloud/concept-cloud-security-posture-management"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p1_q007",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "A single-perimeter design that depends only on the network control",
+        "B": "Federation, because MFA is a partner identity-trust relationship",
+        "C": "Records management, because encryption declares a file as a record",
+        "D": "Defense in depth: other security layers still contain the failure"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/security/fundamentals/overview",
+        "https://learn.microsoft.com/en-us/security/zero-trust/zero-trust-overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q213",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Threat protection for running cloud workloads",
+        "B": "Cloud security posture management for configuration findings",
+        "C": "Microsoft Defender for Endpoint",
+        "D": "Microsoft Sentinel"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction",
+        "https://learn.microsoft.com/en-us/azure/defender-for-cloud/concept-cloud-security-posture-management"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p1_q045",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Microsoft Entra ID",
+        "B": "An identity provider that authenticates users and issues tokens",
+        "C": "Federation",
+        "D": "A records-management service that declares contracts as records"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity-platform/v2-overview",
+        "https://learn.microsoft.com/en-us/entra/identity-platform/authentication-vs-authorization",
+        "https://learn.microsoft.com/en-us/entra/fundamentals/whatis"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q207",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields. Natural tie accepted; do not alter wording solely to break the tie.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Microsoft Purview eDiscovery for legal search and review",
+        "B": "Microsoft Defender Vulnerability Management",
+        "C": "Azure DDoS Protection",
+        "D": "Microsoft Entra Access Reviews"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-vulnerability-management/defender-vulnerability-management"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p1_q046",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Physically securing the datacenter building",
+        "B": "Replacing failed host hardware",
+        "C": "Patching the guest operating system and configuring its access",
+        "D": "Operating the underlying Azure cloud fabric and host infrastructure"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/security/fundamentals/shared-responsibility"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q001",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Azure WAF",
+        "B": "Purview DLP",
+        "C": "Microsoft Defender for Identity",
+        "D": "Azure Bastion for managed RDP/SSH access"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-for-identity/what-is"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q093",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Encryption in transit, such as TLS, protects data while it moves",
+        "B": "Hashing creates a one-way digest for integrity checks rather than encrypting traffic",
+        "C": "A retention label that encrypts packets at the NSG",
+        "D": "Privileged Identity Management, which encrypts HTTP bodies"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/security/fundamentals/encryption-overview",
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/5-describe-encryption-hashing"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q210",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Hashing hides contents for later decryption, while encryption can never be reversed",
+        "B": "Encryption and hashing are both names for Conditional Access grant controls",
+        "C": "Encryption is reversible with the correct key; hashing produces a one-way digest",
+        "D": "Hashing is only used to activate privileged roles in PIM"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/5-describe-encryption-hashing",
+        "https://learn.microsoft.com/en-us/azure/security/fundamentals/encryption-overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q211",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Authorization determines what an authenticated user may access",
+        "B": "Records declaration",
+        "C": "Network segmentation",
+        "D": "Authentication of the user's identity"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity-platform/authentication-vs-authorization",
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-mfa-howitworks"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q007",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "They define how long records are retained",
+        "B": "They are ways users prove identity during sign-in",
+        "C": "They segment Azure virtual networks",
+        "D": "They calculate Microsoft Purview compliance scores"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-authentication-methods"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p1_q022",
+      "review_note": "Apply the exact-wording-draft A-D strings exactly. Preserve prompt, key, objective, choice-letter mapping, and all non-choice fields.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "disposition": "SKIP",
+      "question_id": "sc900_mlc_q293",
+      "review_note": "No sufficiently natural unused contrast can safely repair the answer-length signal without degrading distractor quality. Do not substitute a reserve item in this package."
+    },
+    {
+      "disposition": "SEPARATE_CONTENT_CORRECTION",
+      "question_id": "sc900_mlc_q118",
+      "review_note": "Defender for Endpoint Plan 2 contains core vulnerability-management capabilities, making Defender for Endpoint materially plausible for the existing endpoint-weakness requirement. The DVM-versus-MDE distinction must first be made uniquely testable."
+    },
+    {
+      "disposition": "SEPARATE_CONTENT_CORRECTION",
+      "question_id": "sc900_mlc_q219",
+      "review_note": "Connect Sync still synchronizes on-premises identities, but the existing usual/default-engine framing is not current enough because Cloud Sync is Microsoft's strategic/recommended path for most supported scenarios. Prompt/explanation semantics require currentness repair before length work."
+    },
+    {
+      "disposition": "SEPARATE_CONTENT_CORRECTION",
+      "question_id": "sc900_mlc_q198",
+      "review_note": "Insider Risk Management fits departing-user theft, but Purview DLP can also monitor or restrict sensitive-content uploads. The existing stem does not sufficiently distinguish risk correlation/investigation from DLP prevention/enforcement."
+    },
+    {
+      "disposition": "SEPARATE_CONTENT_CORRECTION",
+      "question_id": "sc900_mlc_q150",
+      "review_note": "Both the keyed access-package answer and generic Entitlement Management distractor identify the capability that enables requestable access packages. The containing-capability overlap must be removed before answer-length repair."
+    },
+    {
+      "disposition": "SEPARATE_CONTENT_CORRECTION",
+      "question_id": "sc900_mlc_q064",
+      "review_note": "Generic Conditional Access is the same capability family as the keyed Conditional Access targeting directory roles and is defensible at the product/capability level."
+    },
+    {
+      "disposition": "SEPARATE_CONTENT_CORRECTION",
+      "question_id": "sc900_mlc_q242",
+      "review_note": "The stem requires distinguishing managed iOS/Android from unmanaged Windows, while device platform identifies operating-system platform rather than management/compliance state. The requirement must be corrected before length work."
+    }
+  ],
+  "source_bank": "sc900_bank_v8_length_rebalanced_t4.json",
+  "work_id": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001 / PACKAGE-B / TRANCHE-5"
+}

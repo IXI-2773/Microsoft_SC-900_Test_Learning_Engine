@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Microsoft Purview eDiscovery for legal search and review",
+    "B": "Microsoft Defender Vulnerability Management",
+    "C": "Azure DDoS Protection",
+    "D": "Microsoft Entra Access Reviews"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/defender-vulnerability-management/defender-vulnerability-management"
+  ],
+  "before": {
+    "A": "Microsoft Purview eDiscovery",
+    "B": "Microsoft Defender Vulnerability Management",
+    "C": "Azure DDoS Protection",
+    "D": "Microsoft Entra Access Reviews"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "b861645f0c35351441ffe8410be272896bdf80fee448fff353a5eb0b18695ec0",
+  "question_id": "sc900_p1_q046",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "7c5acc5cd26bedd0824b35efe53c94f8e7a358b736d92fe7b4140219e77dd346"
+}

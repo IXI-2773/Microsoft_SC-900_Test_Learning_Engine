@@ -1,0 +1,35 @@
+{
+  "after": {
+    "A": "Microsoft Defender XDR",
+    "B": "Microsoft Sentinel, a SIEM and security platform",
+    "C": "Microsoft Defender portal",
+    "D": "Microsoft Purview portal"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/defender-xdr/microsoft-365-defender-portal",
+    "https://learn.microsoft.com/en-us/defender-xdr/microsoft-365-defender",
+    "https://learn.microsoft.com/en-us/azure/sentinel/overview"
+  ],
+  "before": {
+    "A": "Microsoft Defender XDR",
+    "B": "Microsoft Sentinel",
+    "C": "Microsoft Defender portal",
+    "D": "Microsoft Purview portal"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "d0021d1315eaa9d899e1c143c44f5d05366eddc925d64a94ca0f26ad28263216",
+  "question_id": "sc900_mlc_q120",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "d736a94f5989512d1bbe8d29ea8178e21a80bde2376e6a20b70d622e40844179"
+}

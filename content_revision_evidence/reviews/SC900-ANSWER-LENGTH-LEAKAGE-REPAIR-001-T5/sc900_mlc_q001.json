@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Physically securing the datacenter building",
+    "B": "Replacing failed host hardware",
+    "C": "Patching the guest operating system and configuring its access",
+    "D": "Operating the underlying Azure cloud fabric and host infrastructure"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/security/fundamentals/shared-responsibility"
+  ],
+  "before": {
+    "A": "Physically securing the datacenter building",
+    "B": "Replacing failed host hardware",
+    "C": "Patching the guest operating system and configuring its access",
+    "D": "Operating the underlying cloud fabric"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "f97474889d3b01de0464daab85a59d5f1e2d0baf03fc944cd5008c0044c2431e",
+  "question_id": "sc900_mlc_q001",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "8a91c70c312229e8606752b2e0de7dee481350e4bf71a21c034c247832e91772"
+}

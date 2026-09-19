@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Azure Bastion",
+    "B": "Temporary Access Pass",
+    "C": "Network security groups for traffic filtering",
+    "D": "The Service Trust Portal"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/get-started-with-service-trust-portal"
+  ],
+  "before": {
+    "A": "Azure Bastion",
+    "B": "Temporary Access Pass",
+    "C": "Network security groups",
+    "D": "The Service Trust Portal"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "0754f3383a35d4176d4d216e99f1adacfcd5a35c465410cc2e80afeb459cfbab",
+  "question_id": "sc900_mlc_q151",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "797337324d5af1f27891ec734ad041d673e1e6144d31d1566926239997f7efc7"
+}

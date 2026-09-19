@@ -1,0 +1,37 @@
+{
+  "after": {
+    "A": "Microsoft Defender XDR email workloads",
+    "B": "Azure virtual network segmentation",
+    "C": "Microsoft Entra ID Governance capabilities",
+    "D": "Microsoft Purview records-management capabilities"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/id-governance/identity-governance-overview",
+    "https://learn.microsoft.com/en-us/entra/id-governance/entitlement-management-overview",
+    "https://learn.microsoft.com/en-us/entra/id-governance/access-reviews-overview",
+    "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure",
+    "https://learn.microsoft.com/en-us/entra/id-governance/what-are-lifecycle-workflows"
+  ],
+  "before": {
+    "A": "Microsoft Defender XDR email workloads",
+    "B": "Azure virtual network segmentation",
+    "C": "Microsoft Entra ID Governance identity-governance capabilities",
+    "D": "Microsoft Purview records management"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "772e7aee16bd2775eb7d6bf650753c99851ac39028e0f289c98ebbf2595c6f17",
+  "question_id": "sc900_mlc_q240",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "19a023acbc113241855e483f6066962e72d10fc1173414af075b44a6b4004056"
+}

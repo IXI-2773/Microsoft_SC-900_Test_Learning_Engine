@@ -1,0 +1,34 @@
+{
+  "after": {
+    "A": "Microsoft Entra access reviews",
+    "B": "Microsoft Purview Content explorer",
+    "C": "Threat intelligence filtering",
+    "D": "Sensitivity label publishing"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/firewall/threat-intel",
+    "https://learn.microsoft.com/en-us/azure/firewall/overview"
+  ],
+  "before": {
+    "A": "Microsoft Entra access reviews",
+    "B": "Microsoft Purview Content explorer",
+    "C": "Threat intelligence-based filtering",
+    "D": "Sensitivity label publishing"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "91fdc400105f063ca2981ca13783e78d828bab205fc990907d5589d6bb6cbb0f",
+  "question_id": "sc900_p3_q035",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "a780105c0fa1580c84b66f35b0bbf12f7ed55c312ccc223825d6b1f038b0c05a"
+}

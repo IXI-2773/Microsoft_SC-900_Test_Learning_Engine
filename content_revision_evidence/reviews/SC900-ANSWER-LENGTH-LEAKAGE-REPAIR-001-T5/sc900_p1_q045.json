@@ -1,0 +1,34 @@
+{
+  "after": {
+    "A": "Threat protection for running cloud workloads",
+    "B": "Cloud security posture management for configuration findings",
+    "C": "Microsoft Defender for Endpoint",
+    "D": "Microsoft Sentinel"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction",
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/concept-cloud-security-posture-management"
+  ],
+  "before": {
+    "A": "Threat protection for running cloud workloads",
+    "B": "Cloud security posture management",
+    "C": "Microsoft Defender for Endpoint",
+    "D": "Microsoft Sentinel"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "70bb61919e2635af196790c4764e7b5dd898e10f8a5c214e18ed2f072c6a7c9f",
+  "question_id": "sc900_p1_q045",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "44f3ee50ae3269e4e2ee651daa621b7149581a4ab398b411b158bebddba1ae61"
+}

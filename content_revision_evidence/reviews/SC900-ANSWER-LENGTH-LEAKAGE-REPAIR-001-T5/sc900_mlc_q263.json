@@ -1,0 +1,34 @@
+{
+  "after": {
+    "A": "Microsoft Defender for Identity for identity attack detection",
+    "B": "Microsoft Defender for Endpoint",
+    "C": "Microsoft Entra Cloud Sync or Connect Sync",
+    "D": "Privileged Identity Management"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/hybrid/cloud-sync/what-is-cloud-sync",
+    "https://learn.microsoft.com/en-us/entra/identity/hybrid/connect/whatis-azure-ad-connect"
+  ],
+  "before": {
+    "A": "Microsoft Defender for Identity",
+    "B": "Microsoft Defender for Endpoint",
+    "C": "Microsoft Entra Connect or related hybrid sync",
+    "D": "Privileged Identity Management"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "1a326011cd5154b3a083ac944f5c0602c1e8ab1f51c05491c579464f6fb80223",
+  "question_id": "sc900_mlc_q263",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "bb3f5010708146711d8eed9555d7c64cd9daa51fade8b72285f731997077d810"
+}

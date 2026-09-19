@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Security information and event management for security analytics",
+    "B": "Data residency",
+    "C": "Microsoft Entra role-based access control (RBAC)",
+    "D": "Data loss prevention"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/best-practices"
+  ],
+  "before": {
+    "A": "Security information and event management",
+    "B": "Data residency",
+    "C": "Microsoft Entra roles and role-based access control",
+    "D": "Data loss prevention"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "05762224bcd7d99733760443c740e286523631107be6e0783e075b600afc1b1c",
+  "question_id": "sc900_p1_q023",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "52e5039c3b989d7b61c6540395657eb310c3c37abd8d9a2b1cfdd681ca43a8e4"
+}

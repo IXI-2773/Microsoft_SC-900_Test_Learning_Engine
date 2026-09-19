@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Azure WAF",
+    "B": "Purview DLP",
+    "C": "Microsoft Defender for Identity",
+    "D": "Azure Bastion for managed RDP/SSH access"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/defender-for-identity/what-is"
+  ],
+  "before": {
+    "A": "Azure WAF",
+    "B": "Purview DLP",
+    "C": "Microsoft Defender for Identity",
+    "D": "Azure Bastion"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "bd142cb910ffcc8e1bdc77ed97b2511b941f4e99746cb0942531360265dd3fab",
+  "question_id": "sc900_mlc_q093",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "1a5fe5059b26b3af8d9bf6c3f15f02c78829ef739baf597420d6f2d3c77be4a6"
+}

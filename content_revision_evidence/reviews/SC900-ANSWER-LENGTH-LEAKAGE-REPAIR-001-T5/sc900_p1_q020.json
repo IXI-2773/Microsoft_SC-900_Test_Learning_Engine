@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Microsoft Sentinel for security investigation and response",
+    "B": "Network Security Groups",
+    "C": "Privileged Identity Management",
+    "D": "Sensitivity labels and policies"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/sensitivity-labels"
+  ],
+  "before": {
+    "A": "Microsoft Sentinel incidents",
+    "B": "Network Security Groups",
+    "C": "Privileged Identity Management",
+    "D": "Sensitivity labels and policies"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "7b06205f65291988cd66348c255e14af2f956a618794746bb4277af0079ca5a5",
+  "question_id": "sc900_p1_q020",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "2c363a643f4d108bb9dd392a796120bb03fb047acc66ddec65637208f7987a4b"
+}

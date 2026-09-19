@@ -1,0 +1,35 @@
+{
+  "after": {
+    "A": "Microsoft Defender for Endpoint",
+    "B": "Microsoft Defender for Office 365",
+    "C": "Microsoft Defender for Identity for identity attack detection",
+    "D": "Azure DDoS Protection"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/defender-office-365/mdo-about",
+    "https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-endpoint",
+    "https://learn.microsoft.com/en-us/defender-for-identity/what-is"
+  ],
+  "before": {
+    "A": "Microsoft Defender for Endpoint",
+    "B": "Microsoft Defender for Office 365",
+    "C": "Microsoft Defender for Identity",
+    "D": "Azure DDoS Protection"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "e4a85efede90253a0a2759cbb06ce7d173356a497c016906b75a722ee60bfd5f",
+  "question_id": "sc900_p1_q018",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "e0fb3bd98b20f69006b4eab3f6e1c90df3f2cd9381a329387d927d290bf2b80a"
+}

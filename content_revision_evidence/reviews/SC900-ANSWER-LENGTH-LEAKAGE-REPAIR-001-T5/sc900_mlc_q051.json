@@ -1,0 +1,35 @@
+{
+  "after": {
+    "A": "Active Directory Domain Services",
+    "B": "Microsoft Entra ID is Microsoft's cloud IAM service",
+    "C": "Microsoft Entra Domain Services is a managed domain service",
+    "D": "Microsoft Entra External ID"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/fundamentals/whatis",
+    "https://learn.microsoft.com/en-us/entra/identity/domain-services/overview",
+    "https://learn.microsoft.com/en-us/entra/external-id/external-identities-overview"
+  ],
+  "before": {
+    "A": "Active Directory Domain Services",
+    "B": "It is Microsoft's cloud identity and access management service",
+    "C": "Microsoft Entra Domain Services",
+    "D": "Microsoft Entra External ID"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "03fe513218739d438f058b0ec79e9a21833bcfd0e3434536494c7987acc0c729",
+  "question_id": "sc900_mlc_q051",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "727a310236e5ccbf4699a43250949a6b085944688fafd76d8d01f55079fe4917"
+}

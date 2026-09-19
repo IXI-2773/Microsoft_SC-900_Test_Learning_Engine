@@ -1,0 +1,34 @@
+{
+  "after": {
+    "A": "A passkey (FIDO2) on a security key",
+    "B": "A Microsoft Purview retention label",
+    "C": "An Azure network security group rule",
+    "D": "A Service Trust Portal audit report"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/how-to-enable-passkey-fido2",
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-authentication-methods"
+  ],
+  "before": {
+    "A": "FIDO2 security key or passkey authentication",
+    "B": "A Microsoft Purview retention label",
+    "C": "An Azure network security group rule",
+    "D": "A Service Trust Portal audit report"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "bd319ecd2bb6127bd45ed4246f68e8c59036dcce632c02f8b0d440ed1a5df2c5",
+  "question_id": "sc900_p3_q013",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "90b80bb953cf0046345df706695a27944f47397ae36f06d83903c47baf91a263"
+}

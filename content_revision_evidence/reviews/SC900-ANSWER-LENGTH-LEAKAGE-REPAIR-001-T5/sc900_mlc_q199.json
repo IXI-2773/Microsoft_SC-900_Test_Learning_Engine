@@ -1,0 +1,35 @@
+{
+  "after": {
+    "A": "Assign Azure Firewall rules",
+    "B": "Microsoft Purview Audit for user and admin activity",
+    "C": "Create NSGs",
+    "D": "Search, hold, review, and export it"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/edisc-get-started",
+    "https://learn.microsoft.com/en-us/purview/edisc-features-components",
+    "https://learn.microsoft.com/en-us/purview/audit-solutions-overview"
+  ],
+  "before": {
+    "A": "Assign Azure Firewall rules",
+    "B": "Issue FIDO2 credentials",
+    "C": "Create NSGs",
+    "D": "Search, hold, review, and export it"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "fda333fc54d0f9deaba4c30032989b1f00ab49f1872dcb91926fe0f81e2542e5",
+  "question_id": "sc900_mlc_q199",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "ed66706a64466cf4f9addb9215c498a02f0e9c848bf17d50571661b553e5abb8"
+}

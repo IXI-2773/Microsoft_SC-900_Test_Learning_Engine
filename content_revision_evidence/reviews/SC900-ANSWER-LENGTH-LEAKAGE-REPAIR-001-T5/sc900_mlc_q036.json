@@ -1,0 +1,34 @@
+{
+  "after": {
+    "A": "Azure Bastion",
+    "B": "Retention labels",
+    "C": "Service Trust Portal for Microsoft audit reports",
+    "D": "Microsoft Entra ID Protection"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/id-protection/overview-identity-protection",
+    "https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks"
+  ],
+  "before": {
+    "A": "Azure Bastion",
+    "B": "Retention labels",
+    "C": "Service Trust Portal",
+    "D": "Microsoft Entra ID Protection"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "f772ecd2832b3a8a702aab2290f84783dbca8b1af7422d471198218e64ffb76f",
+  "question_id": "sc900_mlc_q036",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "c019e73d4d049155adfe1dff993783771884dc30cad4fd7f3e1ee79afe2cbe70"
+}

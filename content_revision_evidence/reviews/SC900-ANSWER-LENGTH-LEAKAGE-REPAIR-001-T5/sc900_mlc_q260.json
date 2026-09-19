@@ -1,0 +1,34 @@
+{
+  "after": {
+    "A": "Safe Links replaces Safe Attachments, so file detonation is never needed",
+    "B": "Both features are Azure Firewall DNAT rules",
+    "C": "Safe Attachments checks files; Safe Links checks URLs at click time",
+    "D": "Safe Attachments is a Conditional Access named location"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/defender-office-365/safe-attachments-about",
+    "https://learn.microsoft.com/en-us/defender-office-365/safe-links-about"
+  ],
+  "before": {
+    "A": "Safe Links replaces Safe Attachments, so file detonation is never needed",
+    "B": "Both features are Azure Firewall DNAT rules",
+    "C": "They are complementary Defender for Office 365 controls for files versus URLs",
+    "D": "Safe Attachments is a Conditional Access named location"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "ad0ea4f409e1a35832cdd4ac0c974a9855267c8ff9a9c00231c0217a170da13f",
+  "question_id": "sc900_mlc_q260",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "dca6e6a39d89e65bf08d1f17a90d14bc5ec3df533fe884a9f6da125f540b1ec2"
+}

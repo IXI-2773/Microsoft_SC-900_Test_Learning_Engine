@@ -44,6 +44,7 @@ QUALITY_TARGETS = [
     "tools/build_package_b_tranche2.py",
     "tools/build_package_b_tranche3.py",
     "tools/build_package_b_tranche4.py",
+    "tools/build_package_b_tranche5.py",
 ]
 
 

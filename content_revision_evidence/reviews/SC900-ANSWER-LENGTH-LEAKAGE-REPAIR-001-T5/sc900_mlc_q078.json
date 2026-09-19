@@ -1,0 +1,36 @@
+{
+  "after": {
+    "A": "Azure DDoS Protection",
+    "B": "Azure Firewall for network traffic filtering",
+    "C": "Azure Web Application Firewall",
+    "D": "Network security groups"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/web-application-firewall/overview",
+    "https://learn.microsoft.com/en-us/azure/ddos-protection/ddos-protection-overview",
+    "https://learn.microsoft.com/en-us/azure/firewall/overview",
+    "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+  ],
+  "before": {
+    "A": "Azure DDoS Protection",
+    "B": "Azure Firewall",
+    "C": "Azure Web Application Firewall",
+    "D": "Network security groups"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "901118e246c8e736fe1ca3824c3aeae9f712cd669b20c5755e4d129f5fdfd86b",
+  "question_id": "sc900_mlc_q078",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "ee614cc7f932848790e36d19d60deb25164084d176a19379b2ccce3accc8e566"
+}

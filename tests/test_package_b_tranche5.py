@@ -12,6 +12,7 @@ import unittest
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
+from unittest.mock import patch
 
 from answer_length_audit import LETTERS, audit_questions
 from app_constants import MODE_PRACTICE
@@ -32,26 +33,27 @@ from content_revision_registry import AUTHORIZED_CONTENT_REVISION_MANIFESTS
 from question_identity import bank_content_fingerprint, question_content_fingerprint
 from session_identity import canonical_session_signature
 from session_store import build_session_snapshot
+from tools.build_package_b_tranche4 import T4_EDIT_IDS
 
 QUESTION_COUNT = 454
 CHOICE_LABELS = ("A", "B", "C", "D")
-WORK_ID = "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001 / PACKAGE-B / TRANCHE-4"
-TASK_WORK_ID = "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-TRANCHE4-IMPLEMENTATION-RETRY-001"
+WORK_ID = "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001 / PACKAGE-B / TRANCHE-5"
+TASK_WORK_ID = "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-TRANCHE5-IMPLEMENTATION-EXECUTION-001"
 PRODUCTION_BANK_FILENAME = "sc900_bank_v8_final.json"
-SOURCE_BANK_FILENAME = "sc900_bank_v8_length_rebalanced_t3.json"
-CANDIDATE_BANK_FILENAME = "sc900_bank_v8_length_rebalanced_t4.json"
+T3_BANK_FILENAME = "sc900_bank_v8_length_rebalanced_t3.json"
+SOURCE_BANK_FILENAME = "sc900_bank_v8_length_rebalanced_t4.json"
+CANDIDATE_BANK_FILENAME = "sc900_bank_v8_length_rebalanced_t5.json"
 T2_BANK_FILENAME = "sc900_bank_v8_length_rebalanced_t2.json"
-MANIFEST_RELATIVE_PATH = "content_revision_evidence/manifests/sc900_answer_length_rebalance_t4.json"
+T6_BANK_FILENAME = "sc900_bank_v8_length_rebalanced_t6.json"
+MANIFEST_RELATIVE_PATH = "content_revision_evidence/manifests/sc900_answer_length_rebalance_t5.json"
+T4_MANIFEST_RELATIVE_PATH = "content_revision_evidence/manifests/sc900_answer_length_rebalance_t4.json"
 T3_MANIFEST_RELATIVE_PATH = "content_revision_evidence/manifests/sc900_answer_length_rebalance_t3.json"
 REVIEW_ROOT_RELATIVE_PATH = "content_revision_evidence/reviews"
-T3_METRICS_RELATIVE_PATH = (
-    "docs/research/SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001/21-PACKAGE-B-TRANCHE3-CANDIDATE-METRICS.json"
-)
 CANDIDATE_METRICS_RELATIVE_PATH = (
-    "docs/research/SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001/29-PACKAGE-B-TRANCHE4-CANDIDATE-METRICS.json"
+    "docs/research/SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001/32-PACKAGE-B-TRANCHE5-CANDIDATE-METRICS.json"
 )
 SEMANTIC_REVIEW_RELATIVE_PATH = (
-    "docs/research/SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001/28-PACKAGE-B-TRANCHE4-SEMANTIC-REVIEW.json"
+    "docs/research/SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001/31-PACKAGE-B-TRANCHE5-SEMANTIC-REVIEW.json"
 )
 LEAKAGE_METRIC_KEYS = (
     "strict_longest_correct",
@@ -59,22 +61,29 @@ LEAKAGE_METRIC_KEYS = (
     "unique_longest_heuristic",
     "unique_shortest_heuristic",
 )
+EXPECTED_T4_SOURCE_SHA256 = "c40f919bb10cf2a5b965e1525b4771572a7f36fd63ef8749e277d988a04688b4"
+EXPECTED_T4_SOURCE_FINGERPRINT = "99db6d4cbec9a722ef85280debb80f7c60c7acc0e7dba7d9663f2e1744bdae3c"
+EXPECTED_T5_SEMANTIC_REVIEW_SHA256 = "84266440b8fb8b2168c1c51ae388fba2c15ab22d32a833d4a914769302c8f67c"
+EXPECTED_PARENT_MANIFEST_PAYLOAD_SHA = "83482105c1cb820292e14524b268ae8660e9ba9c493c055e920d22579b1639cb"
 EXPECTED_T3_SOURCE_SHA256 = "0b0cdf3bf4c8b7885acf0b3b19381dd9f19ee38944fc6af6934b11b5b14588bd"
 EXPECTED_T3_SOURCE_FINGERPRINT = "83a8644cce462cf231f2c795746ab4d8ca1d71246fea8fbfb2982ddc7961f8a2"
-REJECTED_T3_CRLF_SHA256 = "d4cb07c1c6fe15b52553af2893b445b85d957b7a074b0747b75ca0f11cbf977b"
-EXPECTED_T4_SEMANTIC_REVIEW_SHA256 = "468cc71acedcc39e1b1f849dbbb775f6145923116e2a37fb2633855259c4703a"
-EXPECTED_PARENT_MANIFEST_PAYLOAD_SHA = "4b9eab410da68bd348b4ae40946cf54a45b1da98bf04d68baaf6a57e3de15338"
-T4_CANONICAL_FILE_SHA256 = "c40f919bb10cf2a5b965e1525b4771572a7f36fd63ef8749e277d988a04688b4"
-T4_CONTENT_FINGERPRINT = "99db6d4cbec9a722ef85280debb80f7c60c7acc0e7dba7d9663f2e1744bdae3c"
-T4_MANIFEST_PAYLOAD_SHA256 = "83482105c1cb820292e14524b268ae8660e9ba9c493c055e920d22579b1639cb"
-T4_STILL_LONGEST_IDS = ("sc900_mlc_q017", "sc900_mlc_q049", "sc900_p3_q024")
-T4_TIE_IDS = ("sc900_mlc_q169",)
-T4_EDIT_COUNT = 55
-T4_SKIP_COUNT = 6
-T4_SEPARATE_COUNT = 3
-T4_QUEUE_COUNT = 64
-T4_OUTSIDE_QUEUE_UNCHANGED = 390
-MIGRATED_AT = "2026-09-19T00:00:00"
+T5_EDIT_COUNT = 57
+T5_SKIP_COUNT = 1
+T5_SEPARATE_COUNT = 6
+T5_QUEUE_COUNT = 64
+T5_OUTSIDE_QUEUE_UNCHANGED = 390
+T5_UNCHANGED_COUNT = 397
+T5_SKIP_ID = "sc900_mlc_q293"
+T5_TIE_ID = "sc900_mlc_q207"
+T5_SEPARATE_IDS = (
+    "sc900_mlc_q118",
+    "sc900_mlc_q219",
+    "sc900_mlc_q198",
+    "sc900_mlc_q150",
+    "sc900_mlc_q064",
+    "sc900_mlc_q242",
+)
+MIGRATED_AT = "2026-09-19T12:00:00"
 RECEIPT_FIELDS = {
     "question_id",
     "from_content_fingerprint",
@@ -119,18 +128,18 @@ _NESTED_SUITE_ENV = "SC900_NESTED_PACKAGE_B_TESTS"
 
 
 def _import_builder():
-    from tools import build_package_b_tranche4 as builder_mod
+    from tools import build_package_b_tranche5 as builder_mod
 
     return {
-        "build": builder_mod.build_package_b_tranche4,
-        "queue": builder_mod.T4_DESIGN_QUEUE,
-        "edits": builder_mod.T4_EDIT_IDS,
-        "skips": builder_mod.T4_SKIP_QUESTION_IDS,
-        "separates": builder_mod.T4_SEPARATE_CORRECTION_IDS,
-        "expected_t3_sha": builder_mod.EXPECTED_T3_SOURCE_SHA256,
-        "expected_t3_fp": builder_mod.EXPECTED_T3_SOURCE_FINGERPRINT,
-        "rejected_crlf": builder_mod.REJECTED_T3_CRLF_SHA256,
-        "semantic_sha": builder_mod.EXPECTED_T4_SEMANTIC_REVIEW_SHA256,
+        "build": builder_mod.build_package_b_tranche5,
+        "module": builder_mod,
+        "queue": builder_mod.T5_DESIGN_QUEUE,
+        "edits": builder_mod.T5_EDIT_IDS,
+        "skips": builder_mod.T5_SKIP_QUESTION_IDS,
+        "separates": builder_mod.T5_SEPARATE_CORRECTION_IDS,
+        "expected_t4_sha": builder_mod.EXPECTED_T4_SOURCE_SHA256,
+        "expected_t4_fp": builder_mod.EXPECTED_T4_SOURCE_FINGERPRINT,
+        "semantic_sha": builder_mod.EXPECTED_T5_SEMANTIC_REVIEW_SHA256,
         "parent_manifest_sha": builder_mod.EXPECTED_PARENT_MANIFEST_PAYLOAD_SHA,
     }
 
@@ -228,7 +237,7 @@ def _crossing_kind(source_question: Mapping[str, Any], target_question: Mapping[
     return "NONE"
 
 
-def build_package_b_tranche4_candidate_metrics(
+def build_package_b_tranche5_candidate_metrics(
     source_questions: list[dict[str, Any]],
     candidate_questions: list[dict[str, Any]],
     *,
@@ -250,6 +259,7 @@ def build_package_b_tranche4_candidate_metrics(
     distractor_growths: list[int] = []
     mechanism_counts = {"CORRECT_ONLY": 0, "DISTRACTOR_ONLY": 0, "BOTH": 0}
     crossing_by_mechanism = {"CORRECT_ONLY": 0, "DISTRACTOR_ONLY": 0, "BOTH": 0}
+    residual_ids = [row["question_id"] for row in candidate_audit["ranked_outliers"]]
     for question_id in edited_ids:
         source_question = source_by_id[question_id]
         target_question = candidate_by_id[question_id]
@@ -335,6 +345,7 @@ def build_package_b_tranche4_candidate_metrics(
         "still_strict_longest_count": len(still_longest),
         "still_strict_longest_question_ids": still_longest,
         "strict_crossings": len(crossed_ids),
+        "residual_violating_ids": residual_ids,
         "work_id": TASK_WORK_ID,
     }
 
@@ -397,7 +408,7 @@ def _session_answer(*, selected=None, pending=None, answered=False, flagged=Fals
     }
 
 
-class PackageBTranche4SemanticInputTests(unittest.TestCase):
+class PackageBTranche5SemanticInputTests(unittest.TestCase):
     def setUp(self) -> None:
         self.semantic_path = REPOSITORY_ROOT / SEMANTIC_REVIEW_RELATIVE_PATH
         self.semantic = _read_json(self.semantic_path)
@@ -408,27 +419,35 @@ class PackageBTranche4SemanticInputTests(unittest.TestCase):
         self.assertEqual(WORK_ID, self.semantic["work_id"])
         self.assertEqual(SOURCE_BANK_FILENAME, self.semantic["source_bank"])
         self.assertEqual(CANDIDATE_BANK_FILENAME, self.semantic["candidate_bank"])
-        self.assertEqual(EXPECTED_T4_SEMANTIC_REVIEW_SHA256, sha256_file(self.semantic_path))
+        self.assertEqual(EXPECTED_T5_SEMANTIC_REVIEW_SHA256, sha256_file(self.semantic_path))
 
     def test_08_exact_64_id_queue(self) -> None:
         ids = [row["question_id"] for row in self.queue]
-        self.assertEqual(T4_QUEUE_COUNT, len(ids))
-        self.assertEqual(T4_QUEUE_COUNT, len(set(ids)))
+        self.assertEqual(T5_QUEUE_COUNT, len(ids))
+        self.assertEqual(T5_QUEUE_COUNT, len(set(ids)))
 
-    def test_09_55_edit(self) -> None:
+    def test_09_57_edit(self) -> None:
         edits = [row for row in self.queue if row["disposition"] == "EDIT"]
-        self.assertEqual(T4_EDIT_COUNT, len(edits))
+        self.assertEqual(T5_EDIT_COUNT, len(edits))
 
-    def test_10_6_skip(self) -> None:
+    def test_10_1_skip(self) -> None:
         skips = [row for row in self.queue if row["disposition"] == "SKIP"]
-        self.assertEqual(T4_SKIP_COUNT, len(skips))
+        self.assertEqual(T5_SKIP_COUNT, len(skips))
+        self.assertEqual([T5_SKIP_ID], [row["question_id"] for row in skips])
 
-    def test_11_3_separate(self) -> None:
+    def test_11_6_separate(self) -> None:
         separates = [row for row in self.queue if row["disposition"] == "SEPARATE_CONTENT_CORRECTION"]
-        self.assertEqual(T4_SEPARATE_COUNT, len(separates))
+        self.assertEqual(T5_SEPARATE_COUNT, len(separates))
+        self.assertEqual(set(T5_SEPARATE_IDS), {row["question_id"] for row in separates})
+
+    def test_75_all_edit_rows_have_learn_authority(self) -> None:
+        for row in self.queue:
+            if row["disposition"] != "EDIT":
+                continue
+            self.assertTrue(any(ref.startswith("https://learn.microsoft.com/") for ref in row["authority_refs"]))
 
 
-class PackageBTranche4BuilderTests(unittest.TestCase):
+class PackageBTranche5BuilderTests(unittest.TestCase):
     def setUp(self) -> None:
         self.builder = _import_builder()
         self.temp_dir = tempfile.TemporaryDirectory()
@@ -459,7 +478,7 @@ class PackageBTranche4BuilderTests(unittest.TestCase):
         self.assertFalse(self.candidate_path.exists())
         self.assertFalse(self.manifest_path.exists())
 
-    def test_01_canonical_t3_filename_required(self) -> None:
+    def test_01_canonical_t4_filename_required(self) -> None:
         renamed = self.root / "source_bank.json"
         self.source_path.replace(renamed)
         self.source_path = renamed
@@ -468,18 +487,17 @@ class PackageBTranche4BuilderTests(unittest.TestCase):
         _write_json(self.semantic_path, review)
         self._assert_build_fails()
 
-    def test_02_canonical_t3_sha_required(self) -> None:
+    def test_02_canonical_t4_sha_required(self) -> None:
         self.source_path.write_bytes(self.source_path.read_bytes() + b" ")
         self._assert_build_fails()
 
-    def test_03_historical_crlf_sha_rejected(self) -> None:
+    def test_03_crlf_source_rejected_without_historical_alias(self) -> None:
         crlf = self.source_path.read_bytes().replace(b"\n", b"\r\n")
-        self.assertEqual(REJECTED_T3_CRLF_SHA256, _raw_sha256(crlf))
+        self.assertNotEqual(EXPECTED_T4_SOURCE_SHA256, _raw_sha256(crlf))
         self.source_path.write_bytes(crlf)
         self._assert_build_fails()
 
-    def test_04_t3_fingerprint_required(self) -> None:
-        self.assertEqual(EXPECTED_T3_SOURCE_FINGERPRINT, self.builder["expected_t3_fp"])
+    def test_04_t4_fingerprint_required(self) -> None:
         payload = _read_json(self.source_path)
         payload["questions"][0]["choices"]["A"] = f"{payload['questions'][0]['choices']['A']} mutated"
         _write_json(self.source_path, payload)
@@ -526,28 +544,117 @@ class PackageBTranche4BuilderTests(unittest.TestCase):
     def test_15_extra_id_rejected(self) -> None:
         review = _read_json(self.semantic_path)
         extra = copy.deepcopy(review["review_queue"][0])
-        extra["question_id"] = "sc900_mlc_q001"
+        extra["question_id"] = "sc900_mlc_q002"
         extra["after"] = {"A": "alpha extra", "B": "beta extra", "C": "gamma extra", "D": "delta extra"}
         review["review_queue"].append(extra)
         _write_json(self.semantic_path, review)
         self._assert_build_fails()
 
+    def test_82_t3_as_source_rejected(self) -> None:
+        t3_path = self.root / T3_BANK_FILENAME
+        shutil.copy2(REPOSITORY_ROOT / T3_BANK_FILENAME, t3_path)
+        review = _read_json(self.semantic_path)
+        review["source_bank"] = T3_BANK_FILENAME
+        _write_json(self.semantic_path, review)
+        with self.assertRaises(ValueError):
+            self.builder["build"](
+                t3_path,
+                self.semantic_path,
+                self.candidate_path,
+                self.review_root,
+                self.manifest_path,
+            )
+        self.assertFalse(self.candidate_path.exists())
+
+    def test_83_t5_as_source_rejected(self) -> None:
+        t5_source = self.root / "nested-source" / CANDIDATE_BANK_FILENAME
+        t5_source.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(self.source_path, t5_source)
+        review = _read_json(self.semantic_path)
+        review["source_bank"] = CANDIDATE_BANK_FILENAME
+        _write_json(self.semantic_path, review)
+        with self.assertRaises(ValueError):
+            self.builder["build"](
+                t5_source,
+                self.semantic_path,
+                self.candidate_path,
+                self.review_root,
+                self.manifest_path,
+            )
+        self.assertFalse(self.candidate_path.exists())
+
+    def test_89_wrong_parent_manifest_rejected(self) -> None:
+        module = self.builder["module"]
+        real_load = module._load_json_object
+
+        def fake_load(path: Path, label: str) -> dict[str, Any]:
+            payload = real_load(path, label)
+            if label == "parent T4 manifest":
+                mutated = copy.deepcopy(payload)
+                mutated["payload_sha256"] = "0" * 64
+                return mutated
+            return payload
+
+        with patch.object(module, "_load_json_object", fake_load):
+            self._assert_build_fails()
+
+    def test_git_blob_worktree_mismatch_rejected(self) -> None:
+        module = self.builder["module"]
+        real = subprocess.check_output
+
+        def fake(args, cwd=None):
+            if list(args)[:2] == ["git", "show"]:
+                return b'{"questions":[]}\n'
+            return real(args, cwd=cwd)
+
+        with patch.object(module.subprocess, "check_output", fake):
+            self._assert_build_fails()
+
+    def test_wrong_semantic_review_sha_rejected(self) -> None:
+        self.semantic_path.write_bytes(self.semantic_path.read_bytes() + b"\n")
+        self._assert_build_fails()
+
+    def test_non_equivalent_edit_rejected(self) -> None:
+        review = _read_json(self.semantic_path)
+        edit = next(row for row in review["review_queue"] if row["disposition"] == "EDIT")
+        edit["semantic_review"]["A"] = "NARROWED"
+        _write_json(self.semantic_path, review)
+        self._assert_build_fails()
+
+    def test_non_learn_authority_rejected(self) -> None:
+        review = _read_json(self.semantic_path)
+        edit = next(row for row in review["review_queue"] if row["disposition"] == "EDIT")
+        edit["authority_refs"] = ["https://example.com/not-learn"]
+        _write_json(self.semantic_path, review)
+        self._assert_build_fails()
+
+    def test_skip_mutation_rejected(self) -> None:
+        review = _read_json(self.semantic_path)
+        skip = next(row for row in review["review_queue"] if row["question_id"] == T5_SKIP_ID)
+        skip["disposition"] = "EDIT"
+        skip["after"] = {"A": "alpha", "B": "beta", "C": "gamma", "D": "delta"}
+        skip["semantic_review"] = {letter: "EQUIVALENT" for letter in CHOICE_LABELS}
+        skip["authority_refs"] = ["https://learn.microsoft.com/en-us/security/"]
+        _write_json(self.semantic_path, review)
+        self._assert_build_fails()
+
     def test_pinned_source_identity_constants(self) -> None:
-        self.assertEqual(EXPECTED_T3_SOURCE_SHA256, self.builder["expected_t3_sha"])
-        self.assertEqual(EXPECTED_T3_SOURCE_FINGERPRINT, self.builder["expected_t3_fp"])
-        self.assertEqual(REJECTED_T3_CRLF_SHA256, self.builder["rejected_crlf"])
-        self.assertEqual(EXPECTED_T4_SEMANTIC_REVIEW_SHA256, self.builder["semantic_sha"])
+        self.assertEqual(EXPECTED_T4_SOURCE_SHA256, self.builder["expected_t4_sha"])
+        self.assertEqual(EXPECTED_T4_SOURCE_FINGERPRINT, self.builder["expected_t4_fp"])
+        self.assertEqual(EXPECTED_T5_SEMANTIC_REVIEW_SHA256, self.builder["semantic_sha"])
         self.assertEqual(EXPECTED_PARENT_MANIFEST_PAYLOAD_SHA, self.builder["parent_manifest_sha"])
-        self.assertEqual(T4_QUEUE_COUNT, len(self.builder["queue"]))
-        self.assertEqual(T4_EDIT_COUNT, len(self.builder["edits"]))
-        self.assertEqual(T4_SKIP_COUNT, len(self.builder["skips"]))
-        self.assertEqual(T4_SEPARATE_COUNT, len(self.builder["separates"]))
+        self.assertEqual(T5_QUEUE_COUNT, len(self.builder["queue"]))
+        self.assertEqual(T5_EDIT_COUNT, len(self.builder["edits"]))
+        self.assertEqual(T5_SKIP_COUNT, len(self.builder["skips"]))
+        self.assertEqual(T5_SEPARATE_COUNT, len(self.builder["separates"]))
+        self.assertEqual({T5_SKIP_ID}, set(self.builder["skips"]))
+        self.assertEqual(set(T5_SEPARATE_IDS), set(self.builder["separates"]))
 
 
-class PackageBTranche4CliTests(unittest.TestCase):
+class PackageBTranche5CliTests(unittest.TestCase):
     def test_cli_requires_all_arguments(self) -> None:
         completed = subprocess.run(
-            [sys.executable, "-m", "tools.build_package_b_tranche4"],
+            [sys.executable, "-m", "tools.build_package_b_tranche5"],
             cwd=REPOSITORY_ROOT,
             check=False,
             capture_output=True,
@@ -556,17 +663,19 @@ class PackageBTranche4CliTests(unittest.TestCase):
         self.assertNotEqual(0, completed.returncode)
 
 
-class PackageBTranche4RealCandidateClosureTests(unittest.TestCase):
+class PackageBTranche5RealCandidateClosureTests(unittest.TestCase):
     SOURCE_BANK_PATH = REPOSITORY_ROOT / SOURCE_BANK_FILENAME
     CANDIDATE_BANK_PATH = REPOSITORY_ROOT / CANDIDATE_BANK_FILENAME
     T2_BANK_PATH = REPOSITORY_ROOT / T2_BANK_FILENAME
+    T3_BANK_PATH = REPOSITORY_ROOT / T3_BANK_FILENAME
     PRODUCTION_BANK_PATH = REPOSITORY_ROOT / PRODUCTION_BANK_FILENAME
     MANIFEST_PATH = REPOSITORY_ROOT / MANIFEST_RELATIVE_PATH
+    T4_MANIFEST_PATH = REPOSITORY_ROOT / T4_MANIFEST_RELATIVE_PATH
     T3_MANIFEST_PATH = REPOSITORY_ROOT / T3_MANIFEST_RELATIVE_PATH
     REVIEW_ROOT = REPOSITORY_ROOT / REVIEW_ROOT_RELATIVE_PATH
-    T3_METRICS_PATH = REPOSITORY_ROOT / T3_METRICS_RELATIVE_PATH
     CANDIDATE_METRICS_PATH = REPOSITORY_ROOT / CANDIDATE_METRICS_RELATIVE_PATH
     SEMANTIC_REVIEW_PATH = REPOSITORY_ROOT / SEMANTIC_REVIEW_RELATIVE_PATH
+    T5_RECEIPT_DIR = REVIEW_ROOT / "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T5"
     T4_RECEIPT_DIR = REVIEW_ROOT / "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T4"
 
     @classmethod
@@ -577,24 +686,34 @@ class PackageBTranche4RealCandidateClosureTests(unittest.TestCase):
         cls.candidate_bytes = cls.CANDIDATE_BANK_PATH.read_bytes()
         cls.production_bytes = cls.PRODUCTION_BANK_PATH.read_bytes()
         cls.t2_bytes = cls.T2_BANK_PATH.read_bytes()
+        cls.t3_bytes = cls.T3_BANK_PATH.read_bytes()
         cls.manifest_bytes = cls.MANIFEST_PATH.read_bytes()
+        cls.t4_manifest_bytes = cls.T4_MANIFEST_PATH.read_bytes()
         cls.t3_manifest_bytes = cls.T3_MANIFEST_PATH.read_bytes()
         cls.receipt_bytes = {
+            path.relative_to(cls.T5_RECEIPT_DIR).as_posix(): path.read_bytes()
+            for path in sorted(cls.T5_RECEIPT_DIR.glob("*.json"))
+        }
+        cls.t4_receipt_bytes = {
             path.relative_to(cls.T4_RECEIPT_DIR).as_posix(): path.read_bytes()
             for path in sorted(cls.T4_RECEIPT_DIR.glob("*.json"))
         }
         cls.source_payload = json.loads(cls.source_bytes.decode("utf-8"))
         cls.candidate_payload = json.loads(cls.candidate_bytes.decode("utf-8"))
         cls.t2_payload = json.loads(cls.t2_bytes.decode("utf-8"))
+        cls.t3_payload = json.loads(cls.t3_bytes.decode("utf-8"))
         cls.manifest = json.loads(cls.manifest_bytes.decode("utf-8"))
+        cls.t4_manifest = json.loads(cls.t4_manifest_bytes.decode("utf-8"))
         cls.t3_manifest = json.loads(cls.t3_manifest_bytes.decode("utf-8"))
         cls.semantic_review = _read_json(cls.SEMANTIC_REVIEW_PATH)
         cls.source_questions = cls.source_payload["questions"]
         cls.candidate_questions = cls.candidate_payload["questions"]
         cls.t2_questions = cls.t2_payload["questions"]
+        cls.t3_questions = cls.t3_payload["questions"]
         cls.source_by_id = {question["id"]: question for question in cls.source_questions}
         cls.candidate_by_id = {question["id"]: question for question in cls.candidate_questions}
         cls.t2_by_id = {question["id"]: question for question in cls.t2_questions}
+        cls.t3_by_id = {question["id"]: question for question in cls.t3_questions}
         cls.changed_ids = [edge["question_id"] for edge in cls.manifest["edges"]]
         changed = set(cls.changed_ids)
         cls.skipped_ids = [
@@ -611,10 +730,14 @@ class PackageBTranche4RealCandidateClosureTests(unittest.TestCase):
         cls.unchanged_id = next(question_id for question_id in cls.source_by_id if question_id not in changed)
         cls.changed_source = cls.source_by_id[cls.changed_id]
         cls.changed_target = cls.candidate_by_id[cls.changed_id]
+        cls.t4_changed_ids = [edge["question_id"] for edge in cls.t4_manifest["edges"]]
         cls.t3_changed_ids = [edge["question_id"] for edge in cls.t3_manifest["edges"]]
-        cls.t3_only_changed_id = next(question_id for question_id in cls.t3_changed_ids if question_id not in changed)
-        cls.t4_only_changed_id = next(
-            question_id for question_id in cls.changed_ids if question_id not in set(cls.t3_changed_ids)
+        cls.t4_only_changed_id = next(question_id for question_id in cls.t4_changed_ids if question_id not in changed)
+        cls.t5_only_changed_id = next(
+            question_id for question_id in cls.changed_ids if question_id not in set(cls.t4_changed_ids)
+        )
+        cls.t3_only_changed_id = next(
+            question_id for question_id in cls.t3_changed_ids if question_id not in set(cls.t4_changed_ids)
         )
 
     def tearDown(self) -> None:
@@ -623,8 +746,16 @@ class PackageBTranche4RealCandidateClosureTests(unittest.TestCase):
         self.assertEqual(self.candidate_bytes, self.CANDIDATE_BANK_PATH.read_bytes())
         self.assertEqual(self.production_bytes, self.PRODUCTION_BANK_PATH.read_bytes())
         self.assertEqual(self.manifest_bytes, self.MANIFEST_PATH.read_bytes())
+        self.assertEqual(self.t4_manifest_bytes, self.T4_MANIFEST_PATH.read_bytes())
+        self.assertEqual(
+            self.t4_receipt_bytes,
+            {
+                path.relative_to(self.T4_RECEIPT_DIR).as_posix(): path.read_bytes()
+                for path in sorted(self.T4_RECEIPT_DIR.glob("*.json"))
+            },
+        )
 
-    def _admit_t4(self, **kwargs):
+    def _admit_t5(self, **kwargs):
         source_path = kwargs.get("source_path", self.SOURCE_BANK_PATH)
         target_path = kwargs.get("target_path", self.CANDIDATE_BANK_PATH)
         return admit_content_revision(
@@ -636,13 +767,23 @@ class PackageBTranche4RealCandidateClosureTests(unittest.TestCase):
             review_root=kwargs.get("review_root", self.REVIEW_ROOT),
         )
 
+    def _admit_t4(self):
+        return admit_content_revision(
+            self.t4_manifest,
+            source_questions=self.t3_questions,
+            target_questions=self.source_questions,
+            source_bank_path=self.T3_BANK_PATH,
+            target_bank_path=self.SOURCE_BANK_PATH,
+            review_root=self.REVIEW_ROOT,
+        )
+
     def _admit_t3(self):
         return admit_content_revision(
             self.t3_manifest,
             source_questions=self.t2_questions,
-            target_questions=self.source_questions,
+            target_questions=self.t3_questions,
             source_bank_path=self.T2_BANK_PATH,
-            target_bank_path=self.SOURCE_BANK_PATH,
+            target_bank_path=self.T3_BANK_PATH,
             review_root=self.REVIEW_ROOT,
         )
 
@@ -725,80 +866,93 @@ class PackageBTranche4RealCandidateClosureTests(unittest.TestCase):
             answers=[answer for _question_id, answer in rows],
         )
 
-    def test_16_exactly_55_changed(self) -> None:
+    def test_16_exactly_57_changed(self) -> None:
         actual_changed = [
             question_id
             for question_id, source_question in self.source_by_id.items()
             if source_question != self.candidate_by_id[question_id]
         ]
-        self.assertEqual(T4_EDIT_COUNT, len(actual_changed))
+        self.assertEqual(T5_EDIT_COUNT, len(actual_changed))
         self.assertEqual(set(self.changed_ids), set(actual_changed))
         self.assertEqual(set(self.builder["edits"]), set(actual_changed))
 
-    def test_17_six_skips_unchanged(self) -> None:
-        self.assertEqual(T4_SKIP_COUNT, len(self.skipped_ids))
-        self.assertEqual(set(self.builder["skips"]), set(self.skipped_ids))
-        for question_id in self.skipped_ids:
-            self.assertEqual(self.source_by_id[question_id], self.candidate_by_id[question_id])
+    def test_17_q293_skip_unchanged(self) -> None:
+        self.assertEqual([T5_SKIP_ID], self.skipped_ids)
+        self.assertEqual(self.source_by_id[T5_SKIP_ID], self.candidate_by_id[T5_SKIP_ID])
 
-    def test_18_three_separate_ids_unchanged(self) -> None:
-        self.assertEqual(T4_SEPARATE_COUNT, len(self.separate_ids))
-        self.assertEqual(set(self.builder["separates"]), set(self.separate_ids))
+    def test_18_six_separate_ids_unchanged(self) -> None:
+        self.assertEqual(T5_SEPARATE_COUNT, len(self.separate_ids))
+        self.assertEqual(set(T5_SEPARATE_IDS), set(self.separate_ids))
         for question_id in self.separate_ids:
             self.assertEqual(self.source_by_id[question_id], self.candidate_by_id[question_id])
 
-    def test_19_390_outside_queue_unchanged(self) -> None:
+    def test_19_397_non_edit_questions_unchanged(self) -> None:
+        unchanged = [
+            question_id
+            for question_id, source_question in self.source_by_id.items()
+            if source_question == self.candidate_by_id[question_id]
+        ]
+        self.assertEqual(T5_UNCHANGED_COUNT, len(unchanged))
         queue = set(self.queue_ids)
         outside = [question_id for question_id in self.source_by_id if question_id not in queue]
-        self.assertEqual(T4_OUTSIDE_QUEUE_UNCHANGED, len(outside))
+        self.assertEqual(T5_OUTSIDE_QUEUE_UNCHANGED, len(outside))
         for question_id in outside:
             self.assertEqual(self.source_by_id[question_id], self.candidate_by_id[question_id])
 
-    def test_20_prompts_unchanged(self) -> None:
+    def test_20_t4_edit_set_preserved_and_disjoint(self) -> None:
+        self.assertTrue(set(self.t4_changed_ids).isdisjoint(set(self.changed_ids)))
+        self.assertEqual(set(self.t4_changed_ids), set(T4_EDIT_IDS))
+        for question_id in self.t4_changed_ids:
+            self.assertEqual(self.source_by_id[question_id], self.candidate_by_id[question_id])
+
+    def test_22_prompts_unchanged(self) -> None:
         for question_id, source_question in self.source_by_id.items():
             self.assertEqual(source_question["prompt"], self.candidate_by_id[question_id]["prompt"])
 
-    def test_21_keys_unchanged(self) -> None:
+    def test_23_keys_unchanged(self) -> None:
         for question_id, source_question in self.source_by_id.items():
             self.assertEqual(source_question["correct"], self.candidate_by_id[question_id]["correct"])
 
-    def test_22_objectives_unchanged(self) -> None:
+    def test_24_objectives_unchanged(self) -> None:
         for question_id, source_question in self.source_by_id.items():
             self.assertEqual(source_question["objective_code"], self.candidate_by_id[question_id]["objective_code"])
 
-    def test_23_tiers_unchanged(self) -> None:
+    def test_25_tiers_unchanged(self) -> None:
         for question_id, source_question in self.source_by_id.items():
             self.assertEqual(
                 source_question["exam_calibration_tier"],
                 self.candidate_by_id[question_id]["exam_calibration_tier"],
             )
 
-    def test_24_exam_eligibility_unchanged(self) -> None:
+    def test_26_exam_eligibility_unchanged(self) -> None:
         for question_id, source_question in self.source_by_id.items():
             self.assertEqual(
                 source_question["exam_simulation_eligible"],
                 self.candidate_by_id[question_id]["exam_simulation_eligible"],
             )
 
-    def test_25_question_ids_unchanged(self) -> None:
-        self.assertEqual(set(self.source_by_id), set(self.candidate_by_id))
+    def test_27_question_ids_and_order_unchanged(self) -> None:
+        self.assertEqual(
+            [question["id"] for question in self.source_questions],
+            [question["id"] for question in self.candidate_questions],
+        )
         self.assertEqual(QUESTION_COUNT, len(self.source_by_id))
         self.assertEqual(QUESTION_COUNT, len(self.candidate_questions))
 
-    def test_26_ad_mapping_unchanged(self) -> None:
+    def test_28_ad_mapping_unchanged(self) -> None:
         for question_id, source_question in self.source_by_id.items():
             self.assertEqual(set(CHOICE_LABELS), set(source_question["choices"]))
             self.assertEqual(set(CHOICE_LABELS), set(self.candidate_by_id[question_id]["choices"]))
 
-    def test_27_all_changed_semantics_equivalent(self) -> None:
+    def test_29_all_changed_semantics_equivalent(self) -> None:
         for edge in self.manifest["edges"]:
             self.assertEqual({letter: "EQUIVALENT" for letter in CHOICE_LABELS}, edge["choice_semantics"])
 
-    def test_28_learn_authority_required(self) -> None:
+    def test_30_learn_authority_required(self) -> None:
         for edge in self.manifest["edges"]:
             self.assertTrue(any(ref.startswith("https://learn.microsoft.com/") for ref in edge["authority_refs"]))
 
-    def test_29_one_deterministic_receipt_per_edit(self) -> None:
+    def test_31_one_deterministic_receipt_per_edit(self) -> None:
         for edge in self.manifest["edges"]:
             receipt_path = self.REVIEW_ROOT / edge["review_artifact"]
             receipt = _read_json(receipt_path)
@@ -808,53 +962,62 @@ class PackageBTranche4RealCandidateClosureTests(unittest.TestCase):
             self.assertNotIn("created_at", receipt)
             self.assertEqual(sha256_file(receipt_path), edge["review_artifact_sha256"])
 
-    def test_30_exactly_55_receipts(self) -> None:
-        receipts = list(self.T4_RECEIPT_DIR.glob("*.json"))
-        self.assertEqual(T4_EDIT_COUNT, len(receipts))
+    def test_32_exactly_57_receipts_and_no_t4_duplication(self) -> None:
+        receipts = list(self.T5_RECEIPT_DIR.glob("*.json"))
+        self.assertEqual(T5_EDIT_COUNT, len(receipts))
         self.assertEqual(set(self.changed_ids), {path.stem for path in receipts})
-        for question_id in list(self.skipped_ids) + list(self.separate_ids):
-            self.assertFalse((self.T4_RECEIPT_DIR / f"{question_id}.json").exists())
+        for question_id in list(self.skipped_ids) + list(self.separate_ids) + list(self.t4_changed_ids):
+            self.assertFalse((self.T5_RECEIPT_DIR / f"{question_id}.json").exists())
+        self.assertEqual(
+            self.t4_receipt_bytes,
+            {
+                path.relative_to(self.T4_RECEIPT_DIR).as_posix(): path.read_bytes()
+                for path in sorted(self.T4_RECEIPT_DIR.glob("*.json"))
+            },
+        )
 
-    def test_31_manifest_exactly_55_edges(self) -> None:
+    def test_33_manifest_exactly_57_edges_no_t4_redeclaration(self) -> None:
         self.assertEqual(MANIFEST_FIELDS, set(self.manifest))
         self.assertEqual(self.manifest["payload_sha256"], canonical_manifest_sha256(self.manifest))
-        self.assertEqual(T4_EDIT_COUNT, len(self.manifest["edges"]))
+        self.assertEqual(T5_EDIT_COUNT, len(self.manifest["edges"]))
         self.assertEqual("sc900_content_revision_equivalence", self.manifest["manifest_kind"])
         self.assertEqual("FULL_CONTINUITY", self.manifest["continuity_policy"])
         self.assertEqual("WORDING_ONLY_LENGTH_REBALANCE", self.manifest["permitted_change_class"])
         self.assertEqual(1, self.manifest["schema_version"])
+        self.assertTrue(set(self.changed_ids).isdisjoint(set(self.t4_changed_ids)))
 
-    def test_32_manifest_source_canonical_t3(self) -> None:
+    def test_34_manifest_source_canonical_t4(self) -> None:
         self.assertEqual(SOURCE_BANK_FILENAME, self.manifest["source_bank"]["filename"])
-        self.assertEqual(EXPECTED_T3_SOURCE_SHA256, self.manifest["source_bank"]["file_sha256"])
-        self.assertEqual(EXPECTED_T3_SOURCE_FINGERPRINT, self.manifest["source_bank"]["content_fingerprint"])
-        self.assertEqual(EXPECTED_PARENT_MANIFEST_PAYLOAD_SHA, self.t3_manifest["payload_sha256"])
+        self.assertEqual(EXPECTED_T4_SOURCE_SHA256, self.manifest["source_bank"]["file_sha256"])
+        self.assertEqual(EXPECTED_T4_SOURCE_FINGERPRINT, self.manifest["source_bank"]["content_fingerprint"])
+        self.assertEqual(EXPECTED_PARENT_MANIFEST_PAYLOAD_SHA, self.t4_manifest["payload_sha256"])
+        self.assertEqual(CANDIDATE_BANK_FILENAME, self.manifest["target_bank"]["filename"])
 
-    def test_33_manifest_contains_no_historical_aliases(self) -> None:
+    def test_35_manifest_contains_no_historical_aliases(self) -> None:
         serialized = json.dumps(self.manifest)
         self.assertNotIn("historical_aliases", serialized)
         self.assertNotIn("alias", serialized)
         self.assertNotIn("d4cb07c1c6fe15b52553af2893b445b85d957b7a074b0747b75ca0f11cbf977b", serialized)
 
-    def test_34_target_canonical_lf(self) -> None:
+    def test_36_target_canonical_lf_and_metadata_preserved(self) -> None:
         raw = self.candidate_bytes
         self.assertNotIn(b"\r\n", raw)
         self.assertTrue(raw.endswith(b"\n"))
-        self.assertEqual("utf-8", "utf-8")
         self.assertEqual(
             json.dumps(self.candidate_payload, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
             raw.decode("utf-8"),
         )
+        source_meta = {key: value for key, value in self.source_payload.items() if key != "questions"}
+        target_meta = {key: value for key, value in self.candidate_payload.items() if key != "questions"}
+        self.assertEqual(source_meta, target_meta)
 
-    def test_35_deterministic_target_sha(self) -> None:
-        self.assertEqual(T4_CANONICAL_FILE_SHA256, _raw_sha256(self.candidate_bytes))
-        self.assertEqual(T4_CANONICAL_FILE_SHA256, self.manifest["target_bank"]["file_sha256"])
+    def test_37_deterministic_target_sha_and_fingerprint(self) -> None:
+        observed_sha = _raw_sha256(self.candidate_bytes)
+        observed_fp = bank_content_fingerprint(self.candidate_questions)
+        self.assertEqual(observed_sha, self.manifest["target_bank"]["file_sha256"])
+        self.assertEqual(observed_fp, self.manifest["target_bank"]["content_fingerprint"])
 
-    def test_36_deterministic_target_fingerprint(self) -> None:
-        self.assertEqual(T4_CONTENT_FINGERPRINT, bank_content_fingerprint(self.candidate_questions))
-        self.assertEqual(T4_CONTENT_FINGERPRINT, self.manifest["target_bank"]["content_fingerprint"])
-
-    def test_37_repeated_builds_byte_identical(self) -> None:
+    def test_38_repeated_builds_byte_identical(self) -> None:
         with tempfile.TemporaryDirectory() as first_dir, tempfile.TemporaryDirectory() as second_dir:
             summaries = []
             artifacts = []
@@ -870,7 +1033,7 @@ class PackageBTranche4RealCandidateClosureTests(unittest.TestCase):
                 summary = self.builder["build"](source_path, semantic_path, candidate_path, review_root, manifest_path)
                 receipts = {
                     path.name: path.read_bytes()
-                    for path in sorted((review_root / "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T4").glob("*.json"))
+                    for path in sorted((review_root / "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T5").glob("*.json"))
                 }
                 summaries.append(summary)
                 artifacts.append((candidate_path.read_bytes(), manifest_path.read_bytes(), receipts))
@@ -879,12 +1042,11 @@ class PackageBTranche4RealCandidateClosureTests(unittest.TestCase):
             self.assertEqual(artifacts[0][1], artifacts[1][1])
             self.assertEqual(artifacts[0][2], artifacts[1][2])
             self.assertEqual(self.candidate_bytes, artifacts[0][0])
-            self.assertEqual(T4_CANONICAL_FILE_SHA256, summaries[0]["target_file_sha256"])
-            self.assertEqual(T4_CONTENT_FINGERPRINT, summaries[0]["target_bank_content_fingerprint"])
-            self.assertEqual(T4_MANIFEST_PAYLOAD_SHA256, summaries[0]["manifest_sha256"])
+            self.assertEqual(self.manifest_bytes, artifacts[0][1])
+            self.assertEqual(self.receipt_bytes, artifacts[0][2])
 
-    def test_38_51_shorter(self) -> None:
-        computed = build_package_b_tranche4_candidate_metrics(
+    def test_40_56_shorter_one_tie_zero_still_longest(self) -> None:
+        computed = build_package_b_tranche5_candidate_metrics(
             self.source_questions,
             self.candidate_questions,
             edited_ids=self.changed_ids,
@@ -893,50 +1055,16 @@ class PackageBTranche4RealCandidateClosureTests(unittest.TestCase):
             source_by_id=self.source_by_id,
             candidate_by_id=self.candidate_by_id,
         )
-        self.assertEqual(51, computed["crossing_to_shorter_count"])
-
-    def test_39_q169_tie(self) -> None:
-        computed = build_package_b_tranche4_candidate_metrics(
-            self.source_questions,
-            self.candidate_questions,
-            edited_ids=self.changed_ids,
-            skipped_ids=self.skipped_ids,
-            separate_ids=self.separate_ids,
-            source_by_id=self.source_by_id,
-            candidate_by_id=self.candidate_by_id,
-        )
+        self.assertEqual(56, computed["crossing_to_shorter_count"])
         self.assertEqual(1, computed["crossing_to_tie_count"])
-        self.assertEqual(list(T4_TIE_IDS), computed["crossing_to_tie_question_ids"])
-
-    def test_40_still_longest_ids(self) -> None:
-        computed = build_package_b_tranche4_candidate_metrics(
-            self.source_questions,
-            self.candidate_questions,
-            edited_ids=self.changed_ids,
-            skipped_ids=self.skipped_ids,
-            separate_ids=self.separate_ids,
-            source_by_id=self.source_by_id,
-            candidate_by_id=self.candidate_by_id,
-        )
-        self.assertEqual(3, computed["still_strict_longest_count"])
-        self.assertEqual(set(T4_STILL_LONGEST_IDS), set(computed["still_strict_longest_question_ids"]))
-
-    def test_41_52_crossings(self) -> None:
-        computed = build_package_b_tranche4_candidate_metrics(
-            self.source_questions,
-            self.candidate_questions,
-            edited_ids=self.changed_ids,
-            skipped_ids=self.skipped_ids,
-            separate_ids=self.separate_ids,
-            source_by_id=self.source_by_id,
-            candidate_by_id=self.candidate_by_id,
-        )
-        self.assertEqual(52, computed["strict_crossings"])
-        self.assertEqual(set(LETTERS), set(computed["correct_letter_counts"]))
+        self.assertEqual([T5_TIE_ID], computed["crossing_to_tie_question_ids"])
+        self.assertEqual(0, computed["still_strict_longest_count"])
+        self.assertEqual(57, computed["strict_crossings"])
         self.assertEqual(serialize_candidate_metrics(computed), self.CANDIDATE_METRICS_PATH.read_text(encoding="utf-8"))
+        self.assertEqual(set(LETTERS), set(computed["correct_letter_counts"]))
 
-    def test_42_t3_progress_continuity(self) -> None:
-        admission = self._admit_t4()
+    def test_42_t4_progress_continuity(self) -> None:
+        admission = self._admit_t5()
         self.assertEqual(AdmissionStatus.PASS, admission.status)
         assert admission.admitted is not None
         source_payload = self._source_progress_payload(admission.admitted)
@@ -951,8 +1079,8 @@ class PackageBTranche4RealCandidateClosureTests(unittest.TestCase):
             first.payload["question_content_fingerprints"][self.changed_id],
         )
 
-    def test_43_t3_session_continuity(self) -> None:
-        admission = self._admit_t4()
+    def test_43_t4_session_continuity(self) -> None:
+        admission = self._admit_t5()
         assert admission.admitted is not None
         snapshot = self._session_snapshot(
             admission.admitted,
@@ -985,8 +1113,8 @@ class PackageBTranche4RealCandidateClosureTests(unittest.TestCase):
             result.payload["session_signature"],
         )
 
-    def test_44_unanswered_changed_selection_cleared(self) -> None:
-        admission = self._admit_t4()
+    def test_46_unanswered_changed_selection_cleared(self) -> None:
+        admission = self._admit_t5()
         assert admission.admitted is not None
         snapshot = self._session_snapshot(
             admission.admitted,
@@ -1005,8 +1133,8 @@ class PackageBTranche4RealCandidateClosureTests(unittest.TestCase):
         self.assertEqual([], answers[self.changed_id]["pending"])
         self.assertFalse(answers[self.changed_id]["answered"])
 
-    def test_45_answered_changed_selection_preserved(self) -> None:
-        admission = self._admit_t4()
+    def test_47_answered_changed_selection_preserved(self) -> None:
+        admission = self._admit_t5()
         assert admission.admitted is not None
         snapshot = self._session_snapshot(
             admission.admitted,
@@ -1024,11 +1152,13 @@ class PackageBTranche4RealCandidateClosureTests(unittest.TestCase):
         self.assertEqual(["D"], answers[self.second_changed_id]["selected"])
         self.assertTrue(answers[self.second_changed_id]["answered"])
 
-    def test_46_historical_t2_progress_forwards_sequentially(self) -> None:
+    def test_48_historical_t2_t3_t4_progress_forwards_sequentially(self) -> None:
         t3_admission = self._admit_t3()
         t4_admission = self._admit_t4()
+        t5_admission = self._admit_t5()
         assert t3_admission.admitted is not None
         assert t4_admission.admitted is not None
+        assert t5_admission.admitted is not None
         t2_progress = {
             "version": 3,
             "progress_identity_version": 1,
@@ -1038,118 +1168,124 @@ class PackageBTranche4RealCandidateClosureTests(unittest.TestCase):
             "question_content_fingerprints": {
                 self.t3_only_changed_id: question_content_fingerprint(self.t2_by_id[self.t3_only_changed_id]),
                 self.t4_only_changed_id: question_content_fingerprint(self.t2_by_id[self.t4_only_changed_id]),
+                self.t5_only_changed_id: question_content_fingerprint(self.t2_by_id[self.t5_only_changed_id]),
             },
             "questions": {
                 self.t3_only_changed_id: _progress_record(),
                 self.t4_only_changed_id: _progress_record(),
+                self.t5_only_changed_id: _progress_record(),
             },
             "history": [],
         }
-        to_t3 = migrate_progress_payload(
-            t2_progress, self.source_questions, t3_admission.admitted, "2026-09-18T00:00:00"
-        )
+        to_t3 = migrate_progress_payload(t2_progress, self.t3_questions, t3_admission.admitted, "2026-09-17T00:00:00")
         self.assertEqual(MigrationStatus.APPLIED, to_t3.status)
-        to_t4 = migrate_progress_payload(to_t3.payload, self.candidate_questions, t4_admission.admitted, MIGRATED_AT)
+        to_t4 = migrate_progress_payload(
+            to_t3.payload, self.source_questions, t4_admission.admitted, "2026-09-18T00:00:00"
+        )
         self.assertEqual(MigrationStatus.APPLIED, to_t4.status)
-        self.assertEqual(_progress_record(), to_t4.payload["questions"][self.t4_only_changed_id])
-        self.assertEqual(t4_admission.admitted.target_bank_content_fingerprint, to_t4.payload["bank_fingerprint"])
+        to_t5 = migrate_progress_payload(to_t4.payload, self.candidate_questions, t5_admission.admitted, MIGRATED_AT)
+        self.assertEqual(MigrationStatus.APPLIED, to_t5.status)
+        self.assertEqual(_progress_record(), to_t5.payload["questions"][self.t5_only_changed_id])
+        self.assertEqual(t5_admission.admitted.target_bank_content_fingerprint, to_t5.payload["bank_fingerprint"])
 
-    def test_47_historical_t3_progress_forwards_sequentially(self) -> None:
-        t3_admission = self._admit_t3()
+    def test_49_historical_t3_t4_progress_forwards_sequentially(self) -> None:
         t4_admission = self._admit_t4()
-        assert t3_admission.admitted is not None
+        t5_admission = self._admit_t5()
         assert t4_admission.admitted is not None
-        old_t3 = copy.deepcopy(t3_admission.admitted)
-        object.__setattr__(
-            old_t3, "manifest_sha256", "d89a6708b08f2afc5bfc3a30cbd4c5708b6022acbacdb3a91db360d12c18c2ea"
-        )
-        object.__setattr__(
-            old_t3, "source_bank_file_sha256", "9c208309483aba1f1881e33a2be85a175548498c51854ef9c04adc075b760800"
-        )
-        object.__setattr__(old_t3, "target_bank_file_sha256", REJECTED_T3_CRLF_SHA256)
-        t2_progress = {
+        assert t5_admission.admitted is not None
+        t3_progress = {
             "version": 3,
             "progress_identity_version": 1,
             "question_identity": "canonical_question_id",
             "progress_content_epoch_version": 1,
-            "bank_fingerprint": old_t3.source_bank_content_fingerprint,
+            "bank_fingerprint": t4_admission.admitted.source_bank_content_fingerprint,
             "question_content_fingerprints": {
-                self.t3_only_changed_id: question_content_fingerprint(self.t2_by_id[self.t3_only_changed_id]),
+                self.t4_only_changed_id: question_content_fingerprint(self.t3_by_id[self.t4_only_changed_id]),
+                self.t5_only_changed_id: question_content_fingerprint(self.t3_by_id[self.t5_only_changed_id]),
             },
-            "questions": {self.t3_only_changed_id: _progress_record()},
+            "questions": {
+                self.t4_only_changed_id: _progress_record(),
+                self.t5_only_changed_id: _progress_record(),
+            },
             "history": [],
         }
-        historical_t3 = migrate_progress_payload(t2_progress, self.source_questions, old_t3, "2026-09-17T00:00:00")
-        interpreted = migrate_progress_payload(
-            historical_t3.payload, self.source_questions, t3_admission.admitted, "2026-09-18T00:00:00"
+        to_t4 = migrate_progress_payload(
+            t3_progress, self.source_questions, t4_admission.admitted, "2026-09-18T00:00:00"
         )
-        self.assertEqual(MigrationStatus.MIGRATION_ALREADY_APPLIED, interpreted.status)
-        forwarded = migrate_progress_payload(
-            interpreted.payload, self.candidate_questions, t4_admission.admitted, MIGRATED_AT
-        )
-        self.assertIn(forwarded.status, {MigrationStatus.APPLIED, MigrationStatus.MIGRATION_ALREADY_APPLIED})
-        self.assertEqual(t4_admission.admitted.target_bank_content_fingerprint, forwarded.payload["bank_fingerprint"])
+        self.assertEqual(MigrationStatus.APPLIED, to_t4.status)
+        to_t5 = migrate_progress_payload(to_t4.payload, self.candidate_questions, t5_admission.admitted, MIGRATED_AT)
+        self.assertEqual(MigrationStatus.APPLIED, to_t5.status)
+        self.assertEqual(t5_admission.admitted.target_bank_content_fingerprint, to_t5.payload["bank_fingerprint"])
 
-    def test_48_historical_t2_session_forwards_sequentially(self) -> None:
+    def test_50_historical_t2_session_forwards_sequentially(self) -> None:
         t3_admission = self._admit_t3()
         t4_admission = self._admit_t4()
+        t5_admission = self._admit_t5()
         assert t3_admission.admitted is not None
         assert t4_admission.admitted is not None
+        assert t5_admission.admitted is not None
         t2_snapshot = self._session_snapshot(
             t3_admission.admitted,
             T2_BANK_FILENAME,
             [
                 (self.t3_only_changed_id, _session_answer(selected=["A"], answered=True)),
-                (self.t4_only_changed_id, _session_answer(selected=["B"], pending=["B"], answered=False)),
+                (self.t5_only_changed_id, _session_answer(selected=["B"], pending=["B"], answered=False)),
             ],
         )
         to_t3 = migrate_session_payload(
             t2_snapshot,
-            self.source_questions,
+            self.t3_questions,
             t3_admission.admitted,
-            SOURCE_BANK_FILENAME,
+            T3_BANK_FILENAME,
             source_questions=self.t2_questions,
         )
         self.assertEqual(MigrationStatus.APPLIED, to_t3.status)
         to_t4 = migrate_session_payload(
             to_t3.payload,
-            self.candidate_questions,
-            t4_admission.admitted,
-            CANDIDATE_BANK_FILENAME,
-            source_questions=self.source_questions,
-        )
-        self.assertEqual(MigrationStatus.APPLIED, to_t4.status)
-        with self.assertRaises(ContentRevisionMigrationError) as ctx:
-            migrate_session_payload(
-                t2_snapshot,
-                self.candidate_questions,
-                t4_admission.admitted,
-                CANDIDATE_BANK_FILENAME,
-                source_questions=self.t2_questions,
-            )
-        self.assertEqual(MigrationFailureReason.SOURCE_BANK_MISMATCH, ctx.exception.reason)
-
-    def test_49_historical_t3_session_forwards_sequentially(self) -> None:
-        t4_admission = self._admit_t4()
-        assert t4_admission.admitted is not None
-        snapshot = self._session_snapshot(
+            self.source_questions,
             t4_admission.admitted,
             SOURCE_BANK_FILENAME,
-            [(self.changed_id, _session_answer(selected=["A"], answered=True))],
+            source_questions=self.t3_questions,
         )
-        result = migrate_session_payload(
-            snapshot,
+        self.assertEqual(MigrationStatus.APPLIED, to_t4.status)
+        to_t5 = migrate_session_payload(
+            to_t4.payload,
             self.candidate_questions,
-            t4_admission.admitted,
+            t5_admission.admitted,
             CANDIDATE_BANK_FILENAME,
             source_questions=self.source_questions,
         )
-        self.assertEqual(MigrationStatus.APPLIED, result.status)
-        answers = {row["question_id"]: row for row in result.payload["answers"]}
-        self.assertEqual(["A"], answers[self.changed_id]["selected"])
+        self.assertEqual(MigrationStatus.APPLIED, to_t5.status)
 
-    def test_50_unknown_lineage_rejected(self) -> None:
-        admission = self._admit_t4()
+    def test_51_historical_t3_session_forwards_sequentially(self) -> None:
+        t4_admission = self._admit_t4()
+        t5_admission = self._admit_t5()
+        assert t4_admission.admitted is not None
+        assert t5_admission.admitted is not None
+        snapshot = self._session_snapshot(
+            t4_admission.admitted,
+            T3_BANK_FILENAME,
+            [(self.t5_only_changed_id, _session_answer(selected=["A"], answered=True))],
+        )
+        to_t4 = migrate_session_payload(
+            snapshot,
+            self.source_questions,
+            t4_admission.admitted,
+            SOURCE_BANK_FILENAME,
+            source_questions=self.t3_questions,
+        )
+        self.assertEqual(MigrationStatus.APPLIED, to_t4.status)
+        to_t5 = migrate_session_payload(
+            to_t4.payload,
+            self.candidate_questions,
+            t5_admission.admitted,
+            CANDIDATE_BANK_FILENAME,
+            source_questions=self.source_questions,
+        )
+        self.assertEqual(MigrationStatus.APPLIED, to_t5.status)
+
+    def test_52_unknown_lineage_rejected(self) -> None:
+        admission = self._admit_t5()
         assert admission.admitted is not None
         payload = migrate_progress_payload(
             self._source_progress_payload(admission.admitted),
@@ -1162,8 +1298,8 @@ class PackageBTranche4RealCandidateClosureTests(unittest.TestCase):
             migrate_progress_payload(payload, self.candidate_questions, admission.admitted, "2026-09-20T00:00:00")
         self.assertEqual(MigrationFailureReason.TARGET_PROGRESS_CONFLICT, ctx.exception.reason)
 
-    def test_51_tampered_lineage_rejected(self) -> None:
-        admission = self._admit_t4()
+    def test_53_tampered_lineage_rejected(self) -> None:
+        admission = self._admit_t5()
         assert admission.admitted is not None
         payload = migrate_progress_payload(
             self._source_progress_payload(admission.admitted),
@@ -1176,8 +1312,19 @@ class PackageBTranche4RealCandidateClosureTests(unittest.TestCase):
             migrate_progress_payload(payload, self.candidate_questions, admission.admitted, "2026-09-20T00:00:00")
         self.assertEqual(MigrationFailureReason.TARGET_PROGRESS_CONFLICT, ctx.exception.reason)
 
-    def test_52_already_applied_t4_progress_idempotent(self) -> None:
-        admission = self._admit_t4()
+    def test_54_partial_t5_rejected(self) -> None:
+        admission = self._admit_t5()
+        assert admission.admitted is not None
+        source_payload = self._source_progress_payload(admission.admitted, [self.changed_id, self.second_changed_id])
+        source_payload["question_content_fingerprints"][self.changed_id] = question_content_fingerprint(
+            self.changed_target
+        )
+        with self.assertRaises(ContentRevisionMigrationError) as ctx:
+            migrate_progress_payload(source_payload, self.candidate_questions, admission.admitted, MIGRATED_AT)
+        self.assertEqual(MigrationFailureReason.SOURCE_PROGRESS_FINGERPRINT_MISMATCH, ctx.exception.reason)
+
+    def test_55_already_applied_t5_progress_idempotent(self) -> None:
+        admission = self._admit_t5()
         assert admission.admitted is not None
         first = migrate_progress_payload(
             self._source_progress_payload(admission.admitted),
@@ -1192,8 +1339,8 @@ class PackageBTranche4RealCandidateClosureTests(unittest.TestCase):
         self.assertFalse(second.changed)
         self.assertEqual(first.payload, second.payload)
 
-    def test_53_repeated_t3_to_t4_session_migration_deterministic(self) -> None:
-        admission = self._admit_t4()
+    def test_56_repeated_t4_to_t5_session_migration_deterministic(self) -> None:
+        admission = self._admit_t5()
         assert admission.admitted is not None
         snapshot = self._session_snapshot(
             admission.admitted,
@@ -1219,24 +1366,68 @@ class PackageBTranche4RealCandidateClosureTests(unittest.TestCase):
         )
         self.assertEqual(first.payload, second.payload)
 
-    def test_58_package_c_inactive(self) -> None:
+    def test_62_package_c_inactive(self) -> None:
         profile = _read_json(REPOSITORY_ROOT / "cert_profile_sc900.json")
         self.assertEqual(PRODUCTION_BANK_FILENAME, profile["runtime_bank"])
+        self.assertFalse((REPOSITORY_ROOT / T6_BANK_FILENAME).exists())
         self.assertEqual({}, AUTHORIZED_CONTENT_REVISION_MANIFESTS)
 
-    def test_59_production_registry_inactive(self) -> None:
+    def test_63_production_registry_inactive(self) -> None:
         self.assertEqual({}, AUTHORIZED_CONTENT_REVISION_MANIFESTS)
         self.assertEqual(self.registry_before, AUTHORIZED_CONTENT_REVISION_MANIFESTS)
 
-    def test_60_t5_candidate_not_production_activated(self) -> None:
-        profile = _read_json(REPOSITORY_ROOT / "cert_profile_sc900.json")
-        self.assertEqual(PRODUCTION_BANK_FILENAME, profile["runtime_bank"])
-        self.assertNotEqual("sc900_bank_v8_length_rebalanced_t5.json", profile["runtime_bank"])
-        self.assertEqual({}, AUTHORIZED_CONTENT_REVISION_MANIFESTS)
+    def test_65_t6_not_started(self) -> None:
+        evidence = REPOSITORY_ROOT / "content_revision_evidence"
+        matches = list(evidence.rglob("*t6*")) + list(evidence.rglob("*T6*"))
+        docs = list((REPOSITORY_ROOT / "docs/research/SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001").glob("*TRANCHE6*"))
+        self.assertEqual([], matches)
+        self.assertEqual([], docs)
+
+    def test_71_t5_primary_records_identical_between_canonical_t3_and_t4(self) -> None:
+        self.assertEqual(EXPECTED_T3_SOURCE_SHA256, _raw_sha256(self.t3_bytes))
+        self.assertEqual(EXPECTED_T3_SOURCE_FINGERPRINT, bank_content_fingerprint(self.t3_questions))
+        self.assertEqual(EXPECTED_T3_SOURCE_SHA256, self.t4_manifest["source_bank"]["file_sha256"])
+        self.assertEqual(EXPECTED_T3_SOURCE_FINGERPRINT, self.t4_manifest["source_bank"]["content_fingerprint"])
+        for question_id in self.queue_ids:
+            self.assertEqual(self.t3_by_id[question_id], self.source_by_id[question_id])
+
+    def test_90_no_combined_t3_to_t5_edge(self) -> None:
+        t5_admission = self._admit_t5()
+        assert t5_admission.admitted is not None
+        t3_progress = {
+            "version": 3,
+            "progress_identity_version": 1,
+            "question_identity": "canonical_question_id",
+            "progress_content_epoch_version": 1,
+            "bank_fingerprint": bank_content_fingerprint(self.t3_questions),
+            "question_content_fingerprints": {
+                self.t5_only_changed_id: question_content_fingerprint(self.t3_by_id[self.t5_only_changed_id]),
+            },
+            "questions": {self.t5_only_changed_id: _progress_record()},
+            "history": [],
+        }
+        with self.assertRaises(ContentRevisionMigrationError) as ctx:
+            migrate_progress_payload(t3_progress, self.candidate_questions, t5_admission.admitted, MIGRATED_AT)
+        self.assertEqual(MigrationFailureReason.SOURCE_BANK_MISMATCH, ctx.exception.reason)
+        snapshot = self._session_snapshot(
+            t5_admission.admitted,
+            T3_BANK_FILENAME,
+            [(self.t5_only_changed_id, _session_answer(selected=["A"], answered=True))],
+        )
+        snapshot["bank_fingerprint"] = bank_content_fingerprint(self.t3_questions)
+        with self.assertRaises(ContentRevisionMigrationError) as session_ctx:
+            migrate_session_payload(
+                snapshot,
+                self.candidate_questions,
+                t5_admission.admitted,
+                CANDIDATE_BANK_FILENAME,
+                source_questions=self.t3_questions,
+            )
+        self.assertEqual(MigrationFailureReason.SOURCE_BANK_MISMATCH, session_ctx.exception.reason)
 
 
-class PackageBTranche4RegressionAndQualityTests(unittest.TestCase):
-    def test_54_t1_t2_t3_regression_remains_green(self) -> None:
+class PackageBTranche5RegressionAndQualityTests(unittest.TestCase):
+    def test_57_t1_t4_regression_remains_green(self) -> None:
         if os.environ.get(_NESTED_SUITE_ENV) == "1":
             self.skipTest("already inside nested Package-B regression")
         env = os.environ.copy()
@@ -1256,8 +1447,34 @@ class PackageBTranche4RegressionAndQualityTests(unittest.TestCase):
                 text=True,
             )
             self.assertEqual(0, completed.returncode, completed.stderr)
+        t4_loader = unittest.TestLoader()
+        t4_suite = t4_loader.loadTestsFromName("tests.test_package_b_tranche4")
+        excluded = {"test_58_package_c_inactive", "test_60_no_t5_artifacts"}
 
-    def test_55_canonical_byte_suite_remains_green(self) -> None:
+        def _flatten(suite: unittest.TestSuite) -> list[unittest.TestCase]:
+            tests: list[unittest.TestCase] = []
+            for item in suite:
+                if isinstance(item, unittest.TestSuite):
+                    tests.extend(_flatten(item))
+                else:
+                    tests.append(item)
+            return tests
+
+        filtered = unittest.TestSuite()
+        for test in _flatten(t4_suite):
+            if getattr(test, "_testMethodName", "") not in excluded:
+                filtered.addTest(test)
+        stream = open(os.devnull, "w", encoding="utf-8")
+        try:
+            result = unittest.TextTestRunner(stream=stream, verbosity=0).run(filtered)
+        finally:
+            stream.close()
+        self.assertTrue(
+            result.wasSuccessful(),
+            f"T4 functional failures={len(result.failures)} errors={len(result.errors)}",
+        )
+
+    def test_58_canonical_byte_suite_remains_green(self) -> None:
         if os.environ.get(_NESTED_SUITE_ENV) == "1":
             self.skipTest("already inside nested Package-B regression")
         env = os.environ.copy()
@@ -1272,17 +1489,19 @@ class PackageBTranche4RegressionAndQualityTests(unittest.TestCase):
         )
         self.assertEqual(0, completed.returncode, completed.stderr)
 
-    def test_56_full_suite_remains_green(self) -> None:
+    def test_59_full_suite_remains_green(self) -> None:
         if os.environ.get(_NESTED_SUITE_ENV) == "1" or os.environ.get("SC900_NESTED_FULL_SUITE") == "1":
             self.skipTest("operator full suite is measured outside this nested test")
         self.assertTrue((REPOSITORY_ROOT / "tests").is_dir())
 
-    def test_57_quality_state_measured_independently(self) -> None:
+    def test_87_t5_builder_in_quality_targets_and_mypy_not_expanded(self) -> None:
         from tools.run_quality_checks import QUALITY_TARGETS
 
-        self.assertIn("tools/build_package_b_tranche4.py", QUALITY_TARGETS)
+        self.assertIn("tools/build_package_b_tranche5.py", QUALITY_TARGETS)
+        pyproject = (REPOSITORY_ROOT / "pyproject.toml").read_text(encoding="utf-8")
+        self.assertNotIn("tools/build_package_b_tranche5.py", pyproject)
         completed = subprocess.run(
-            [sys.executable, "-m", "ruff", "check", "tools/build_package_b_tranche4.py"],
+            [sys.executable, "-m", "ruff", "check", "tools/build_package_b_tranche5.py"],
             cwd=REPOSITORY_ROOT,
             check=False,
             capture_output=True,

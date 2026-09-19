@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Hybrid identity connects on-premises identities to Entra ID and cloud apps",
+    "B": "Hybrid identity requires deleting Active Directory Domain Services on day one",
+    "C": "Hybrid identity is a Purview eDiscovery case type",
+    "D": "Hybrid identity replaces encryption"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/hybrid/whatis-hybrid-identity"
+  ],
+  "before": {
+    "A": "Hybrid identity lets on-premises identities be used with Entra ID and cloud apps",
+    "B": "Hybrid identity requires deleting Active Directory Domain Services on day one",
+    "C": "Hybrid identity is a Purview eDiscovery case type",
+    "D": "Hybrid identity replaces encryption"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "5b2d418c4104fb99e5f2186b9277909ff43f13765960cf6f731d259a21c00f26",
+  "question_id": "sc900_mlc_q038",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "ba8d6a3f25366c612aff5dd393adb2651c7f783b318e5416cdbcabb55496a2a1"
+}

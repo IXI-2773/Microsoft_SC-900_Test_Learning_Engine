@@ -1,0 +1,35 @@
+{
+  "after": {
+    "A": "Azure Key Vault",
+    "B": "Microsoft Defender for Office 365",
+    "C": "Microsoft Entra Domain Services for managed domain services",
+    "D": "Azure Bastion"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/defender-office-365/mdo-about",
+    "https://learn.microsoft.com/en-us/defender-office-365/safe-attachments-about",
+    "https://learn.microsoft.com/en-us/defender-office-365/safe-links-about"
+  ],
+  "before": {
+    "A": "Azure Key Vault",
+    "B": "Microsoft Defender for Office 365",
+    "C": "Microsoft Entra Domain Services",
+    "D": "Azure Bastion"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "7a478f71a978d6be5cdd3c0da0b49542561fae2202f16b42df17ba87e385221b",
+  "question_id": "sc900_p3_q026",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "58b4d8e55cdbaa000a6e3a2783af7a7f536370a35fa98a0b5196269077497430"
+}
