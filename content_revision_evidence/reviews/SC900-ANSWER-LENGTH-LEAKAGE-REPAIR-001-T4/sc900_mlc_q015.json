@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Using identity, network, endpoint, and data controls together",
+    "B": "Using only a strong password leaves security dependent on one control layer",
+    "C": "Publishing secrets in a public repository removes confidentiality rather than adding a layer",
+    "D": "Opening every inbound port weakens network protection rather than adding a defense layer"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/"
+  ],
+  "before": {
+    "A": "Combining identity controls, network filters, endpoint protection, and data encryption",
+    "B": "Using only a long password and no other controls",
+    "C": "Storing all secrets in a public Git repository",
+    "D": "Allowing every inbound port to simplify operations"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "89f8a44d46ec7766e13c168c24ac4c89b3d8acdcf6ab5a22e33b0f16e6de58de",
+  "question_id": "sc900_mlc_q015",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "627238f3f76b8d06e11d9b490447051b16c2e6739d8e3ae1f8c3f867cf7c951a"
+}

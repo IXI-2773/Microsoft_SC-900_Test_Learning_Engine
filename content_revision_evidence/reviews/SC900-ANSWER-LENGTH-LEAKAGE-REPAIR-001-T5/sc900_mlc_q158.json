@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Mitigate volumetric DDoS",
+    "B": "Activate eligible privileged roles just in time",
+    "C": "Classify content and can apply protection",
+    "D": "Open RDP ports"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/sensitivity-labels"
+  ],
+  "before": {
+    "A": "Mitigate volumetric DDoS",
+    "B": "Activate privileged Entra roles",
+    "C": "Classify and can protect content as it travels across services",
+    "D": "Open RDP ports"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "bbf5c2ecbc48959cb604f44f184eab6e87e1473c012d0854436e67b53d3a0160",
+  "question_id": "sc900_mlc_q158",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "c467c8bb87af31cb2a68b4081f2612ffcb42843a86bec9f8fd7e3995085a9ca1"
+}

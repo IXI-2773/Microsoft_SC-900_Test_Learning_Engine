@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "To mitigate volumetric DDoS floods against public IP addresses",
+    "B": "To publish Microsoft's independent audit reports",
+    "C": "To scan email attachments for malware",
+    "D": "To recertify existing access and remove access no longer needed"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/id-governance/access-reviews-overview"
+  ],
+  "before": {
+    "A": "To mitigate volumetric DDoS floods against public IP addresses",
+    "B": "To publish Microsoft's independent audit reports",
+    "C": "To scan email attachments for malware",
+    "D": "To recertify whether existing access should continue and remove access that is no longer needed"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "b0bc36f0a0beb99e169408a390df1075d9afb3da6ba0a397a531c36de3737b40",
+  "question_id": "sc900_p3_q024",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "b87ed3a06fceca2555892af79ba475be0715d27b9143f3d18f798fb37246d7fb"
+}

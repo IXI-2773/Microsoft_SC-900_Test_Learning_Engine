@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "To guarantee that all data stays in one country",
+    "B": "To eliminate the need for identity controls",
+    "C": "So one failed layer does not remove all protection",
+    "D": "To replace monitoring with preventive controls only"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/"
+  ],
+  "before": {
+    "A": "To guarantee that all data stays in one country",
+    "B": "To eliminate the need for identity controls",
+    "C": "So that failure or bypass of one layer does not leave the system entirely unprotected",
+    "D": "To replace monitoring with preventive controls only"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "903ba7924641cd6de337da1a510344a2b36f6e4b70e4898abafb56a3af38f556",
+  "question_id": "sc900_p1_q031",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "e416fb0831af3e02365f955b14b38f08852965d06ee9f425ae69edd7c4fb354c"
+}

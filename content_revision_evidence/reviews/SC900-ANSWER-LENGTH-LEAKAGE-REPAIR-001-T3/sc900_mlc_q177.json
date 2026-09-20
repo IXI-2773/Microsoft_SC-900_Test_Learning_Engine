@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Opening RDP to the internet on an Azure virtual machine",
+    "B": "Recertifying guest users in Microsoft Entra access reviews",
+    "C": "Mitigating UDP floods with Azure DDoS Protection",
+    "D": "Data integrity and authenticity through digital signatures"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/"
+  ],
+  "before": {
+    "A": "Opening RDP to the internet",
+    "B": "Recertifying guest users",
+    "C": "Mitigating UDP floods with Azure DDoS Protection",
+    "D": "Data integrity and authenticity through digital signatures"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "29d56ef6c7ad39cb52712121ed489f4d7ad93b8d175755e3ca90b77f6e413fc9",
+  "question_id": "sc900_mlc_q177",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "199506084777b4fc8294c9a5e40b22761c1d4890cfd651f4714c8774db5311b1"
+}

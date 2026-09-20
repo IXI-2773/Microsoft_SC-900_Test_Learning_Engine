@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Microsoft Defender for Office 365",
+    "B": "Azure Bastion",
+    "C": "Azure Key Vault",
+    "D": "Network security groups for network traffic filtering"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/defender-office-365/mdo-about"
+  ],
+  "before": {
+    "A": "Microsoft Defender for Office 365",
+    "B": "Azure Bastion",
+    "C": "Azure Key Vault",
+    "D": "Network security groups"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "ea95eed4ff8d795052a0ebe02b825c12bd50cf048d9829bf4509f64006a0830d",
+  "question_id": "sc900_mlc_q090",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "01a8a80234606c659dfa80227e15a60cfd41636f7165d53c63ad24cdcd373d93"
+}

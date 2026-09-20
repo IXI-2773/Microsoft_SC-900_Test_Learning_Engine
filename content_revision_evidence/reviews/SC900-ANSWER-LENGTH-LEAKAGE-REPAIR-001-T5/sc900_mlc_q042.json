@@ -1,0 +1,34 @@
+{
+  "after": {
+    "A": "Assigning public IP addresses to Azure virtual machines",
+    "B": "Disabling authentication",
+    "C": "Just-in-time privileged-role activation",
+    "D": "Publishing ISO reports"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure",
+    "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-how-to-activate-role"
+  ],
+  "before": {
+    "A": "Automatic public IP assignment to VMs",
+    "B": "Disabling authentication",
+    "C": "Just-in-time activation instead of always-on privileged roles",
+    "D": "Publishing ISO reports"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "1048ee2a8047b2cbebf76bd85e07a879782a678471f3367a777982fbdc70b2ce",
+  "question_id": "sc900_mlc_q042",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "90b31a526c8f8b5c5a5a6eec077236329cf5c4e58804c7786ece76bee0c9d439"
+}

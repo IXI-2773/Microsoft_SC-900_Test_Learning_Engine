@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Microsoft Defender for Endpoint device EDR",
+    "B": "Microsoft Entra ID Protection for user and sign-in risk detections",
+    "C": "It detects identity-based attacks using Active Directory signals",
+    "D": "Microsoft Defender for Cloud Apps for SaaS session control"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/defender-for-identity/what-is"
+  ],
+  "before": {
+    "A": "Microsoft Defender for Endpoint",
+    "B": "Microsoft Entra ID Protection",
+    "C": "It detects identity-based attacks using Active Directory signals",
+    "D": "Microsoft Defender for Cloud Apps"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "5eaf8bc8033c560afb1e7014b70ff5cf7d7930c639c0f95400967a3a82d2f6ee",
+  "question_id": "sc900_mlc_q140",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "a4e563ec58ff3f7f72fb647f624bf027c1559844ccb5f3bb3ca64968f7e42e85"
+}

@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Access reviews recertify existing access; PIM activates privileged roles just in time",
+    "B": "Access reviews are the only way to require MFA on PIM role activation",
+    "C": "PIM recertifies guest groups, and access reviews encrypt virtual machines",
+    "D": "They are identical Microsoft Entra services with two marketing names"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/id-governance/access-reviews-overview"
+  ],
+  "before": {
+    "A": "Access reviews recertify whether existing access should continue; PIM activates privileged roles just in time",
+    "B": "Access reviews are the only way to require MFA on role activation",
+    "C": "PIM recertifies guest groups, and access reviews encrypt virtual machines",
+    "D": "They are identical services with two marketing names"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "ed590f33ef882c507d7754c21e55396b799b754126e8491abc9dc34cc83110b8",
+  "question_id": "sc900_mlc_q229",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "993478e6bbb8cc4680c49a3bc1696fb7e627c2a3dc7a20bb8a460511af7e082a"
+}

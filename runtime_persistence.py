@@ -12,6 +12,8 @@ from content_revision_migration import (
     ContentRevisionMigrationError,
     MigrationFailureReason,
     MigrationStatus,
+    accepted_migration_lineage_identities,
+    derive_migration_id,
     migrate_progress_payload,
     migrate_session_payload,
 )
@@ -261,9 +263,7 @@ class RuntimePersistence:
                             str(target_path),
                         ),
                     )
-                if not _progress_payloads_equal_ignoring_retry_migrated_at(
-                    expected.payload, existing, expected.migration_id
-                ):
+                if not _progress_payloads_equal_ignoring_retry_migrated_at(expected.payload, existing, revision):
                     return (
                         None,
                         None,
@@ -402,18 +402,26 @@ def content_revision_archive_path(source_path: Path, migration_id: str, label: s
 
 
 def _progress_payloads_equal_ignoring_retry_migrated_at(
-    expected: dict[str, Any], existing: dict[str, Any], migration_id: str
+    expected: dict[str, Any], existing: dict[str, Any], revision
 ) -> bool:
-    return _payload_for_recovery_compare(expected, migration_id) == _payload_for_recovery_compare(
-        existing, migration_id
-    )
+    return _payload_for_recovery_compare(expected, revision) == _payload_for_recovery_compare(existing, revision)
 
 
-def _payload_for_recovery_compare(payload: dict[str, Any], migration_id: str) -> str:
+def _payload_for_recovery_compare(payload: dict[str, Any], revision) -> str:
     normalized = json.loads(json.dumps(payload))
     lineage = normalized.get("content_revision_lineage")
+    canonical_migration_id = derive_migration_id(revision)
+    accepted_identities = accepted_migration_lineage_identities(revision)
     if isinstance(lineage, list):
         for row in lineage:
-            if isinstance(row, dict) and str(row.get("migration_id") or "") == migration_id:
+            if not isinstance(row, dict):
+                continue
+            identity = (
+                str(row.get("manifest_sha256") or ""),
+                str(row.get("migration_id") or ""),
+            )
+            if identity in accepted_identities:
+                row["manifest_sha256"] = revision.manifest_sha256
+                row["migration_id"] = canonical_migration_id
                 row["migrated_at"] = ""
     return json.dumps(normalized, sort_keys=True, separators=(",", ":"))

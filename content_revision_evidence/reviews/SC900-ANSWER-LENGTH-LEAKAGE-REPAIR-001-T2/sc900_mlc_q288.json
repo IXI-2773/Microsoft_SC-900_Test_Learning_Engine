@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Disposition review requiring approval before a record is destroyed",
+    "B": "Retention labels that apply keep-or-delete settings to content",
+    "C": "Retention policies that apply keep-or-delete to locations",
+    "D": "Safe Links time-of-click URL checks in email"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/records-management"
+  ],
+  "before": {
+    "A": "Disposition review, which can require approval before a record is destroyed",
+    "B": "Retention labels",
+    "C": "Retention policies",
+    "D": "Safe Links time-of-click URL checks"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "00ef4b2b6530c42ad188f3233a2e58398642139da7c98a511e8be64e8793050f",
+  "question_id": "sc900_mlc_q288",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "65072c407ca96fa294527a51662566a1d9898242ce9617500d91461adcd31d31"
+}

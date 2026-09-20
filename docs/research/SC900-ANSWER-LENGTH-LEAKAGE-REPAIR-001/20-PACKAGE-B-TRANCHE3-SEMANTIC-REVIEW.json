@@ -1,0 +1,622 @@
+{
+  "candidate_bank": "sc900_bank_v8_length_rebalanced_t3.json",
+  "review_queue": [
+    {
+      "disposition": "SKIP",
+      "question_id": "sc900_mlc_q288",
+      "review_note": "Second-pass review of the T2 BOTH revision. Distractors already name retention-label, retention-policy, and Safe Links jobs, and the remaining 4-character gap would require padding those complete contrasts. SKIP; later reconsideration remains possible."
+    },
+    {
+      "disposition": "SKIP",
+      "question_id": "sc900_mlc_q126",
+      "review_note": "Second-pass review of the T2 DISTRACTOR_ONLY revision. CSPM and Defender for Endpoint jobs are already complete, and expanding the identity-provider distractor would not naturally overtake the 82-character workload-protection statement without filler. SKIP; later reconsideration remains possible."
+    },
+    {
+      "after": {
+        "A": "CSPM is Defender for Office 365 mailbox anti-phishing protection",
+        "B": "CSPM is Microsoft Entra access reviews that recertify guest users",
+        "C": "CSPM continuously assesses cloud configuration against security standards",
+        "D": "CSPM is Azure Bastion RDP/SSH connectivity to VMs without public IP addresses"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/defender-for-cloud/concept-cloud-security-posture-management"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q138",
+      "review_note": "Distractor-only second-pass: D now states Azure Bastion's actual private RDP/SSH job, and B names access reviews as the guest-recertification control, both remaining wrong for CSPM. Distractor growth: A 64->64 (+0); B 52->65 (+13); C 73->73 (+0); D 38->77 (+39). MAX_DISTRACTOR 64->77 (+13). Correct 73->73 (+0). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "disposition": "SKIP",
+      "question_id": "sc900_mlc_q109",
+      "review_note": "Second-pass label-like residual with a 1-character gap. C and D remain the assigned-standard labels Regulations and Industry standards; expanding them into sentences would create a second defensible reading of the failing-resource list. High padding pressure. SKIP; later reconsideration remains possible."
+    },
+    {
+      "after": {
+        "A": "Opening RDP to the internet on an Azure virtual machine",
+        "B": "Recertifying guest users in Microsoft Entra access reviews",
+        "C": "Mitigating UDP floods with Azure DDoS Protection",
+        "D": "Data integrity and authenticity through digital signatures"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q177",
+      "review_note": "Distractor-only second-pass: A names the Azure VM RDP exposure plane and B names Entra access reviews as the guest-recertification control; neither is a digital-signature integrity control. Distractor growth: A 27->55 (+28); B 24->58 (+34); C 48->48 (+0); D 58->58 (+0). MAX_DISTRACTOR 48->58 (+10). Correct 58->58 (+0). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "disposition": "SKIP",
+      "question_id": "sc900_mlc_q216",
+      "review_note": "Second-pass review of the T2 BOTH revision. Policies and standards already state their GRC roles after 95 characters of prior distractor growth. Remaining gap 11 has no unused discriminative contrast. SKIP; later reconsideration remains possible."
+    },
+    {
+      "disposition": "SKIP",
+      "question_id": "sc900_p3_q054",
+      "review_note": "Second-pass review of the T2 BOTH revision. A, C, and D already name the wrong DDoS, eDiscovery, and NSG planes. Further lengthening would pad complete false claims, and shortening the identity-type reason would drop authentication or authorization. SKIP; later reconsideration remains possible."
+    },
+    {
+      "disposition": "SKIP",
+      "question_id": "sc900_mlc_q295",
+      "review_note": "Second-pass review of the T2 BOTH revision. Prior distractor growth was 87 characters; B is already a complete always-visible-label falsehood and C/D already name DLP and retention. Remaining gap 14 has no unused contrast. SKIP; later reconsideration remains possible."
+    },
+    {
+      "disposition": "SKIP",
+      "question_id": "sc900_mlc_q217",
+      "review_note": "Second-pass review of the T2 BOTH revision. DDoS, Purview, and Sentinel false planes are already complete. Shortening the tenant definition would drop the organization-boundary meaning. Remaining gap 17. SKIP; later reconsideration remains possible."
+    },
+    {
+      "after": {
+        "A": "Azure Firewall filtering network traffic for virtual networks",
+        "B": "Protect web apps from HTTP attacks such as injection and XSS",
+        "C": "Azure DDoS Protection mitigating volumetric network floods",
+        "D": "Azure Bastion for managed RDP and SSH access"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/web-application-firewall/overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q134",
+      "review_note": "Distractor-only second-pass: leftover Azure Firewall and DDoS product labels now state their network-filtering and volumetric-flood jobs, remaining distinct from WAF HTTP protection. Distractor growth: A 14->61 (+47); B 60->60 (+0); C 21->58 (+37); D 44->44 (+0). MAX_DISTRACTOR 44->61 (+17). Correct 60->60 (+0). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Key Vault is an Azure Web Application Firewall for HTTP attacks",
+        "B": "Source control cannot store text files such as configuration",
+        "C": "Key Vault stores secrets with access control instead of in code",
+        "D": "Key Vault recertifies Microsoft Entra guest group membership"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/key-vault/general/basic-concepts"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q124",
+      "review_note": "Two-sided equivalent rebalancing: the correct choice still names access-controlled secret storage versus secrets in code; A/D now state WAF and guest-recertification jobs that Key Vault does not perform. Distractor growth: A 18->63 (+45); B 38->60 (+22); C 87->63 (-24); D 28->60 (+32). MAX_DISTRACTOR 38->63 (+25). Correct 87->63 (-24). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "eDiscovery hold preserves legal-matter content; retention is a keep-or-delete schedule",
+        "B": "Retention holds are the only way to respond to a legal lawsuit",
+        "C": "eDiscovery hold is a Microsoft Entra Conditional Access grant control",
+        "D": "A lawsuit is preserved only by Azure Firewall network filtering"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/ediscovery"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q291",
+      "review_note": "Two-sided equivalent rebalancing: legal hold versus keep-or-delete retention is preserved; C/D name Conditional Access and Azure Firewall jobs that do not preserve mailbox content for a lawsuit. Distractor growth: A 102->86 (-16); B 56->62 (+6); C 53->69 (+16); D 45->63 (+18). MAX_DISTRACTOR 56->69 (+13). Correct 102->86 (-16). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Because SaaS applications cannot use encryption in transit or at rest",
+        "B": "Because a trusted office network no longer surrounds access requests",
+        "C": "Because passwords are no longer used for any Microsoft Entra sign-in",
+        "D": "Because Azure cannot deploy network firewalls or NSGs"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts/"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q006",
+      "review_note": "Two-sided equivalent rebalancing: identity is still the perimeter because office networks no longer surround access; A/C/D remain false encryption, password-abolition, and Azure-firewall claims. Distractor growth: A 39->69 (+30); B 80->68 (-12); C 45->68 (+23); D 45->53 (+8). MAX_DISTRACTOR 45->69 (+24). Correct 80->68 (-12). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Because Key Vault stores secrets, keys, and certificates with access control",
+        "B": "Because Key Vault classifies Microsoft 365 email as records",
+        "C": "Because Key Vault is a Microsoft Sentinel SIEM workspace for log analytics and detections",
+        "D": "Because Key Vault issues Temporary Access Pass credentials"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure/"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p3_q097",
+      "review_note": "Two-sided equivalent rebalancing: Key Vault remains a managed secrets/keys/certificates store with access control; C now names a Sentinel SIEM workspace, which Key Vault is not. Distractor growth: A 104->76 (-28); B 59->59 (+0); C 27->89 (+62); D 58->58 (+0). MAX_DISTRACTOR 59->89 (+30). Correct 104->76 (-28). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Microsoft takes on more of the platform while the customer still owns data and identities",
+        "B": "The customer becomes responsible for Microsoft's physical datacenter hosts",
+        "C": "Identity management disappears as a customer responsibility under SaaS",
+        "D": "Encryption is no longer allowed for customer data in SaaS"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/security/fundamentals/shared-responsibility"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q016",
+      "review_note": "Two-sided equivalent rebalancing: moving toward SaaS still shifts platform duties to Microsoft while the customer owns data and identities; C/D remain false disappear-identity and ban-encryption claims. Distractor growth: A 110->89 (-21); B 63->74 (+11); C 30->70 (+40); D 31->57 (+26). MAX_DISTRACTOR 63->74 (+11). Correct 110->89 (-21). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "So every user can manage all Azure Firewall policies",
+        "B": "So administrators receive only the permissions needed for a job",
+        "C": "So multifactor authentication can be permanently disabled for all users",
+        "D": "So Microsoft Entra audit logs can be turned off"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities/"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p3_q062",
+      "review_note": "Two-sided equivalent rebalancing: built-in Entra roles still exist for least-privilege job permissions; C/D remain false MFA-off and audit-off motives. Distractor growth: A 44->52 (+8); B 76->63 (-13); C 34->71 (+37); D 31->47 (+16). MAX_DISTRACTOR 44->71 (+27). Correct 76->63 (-13). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "The item becomes a Microsoft Entra authentication method such as FIDO2 or TAP",
+        "B": "The item is treated as a record with retention and disposition restrictions",
+        "C": "The item is copied into Azure Firewall network logs",
+        "D": "The item is automatically published to the Service Trust Portal"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/records-management"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p3_q070",
+      "review_note": "Two-sided equivalent rebalancing: declaring a record still applies retention and disposition restrictions; A names an Entra authentication method, which records declaration is not. Distractor growth: A 56->77 (+21); B 107->75 (-32); C 43->51 (+8); D 63->63 (+0). MAX_DISTRACTOR 63->77 (+14). Correct 107->75 (-32). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "SMS one-time codes are more phishing-resistant than FIDO2 keys",
+        "B": "SMS codes are Purview retention labels, and FIDO2 keys are NSG rules",
+        "C": "FIDO2 keys are phishing-resistant; SMS codes are easier to intercept or phish",
+        "D": "Phishing resistance is measured only by Microsoft Purview Compliance Manager score"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-authentication-methods"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q233",
+      "review_note": "Two-sided equivalent rebalancing: FIDO2 remains phishing-resistant and SMS remains phishable; D now falsely assigns that comparison to compliance score. Distractor growth: A 62->62 (+0); B 60->68 (+8); C 105->77 (-28); D 56->82 (+26). MAX_DISTRACTOR 62->82 (+20). Correct 105->77 (-28). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Insider Risk Management is Microsoft's only Conditional Access MFA grant control",
+        "B": "Conditional Access is a subset of Insider Risk Management file plans",
+        "C": "Insider Risk Management analyzes internal user activity; Conditional Access evaluates sign-ins",
+        "D": "Insider Risk Management issues FIDO2 keys and replaces Conditional Access"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/insider-risk-management"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q299",
+      "review_note": "Two-sided equivalent rebalancing: insider-risk activity analysis versus Conditional Access sign-in evaluation is preserved; A remains a false MFA-grant claim. Distractor growth: A 61->80 (+19); B 68->68 (+0); C 119->94 (-25); D 73->73 (+0). MAX_DISTRACTOR 73->80 (+7). Correct 119->94 (-25). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "They replace Microsoft Entra ID as the organization's only identity provider",
+        "B": "They form an extended detection and response suite for endpoints, identities, email, and cloud apps",
+        "C": "They are used only to generate Microsoft Purview retention labels for documents",
+        "D": "They provide layer 3 and layer 4 DDoS mitigation for Azure public IPs"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p3_q006",
+      "review_note": "Two-sided equivalent rebalancing: Defender XDR remains an EDR suite across endpoints, identities, email, and cloud apps; C remains a false Purview-label claim. Distractor growth: A 76->76 (+0); B 122->99 (-23); C 65->79 (+14); D 69->69 (+0). MAX_DISTRACTOR 76->79 (+3). Correct 122->99 (-23). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Azure WAF is Microsoft's Safe Attachments detonation engine",
+        "B": "Defender for Office 365 inspects email and collaboration; WAF inspects HTTP web-app traffic",
+        "C": "Defender for Office 365 only protects Azure public IP addresses",
+        "D": "Email attachments are filtered only by Azure network security groups"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-office-365/mdo-about"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q270",
+      "review_note": "Two-sided equivalent rebalancing: Defender for Office 365 still inspects email/collaboration while WAF inspects HTTP; A/D name Safe Attachments and NSG jobs that do not replace that pairing. Distractor growth: A 42->59 (+17); B 99->91 (-8); C 54->63 (+9); D 62->68 (+6). MAX_DISTRACTOR 62->68 (+6). Correct 99->91 (-8). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Customer-managed actions are performed automatically by Azure Firewall",
+        "B": "Microsoft-managed actions recertify Microsoft Entra guest groups",
+        "C": "The split means the customer no longer owns any tenant data",
+        "D": "Microsoft implements some service controls; the customer still completes remaining actions"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/compliance-manager"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q281",
+      "review_note": "Two-sided equivalent rebalancing: Microsoft-implemented service controls versus remaining customer improvement actions is preserved; B/C remain false guest-recertification and data-ownership claims. Distractor growth: A 70->70 (+0); B 54->64 (+10); C 52->59 (+7); D 110->90 (-20). MAX_DISTRACTOR 70->70 (+0). Correct 110->90 (-20). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "The Service Trust Portal is where you create tenant DLP policies",
+        "B": "The Purview portal publishes Microsoft's SOC reports as its primary job",
+        "C": "Compliance Manager publishes Microsoft's audit reports and configures tenant DLP",
+        "D": "Service Trust Portal for Microsoft audit reports; Purview portal for tenant DLP"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q279",
+      "review_note": "Two-sided equivalent rebalancing: STP still publishes Microsoft audit reports and Purview still hosts tenant DLP; leftover C now states that one Compliance Manager pairing publishes Microsoft audit reports and configures DLP, which is still the wrong portal split. Distractor growth: A 64->64 (+0); B 71->71 (+0); C 18->80 (+62); D 111->79 (-32). MAX_DISTRACTOR 71->80 (+9). Correct 111->79 (-32). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Retention blocks outbound credit-card numbers as its primary job",
+        "B": "DLP is the keep-or-delete lifecycle engine for mailboxes",
+        "C": "Retention keeps content for the required period; DLP prevents risky sharing",
+        "D": "Retention replaces eDiscovery holds; DLP replaces Microsoft Purview audit logging"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/retention"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q296",
+      "review_note": "Two-sided equivalent rebalancing: retention remains keep-or-delete and DLP remains risky-sharing prevention; B/D remain false lifecycle and eDiscovery/audit substitutions. Distractor growth: A 64->64 (+0); B 42->56 (+14); C 100->75 (-25); D 49->81 (+32). MAX_DISTRACTOR 64->81 (+17). Correct 100->75 (-25). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "An official Microsoft ISO certification that Compliance Manager issues to the customer tenant",
+        "B": "A replacement for the Service Trust Portal audit reports",
+        "C": "Defender for Cloud secure score for Azure resource posture",
+        "D": "Estimated remaining Compliance Manager improvement-action progress, not a certification"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/compliance-manager-scoring"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q282",
+      "review_note": "Two-sided equivalent rebalancing: compliance score remains estimated remaining improvement-action progress, not a certification; A/B/C remain ISO-certification, STP-replacement, and Defender secure-score claims. Distractor growth: A 56->93 (+37); B 42->56 (+14); C 51->58 (+7); D 87->87 (+0). MAX_DISTRACTOR 56->93 (+37). Correct 87->87 (+0). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Azure DDoS Protection replaces the need for identity authentication",
+        "B": "WAF is the only service that can mitigate layer 3 and layer 4 floods",
+        "C": "DDoS Protection handles volumetric network floods; WAF handles HTTP application attacks",
+        "D": "Azure DDoS Protection is used only to classify Microsoft 365 documents"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure/"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_p3_q015",
+      "review_note": "Two-sided equivalent rebalancing: DDoS Protection remains volumetric network-flood defense and WAF remains HTTP application defense; A/D remain false identity-replacement and document-classification claims. Distractor growth: A 61->67 (+6); B 68->68 (+0); C 105->87 (-18); D 64->70 (+6). MAX_DISTRACTOR 68->70 (+2). Correct 105->87 (-18). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Content explorer shows where classified items are; Activity explorer shows labeled-content activity",
+        "B": "Content explorer creates DLP policies; Activity explorer creates retention labels",
+        "C": "Content explorer issues Microsoft Entra roles; Activity explorer activates PIM",
+        "D": "Both explorers replace Microsoft Purview sensitivity labels"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/data-classification-activity-explorer"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q157",
+      "review_note": "Two-sided equivalent rebalancing: content explorer still locates classified items and activity explorer still shows labeled-content operations; D remains a false sensitivity-label replacement. Distractor growth: A 125->99 (-26); B 81->81 (+0); C 68->78 (+10); D 41->59 (+18). MAX_DISTRACTOR 81->81 (+0). Correct 125->99 (-26). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "DLP can apply across multiple locations, not only one mailbox",
+        "B": "DLP exists only as an Azure network security group application rule",
+        "C": "DLP can run only after a file is declared a Purview record",
+        "D": "Endpoint DLP is a Microsoft Entra Conditional Access grant control"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/dlp-learn-about-dlp"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q287",
+      "review_note": "Two-sided equivalent rebalancing: DLP still covers multiple locations rather than one mailbox; B/D name NSG and Conditional Access jobs that DLP is not. Distractor growth: A 77->61 (-16); B 48->67 (+19); C 50->58 (+8); D 50->66 (+16). MAX_DISTRACTOR 50->67 (+17). Correct 77->61 (-16). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "The Defender portal is the only place to declare records and manage Azure VMs",
+        "B": "The Purview portal investigates Defender endpoint process trees",
+        "C": "Defender portal for XDR, Purview portal for compliance, Azure portal for resource security",
+        "D": "The Azure portal is Microsoft's only Purview eDiscovery console"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-xdr/microsoft-365-defender-portal"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q266",
+      "review_note": "Two-sided equivalent rebalancing: Defender, Purview, and Azure portals still map to XDR, compliance, and Azure resource security; B/D remain false endpoint-investigation and eDiscovery-console claims. Distractor growth: A 77->77 (+0); B 54->63 (+9); C 117->90 (-27); D 55->63 (+8). MAX_DISTRACTOR 77->77 (+0). Correct 117->90 (-27). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "NSGs decrypt TLS traffic and therefore already block SQL injection",
+        "B": "An allow-443 NSG is equivalent to Microsoft Entra ID Protection risk policies",
+        "C": "NSGs filter ports and addresses; they do not inspect HTTP payloads the way a WAF does",
+        "D": "SQL injection is remediated only by Service Trust Portal audit reports"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q248",
+      "review_note": "Two-sided equivalent rebalancing: NSGs still filter ports/addresses and do not inspect HTTP payloads as a WAF does; A/B remain false TLS-decryption and ID Protection equivalences. Distractor growth: A 54->66 (+12); B 63->77 (+14); C 97->85 (-12); D 64->70 (+6). MAX_DISTRACTOR 64->77 (+13). Correct 97->85 (-12). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Defender for Office 365 is the CASB that inventories unsanctioned SaaS",
+        "B": "Defender for Cloud Apps detonates mailbox attachments as Safe Attachments",
+        "C": "Defender for Cloud Apps for CASB/SaaS; Defender for Office 365 for email and collaboration",
+        "D": "Microsoft Defender for Office 365 is the only control needed for both problems"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-cloud-apps/what-is-defender-for-cloud-apps"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q262",
+      "review_note": "Two-sided equivalent rebalancing: Cloud Apps remains the CASB/SaaS control and Defender for Office 365 remains email/collaboration threat protection; leftover D now falsely claims one product covers both problems. Distractor growth: A 70->70 (+0); B 73->73 (+0); C 110->90 (-20); D 33->78 (+45). MAX_DISTRACTOR 73->78 (+5). Correct 110->90 (-20). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Access reviews recertify existing access; PIM activates privileged roles just in time",
+        "B": "Access reviews are the only way to require MFA on PIM role activation",
+        "C": "PIM recertifies guest groups, and access reviews encrypt virtual machines",
+        "D": "They are identical Microsoft Entra services with two marketing names"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/access-reviews-overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q229",
+      "review_note": "Two-sided equivalent rebalancing: access reviews still recertify existing access and PIM still activates privileged roles just in time; D remains a false identical-service claim. Distractor growth: A 109->85 (-24); B 65->69 (+4); C 73->73 (+0); D 52->68 (+16). MAX_DISTRACTOR 73->73 (+0). Correct 109->85 (-24). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Workload identities are guest users who must complete MFA every hour",
+        "B": "Workload identities represent apps or services, not a person who interactively signs in",
+        "C": "Application identities are Purview sensitivity labels attached to service principals",
+        "D": "Only user accounts can be granted Azure RBAC roles; applications cannot have identities"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/architecture/architecture"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q236",
+      "review_note": "Two-sided equivalent rebalancing: workload identities still represent apps or services rather than an interactive person; C remains a false sensitivity-label claim. Distractor growth: A 68->68 (+0); B 102->87 (-15); C 76->84 (+8); D 79->87 (+8). MAX_DISTRACTOR 79->87 (+8). Correct 102->87 (-15). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Service Trust Portal configures tenant DLP; Compliance Manager publishes Microsoft's ISO reports",
+        "B": "Compliance Manager is a DDoS mitigation service; Service Trust Portal is Defender XDR",
+        "C": "Both replace Microsoft Entra ID as the identity provider",
+        "D": "Service Trust Portal publishes audit evidence; Compliance Manager tracks implemented customer controls"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance/"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q165",
+      "review_note": "Two-sided equivalent rebalancing: STP still publishes Microsoft audit evidence and Compliance Manager still tracks customer controls; C remains a false Entra-replacement claim. Distractor growth: A 96->96 (+0); B 85->85 (+0); C 31->56 (+25); D 120->102 (-18). MAX_DISTRACTOR 96->96 (+0). Correct 120->102 (-18). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Entitlement management is only for Global Administrators, and PIM is only for guest password reset",
+        "B": "Entitlement management packages project access; PIM activates privileged directory or Azure roles just in time",
+        "C": "Both capabilities are Azure Web Application Firewall policies with different names",
+        "D": "PIM publishes sensitivity labels, and entitlement management is a DDoS plan"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/identity-governance-overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q228",
+      "review_note": "Two-sided equivalent rebalancing: entitlement management still packages project access and PIM still activates privileged roles just in time; C remains a false WAF-policy claim. Distractor growth: A 98->98 (+0); B 120->110 (-10); C 61->82 (+21); D 75->75 (+0). MAX_DISTRACTOR 98->98 (+0). Correct 120->110 (-10). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    },
+    {
+      "after": {
+        "A": "Share the Global Administrator password in a team chat",
+        "B": "Disable Microsoft Entra Conditional Access for everyone",
+        "C": "Assign a password-reset role without granting Global Administrator",
+        "D": "Open Remote Desktop Protocol to the internet from Azure"
+      },
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/custom-overview"
+      ],
+      "disposition": "EDIT",
+      "question_id": "sc900_mlc_q056",
+      "review_note": "Mixed two-sided rebalancing: the correct choice still assigns a password-reset role without Global Administrator; D now names exposed RDP as the opposite of least privilege rather than a bare label. Distractor growth: A 47->54 (+7); B 39->55 (+16); C 80->66 (-14); D 24->55 (+31). MAX_DISTRACTOR 47->55 (+8). Correct 80->66 (-14). Additional distractor wording adds the named product's actual wrong-plane job rather than filler.",
+      "semantic_review": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      }
+    }
+  ],
+  "source_bank": "sc900_bank_v8_length_rebalanced_t2.json",
+  "work_id": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001 / PACKAGE-B / TRANCHE-3"
+}

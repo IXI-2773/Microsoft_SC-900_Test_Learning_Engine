@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Workload protection is used only to publish Service Trust audit reports",
+    "B": "Posture management is the only way to isolate a compromised laptop",
+    "C": "Workload protection adds threat detection and runtime protection; posture management focuses on configuration and recommendations",
+    "D": "Workload protection replaces the need for identities"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction"
+  ],
+  "before": {
+    "A": "Workload protection is used only to publish audit reports",
+    "B": "Posture management is the only way to isolate a compromised laptop",
+    "C": "Workload protection adds threat detection and runtime protection for resources, while posture management focuses on configuration and recommendations",
+    "D": "Workload protection replaces the need for identities"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "1ef804d5b0cefc225aee6f3b96ee408968745ac102d623989f304d8a8d82b220",
+  "question_id": "sc900_p3_q067",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "907ef1574d857b11e8b83891e0d4f86e2472f2d05ecd01b9868087f360008a75"
+}

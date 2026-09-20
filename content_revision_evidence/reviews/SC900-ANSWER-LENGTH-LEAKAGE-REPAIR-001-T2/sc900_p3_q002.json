@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "The customer becomes responsible for the provider's physical datacenter and hardware security",
+    "B": "The provider assumes more infrastructure responsibility; the customer retains data, identities, and configurations",
+    "C": "All customer security responsibilities transfer to the cloud provider",
+    "D": "Responsibility is determined only by where employees physically work"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/security/fundamentals/shared-responsibility"
+  ],
+  "before": {
+    "A": "The customer becomes responsible for the provider's physical datacenter security",
+    "B": "The cloud provider assumes more responsibility for underlying infrastructure while the customer retains responsibilities such as its data, identities, and configurations",
+    "C": "All customer security responsibilities transfer to the cloud provider",
+    "D": "Responsibility is determined only by where employees physically work"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "b1c7686a39722ad95717d83ec12a50e0114ee804a173261e0c9e30997a7c89e4",
+  "question_id": "sc900_p3_q002",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "605b5c214d97826e7f94ae075a336900cf7d0fc946f4e40ece82f5092a3f0084"
+}

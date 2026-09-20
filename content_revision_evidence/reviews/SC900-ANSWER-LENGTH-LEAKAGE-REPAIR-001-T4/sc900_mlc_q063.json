@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Global Administrator is a highly privileged Microsoft Entra directory role",
+    "B": "A time-limited passcode for sign-in and authentication-method registration",
+    "C": "DLP policies detect sensitive information and can restrict risky sharing",
+    "D": "A Microsoft Sentinel table stores or organizes security telemetry for queries"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/howto-authentication-temporary-access-pass"
+  ],
+  "before": {
+    "A": "It is a Global Administrator role",
+    "B": "A time-limited passcode for sign-in and authentication-method registration",
+    "C": "It is a DLP location",
+    "D": "It is a Sentinel table"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "8a130ce1b1a89ca9309a42b36af15b0240e581e76470232365f0e3b6b1f2d532",
+  "question_id": "sc900_mlc_q063",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "f9e3054c36c09af79d83fb77596c51a7ada8bb4c3913fddd5e90c8ed64dbaf9d"
+}

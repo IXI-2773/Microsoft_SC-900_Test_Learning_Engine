@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Service Trust Portal configures tenant DLP; Compliance Manager publishes Microsoft's ISO reports",
+    "B": "Compliance Manager is a DDoS mitigation service; Service Trust Portal is Defender XDR",
+    "C": "Both replace Microsoft Entra ID as the identity provider",
+    "D": "Service Trust Portal publishes audit evidence; Compliance Manager tracks implemented customer controls"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance/"
+  ],
+  "before": {
+    "A": "Service Trust Portal configures tenant DLP; Compliance Manager publishes Microsoft's ISO reports",
+    "B": "Compliance Manager is a DDoS mitigation service; Service Trust Portal is Defender XDR",
+    "C": "Both replace Microsoft Entra ID",
+    "D": "Service Trust Portal publishes Microsoft's audit evidence; Compliance Manager tracks the customer's implemented controls"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "eea610aa4f72d0897e7ca1e8d16ac89a9d1c4233457d841af96e36d3d43489d9",
+  "question_id": "sc900_mlc_q165",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "5ad378be2c31485bfefdbab204b52362cd3ad621a7af7fee0e8eea6f5ce7d237"
+}

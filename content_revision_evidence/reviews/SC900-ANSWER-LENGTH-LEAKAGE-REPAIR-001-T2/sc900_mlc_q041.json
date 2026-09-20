@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Privileged Identity Management for just-in-time role activation",
+    "B": "It declares SharePoint items as records",
+    "C": "It can require a compliant device or MFA when conditions match",
+    "D": "Microsoft Entra ID Protection risk detection"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview"
+  ],
+  "before": {
+    "A": "Privileged Identity Management",
+    "B": "It declares items as records",
+    "C": "It can require a compliant device or MFA when sign-in conditions match",
+    "D": "Microsoft Entra ID Protection"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "2a75975aecd63d6512274393ba9efda1684648c85bcf88651b6884b90761d068",
+  "question_id": "sc900_mlc_q041",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "832d9f2d33c89e7e9a304768d61c909e5c6f6c3ed3c22b930f6c1a63f1ff8480"
+}

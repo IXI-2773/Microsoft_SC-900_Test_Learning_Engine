@@ -1,0 +1,34 @@
+{
+  "after": {
+    "A": "A single-perimeter design that depends only on the network control",
+    "B": "Federation, because MFA is a partner identity-trust relationship",
+    "C": "Records management, because encryption declares a file as a record",
+    "D": "Defense in depth: other security layers still contain the failure"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/security/fundamentals/overview",
+    "https://learn.microsoft.com/en-us/security/zero-trust/zero-trust-overview"
+  ],
+  "before": {
+    "A": "A single-perimeter design that depends only on the network control",
+    "B": "Federation, because MFA is a partner identity-trust relationship",
+    "C": "Records management, because encryption declares a file as a record",
+    "D": "Defense-in-depth, because remaining independent layers still contained the failure"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "24ad64b4b4565c0000e234106199c6643f6f37388f425324b21c202a0a04ddcb",
+  "question_id": "sc900_mlc_q213",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "80d157be9c8ad3053865b35927d6979a6890e2504c7f9ab1d91f927ba09c9760"
+}

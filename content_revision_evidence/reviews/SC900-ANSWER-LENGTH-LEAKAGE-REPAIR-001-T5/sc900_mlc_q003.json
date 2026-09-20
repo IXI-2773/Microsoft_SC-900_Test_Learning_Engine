@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Grant access based on network location without evaluating identity, device, or risk",
+    "B": "Disable authentication after a user is on a VPN",
+    "C": "Replace encryption with network location checks",
+    "D": "Verify explicitly and use least privilege, regardless of network location"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/security/zero-trust/zero-trust-overview"
+  ],
+  "before": {
+    "A": "Trust every request that originates on the corporate network",
+    "B": "Disable authentication after a user is on a VPN",
+    "C": "Replace encryption with network location checks",
+    "D": "Verify explicitly and grant only the access needed, even for internal users"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "aea494f1b560e777e1ab00a9170395ed58460215f6af6cdc749f1d6c1902f317",
+  "question_id": "sc900_mlc_q003",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "75b610585a7295b82ebc24d0a2024991889dc5fe9f8ad5439483b586e053d6a2"
+}

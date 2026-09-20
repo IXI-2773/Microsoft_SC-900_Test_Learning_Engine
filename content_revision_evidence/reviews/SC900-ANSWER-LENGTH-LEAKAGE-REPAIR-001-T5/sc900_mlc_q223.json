@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "User risk from Identity Protection only, with no location condition",
+    "B": "Device compliance as the only possible signal",
+    "C": "Access reviews of the payroll group",
+    "D": "A named network location in the Conditional Access policy"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-assignment-network"
+  ],
+  "before": {
+    "A": "User risk from Identity Protection only, with no location condition",
+    "B": "Device compliance as the only possible signal",
+    "C": "Access reviews of the payroll group",
+    "D": "Named or trusted network locations used as a condition in the policy"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "724f1e008ee65629c65d5c4120edd4fc3b8e96b51f5a65133f82e5ac28c98046",
+  "question_id": "sc900_mlc_q223",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "d1b312a5d2a926ebdd476c4e930fe7bc649ea6405023ee9e59d5b13b533d810e"
+}

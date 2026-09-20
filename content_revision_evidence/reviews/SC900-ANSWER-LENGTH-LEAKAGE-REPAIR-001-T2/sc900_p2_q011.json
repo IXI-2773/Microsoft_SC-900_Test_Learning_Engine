@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "It gives the user every Microsoft Entra directory role",
+    "B": "It uses more than one authentication factor so a stolen password alone is less likely to suffice",
+    "C": "It guarantees that phishing attacks can never succeed",
+    "D": "It removes the need for access policies"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-mfa-howitworks"
+  ],
+  "before": {
+    "A": "It gives the user every directory role",
+    "B": "It uses more than one authentication factor so a stolen password alone is less likely to be sufficient",
+    "C": "It guarantees that phishing can never succeed",
+    "D": "It removes the need for access policies"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "25519e7799db477642eb05cfd376727ecdcd1acc48de741ae32b25aaf9c9bf22",
+  "question_id": "sc900_p2_q011",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "804e7beddbe276799dfd3e65dd42b63d17245610c2e61571b9bd6230c49da88d"
+}

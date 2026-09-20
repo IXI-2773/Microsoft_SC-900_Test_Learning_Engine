@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Defender for Office 365 filters phishing and malware in email and collaboration",
+    "B": "A managed, stateful network firewall for Azure virtual networks",
+    "C": "Privileged Identity Management controls time-bound activation of privileged roles",
+    "D": "Retention policies manage how long content is kept or deleted"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/firewall/overview"
+  ],
+  "before": {
+    "A": "A mailbox anti-phishing filter",
+    "B": "A managed, stateful network firewall for Azure virtual networks",
+    "C": "A privileged role activation service",
+    "D": "A file retention engine"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "881c72f570259d3ff4ad34263bd96c8df2ed8690e2e49b34185d4701d02e6a70",
+  "question_id": "sc900_mlc_q077",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "d6f47e7f8d2bd9f3208deb31ae200cee557adb41f675d8ce54beb8e270f1da0f"
+}

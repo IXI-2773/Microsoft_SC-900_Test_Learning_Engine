@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Protecting customer data with security controls is part of Microsoft privacy commitments, not a reason to ignore encryption or access control",
+    "B": "Privacy means Microsoft must disable MFA so support staff can read customer mailboxes",
+    "C": "Privacy is achieved by publishing NSG allow-all rules",
+    "D": "Privacy is a Defender XDR workload name"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/privacy/"
+  ],
+  "before": {
+    "A": "Protecting customer data with security controls is part of Microsoft's privacy commitments, not a reason to ignore encryption or access control",
+    "B": "Privacy means Microsoft must disable MFA so support can read mailboxes",
+    "C": "Privacy is achieved by publishing NSG allow-all rules",
+    "D": "Privacy is a Defender XDR workload name"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "78b005b04de16322ab39c90078c99858ec9a428c1c22838571c7b0ea5f650e95",
+  "question_id": "sc900_mlc_q277",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "783b3dae7fcc23e0fbbae4a71376e0448c6490689f4d8c818aeae55a2f67182a"
+}

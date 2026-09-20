@@ -9,7 +9,6 @@ from pathlib import Path
 from typing import Any
 
 from content_revision_authority import (
-    AdmissionStatus,
     CHOICE_LABELS,
     CONTINUITY_POLICY,
     MANIFEST_KIND,
@@ -19,6 +18,7 @@ from content_revision_authority import (
     REVIEW_DISPOSITION_APPROVED,
     REVIEW_STATUS_APPROVED,
     SEMANTIC_EQUIVALENT,
+    AdmissionStatus,
     admit_content_revision,
     canonical_manifest_sha256,
     sha256_file,
@@ -30,8 +30,74 @@ from question_identity import (
     question_content_fingerprint,
 )
 
-
-REVIEW_DIRECTORY = "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T1"
+REVIEW_DIRECTORY = "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T2"
+T1_SOURCE_BANK_FILENAME = "sc900_bank_v8_length_rebalanced_t1.json"
+T2_CANDIDATE_BANK_FILENAME = "sc900_bank_v8_length_rebalanced_t2.json"
+PRODUCTION_BANK_FILENAME = "sc900_bank_v8_final.json"
+EXPECTED_T1_SOURCE_SHA256 = "45ee43c9ced0d50c790c4b637ddc3d585526830a3dec32251b904d9d06e4c7e8"
+T1_SKIP_QUESTION_IDS = frozenset(
+    {
+        "sc900_mlc_q173",
+        "sc900_mlc_q070",
+        "sc900_mlc_q116",
+        "sc900_mlc_q085",
+        "sc900_mlc_q253",
+        "sc900_mlc_q075",
+        "sc900_mlc_q155",
+    }
+)
+T2_DESIGN_QUEUE = (
+    "sc900_mlc_q125",
+    "sc900_p3_q039",
+    "sc900_mlc_q054",
+    "sc900_mlc_q182",
+    "sc900_mlc_q278",
+    "sc900_p3_q090",
+    "sc900_mlc_q216",
+    "sc900_mlc_q041",
+    "sc900_mlc_q250",
+    "sc900_mlc_q046",
+    "sc900_mlc_q300",
+    "sc900_mlc_q012",
+    "sc900_p2_q011",
+    "sc900_p3_q067",
+    "sc900_p2_q004",
+    "sc900_mlc_q089",
+    "sc900_p3_q086",
+    "sc900_p2_q020",
+    "sc900_mlc_q252",
+    "sc900_mlc_q257",
+    "sc900_p3_q099",
+    "sc900_mlc_q288",
+    "sc900_p2_q005",
+    "sc900_mlc_q141",
+    "sc900_p3_q002",
+    "sc900_mlc_q137",
+    "sc900_p3_q047",
+    "sc900_mlc_q122",
+    "sc900_p1_q047",
+    "sc900_p3_q057",
+    "sc900_mlc_q126",
+    "sc900_mlc_q277",
+    "sc900_mlc_q254",
+    "sc900_mlc_q074",
+    "sc900_mlc_q138",
+    "sc900_mlc_q097",
+    "sc900_mlc_q267",
+    "sc900_p3_q050",
+    "sc900_mlc_q188",
+    "sc900_mlc_q280",
+    "sc900_mlc_q140",
+    "sc900_mlc_q034",
+    "sc900_p2_q013",
+    "sc900_p3_q034",
+    "sc900_p3_q054",
+    "sc900_mlc_q059",
+    "sc900_mlc_q295",
+    "sc900_mlc_q221",
+    "sc900_p1_q033",
+    "sc900_mlc_q217",
+)
 _SEMANTIC_REVIEW_FIELDS = {"work_id", "source_bank", "candidate_bank", "review_queue"}
 _EDIT_FIELDS = {
     "question_id",
@@ -42,19 +108,20 @@ _EDIT_FIELDS = {
     "review_note",
 }
 _SKIP_FIELDS = {"question_id", "disposition", "review_note"}
+_FROZEN_OUTPUT_FILENAMES = {T1_SOURCE_BANK_FILENAME, PRODUCTION_BANK_FILENAME}
 
 
-class PackageBTranche1BuildError(ValueError):
-    """Raised when reviewed input cannot produce an admissible Package-B package."""
+class PackageBTranche2BuildError(ValueError):
+    """Raised when reviewed input cannot produce an admissible Package-B T2 package."""
 
 
 def _load_json_object(path: Path, label: str) -> dict[str, Any]:
     try:
         payload = json.loads(Path(path).read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
-        raise PackageBTranche1BuildError(f"{label} is unreadable or invalid JSON: {exc}") from exc
+        raise PackageBTranche2BuildError(f"{label} is unreadable or invalid JSON: {exc}") from exc
     if not isinstance(payload, dict):
-        raise PackageBTranche1BuildError(f"{label} must be a JSON object")
+        raise PackageBTranche2BuildError(f"{label} must be a JSON object")
     return payload
 
 
@@ -81,7 +148,7 @@ def _exact_ad_string_mapping(value: Any) -> bool:
 def _keyed_choices(question: Mapping[str, Any]) -> dict[str, str]:
     choices = question.get("choices")
     if not _exact_ad_string_mapping(choices):
-        raise PackageBTranche1BuildError(
+        raise PackageBTranche2BuildError(
             f"question {canonical_question_id(question)!r} must have exact string A-D choices"
         )
     return {letter: choices[letter] for letter in CHOICE_LABELS}
@@ -93,49 +160,41 @@ def _correct_key_list(question: Mapping[str, Any]) -> list[str]:
         return [correct]
     if isinstance(correct, list) and all(isinstance(item, str) for item in correct):
         return sorted(correct)
-    raise PackageBTranche1BuildError(
-        f"edited question {canonical_question_id(question)!r} has an invalid correct key"
-    )
+    raise PackageBTranche2BuildError(f"edited question {canonical_question_id(question)!r} has an invalid correct key")
 
 
 def _normalized_authority_refs(value: Any, question_id: str) -> list[str]:
     if not isinstance(value, list) or not value:
-        raise PackageBTranche1BuildError(f"EDIT {question_id!r} requires authority_refs")
+        raise PackageBTranche2BuildError(f"EDIT {question_id!r} requires authority_refs")
     refs: list[str] = []
     for ref in value:
         if not isinstance(ref, str) or not ref.strip():
-            raise PackageBTranche1BuildError(f"EDIT {question_id!r} has an invalid authority ref")
+            raise PackageBTranche2BuildError(f"EDIT {question_id!r} has an invalid authority ref")
         refs.append(ref.strip())
     if not any(ref.startswith(MS_LEARN_PREFIX) for ref in refs):
-        raise PackageBTranche1BuildError(
-            f"EDIT {question_id!r} requires Microsoft Learn authority evidence"
-        )
+        raise PackageBTranche2BuildError(f"EDIT {question_id!r} requires Microsoft Learn authority evidence")
     return refs
 
 
 def _validate_review_artifact_question_id(question_id: str) -> None:
     if question_id in {".", ".."} or "/" in question_id or "\\" in question_id:
-        raise PackageBTranche1BuildError(
-            f"question ID {question_id!r} cannot be used as a contained review filename"
-        )
+        raise PackageBTranche2BuildError(f"question ID {question_id!r} cannot be used as a contained review filename")
 
 
 def _index_source_questions(questions: Any) -> dict[str, Mapping[str, Any]]:
     if not isinstance(questions, list):
-        raise PackageBTranche1BuildError("source bank questions must be a list")
+        raise PackageBTranche2BuildError("source bank questions must be a list")
     if len(questions) != REQUIRED_QUESTION_COUNT:
-        raise PackageBTranche1BuildError(
-            f"source bank must contain exactly {REQUIRED_QUESTION_COUNT} questions"
-        )
+        raise PackageBTranche2BuildError(f"source bank must contain exactly {REQUIRED_QUESTION_COUNT} questions")
     indexed: dict[str, Mapping[str, Any]] = {}
     for question in questions:
         if not isinstance(question, Mapping):
-            raise PackageBTranche1BuildError("every source question must be an object")
+            raise PackageBTranche2BuildError("every source question must be an object")
         question_id = canonical_question_id(question)
         if not question_id:
-            raise PackageBTranche1BuildError("every source question requires a canonical ID")
+            raise PackageBTranche2BuildError("every source question requires a canonical ID")
         if question_id in indexed:
-            raise PackageBTranche1BuildError(f"duplicate source question ID: {question_id}")
+            raise PackageBTranche2BuildError(f"duplicate source question ID: {question_id}")
         indexed[question_id] = question
     return indexed
 
@@ -143,59 +202,70 @@ def _index_source_questions(questions: Any) -> dict[str, Mapping[str, Any]]:
 def _validated_review_rows(
     semantic_review: Mapping[str, Any],
     source_index: Mapping[str, Mapping[str, Any]],
+    *,
+    require_design_queue: bool,
 ) -> tuple[dict[str, dict[str, Any]], set[str]]:
     if set(semantic_review) != _SEMANTIC_REVIEW_FIELDS:
-        raise PackageBTranche1BuildError("semantic-review input has missing or unknown fields")
+        raise PackageBTranche2BuildError("semantic-review input has missing or unknown fields")
     queue = semantic_review.get("review_queue")
     if not isinstance(queue, list):
-        raise PackageBTranche1BuildError("semantic-review review_queue must be a list")
+        raise PackageBTranche2BuildError("semantic-review review_queue must be a list")
     edits: dict[str, dict[str, Any]] = {}
     skipped: set[str] = set()
     seen: set[str] = set()
     for row in queue:
         if not isinstance(row, Mapping):
-            raise PackageBTranche1BuildError("every review_queue row must be an object")
+            raise PackageBTranche2BuildError("every review_queue row must be an object")
         question_id = row.get("question_id")
         if not _nonblank(question_id):
-            raise PackageBTranche1BuildError("every review_queue row requires a question_id")
+            raise PackageBTranche2BuildError("every review_queue row requires a question_id")
         question_id = question_id.strip()
         if question_id in seen:
-            raise PackageBTranche1BuildError(f"duplicate review_queue question ID: {question_id}")
+            raise PackageBTranche2BuildError(f"duplicate review_queue question ID: {question_id}")
         seen.add(question_id)
         if question_id not in source_index:
-            raise PackageBTranche1BuildError(f"unknown review_queue question ID: {question_id}")
+            raise PackageBTranche2BuildError(f"unknown review_queue question ID: {question_id}")
         if not _nonblank(row.get("review_note")):
-            raise PackageBTranche1BuildError(f"review_note must be nonblank for {question_id}")
+            raise PackageBTranche2BuildError(f"review_note must be nonblank for {question_id}")
         disposition = row.get("disposition")
         if disposition == "SKIP":
             if set(row) != _SKIP_FIELDS:
-                raise PackageBTranche1BuildError(f"SKIP {question_id!r} has an invalid schema")
+                raise PackageBTranche2BuildError(f"SKIP {question_id!r} has an invalid schema")
             skipped.add(question_id)
             continue
         if disposition != "EDIT":
-            raise PackageBTranche1BuildError(f"invalid disposition for {question_id}: {disposition!r}")
+            raise PackageBTranche2BuildError(f"invalid disposition for {question_id}: {disposition!r}")
+        if question_id in T1_SKIP_QUESTION_IDS:
+            raise PackageBTranche2BuildError(f"T1 SKIP question {question_id!r} cannot appear as an EDIT")
         if set(row) != _EDIT_FIELDS:
-            raise PackageBTranche1BuildError(f"EDIT {question_id!r} has an invalid schema")
+            raise PackageBTranche2BuildError(f"EDIT {question_id!r} has an invalid schema")
         after = row.get("after")
         if not _exact_ad_string_mapping(after):
-            raise PackageBTranche1BuildError(f"EDIT {question_id!r} after must be exact string A-D")
+            raise PackageBTranche2BuildError(f"EDIT {question_id!r} after must be exact string A-D")
         semantics = row.get("semantic_review")
         if not _exact_ad_string_mapping(semantics) or any(
             semantics[letter] != SEMANTIC_EQUIVALENT for letter in CHOICE_LABELS
         ):
-            raise PackageBTranche1BuildError(
-                f"EDIT {question_id!r} must mark every A-D choice EQUIVALENT"
-            )
-        source_choices = _keyed_choices(source_index[question_id])
+            raise PackageBTranche2BuildError(f"EDIT {question_id!r} must mark every A-D choice EQUIVALENT")
+        source_question = source_index[question_id]
+        source_choices = _keyed_choices(source_question)
         normalized_after = {letter: after[letter] for letter in CHOICE_LABELS}
         if normalized_after == source_choices:
-            raise PackageBTranche1BuildError(f"EDIT {question_id!r} does not change any choice")
+            raise PackageBTranche2BuildError(f"EDIT {question_id!r} does not change any choice")
+        if _correct_key_list(source_question) != _correct_key_list({**source_question, "choices": normalized_after}):
+            raise PackageBTranche2BuildError(f"EDIT {question_id!r} cannot change the correct key")
         _validate_review_artifact_question_id(question_id)
         edits[question_id] = {
             "after": normalized_after,
             "semantic_review": {letter: SEMANTIC_EQUIVALENT for letter in CHOICE_LABELS},
             "authority_refs": _normalized_authority_refs(row.get("authority_refs"), question_id),
         }
+    if require_design_queue and seen != set(T2_DESIGN_QUEUE):
+        missing = sorted(set(T2_DESIGN_QUEUE) - seen)
+        extra = sorted(seen - set(T2_DESIGN_QUEUE))
+        raise PackageBTranche2BuildError(
+            "T2 design queue is unresolved or altered: " f"missing={missing!r} extra={extra!r}"
+        )
     return edits, skipped
 
 
@@ -208,69 +278,79 @@ def _verify_candidate(
     source_questions = source_payload["questions"]
     target_questions = candidate_payload["questions"]
     if len(target_questions) != REQUIRED_QUESTION_COUNT:
-        raise PackageBTranche1BuildError("candidate question count changed")
+        raise PackageBTranche2BuildError("candidate question count changed")
     source_meta = {key: value for key, value in source_payload.items() if key != "questions"}
     target_meta = {key: value for key, value in candidate_payload.items() if key != "questions"}
     if source_meta != target_meta:
-        raise PackageBTranche1BuildError("candidate top-level metadata changed")
+        raise PackageBTranche2BuildError("candidate top-level metadata changed")
     source_index = {canonical_question_id(question): question for question in source_questions}
     target_index = {canonical_question_id(question): question for question in target_questions}
     if set(source_index) != set(target_index):
-        raise PackageBTranche1BuildError("candidate question-ID set changed")
+        raise PackageBTranche2BuildError("candidate question-ID set changed")
     for question_id in sorted(source_index):
         source_question = source_index[question_id]
         target_question = target_index[question_id]
         if question_id not in edited_ids:
             if source_question != target_question:
-                raise PackageBTranche1BuildError(f"non-edited question changed: {question_id}")
+                raise PackageBTranche2BuildError(f"non-edited question changed: {question_id}")
             continue
         source_nonchoices = {key: value for key, value in source_question.items() if key != "choices"}
         target_nonchoices = {key: value for key, value in target_question.items() if key != "choices"}
         if source_nonchoices != target_nonchoices:
-            raise PackageBTranche1BuildError(f"non-choice fields changed: {question_id}")
+            raise PackageBTranche2BuildError(f"non-choice fields changed: {question_id}")
         if _keyed_choices(source_question) == _keyed_choices(target_question):
-            raise PackageBTranche1BuildError(f"edited question did not transition: {question_id}")
+            raise PackageBTranche2BuildError(f"edited question did not transition: {question_id}")
+        if _correct_key_list(source_question) != _correct_key_list(target_question):
+            raise PackageBTranche2BuildError(f"edited question changed the correct key: {question_id}")
         if question_content_fingerprint(source_question) == question_content_fingerprint(target_question):
-            raise PackageBTranche1BuildError(
-                f"edited question has no content-fingerprint transition: {question_id}"
-            )
+            raise PackageBTranche2BuildError(f"edited question has no content-fingerprint transition: {question_id}")
     for question_id in skipped_ids:
         if source_index[question_id] != target_index[question_id]:
-            raise PackageBTranche1BuildError(f"SKIP question changed: {question_id}")
+            raise PackageBTranche2BuildError(f"SKIP question changed: {question_id}")
 
 
-def build_package_b_tranche1(
+def build_package_b_tranche2(
     source_bank_path: Path,
     semantic_review_path: Path,
     candidate_bank_path: Path,
     review_root: Path,
     manifest_path: Path,
 ) -> dict[str, Any]:
-    """Build and admit deterministic Package-B candidate evidence from human review."""
+    """Build and admit deterministic Package-B T2 candidate evidence from human review."""
     source_bank_path = Path(source_bank_path)
     semantic_review_path = Path(semantic_review_path)
     candidate_bank_path = Path(candidate_bank_path)
     review_root = Path(review_root)
     manifest_path = Path(manifest_path)
     if source_bank_path.name == candidate_bank_path.name:
-        raise PackageBTranche1BuildError("source and candidate bank filenames must differ")
+        raise PackageBTranche2BuildError("source and candidate bank filenames must differ")
+    if candidate_bank_path.name in _FROZEN_OUTPUT_FILENAMES:
+        raise PackageBTranche2BuildError("candidate bank filename must not overwrite a frozen bank")
     if _same_path(source_bank_path, candidate_bank_path) or _same_path(source_bank_path, manifest_path):
-        raise PackageBTranche1BuildError("output paths must not overwrite the source bank")
+        raise PackageBTranche2BuildError("output paths must not overwrite the source bank")
     if _same_path(candidate_bank_path, manifest_path):
-        raise PackageBTranche1BuildError("candidate and manifest output paths must differ")
+        raise PackageBTranche2BuildError("candidate and manifest output paths must differ")
 
     source_bytes_before = source_bank_path.read_bytes()
+    if source_bank_path.name == T1_SOURCE_BANK_FILENAME:
+        source_sha256 = sha256_file(source_bank_path)
+        if source_sha256 != EXPECTED_T1_SOURCE_SHA256:
+            raise PackageBTranche2BuildError("T1 source SHA-256 does not match the admitted T1 candidate identity")
     source_payload = _load_json_object(source_bank_path, "source bank")
     source_questions = source_payload.get("questions")
     source_index = _index_source_questions(source_questions)
     semantic_review = _load_json_object(semantic_review_path, "semantic review")
     if semantic_review.get("source_bank") != source_bank_path.name:
-        raise PackageBTranche1BuildError("semantic-review source_bank filename does not match")
+        raise PackageBTranche2BuildError("semantic-review source_bank filename does not match")
     if semantic_review.get("candidate_bank") != candidate_bank_path.name:
-        raise PackageBTranche1BuildError("semantic-review candidate_bank filename does not match")
+        raise PackageBTranche2BuildError("semantic-review candidate_bank filename does not match")
     if not _nonblank(semantic_review.get("work_id")):
-        raise PackageBTranche1BuildError("semantic-review work_id must be nonblank")
-    edits, skipped_ids = _validated_review_rows(semantic_review, source_index)
+        raise PackageBTranche2BuildError("semantic-review work_id must be nonblank")
+    edits, skipped_ids = _validated_review_rows(
+        semantic_review,
+        source_index,
+        require_design_queue=source_bank_path.name == T1_SOURCE_BANK_FILENAME,
+    )
     protected_paths = {
         source_bank_path.resolve(),
         semantic_review_path.resolve(),
@@ -280,7 +360,7 @@ def build_package_b_tranche1(
     for question_id in edits:
         receipt_path = review_root / REVIEW_DIRECTORY / f"{question_id}.json"
         if receipt_path.resolve() in protected_paths:
-            raise PackageBTranche1BuildError("review receipt path collides with a package input or output")
+            raise PackageBTranche2BuildError("review receipt path collides with a package input or output")
 
     candidate_payload = copy.deepcopy(source_payload)
     target_questions = candidate_payload["questions"]
@@ -290,7 +370,7 @@ def build_package_b_tranche1(
     edited_ids = set(edits)
     _verify_candidate(source_payload, candidate_payload, edited_ids, skipped_ids)
     if source_bank_path.read_bytes() != source_bytes_before:
-        raise PackageBTranche1BuildError("source bank bytes changed before package materialization")
+        raise PackageBTranche2BuildError("source bank bytes changed before package materialization")
 
     _write_json(candidate_bank_path, candidate_payload)
     receipt_hashes: dict[str, str] = {}
@@ -372,18 +452,15 @@ def build_package_b_tranche1(
         target_bank_path=candidate_bank_path,
         review_root=review_root,
     )
-    if (
-        admission.status != AdmissionStatus.PASS
-        or admission.reasons != ()
-        or admission.admitted is None
-    ):
+    if admission.status != AdmissionStatus.PASS or admission.reasons != () or admission.admitted is None:
         reasons = ", ".join(reason.value for reason in admission.reasons) or "unknown rejection"
-        raise PackageBTranche1BuildError(f"Package-A admission failed: {reasons}")
+        raise PackageBTranche2BuildError(f"Package-A admission failed: {reasons}")
     if source_bank_path.read_bytes() != source_bytes_before:
-        raise PackageBTranche1BuildError("source bank bytes changed during package build")
+        raise PackageBTranche2BuildError("source bank bytes changed during package build")
 
     return {
         "edited_question_ids": sorted(edits),
+        "skipped_question_ids": sorted(skipped_ids),
         "source_file_sha256": source_file_sha256,
         "target_file_sha256": target_file_sha256,
         "source_bank_content_fingerprint": source_fingerprint,
@@ -395,7 +472,7 @@ def build_package_b_tranche1(
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Build deterministic Package-B tranche-1 evidence.")
+    parser = argparse.ArgumentParser(description="Build deterministic Package-B tranche-2 evidence.")
     parser.add_argument("--source-bank", required=True, type=Path)
     parser.add_argument("--semantic-review", required=True, type=Path)
     parser.add_argument("--candidate-bank", required=True, type=Path)
@@ -407,14 +484,14 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
-        summary = build_package_b_tranche1(
+        summary = build_package_b_tranche2(
             args.source_bank,
             args.semantic_review,
             args.candidate_bank,
             args.review_root,
             args.manifest,
         )
-    except PackageBTranche1BuildError as exc:
+    except PackageBTranche2BuildError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
     sys.stdout.write(json.dumps(summary, ensure_ascii=False, sort_keys=True, indent=2) + "\n")

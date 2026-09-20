@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "They filter traffic to subnets or NICs using allow and deny rules",
+    "B": "Microsoft Entra issues tokens after authentication for authorized applications and resources",
+    "C": "Purview eDiscovery can place content on hold for legal matters",
+    "D": "Azure Key Vault stores secrets, keys, and certificates for applications"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+  ],
+  "before": {
+    "A": "They filter traffic to subnets or NICs using allow and deny rules",
+    "B": "They issue Entra tokens",
+    "C": "They hold email for lawsuits",
+    "D": "They store TLS private keys as their primary purpose"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "013d658361b9c326e4fcee42e8c3a05f484378758652503324dc9fa43e52315b",
+  "question_id": "sc900_mlc_q123",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "431d4c57c7d08485de975fec356d7303fa999125b2a8f0b17b8b8bc99c9664d3"
+}

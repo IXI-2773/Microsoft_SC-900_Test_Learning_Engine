@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "The Service Trust Portal is where you create tenant DLP policies",
+    "B": "The Purview portal publishes Microsoft's SOC reports as its primary job",
+    "C": "Compliance Manager publishes Microsoft's audit reports and configures tenant DLP",
+    "D": "Service Trust Portal for Microsoft audit reports; Purview portal for tenant DLP"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home"
+  ],
+  "before": {
+    "A": "The Service Trust Portal is where you create tenant DLP policies",
+    "B": "The Purview portal publishes Microsoft's SOC reports as its primary job",
+    "C": "Compliance Manager",
+    "D": "Service Trust Portal for Microsoft's audit reports; Microsoft Purview portal for the tenant's DLP configuration"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "1e8ae447a2b2bf2f1f4f0923c1a1398101398211494f430460326a22df6e5900",
+  "question_id": "sc900_mlc_q279",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "195877faaacb58b00020c4bf6b34edbbb8d4c92e93338d743ed4fd9ef8bd0e73"
+}

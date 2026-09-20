@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Azure Firewall is a managed, stateful network firewall for Azure virtual networks",
+    "B": "Defender for Endpoint provides endpoint detection and response for devices",
+    "C": "It protects email and collaboration from phishing and malware",
+    "D": "Defender for Cloud Apps provides visibility and control for cloud-app usage and sessions"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/defender-office-365/mdo-about"
+  ],
+  "before": {
+    "A": "It is Azure's stateful network firewall",
+    "B": "Microsoft Defender for Endpoint",
+    "C": "It protects email and collaboration from phishing and malware",
+    "D": "Microsoft Defender for Cloud Apps"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "0501e8e833dfb2a7c029355e729964d29547d5dd9639bdcff47faa3e92660066",
+  "question_id": "sc900_mlc_q130",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "6a9afec3808fe829f9d94a9702d6abde7d223cd0b7f6642545a6d2a01f0fc296"
+}

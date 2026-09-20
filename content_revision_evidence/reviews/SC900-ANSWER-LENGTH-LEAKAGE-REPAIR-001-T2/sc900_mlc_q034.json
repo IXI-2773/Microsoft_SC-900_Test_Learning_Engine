@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "To mitigate volumetric DDoS floods against Azure public IP addresses",
+    "B": "To hash files at rest",
+    "C": "To recertify whether users still need group, app, or role access",
+    "D": "To host Azure Bastion RDP jump boxes"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/id-governance/access-reviews-overview"
+  ],
+  "before": {
+    "A": "To mitigate volumetric DDoS floods",
+    "B": "To hash files at rest",
+    "C": "To recertify whether users still need group, app, or role access",
+    "D": "To host RDP jump boxes"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "2b4327eb93b8c9a5aff2c84f934d2e60fcff5a0556361e2dac8cf84b3493c463",
+  "question_id": "sc900_mlc_q034",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "5892553503b090151f7197294f130b41cfd222ee5557c54d355614a2da1e2cd6"
+}

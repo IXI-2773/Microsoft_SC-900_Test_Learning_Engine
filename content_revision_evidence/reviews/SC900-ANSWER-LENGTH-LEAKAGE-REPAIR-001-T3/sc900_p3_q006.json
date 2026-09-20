@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "They replace Microsoft Entra ID as the organization's only identity provider",
+    "B": "They form an extended detection and response suite for endpoints, identities, email, and cloud apps",
+    "C": "They are used only to generate Microsoft Purview retention labels for documents",
+    "D": "They provide layer 3 and layer 4 DDoS mitigation for Azure public IPs"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/"
+  ],
+  "before": {
+    "A": "They replace Microsoft Entra ID as the organization's only identity provider",
+    "B": "They form an extended detection and response suite covering workloads such as endpoints, identities, email, and cloud apps",
+    "C": "They are used only to generate Microsoft Purview retention labels",
+    "D": "They provide layer 3 and layer 4 DDoS mitigation for Azure public IPs"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "58e43f564fd09a2140682c02685af3dfda4b1da7b5a81619d1765d4cdf666ed2",
+  "question_id": "sc900_p3_q006",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "90f19e5438bd31655fe4073a697106f31b3d26e6aa1e59ada77f8bdbaa047a54"
+}

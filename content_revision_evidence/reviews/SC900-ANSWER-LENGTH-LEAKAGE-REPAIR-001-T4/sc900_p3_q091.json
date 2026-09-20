@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Hashing verifies whether data has been altered by comparing integrity values",
+    "B": "An Azure public IP provides internet-reachable addressing for a resource",
+    "C": "Set policies, responsibilities, and oversight for security and compliance",
+    "D": "A Temporary Access Pass provides time-limited sign-in and authentication-method registration"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/6-describe-compliance-concepts"
+  ],
+  "before": {
+    "A": "Hashing a file to check integrity",
+    "B": "Creating an Azure public IP address",
+    "C": "Set policies, responsibilities, and oversight for security and compliance",
+    "D": "Issuing a Temporary Access Pass"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "9f5f7d3bd4187d4db49a2f8fa1784fd1d3d4f606cb9518ffe8439e05d17c1890",
+  "question_id": "sc900_p3_q091",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "f47dad875bb80013e872fffd6f4decde724f58b8f147f2204390203a9919cb47"
+}

@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "An official Microsoft ISO certification that Compliance Manager issues to the customer tenant",
+    "B": "A replacement for the Service Trust Portal audit reports",
+    "C": "Defender for Cloud secure score for Azure resource posture",
+    "D": "Estimated remaining Compliance Manager improvement-action progress, not a certification"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/compliance-manager-scoring"
+  ],
+  "before": {
+    "A": "An official Microsoft ISO certification for the customer",
+    "B": "A replacement for the Service Trust Portal",
+    "C": "Defender for Cloud secure score for Azure resources",
+    "D": "Estimated remaining Compliance Manager improvement-action progress, not a certification"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "e0761f2e310c5f7cd7160579d0170f9d9ebd11ee35dfc78b3afc82e99199d071",
+  "question_id": "sc900_mlc_q282",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "faf87233dc7e9ad028c6a9a8c9d4feb352608bc768d0d4cc6791ca717c6c48bb"
+}

@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Users and apps moved beyond one corporate network boundary",
+    "B": "The retirement of encryption",
+    "C": "The requirement that all admins use Telnet",
+    "D": "The removal of authentication from cloud apps"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts/"
+  ],
+  "before": {
+    "A": "Applications and users moving outside a single corporate network boundary",
+    "B": "The retirement of encryption",
+    "C": "The requirement that all admins use Telnet",
+    "D": "The removal of authentication from cloud apps"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "3f2cb575551045b301d045fee0fbe48c1e1778d115b81423c940a454c08e93fb",
+  "question_id": "sc900_mlc_q017",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "00d6c3d6cbd7c0c34c0c393663f3edab635eec8c18ca74b3d4be5b497399ed6a"
+}

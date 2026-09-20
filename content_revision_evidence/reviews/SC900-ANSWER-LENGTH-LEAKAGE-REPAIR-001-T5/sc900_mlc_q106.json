@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "It is Microsoft's email anti-phishing service",
+    "B": "It recertifies guest access",
+    "C": "It publishes SOC reports",
+    "D": "It stores secrets, keys, and certificates"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/key-vault/general/overview"
+  ],
+  "before": {
+    "A": "It is Microsoft's email anti-phishing service",
+    "B": "It recertifies guest access",
+    "C": "It publishes SOC reports",
+    "D": "It controls access to secrets, keys, and certificates"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "05e4355133e2710c9f6236e6546bea2a4f309a6ce0d3c266431db4bcdc65305b",
+  "question_id": "sc900_mlc_q106",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "eba763eab964da45c0f2593f21c473df22bedb1857a1c85bfa66e165806ebf4c"
+}

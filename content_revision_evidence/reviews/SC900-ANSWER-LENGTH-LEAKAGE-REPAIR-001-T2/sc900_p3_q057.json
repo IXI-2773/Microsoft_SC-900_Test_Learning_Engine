@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Policies and standards define desired posture; recommendations identify resources that do not meet it",
+    "B": "Recommendations replace Microsoft Entra ID authentication",
+    "C": "Standards are used only to create Purview eDiscovery cases",
+    "D": "Policies are used only to issue FIDO2 credentials"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/security-policy-concept"
+  ],
+  "before": {
+    "A": "Policies and standards define the desired posture, and recommendations identify resources that do not meet that posture",
+    "B": "Recommendations replace Microsoft Entra authentication",
+    "C": "Standards are used only to create Purview eDiscovery cases",
+    "D": "Policies are used only to issue FIDO2 credentials"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "f71a4de13378edf9f41b8be80f7a16ae79a47872cfa884a85cd17eb79c2f63a4",
+  "question_id": "sc900_p3_q057",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "6110b7286846118862e83f7a81092a11c9c36f1be5f21d04837d680b59cb7780"
+}

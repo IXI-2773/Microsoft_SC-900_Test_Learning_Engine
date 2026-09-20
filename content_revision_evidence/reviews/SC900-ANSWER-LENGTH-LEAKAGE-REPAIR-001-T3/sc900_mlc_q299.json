@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Insider Risk Management is Microsoft's only Conditional Access MFA grant control",
+    "B": "Conditional Access is a subset of Insider Risk Management file plans",
+    "C": "Insider Risk Management analyzes internal user activity; Conditional Access evaluates sign-ins",
+    "D": "Insider Risk Management issues FIDO2 keys and replaces Conditional Access"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/insider-risk-management"
+  ],
+  "before": {
+    "A": "Insider Risk Management is Microsoft's only MFA grant control",
+    "B": "Conditional Access is a subset of Insider Risk Management file plans",
+    "C": "Insider Risk Management analyzes internal user activity patterns; Conditional Access still evaluates sign-in conditions",
+    "D": "Insider Risk Management issues FIDO2 keys and replaces Conditional Access"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "2e1dfbdd7183b16611cdd858c4c052d2de054edbfe2dae77075e1131d1612900",
+  "question_id": "sc900_mlc_q299",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "98ec59d55f4f85e862d0c5e1234019ba8548cbdf8a034ec164b7e05969870422"
+}

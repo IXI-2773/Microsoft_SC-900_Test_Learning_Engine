@@ -1,0 +1,36 @@
+{
+  "after": {
+    "A": "Retention policies and retention labels",
+    "B": "Data loss prevention for risky sharing controls",
+    "C": "Records management for governing declared records",
+    "D": "Sensitivity labels"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/retention",
+    "https://learn.microsoft.com/en-us/purview/dlp-learn-about-dlp",
+    "https://learn.microsoft.com/en-us/purview/records-management",
+    "https://learn.microsoft.com/en-us/purview/sensitivity-labels"
+  ],
+  "before": {
+    "A": "Retention policies and retention labels",
+    "B": "Data loss prevention",
+    "C": "Records management",
+    "D": "Sensitivity labels"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "c8aefe430c8474ad263c7ed204075c0f7deb3e52f60342df701135d2c4593981",
+  "question_id": "sc900_p1_q049",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "e8b4fb3ef75838a97c95e27cdbae46e84f9bf06cb36521ef736efb7f71042ccd"
+}

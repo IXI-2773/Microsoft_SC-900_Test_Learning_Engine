@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "MFA makes encryption illegal",
+    "B": "One strong identity layer does not replace endpoint and data controls",
+    "C": "Defense-in-depth applies only to DNS",
+    "D": "Zero Trust forbids laptops"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/"
+  ],
+  "before": {
+    "A": "MFA makes encryption illegal",
+    "B": "One strong layer does not remove the need for data and endpoint controls",
+    "C": "Defense-in-depth applies only to DNS",
+    "D": "Zero Trust forbids laptops"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "7e27147168519e113594d8ed3a761f68f2325ffff1bc95349e652ae0e8440113",
+  "question_id": "sc900_mlc_q049",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "a3012975ec1eeff89c90f712dd58e2c83f6cc3ef9ab74cfc2a8de6108a69e5e0"
+}

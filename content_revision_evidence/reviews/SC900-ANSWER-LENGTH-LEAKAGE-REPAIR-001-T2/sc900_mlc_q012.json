@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Governance is only a Microsoft Defender XDR incident queue in the Defender portal",
+    "B": "Governance sets the organization's rules and oversight; compliance assesses whether requirements are met",
+    "C": "Compliance replaces the need for encryption",
+    "D": "Governance applies only to on-premises firewalls"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/training/modules/describe-basic-compliance-capabilities/"
+  ],
+  "before": {
+    "A": "Governance is only a Microsoft Defender XDR incident queue",
+    "B": "Governance sets the organization's chosen rules and oversight; compliance assesses whether internal and external requirements are met",
+    "C": "Compliance replaces the need for encryption",
+    "D": "Governance applies only to on-premises firewalls"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "baf7e2aec48a560b8178c25773eb57702b3bb5632ffdfcc045b4290df9dcfe8c",
+  "question_id": "sc900_mlc_q012",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "b60d178ab1347295e7bdb2f146845da736071a694e4c0041b0e8909a20385fe0"
+}

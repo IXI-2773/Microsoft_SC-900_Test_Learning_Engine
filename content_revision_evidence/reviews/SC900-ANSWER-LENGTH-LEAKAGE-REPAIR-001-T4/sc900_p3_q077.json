@@ -1,0 +1,34 @@
+{
+  "after": {
+    "A": "Detecting suspicious behavior on a running workload",
+    "B": "Listing a missing encryption setting on a storage account",
+    "C": "Reporting that a resource does not meet a policy baseline",
+    "D": "Suggesting that diagnostic logs should be enabled"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction",
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/concept-cloud-security-posture-management"
+  ],
+  "before": {
+    "A": "Detecting malware or suspicious behavior on a running virtual machine or container",
+    "B": "Listing a missing encryption setting on a storage account",
+    "C": "Reporting that a resource does not meet a policy baseline",
+    "D": "Suggesting that diagnostic logs should be enabled"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "a573a242c38c2777def5357fec30076dd07da443fc85e118cef544a5b13a21e5",
+  "question_id": "sc900_p3_q077",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "77972575ffa404195937531ce2c27b22c2e41b98152ad72c4116910715004655"
+}

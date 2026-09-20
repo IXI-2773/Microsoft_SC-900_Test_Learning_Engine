@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Conditional Access evaluates identity, device, location, and risk signals to grant or block access",
+    "B": "Privileged Identity Management manages activation and governance of privileged role assignments",
+    "C": "User risk replaces Conditional Access and cannot be used as a policy condition",
+    "D": "User risk concerns the account; sign-in risk concerns one authentication attempt"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks"
+  ],
+  "before": {
+    "A": "Conditional Access",
+    "B": "Privileged Identity Management",
+    "C": "User risk replaces Conditional Access and cannot be used as a policy condition",
+    "D": "User risk describes the user/account, while sign-in risk describes a specific authentication attempt"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "b4d1000a52302ee313ced4d2bd3837cb5abc5d924c1c1ac127002e6939ec3c80",
+  "question_id": "sc900_mlc_q224",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "d6c5f513a56979f06ffc3489602b973612bd758f287c25536763b7f466b3cfd9"
+}

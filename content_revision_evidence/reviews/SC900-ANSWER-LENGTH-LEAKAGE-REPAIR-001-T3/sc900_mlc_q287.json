@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "DLP can apply across multiple locations, not only one mailbox",
+    "B": "DLP exists only as an Azure network security group application rule",
+    "C": "DLP can run only after a file is declared a Purview record",
+    "D": "Endpoint DLP is a Microsoft Entra Conditional Access grant control"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/dlp-learn-about-dlp"
+  ],
+  "before": {
+    "A": "DLP policies can apply across multiple locations rather than only one mailbox",
+    "B": "DLP exists only as an Azure NSG application rule",
+    "C": "DLP can run only after a file is declared a record",
+    "D": "Endpoint DLP is a Conditional Access grant control"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "feee5a57adcba497a6c0350d2565195847038d93f257aca25f8e35c260e95da6",
+  "question_id": "sc900_mlc_q287",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "be841050acb09c43b90b7d682b3975db2c40776e1d300bac0c2932dfd553dbde"
+}

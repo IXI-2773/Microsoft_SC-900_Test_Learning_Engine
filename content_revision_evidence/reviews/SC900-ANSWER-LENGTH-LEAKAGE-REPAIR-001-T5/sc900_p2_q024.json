@@ -1,0 +1,35 @@
+{
+  "after": {
+    "A": "Azure Web Application Firewall",
+    "B": "Azure Bastion",
+    "C": "Azure Firewall for network traffic filtering",
+    "D": "Azure DDoS Protection"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/web-application-firewall/overview",
+    "https://learn.microsoft.com/en-us/azure/firewall/overview",
+    "https://learn.microsoft.com/en-us/azure/ddos-protection/ddos-protection-overview"
+  ],
+  "before": {
+    "A": "Azure Web Application Firewall",
+    "B": "Azure Bastion",
+    "C": "Azure Firewall",
+    "D": "Azure DDoS Protection"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "ad139821f3c8fa50a2977f521668d63b50d452d359c1be4d85da8f0701b83018",
+  "question_id": "sc900_p2_q024",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "3452c334b066b8d5a1bec58a2c8541805c298d20786967a30999f4fa54853869"
+}

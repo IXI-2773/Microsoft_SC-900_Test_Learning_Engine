@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Directory and identity-administration permissions in Entra ID",
+    "B": "Layer 3/4 Azure DDoS Protection for public IP mitigation only",
+    "C": "Whether a file is a Purview record",
+    "D": "Whether an Azure VM has a public IP address"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/custom-overview"
+  ],
+  "before": {
+    "A": "Directory and identity-administration permissions in Entra ID",
+    "B": "Layer 3/4 DDoS mitigation only",
+    "C": "Whether a file is a record",
+    "D": "Whether a VM has a public IP"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "24476c54ec549bc694e47c44020a170b68a3c6566174bc1fc52f4800e66627d2",
+  "question_id": "sc900_mlc_q074",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "65c1a1b85d273185772dd742ec5c969c0f951b3d579f8cefd316e4642dfb07c2"
+}

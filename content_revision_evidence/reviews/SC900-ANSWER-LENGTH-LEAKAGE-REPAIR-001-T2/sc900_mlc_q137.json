@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "They are Microsoft Entra access packages that grant group or app access",
+    "B": "They are Defender Safe Attachments policies",
+    "C": "Regulations",
+    "D": "They flag resources that do not meet the assigned security standard"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/security-policy-concept"
+  ],
+  "before": {
+    "A": "They are Entra access packages",
+    "B": "They are Safe Attachments policies",
+    "C": "Regulations",
+    "D": "They identify resources that do not meet the assigned security standard"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "1b127a8247953865fd098aba9da88cf9a2f4adb15617b242f809c7f7e5c1bc92",
+  "question_id": "sc900_mlc_q137",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "308a8556f6e4bdaa1e9d5619d7137ae5052a55ad28f8804ae9a012db32eb760a"
+}

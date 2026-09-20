@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "SQL injection attacks against a public website",
+    "B": "Identity-based threats against Active Directory, such as reconnaissance or credential theft",
+    "C": "Volumetric DDoS floods against a public IP address",
+    "D": "Oversharing of a sensitivity-labeled Word document"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/defender-for-identity/what-is"
+  ],
+  "before": {
+    "A": "SQL injection against a public website",
+    "B": "Identity-based threats against Active Directory, such as reconnaissance or credential theft patterns",
+    "C": "Volumetric floods against a public IP address",
+    "D": "Oversharing of a labeled Word document"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "f7d663449a1b58bee93ddb881815be73cac7ca5446b2a853e047a008ec3890d5",
+  "question_id": "sc900_p3_q086",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "bbf4a60a92a4b4c092f66977e38dc9531faa3a371543a6a2de98abde9af2a3c6"
+}

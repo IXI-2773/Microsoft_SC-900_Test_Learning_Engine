@@ -1,0 +1,35 @@
+{
+  "after": {
+    "A": "Microsoft Entra ID",
+    "B": "An identity provider that authenticates users and issues tokens",
+    "C": "Federation",
+    "D": "A records-management service that declares contracts as records"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity-platform/v2-overview",
+    "https://learn.microsoft.com/en-us/entra/identity-platform/authentication-vs-authorization",
+    "https://learn.microsoft.com/en-us/entra/fundamentals/whatis"
+  ],
+  "before": {
+    "A": "Microsoft Entra ID",
+    "B": "An identity provider that authenticates users and issues trusted tokens or claims",
+    "C": "Federation",
+    "D": "A records-management service that declares contracts as records"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "ded451aeb5282b3afbca831434f5e5be0572579e117eb2ec28b76537c847309c",
+  "question_id": "sc900_mlc_q207",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "b21eebae2f7b7714f632ecae348eb7679c3fd02e675e13bd15d6985ddbcfd042"
+}

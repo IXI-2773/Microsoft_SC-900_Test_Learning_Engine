@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Key Vault is an Azure Web Application Firewall for HTTP attacks",
+    "B": "Source control cannot store text files such as configuration",
+    "C": "Key Vault stores secrets with access control instead of in code",
+    "D": "Key Vault recertifies Microsoft Entra guest group membership"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/key-vault/general/basic-concepts"
+  ],
+  "before": {
+    "A": "Key Vault is a WAF",
+    "B": "Source control cannot store text files",
+    "C": "Key Vault provides access-controlled secret storage instead of exposing secrets in code",
+    "D": "Key Vault recertifies guests"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "67b73dca0530cdccb542b70b38a98a132b353de1991029d8e728b4b3e532f306",
+  "question_id": "sc900_mlc_q124",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "214078b0dd998f8e9765e2c1aa51f8c0db915747882ab7b547fcc76e110e9e17"
+}

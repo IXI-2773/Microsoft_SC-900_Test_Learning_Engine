@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "It automatically assigns a directory administrator role",
+    "B": "It can verify the user without requiring a password for that sign-in",
+    "C": "It disables authorization checks",
+    "D": "It converts the account into an external Microsoft Entra guest identity"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-authentication-passwordless"
+  ],
+  "before": {
+    "A": "It automatically assigns an administrator role",
+    "B": "It can verify the user without requiring the user to enter a password for that sign-in",
+    "C": "It disables authorization checks",
+    "D": "It converts the account into a guest identity"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "f1e422685d7f18b96ced7f60a73468e0f473b5ae6d1b5d8e2174380a2dec1bbd",
+  "question_id": "sc900_p2_q013",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "a998a20b56cf925c0cf56798fe92017c993123d2a454d422a219339cae405cae"
+}

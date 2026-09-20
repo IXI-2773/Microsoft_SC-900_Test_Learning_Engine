@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Authorization determines which files or resources an authenticated user may edit",
+    "B": "Authentication verifies claimed identity before access rights are evaluated",
+    "C": "Authentication applies only to printers and not users or applications",
+    "D": "Data classification identifies and labels information; it is not identity verification"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts/"
+  ],
+  "before": {
+    "A": "Authentication decides which files a user may edit",
+    "B": "Authentication verifies claimed identity before access rights are evaluated",
+    "C": "Authentication only applies to printers",
+    "D": "Authentication is the same as data classification"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "6562b11d9ffcfdb1f5346205f4ec77ce598967a7f14e0343947074852a223292",
+  "question_id": "sc900_mlc_q018",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "0ce96240920e6bf9173584e0ec7d2c4925794667cdaaa4d0c58f620e5c0b913b"
+}

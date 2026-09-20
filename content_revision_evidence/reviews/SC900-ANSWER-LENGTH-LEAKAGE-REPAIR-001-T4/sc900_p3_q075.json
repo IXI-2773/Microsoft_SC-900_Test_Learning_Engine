@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Because every virtual network issues FIDO2 credentials",
+    "B": "Because virtual networks classify Microsoft 365 documents",
+    "C": "A virtual network provides private resource connectivity",
+    "D": "Because virtual networks replace Microsoft Entra ID"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview"
+  ],
+  "before": {
+    "A": "Because every virtual network issues FIDO2 credentials",
+    "B": "Because virtual networks classify Microsoft 365 documents",
+    "C": "Because a virtual network provides a private network boundary for those resources",
+    "D": "Because virtual networks replace Microsoft Entra ID"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "a626f4e64eb2063abdb7bc20172af80871f5b39a11cf76ae28ea3bcbfa880be1",
+  "question_id": "sc900_p3_q075",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "41d2eefede2603003d2119cc1425e3e8444c4c66be3cc38ebfbf148896e6fced"
+}

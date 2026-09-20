@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Microsoft Defender for Cloud Apps",
+    "B": "Azure DDoS Protection for network-layer attacks",
+    "C": "Azure Key Vault",
+    "D": "Privileged Identity Management"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/defender-cloud-apps/what-is-defender-for-cloud-apps"
+  ],
+  "before": {
+    "A": "Microsoft Defender for Cloud Apps",
+    "B": "Azure DDoS Protection",
+    "C": "Azure Key Vault",
+    "D": "Privileged Identity Management"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "9a7f320293b1523cfe8bd6e7203c078dc6a08c4e98fe1916e63968a7244c9d11",
+  "question_id": "sc900_mlc_q139",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "57bf72bfc024f57b1bf280dc4302393051f2c0cd7fb54304483732d645f3642e"
+}

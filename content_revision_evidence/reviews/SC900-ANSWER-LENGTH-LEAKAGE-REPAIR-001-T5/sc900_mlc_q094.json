@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Lifecycle Workflows",
+    "B": "Service Trust Portal for Microsoft audit reports",
+    "C": "Microsoft Defender Vulnerability Management",
+    "D": "Azure Bastion"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/defender-vulnerability-management/defender-vulnerability-management"
+  ],
+  "before": {
+    "A": "Lifecycle Workflows",
+    "B": "Service Trust Portal",
+    "C": "Microsoft Defender Vulnerability Management",
+    "D": "Azure Bastion"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "5d5eac5d846e927216316cb2653c553d2cc0eb0196e2096cd10b713710d804b1",
+  "question_id": "sc900_mlc_q094",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "e5b9915e0aa6a58e76fdf041baf93da006bfd5e58f577f0e8d68b2043286565d"
+}

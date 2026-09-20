@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Retention blocks outbound credit-card numbers as its primary job",
+    "B": "DLP is the keep-or-delete lifecycle engine for mailboxes",
+    "C": "Retention keeps content for the required period; DLP prevents risky sharing",
+    "D": "Retention replaces eDiscovery holds; DLP replaces Microsoft Purview audit logging"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/retention"
+  ],
+  "before": {
+    "A": "Retention blocks outbound credit-card numbers as its primary job",
+    "B": "DLP is the keep-or-delete lifecycle engine",
+    "C": "Retention keeps content for the required period; DLP prevents risky sharing of sensitive information",
+    "D": "Retention replaces eDiscovery; DLP replaces audit"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "694dc0ea8caa648b3940609da6ff130a45c7a753f74678f18201b603f38cba7b",
+  "question_id": "sc900_mlc_q296",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "225af66b070eff4f2306120af0b5c40d76056abb867f278d755160336ca73dc5"
+}

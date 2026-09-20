@@ -1,0 +1,34 @@
+{
+  "after": {
+    "A": "Data loss prevention for detecting risky sharing",
+    "B": "Retention labels",
+    "C": "Data classification",
+    "D": "Sensitivity label policies"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/sensitivity-labels",
+    "https://learn.microsoft.com/en-us/purview/create-sensitivity-labels"
+  ],
+  "before": {
+    "A": "Data loss prevention",
+    "B": "Retention labels",
+    "C": "Data classification",
+    "D": "Sensitivity label policies"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "903927ac83b0fafd88981c3a7c007e3b8b501f100bf0a52dc8183c44751e0011",
+  "question_id": "sc900_mlc_q168",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "be94973f8d57aa957aa893e0210e142d63c930d3e39f27afa9bd8355b03cc521"
+}

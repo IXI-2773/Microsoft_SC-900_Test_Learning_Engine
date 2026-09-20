@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "So every user can manage all Azure Firewall policies",
+    "B": "So administrators receive only the permissions needed for a job",
+    "C": "So multifactor authentication can be permanently disabled for all users",
+    "D": "So Microsoft Entra audit logs can be turned off"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities/"
+  ],
+  "before": {
+    "A": "So every user can manage all Azure firewalls",
+    "B": "So administrators can receive only the permissions needed for a specific job",
+    "C": "So MFA can be permanently disabled",
+    "D": "So audit logs can be turned off"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "9afa74ed3867f0378d338a9efc4cf12d2ee57eb86e63347ebd5af6ca38700697",
+  "question_id": "sc900_p3_q062",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "fbcf9ffdb556d37be1197a398e64f1b4890287658513003ca52fc5dfd347dd0c"
+}

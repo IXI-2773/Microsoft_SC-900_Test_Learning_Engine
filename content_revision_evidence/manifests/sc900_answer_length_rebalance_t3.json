@@ -1,0 +1,689 @@
+{
+  "continuity_policy": "FULL_CONTINUITY",
+  "edges": [
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts/"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "c886b4f84b617c3babcd644750abb6015a769dca8c012caa5880c404e82f6efd",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_mlc_q006",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q006.json",
+      "review_artifact_sha256": "6694b23543ffe2a59f44e3d4672343ee3a5190edf40fec36d8b96ea50029b8f2",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "f827e27fcf92fa116ca83a10c6d252bd743752e020d7aa2a51fecfedd6259b9c"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/security/fundamentals/shared-responsibility"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "c1c29ae01210af179da3d6ec0bd3eddb38ea4ea819d922660ac842fbbd432567",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_mlc_q016",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q016.json",
+      "review_artifact_sha256": "dde61a123eb029c819fe4f12cade9a871826fef4a04ea65b74176f647eabf172",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "bf466c2d1a8d3bf749de187e8247ea563d1b31f7bac99c3e5763b750b84d4127"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/custom-overview"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "3cb1e476f9243599348f8585a1a9191ea9e293830951426d9f3e02bee3b29df8",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_mlc_q056",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q056.json",
+      "review_artifact_sha256": "5e75a98f120a26a16e193099dc1daa2a0bc2f166e9ed58315d595c0c21925dee",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "6169aab981b188f2f6d2f5411107084f8da3f2e87e43dbf6eeb7de5cc0ba680d"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/key-vault/general/basic-concepts"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "67b73dca0530cdccb542b70b38a98a132b353de1991029d8e728b4b3e532f306",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_mlc_q124",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q124.json",
+      "review_artifact_sha256": "eb070ab3f60c6052cecb031af0026dec1813e42a28b3c519741c39cc4fc2b5c7",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "214078b0dd998f8e9765e2c1aa51f8c0db915747882ab7b547fcc76e110e9e17"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/web-application-firewall/overview"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "42cc346539e88c06a896496ea1cf245d5b6af80c1d01ecfe3caf38f77afcbcd8",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_mlc_q134",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q134.json",
+      "review_artifact_sha256": "f267ab410634191d62e3fa3a0701cd1c417f864b15a0a8d51a89cd5d687fe4f3",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "52e65e68f42f1a166bfd088c9eccdf5ec53785a83b22c60b1b5ba4100d037e27"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/defender-for-cloud/concept-cloud-security-posture-management"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "1743338422408ca6338906fcc7c90de9ae712a889cffe952f1939a196c438d00",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_mlc_q138",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q138.json",
+      "review_artifact_sha256": "2e5bf7259736d4a779cd17ea3584716bddba2bd546449e1bc3352706edce4565",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "b5ede2df9008cd05743c87158e6adc8a839a5b16d734d1572d058d70a563d96d"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/data-classification-activity-explorer"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "8e99e29eb0a76eafe5ad5b3aaab174c6f82077811347c9449dde1d8f9e2eed72",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_mlc_q157",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q157.json",
+      "review_artifact_sha256": "c179c7b656b074500568a539317e05d460f7632ba5469c71229e57f298a808c9",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "6b2d9f524269c73b3984c6e5d8b55fad6dfa43933d731c1382921ab0ce5a04db"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance/"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "eea610aa4f72d0897e7ca1e8d16ac89a9d1c4233457d841af96e36d3d43489d9",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_mlc_q165",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q165.json",
+      "review_artifact_sha256": "57582684dd26a31028c65051b06f1ba9b8fec1f78879e99d8e975317b7608e63",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "5ad378be2c31485bfefdbab204b52362cd3ad621a7af7fee0e8eea6f5ce7d237"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "29d56ef6c7ad39cb52712121ed489f4d7ad93b8d175755e3ca90b77f6e413fc9",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_mlc_q177",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q177.json",
+      "review_artifact_sha256": "205b07cf24188eacb8b3204e720d7444f87c95129cb417fec5da92fba90de2ea",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "199506084777b4fc8294c9a5e40b22761c1d4890cfd651f4714c8774db5311b1"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/identity-governance-overview"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "c22f0142a14d82c8fd3de2a8473973a8ba9f1bf8eabdd73dd3de832ccdbde593",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_mlc_q228",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q228.json",
+      "review_artifact_sha256": "d953c7e1d95fb09868a433c1ca93c8ed11d765a1986ddc89ae98ebbc4cc26cba",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "bdd806f78feadabfa5b124ae18caf4d5f13335601b303a6c6a724cab9665fa90"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/access-reviews-overview"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "ed590f33ef882c507d7754c21e55396b799b754126e8491abc9dc34cc83110b8",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_mlc_q229",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q229.json",
+      "review_artifact_sha256": "292d3a3d597ebaa3f7bff0709459fcae92c67bffedececf3a1431764b53e8731",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "993478e6bbb8cc4680c49a3bc1696fb7e627c2a3dc7a20bb8a460511af7e082a"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-authentication-methods"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "9f3ab07d0df0909b3a837ce61ba54caa34e4bbe4a43a9cce58e8c610d3e3ca17",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_mlc_q233",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q233.json",
+      "review_artifact_sha256": "8316091e1c66cb11c7fbe06914bad73bdb26fd150bacddf8192d8f8f569add6c",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "e6bdfa0897ffbb573cbba1c59119808c74465ec3fd80eee48f797e5d3fc30664"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/architecture/architecture"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "fc943fb7e84bf711a83cc3977cc8bf6872f935238e231aaee3d689b1bdb4a89a",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_mlc_q236",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q236.json",
+      "review_artifact_sha256": "e3ab5ddc89859b16e5b76c77fcd57619518ed1ce5d0bd45ca83bf6a7234217ff",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "9f570aaeea4043e46af82c490888c04e303f8d5ddbf722d9b5ff77fdbb919b9a"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "c14d80c1f802997722793771bf0a49cd8d93b3f32aff9c90cfb66abf4649ba59",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_mlc_q248",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q248.json",
+      "review_artifact_sha256": "6a1b1170c165781e339a55d8088f30d7b0b2b1bc91a796c4afcb9083ce1695ff",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "b1e95f43a4e7e120fab2ee612cb40a916726f2b3cffa479d564900327c533ba2"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-cloud-apps/what-is-defender-for-cloud-apps"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "ce86ed7d03dd7b7e3323348b9cd09d37252f1c9fa07e0a68c08a46164ee188c5",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_mlc_q262",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q262.json",
+      "review_artifact_sha256": "a00e5d4fb2af8c0adf1d08c578702bd6bf8d360f49d5d69ba1b7c077ec1a13c7",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "0ab2582d89253d9a83460e383aa3e2bf1b904042a7404c64212d93bf749d76b3"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-xdr/microsoft-365-defender-portal"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "1684a5f15e4b540affd26f677845aeb43116dfbcb4671f40a00dbbedb98966cf",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_mlc_q266",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q266.json",
+      "review_artifact_sha256": "167a2ceb0fd4a8755a3d5d1e51a0afb91fa954af19299ab5b8563bc7ff00a54c",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "8d71d06000854cf263bdda247f418f7eeb9f9bcd829533614be893df10cddefb"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-office-365/mdo-about"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "86c3ecbfd929d457c84cc97dcb421f3173587426b20f410310940ff268f7cc4c",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_mlc_q270",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q270.json",
+      "review_artifact_sha256": "6b93802b85f98e84844ee1becdd9c03dfca5e96a0806e891275c4b02bb09f876",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "d90e9bd275824f2e898b77a5299035ad559a21571e64f17299fbe356264bc8f5"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "1e8ae447a2b2bf2f1f4f0923c1a1398101398211494f430460326a22df6e5900",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_mlc_q279",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q279.json",
+      "review_artifact_sha256": "f4e7db7f3a29bac6684b308134f15b451c8779688e31aeb33861ec176d39149c",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "195877faaacb58b00020c4bf6b34edbbb8d4c92e93338d743ed4fd9ef8bd0e73"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/compliance-manager"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "10055305e867df6cf61a473c26c19585c8dac516e778596b476131d0c83eb9e9",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_mlc_q281",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q281.json",
+      "review_artifact_sha256": "516eaf312faf9fa6494ffed8d04e67765a8341e6f51f272f7c88f12dfc7ffa47",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "ecd8a575d86ebda03d5b604733b3804e6f709bb93eb8193ac4a7a552739c1e01"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/compliance-manager-scoring"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "e0761f2e310c5f7cd7160579d0170f9d9ebd11ee35dfc78b3afc82e99199d071",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_mlc_q282",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q282.json",
+      "review_artifact_sha256": "6ee344061cf059ceaa52e7c4c9ccbc4fa01f0114c6403ad2358550f73d74d7e7",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "faf87233dc7e9ad028c6a9a8c9d4feb352608bc768d0d4cc6791ca717c6c48bb"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/dlp-learn-about-dlp"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "feee5a57adcba497a6c0350d2565195847038d93f257aca25f8e35c260e95da6",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_mlc_q287",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q287.json",
+      "review_artifact_sha256": "f00eec0d86fe444781b645e5cfa0599a3e9e0052dee443592e4a570adeed3238",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "be841050acb09c43b90b7d682b3975db2c40776e1d300bac0c2932dfd553dbde"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/ediscovery"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "ab3c905452d1ed5196f6e7e1c64487359943e602e12c4a1c9c1e31c5fcef9488",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_mlc_q291",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q291.json",
+      "review_artifact_sha256": "4a7d21450eda72243c5317ed92fcc428915586651069258a2a89ffa987e31973",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "38c5f4d830cd2d328fb66f689d7acdc2460c2ebd40d7604f3b56571ec02617fc"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/retention"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "694dc0ea8caa648b3940609da6ff130a45c7a753f74678f18201b603f38cba7b",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_mlc_q296",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q296.json",
+      "review_artifact_sha256": "728d2bc1da9578cde9f8756741ef00adbf89f5aa42bd898f01f334fd3d521e51",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "225af66b070eff4f2306120af0b5c40d76056abb867f278d755160336ca73dc5"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/insider-risk-management"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "2e1dfbdd7183b16611cdd858c4c052d2de054edbfe2dae77075e1131d1612900",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_mlc_q299",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_mlc_q299.json",
+      "review_artifact_sha256": "7f9ace2e40b345958544d0862169e64003b4e9bad7390344fe610dbe98fba929",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "98ec59d55f4f85e862d0c5e1234019ba8548cbdf8a034ec164b7e05969870422"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "58e43f564fd09a2140682c02685af3dfda4b1da7b5a81619d1765d4cdf666ed2",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_p3_q006",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_p3_q006.json",
+      "review_artifact_sha256": "ce31723cbf3aea7b66568926f4b3744a100674ac54f8d405ee7c2282513a0afc",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "90f19e5438bd31655fe4073a697106f31b3d26e6aa1e59ada77f8bdbaa047a54"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure/"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "758f112a9483d28811bb8485e97a63cba5c6a91f560c918a5828d0ae36eb99a2",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_p3_q015",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_p3_q015.json",
+      "review_artifact_sha256": "f49583094c5506f08ea2233215ad4d16940c8f1712746090e619bb51a0db185e",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "e940b0ee4deba9b7a090e1314624375d4571b8ea477d209ef8863952e1078901"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities/"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "9afa74ed3867f0378d338a9efc4cf12d2ee57eb86e63347ebd5af6ca38700697",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_p3_q062",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_p3_q062.json",
+      "review_artifact_sha256": "3b287929fb4f5d15743b7f3944c5878e5fcfe4079f264b6a68c82e8b63efe410",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "fbcf9ffdb556d37be1197a398e64f1b4890287658513003ca52fc5dfd347dd0c"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/records-management"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "0e1ff0bd6de2f466b0034024292c3500e565193677d9307d40b95bab56ff2076",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_p3_q070",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_p3_q070.json",
+      "review_artifact_sha256": "2d5f7425b7c75a76e73c8e4f12e81eea069b2733695c4519583abc2e7b133f90",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "216fffba2ea1fcff680f75ae85b4eb9b2f56487f2b5e0d4b487d36fe3456eca7"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure/"
+      ],
+      "choice_letter_mapping_unchanged": true,
+      "choice_semantics": {
+        "A": "EQUIVALENT",
+        "B": "EQUIVALENT",
+        "C": "EQUIVALENT",
+        "D": "EQUIVALENT"
+      },
+      "correct_key_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "ac7f1c29a7355a426616b690e1696f6d7b40c94a65bc5b2a9f7408cb02980728",
+      "objective_unchanged": true,
+      "prompt_unchanged": true,
+      "question_id": "sc900_p3_q097",
+      "review_artifact": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T3/sc900_p3_q097.json",
+      "review_artifact_sha256": "0b69d49abaab92dbff946c1029636125fc155eeca440a22fda15bef13bda8053",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "c9f1153294328e1140f4044cafa07cd4c4db7ce7071bdf6475ffceb9f25a89ba"
+    }
+  ],
+  "manifest_kind": "sc900_content_revision_equivalence",
+  "payload_sha256": "4b9eab410da68bd348b4ae40946cf54a45b1da98bf04d68baaf6a57e3de15338",
+  "permitted_change_class": "WORDING_ONLY_LENGTH_REBALANCE",
+  "schema_version": 1,
+  "source_bank": {
+    "content_fingerprint": "34b5278570d89ab17ce09dfda891be0ab31a2b4e134b4727a10ed9b65a2b1f8b",
+    "file_sha256": "c53ba19ee26992643969d546a73da5aa8396041ebe4e138f6b30db637756aa65",
+    "filename": "sc900_bank_v8_length_rebalanced_t2.json",
+    "question_count": 454
+  },
+  "target_bank": {
+    "content_fingerprint": "83a8644cce462cf231f2c795746ab4d8ca1d71246fea8fbfb2982ddc7961f8a2",
+    "file_sha256": "0b0cdf3bf4c8b7885acf0b3b19381dd9f19ee38944fc6af6934b11b5b14588bd",
+    "filename": "sc900_bank_v8_length_rebalanced_t3.json",
+    "question_count": 454
+  },
+  "work_id": "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001 / PACKAGE-B / TRANCHE-3"
+}

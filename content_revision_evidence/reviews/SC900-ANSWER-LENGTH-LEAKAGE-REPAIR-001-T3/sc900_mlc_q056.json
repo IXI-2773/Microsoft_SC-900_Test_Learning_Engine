@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Share the Global Administrator password in a team chat",
+    "B": "Disable Microsoft Entra Conditional Access for everyone",
+    "C": "Assign a password-reset role without granting Global Administrator",
+    "D": "Open Remote Desktop Protocol to the internet from Azure"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/custom-overview"
+  ],
+  "before": {
+    "A": "Share the Global Administrator password in chat",
+    "B": "Disable Conditional Access for everyone",
+    "C": "Assign a role that includes password reset without granting Global Administrator",
+    "D": "Open RDP to the internet"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "3cb1e476f9243599348f8585a1a9191ea9e293830951426d9f3e02bee3b29df8",
+  "question_id": "sc900_mlc_q056",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "6169aab981b188f2f6d2f5411107084f8da3f2e87e43dbf6eeb7de5cc0ba680d"
+}

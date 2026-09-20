@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Which administrative permissions an assigned identity can exercise",
+    "B": "Azure Web Application Firewall inspects HTTP/S requests to web applications and can block web attacks",
+    "C": "Retention policies control how long content is kept or deleted",
+    "D": "Sentinel analytics rules detect patterns in ingested security data"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/custom-overview"
+  ],
+  "before": {
+    "A": "Which administrative permissions an assigned identity can exercise",
+    "B": "Which web requests a firewall blocks",
+    "C": "How long a document is retained",
+    "D": "Which Sentinel analytics rule detects a threat"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "1647836bbf7c84392459707333a57f86df969aa1dd12b5888a13e53e7c257f73",
+  "question_id": "sc900_p2_q015",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "5a02f0144e69d4479f7228dffabb745f6a4f49b796e43be9f4d28840ab6c993d"
+}

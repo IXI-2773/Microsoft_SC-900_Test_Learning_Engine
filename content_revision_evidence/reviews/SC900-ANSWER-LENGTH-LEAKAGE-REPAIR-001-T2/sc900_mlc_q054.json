@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Self-service password reset so users can change forgotten passwords",
+    "B": "It is a Microsoft Sentinel SIEM connector",
+    "C": "It can block passwords on banned lists, including custom terms",
+    "D": "It declares SharePoint items as records"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-password-ban-bad"
+  ],
+  "before": {
+    "A": "Self-service password reset",
+    "B": "It is a SIEM connector",
+    "C": "It can block passwords that appear on banned lists, including custom terms",
+    "D": "It declares SharePoint records"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "2610ae6bb2c3c990b1aad92f74eb1080eb588592df4d5e4045451e2b48d19cb5",
+  "question_id": "sc900_mlc_q054",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "b79def762874033a0ca19b55e6692a6a145880ceae9aca70b5fe99a87504e0e5"
+}

@@ -1,0 +1,34 @@
+{
+  "after": {
+    "A": "Defender for Endpoint provides endpoint detection and response for devices",
+    "B": "Defender for Office 365 protects email and collaboration from threats",
+    "C": "Temporary Access Pass is a time-limited Entra authentication credential",
+    "D": "An XDR suite, not an identity provider that replaces Entra ID"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/defender-xdr/microsoft-365-defender",
+    "https://learn.microsoft.com/en-us/entra/fundamentals/whatis"
+  ],
+  "before": {
+    "A": "Microsoft Defender for Endpoint",
+    "B": "Microsoft Defender for Office 365",
+    "C": "It is a TAP authentication method",
+    "D": "An XDR suite, not an identity provider that replaces Entra ID"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "cf109570caf7cba97a44f15e0f11f06e9e741b9f950d3e013d202722b82676ae",
+  "question_id": "sc900_mlc_q129",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "2517d92dea0ce1aef2eed81dd448c2ac9240d140f57fedadfc94cbdd2a76f04b"
+}

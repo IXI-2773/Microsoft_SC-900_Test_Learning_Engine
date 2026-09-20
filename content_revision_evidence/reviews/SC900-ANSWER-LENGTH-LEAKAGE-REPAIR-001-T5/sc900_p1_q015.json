@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Compliance Manager",
+    "B": "Azure Key Vault for secrets and certificates",
+    "C": "Network Security Groups",
+    "D": "Access reviews"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+  ],
+  "before": {
+    "A": "Compliance Manager",
+    "B": "Azure Key Vault",
+    "C": "Network Security Groups",
+    "D": "Access reviews"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "a2b24bee285e6b405311a80325735ebb4d9400823776bd77df8d302587f7e08b",
+  "question_id": "sc900_p1_q015",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "6aa700443744477b0b707879917a11b3d002bcfad48daeb9e1ac5778bca22e2f"
+}

@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Using sign-in conditions to decide which access control to enforce",
+    "B": "Encrypting all application data at rest in storage",
+    "C": "Collecting logs for Microsoft Sentinel SIEM correlation and hunting",
+    "D": "Classifying sensitive documents with sensitivity labels"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview"
+  ],
+  "before": {
+    "A": "Using sign-in conditions to determine which access control to enforce",
+    "B": "Encrypting all application data at rest",
+    "C": "Collecting logs for SIEM correlation",
+    "D": "Classifying sensitive documents"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "4491594e7acb2cb95423753fb4ef0600c79b20416f17d36de32bbd4e2ec0f3c2",
+  "question_id": "sc900_p1_q033",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "9de09d6eccc3c535f2399ecd7191369dfa66383519699b8fc44d58707bad8734"
+}

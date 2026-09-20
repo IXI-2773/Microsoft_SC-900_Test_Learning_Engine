@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Azure Firewall filtering network traffic for virtual networks",
+    "B": "Protect web apps from HTTP attacks such as injection and XSS",
+    "C": "Azure DDoS Protection mitigating volumetric network floods",
+    "D": "Azure Bastion for managed RDP and SSH access"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/web-application-firewall/overview"
+  ],
+  "before": {
+    "A": "Azure Firewall",
+    "B": "Protect web apps from HTTP attacks such as injection and XSS",
+    "C": "Azure DDoS Protection",
+    "D": "Azure Bastion for managed RDP and SSH access"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "42cc346539e88c06a896496ea1cf245d5b6af80c1d01ecfe3caf38f77afcbcd8",
+  "question_id": "sc900_mlc_q134",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "52e65e68f42f1a166bfd088c9eccdf5ec53785a83b22c60b1b5ba4100d037e27"
+}

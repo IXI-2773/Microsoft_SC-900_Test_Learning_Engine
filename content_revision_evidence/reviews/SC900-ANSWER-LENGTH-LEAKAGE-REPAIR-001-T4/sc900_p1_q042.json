@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "It automatically grants administrative roles",
+    "B": "One compromised factor may not be enough",
+    "C": "It removes the need for authorization",
+    "D": "It prevents every type of phishing attack"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-mfa-howitworks"
+  ],
+  "before": {
+    "A": "It automatically grants administrative roles",
+    "B": "Compromise of one factor is less likely to be sufficient for access",
+    "C": "It removes the need for authorization",
+    "D": "It prevents every type of phishing attack"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "f1f736a78994afb1de7eecc0e39ed6f1a91365cbd6366bf749d06a3a348cdcda",
+  "question_id": "sc900_p1_q042",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "c74ab1432cd74796b653ac44f8420a7fd218dd143d544fc32f1d26f756abc404"
+}

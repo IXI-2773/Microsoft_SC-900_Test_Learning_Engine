@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Azure DDoS Protection replaces the need for identity authentication",
+    "B": "WAF is the only service that can mitigate layer 3 and layer 4 floods",
+    "C": "DDoS Protection handles volumetric network floods; WAF handles HTTP application attacks",
+    "D": "Azure DDoS Protection is used only to classify Microsoft 365 documents"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure/"
+  ],
+  "before": {
+    "A": "DDoS Protection replaces the need for identity authentication",
+    "B": "WAF is the only service that can mitigate layer 3 and layer 4 floods",
+    "C": "DDoS Protection focuses on volumetric network-layer floods, while WAF focuses on HTTP application attacks",
+    "D": "DDoS Protection is used only to classify Microsoft 365 documents"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "758f112a9483d28811bb8485e97a63cba5c6a91f560c918a5828d0ae36eb99a2",
+  "question_id": "sc900_p3_q015",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "e940b0ee4deba9b7a090e1314624375d4571b8ea477d209ef8863952e1078901"
+}

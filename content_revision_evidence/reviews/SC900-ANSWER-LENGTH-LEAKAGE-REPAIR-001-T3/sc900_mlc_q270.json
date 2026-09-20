@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Azure WAF is Microsoft's Safe Attachments detonation engine",
+    "B": "Defender for Office 365 inspects email and collaboration; WAF inspects HTTP web-app traffic",
+    "C": "Defender for Office 365 only protects Azure public IP addresses",
+    "D": "Email attachments are filtered only by Azure network security groups"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/defender-office-365/mdo-about"
+  ],
+  "before": {
+    "A": "WAF is Microsoft's Safe Attachments engine",
+    "B": "Defender for Office 365 inspects email and collaboration content; WAF inspects HTTP web-app traffic",
+    "C": "Defender for Office 365 only protects Azure public IPs",
+    "D": "Email attachments are filtered only by network security groups"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "86c3ecbfd929d457c84cc97dcb421f3173587426b20f410310940ff268f7cc4c",
+  "question_id": "sc900_mlc_q270",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "d90e9bd275824f2e898b77a5299035ad559a21571e64f17299fbe356264bc8f5"
+}

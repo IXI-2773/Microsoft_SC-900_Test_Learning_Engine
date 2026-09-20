@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "A label policy publishes selected labels to users; unused labels can remain unpublished",
+    "B": "Every sensitivity label in the tenant is always visible in Microsoft Word",
+    "C": "Data loss prevention policies that restrict risky sharing",
+    "D": "Retention labels for keep-or-delete lifetime"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/sensitivity-labels"
+  ],
+  "before": {
+    "A": "A label policy publishes selected labels to those users; unused labels can remain unpublished",
+    "B": "Every label in the tenant is always visible in Word",
+    "C": "Data loss prevention",
+    "D": "Retention labels"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "f93ee74f0cb8212b997e51df42d1b5df18828c56d7845a9c540ea6927f15ce39",
+  "question_id": "sc900_mlc_q295",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "8e38a5cb61d8616a0dc4a7eaa73631a3465e06465dafe193c89b92a131cc97ae"
+}

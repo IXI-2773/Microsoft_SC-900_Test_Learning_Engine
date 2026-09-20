@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "On services such as Azure Application Gateway, Azure Front Door, or Azure CDN",
+    "B": "Microsoft Purview eDiscovery cases preserve, search, review, and export content for legal matters",
+    "C": "Microsoft Entra authentication methods verify identities during sign-in",
+    "D": "Service Trust Portal provides Microsoft audit, compliance, and trust documentation"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/web-application-firewall/overview"
+  ],
+  "before": {
+    "A": "On services such as Azure Application Gateway, Azure Front Door, or Azure CDN",
+    "B": "Inside Microsoft Purview eDiscovery cases",
+    "C": "As a Microsoft Entra authentication method",
+    "D": "As a Service Trust Portal offering"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "fc120d0dd7f921030a52f93e2c18fd3c188aa4068edf271066baa69d01a4ec8b",
+  "question_id": "sc900_p3_q045",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "8affe6144c5810268af0a40fd4b44c6f8d9d7f13b8888276fb30e22787af4de1"
+}

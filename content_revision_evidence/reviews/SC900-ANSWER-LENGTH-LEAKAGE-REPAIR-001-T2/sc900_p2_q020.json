@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Filter inbound HTTP requests to a web application with WAF",
+    "B": "Store cryptographic keys for applications",
+    "C": "Collect network packets for a SIEM",
+    "D": "Manage identity and access lifecycles so access can be granted, reviewed, and removed over time"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/id-governance/identity-governance-overview"
+  ],
+  "before": {
+    "A": "Filter inbound HTTP requests to a web application",
+    "B": "Store cryptographic keys for applications",
+    "C": "Collect network packets for a SIEM",
+    "D": "Manage identity and access lifecycles so appropriate access can be granted, reviewed, and removed over time"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "be33ddccb6d58d81489a1b0d27a4b17fc5531c1d7cf50a1effaeaf521b589312",
+  "question_id": "sc900_p2_q020",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "6198396df1fcf87de2c4d37a95a3294b40f5383d23a31b0b111f060e0b4c5af8"
+}

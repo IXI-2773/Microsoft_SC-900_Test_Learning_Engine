@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Customer-managed actions are performed automatically by Azure Firewall",
+    "B": "Microsoft-managed actions recertify Microsoft Entra guest groups",
+    "C": "The split means the customer no longer owns any tenant data",
+    "D": "Microsoft implements some service controls; the customer still completes remaining actions"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/compliance-manager"
+  ],
+  "before": {
+    "A": "Customer-managed actions are performed automatically by Azure Firewall",
+    "B": "Microsoft-managed actions recertify Entra guest groups",
+    "C": "The split means the customer no longer owns any data",
+    "D": "Microsoft implements some controls for its service; the customer still completes remaining improvement actions"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "10055305e867df6cf61a473c26c19585c8dac516e778596b476131d0c83eb9e9",
+  "question_id": "sc900_mlc_q281",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "ecd8a575d86ebda03d5b604733b3804e6f709bb93eb8193ac4a7a552739c1e01"
+}

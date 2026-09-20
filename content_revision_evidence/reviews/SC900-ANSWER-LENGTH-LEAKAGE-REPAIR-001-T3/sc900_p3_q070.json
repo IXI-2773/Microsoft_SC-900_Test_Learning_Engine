@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "The item becomes a Microsoft Entra authentication method such as FIDO2 or TAP",
+    "B": "The item is treated as a record with retention and disposition restrictions",
+    "C": "The item is copied into Azure Firewall network logs",
+    "D": "The item is automatically published to the Service Trust Portal"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/records-management"
+  ],
+  "before": {
+    "A": "The item becomes a Microsoft Entra authentication method",
+    "B": "The item is treated as a formal record with restrictions that support retention and disposition obligations",
+    "C": "The item is copied into Azure Firewall logs",
+    "D": "The item is automatically published to the Service Trust Portal"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "0e1ff0bd6de2f466b0034024292c3500e565193677d9307d40b95bab56ff2076",
+  "question_id": "sc900_p3_q070",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "216fffba2ea1fcff680f75ae85b4eb9b2f56487f2b5e0d4b487d36fe3456eca7"
+}

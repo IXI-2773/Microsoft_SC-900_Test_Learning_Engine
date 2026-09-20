@@ -1,0 +1,35 @@
+{
+  "after": {
+    "A": "Audit preserves legal content; eDiscovery prevents risky sharing; DLP records user and admin activity",
+    "B": "Audit records activity; eDiscovery supports legal discovery; DLP helps prevent risky sharing",
+    "C": "Audit records activity; eDiscovery prevents risky sharing; DLP preserves legal content",
+    "D": "Audit prevents risky sharing; eDiscovery records activity; DLP preserves legal content for lawsuits"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/audit-solutions-overview",
+    "https://learn.microsoft.com/en-us/purview/ediscovery",
+    "https://learn.microsoft.com/en-us/purview/dlp-learn-about-dlp"
+  ],
+  "before": {
+    "A": "Audit blocks sharing, eDiscovery is a firewall, and DLP exports mailboxes",
+    "B": "Audit is detective history, eDiscovery is legal preservation and production, and DLP is preventive control",
+    "C": "Data loss prevention",
+    "D": "eDiscovery content collection"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "914f9ed7eb084021488a901a0d1b72834732579b6415e7a51751ce1471c4b4ba",
+  "question_id": "sc900_mlc_q298",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "3f318c978399d8bbf5e1785c87021f225fae82175b983835df4c91a787419ad9"
+}

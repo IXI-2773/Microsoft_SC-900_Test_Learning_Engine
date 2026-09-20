@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Passwordless sign-in is the same as disabling MFA permanently for all users",
+    "B": "FIDO2 keys are retention labels and cannot participate in authentication",
+    "C": "Authenticator without a password is only a Service Trust Portal offering",
+    "D": "Passwordless methods can still satisfy strong multifactor or phishing-resistant authentication without a password factor"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-authentication-passwordless"
+  ],
+  "before": {
+    "A": "Passwordless sign-in is the same as disabling MFA permanently",
+    "B": "FIDO2 keys are retention labels and cannot participate in authentication",
+    "C": "Authenticator without a password is only a Service Trust Portal offering",
+    "D": "Passwordless methods can still satisfy strong multifactor or phishing-resistant authentication without using a password as a factor"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "0b49431754bb106e251b56e84bdff52aa1da1cd0e86b66da2d9b04ed8f4edb85",
+  "question_id": "sc900_mlc_q221",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "63e1eda07176ab51f235545a029dbb27d31dc021bc09b7c83928c3ec7426d401"
+}

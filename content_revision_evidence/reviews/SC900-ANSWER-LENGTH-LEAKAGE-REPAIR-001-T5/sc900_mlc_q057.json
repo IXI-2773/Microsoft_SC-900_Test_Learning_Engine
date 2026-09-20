@@ -1,0 +1,33 @@
+{
+  "after": {
+    "A": "Scrubbing volumetric network floods",
+    "B": "Creating access packages that users can request",
+    "C": "Scanning endpoints for malware",
+    "D": "Service Trust Portal for Microsoft audit reports"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/id-governance/entitlement-management-overview"
+  ],
+  "before": {
+    "A": "Scrubbing volumetric network floods",
+    "B": "Packaging resources into access packages that users can request",
+    "C": "Scanning endpoints for malware",
+    "D": "Publishing Microsoft SOC reports"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "disposition": "APPROVED_FOR_FULL_CONTINUITY",
+  "from_content_fingerprint": "c8ade32717949ed2921582fec28df89e194cf76a1113db92e1dad6a2c5b8f3f2",
+  "question_id": "sc900_mlc_q057",
+  "semantic_review": {
+    "A": "EQUIVALENT",
+    "B": "EQUIVALENT",
+    "C": "EQUIVALENT",
+    "D": "EQUIVALENT"
+  },
+  "to_content_fingerprint": "a35f15ae413422b8e9b52dd5fa2e091c780a939dd9133b55cdda0156ba25fe1e"
+}
