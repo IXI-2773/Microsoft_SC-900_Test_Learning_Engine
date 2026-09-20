@@ -1,0 +1,56 @@
+{
+  "after": {
+    "choice_explanations": {
+      "A": "Conditional Access assignments can target directory roles, and Conditional Access grant controls can require multifactor authentication. Security defaults provides broad preconfigured MFA protections but does not let administrators customize exactly which administrator roles are targeted. Self-service password reset and Password Protection serve different functions.",
+      "B": "Conditional Access assignments can target directory roles, and Conditional Access grant controls can require multifactor authentication. Security defaults provides broad preconfigured MFA protections but does not let administrators customize exactly which administrator roles are targeted. Self-service password reset and Password Protection serve different functions.",
+      "C": "Conditional Access assignments can target directory roles, and Conditional Access grant controls can require multifactor authentication. Security defaults provides broad preconfigured MFA protections but does not let administrators customize exactly which administrator roles are targeted. Self-service password reset and Password Protection serve different functions.",
+      "D": "Conditional Access assignments can target directory roles, and Conditional Access grant controls can require multifactor authentication. Security defaults provides broad preconfigured MFA protections but does not let administrators customize exactly which administrator roles are targeted. Self-service password reset and Password Protection serve different functions."
+    },
+    "choices": {
+      "A": "Conditional Access targeting directory roles",
+      "B": "Self-service password reset",
+      "C": "Microsoft Entra Password Protection",
+      "D": "Security defaults"
+    },
+    "general_explanation": "Conditional Access assignments can target directory roles, and Conditional Access grant controls can require multifactor authentication. Security defaults provides broad preconfigured MFA protections but does not let administrators customize exactly which administrator roles are targeted. Self-service password reset and Password Protection serve different functions.",
+    "prompt": "A policy must require MFA for selected administrator roles and allow administrators to choose exactly which built-in roles are targeted. Which Microsoft Entra feature supports that scoping?"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-mfa-howitworks"
+  ],
+  "authorized_changed_fields": [
+    "choice_explanations",
+    "choices",
+    "general_explanation",
+    "prompt"
+  ],
+  "before": {
+    "choice_explanations": {
+      "A": "Conditional Access can target users or roles and then require MFA. WAF, audit search, and Key Vault soft-delete do not issue MFA challenges.",
+      "B": "Conditional Access can target users or roles and then require MFA. WAF, audit search, and Key Vault soft-delete do not issue MFA challenges.",
+      "C": "Conditional Access can target users or roles and then require MFA. WAF, audit search, and Key Vault soft-delete do not issue MFA challenges.",
+      "D": "Conditional Access can target users or roles and then require MFA. WAF, audit search, and Key Vault soft-delete do not issue MFA challenges."
+    },
+    "choices": {
+      "A": "Conditional Access targeting directory roles",
+      "B": "Self-service password reset",
+      "C": "Password protection",
+      "D": "Conditional Access"
+    },
+    "general_explanation": "Conditional Access can target users or roles and then require MFA. WAF, audit search, and Key Vault soft-delete do not issue MFA challenges.",
+    "prompt": "A policy requires MFA only for administrators. Which Microsoft Entra feature is commonly used to scope that requirement?"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "correction_spec_payload_sha256": "ea957c3657e70d425794215c76dcfef192972a75fb16f219d591d83c5a148ee3",
+  "disposition": "APPROVED_FOR_KEY_PRESERVING_CONTENT_CORRECTION",
+  "from_content_fingerprint": "090322f86867d67c51f4ce5226bc8bf3ba6e742f12d49a6edd738d9d8a46e43f",
+  "objective_after": "entra_authentication",
+  "objective_before": "entra_authentication",
+  "question_id": "sc900_mlc_q064",
+  "to_content_fingerprint": "a9e47b5525edc8950aadfb3a93e554edd840402a0d284ddcbc0a132bd41ad30e"
+}

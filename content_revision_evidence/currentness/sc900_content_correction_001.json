@@ -1,0 +1,57 @@
+{
+  "checked_at": "2026-09-20T17:58:24Z",
+  "overall_status": "PASS",
+  "payload_sha256": "0f9f2e5f5c971213e550f00d16e6d3013d9fbdc145479a7dfeb0a8340fa95917",
+  "q219_prior_device_sync_failure_provenance": true,
+  "q219_prior_failure_work_id": "SC900-SEPARATE-CONTENT-CORRECTION-001-Q219-PRE-IMPLEMENTATION-CURRENTNESS-REVALIDATION-001",
+  "q219_replacement_pass_provenance": true,
+  "q219_replacement_work_id": "SC900-SEPARATE-CONTENT-CORRECTION-001-Q219-BOUNDED-REPLACEMENT-FREEZE-001",
+  "schema_version": 1,
+  "source_bank": "sc900_bank_v8_length_rebalanced_t5.json",
+  "source_bank_content_fingerprint": "ec5ec3233c451b80dc6ce09710c8dc7272e19052d9bc2c8d22c53d0945f18766",
+  "source_bank_raw_sha256": "13820be0ff959c2229838088eb6380cb801acd753cb857554d0ed1869982ecfd",
+  "targets": [
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-vulnerability-management/defender-vulnerability-management",
+        "https://learn.microsoft.com/en-us/defender-vulnerability-management/defender-vulnerability-management-capabilities"
+      ],
+      "checked_at": "2026-09-20T17:32:35Z",
+      "material_change_detected": false,
+      "notes": "Currentness PASS is reused from SC900-SEPARATE-CONTENT-CORRECTION-001-Q219-PRE-IMPLEMENTATION-CURRENTNESS-REVALIDATION-001. No dedicated historical q118 currentness work ID exists.",
+      "prior_currentness_work_id": "SC900-SEPARATE-CONTENT-CORRECTION-001-Q219-PRE-IMPLEMENTATION-CURRENTNESS-REVALIDATION-001",
+      "question_id": "sc900_mlc_q118",
+      "status": "PASS",
+      "superseding_work_id_if_any": ""
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/sc-900",
+        "https://learn.microsoft.com/en-us/entra/identity/hybrid/connect/how-to-connect-sync-whatis",
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types/4-describe-concept-of-hybrid-identity"
+      ],
+      "checked_at": "2026-09-20T17:58:24Z",
+      "material_change_detected": false,
+      "notes": "Prior device-sync/hybrid-join currentness FAIL is preserved from SC900-SEPARATE-CONTENT-CORRECTION-001-Q219-PRE-IMPLEMENTATION-CURRENTNESS-REVALIDATION-001. Replacement packet PASS is preserved from SC900-SEPARATE-CONTENT-CORRECTION-001-Q219-BOUNDED-REPLACEMENT-FREEZE-001. The superseded device-sync target is not implemented.",
+      "prior_currentness_work_id": "SC900-SEPARATE-CONTENT-CORRECTION-001-Q219-PRE-IMPLEMENTATION-CURRENTNESS-REVALIDATION-001",
+      "question_id": "sc900_mlc_q219",
+      "status": "PASS",
+      "superseding_work_id_if_any": "SC900-SEPARATE-CONTENT-CORRECTION-001-Q219-BOUNDED-REPLACEMENT-FREEZE-001"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/sentinel/automate-incident-handling-with-automation-rules",
+        "https://learn.microsoft.com/en-us/azure/sentinel/automation/run-playbooks",
+        "https://learn.microsoft.com/en-us/defender-xdr/automatic-attack-disruption"
+      ],
+      "checked_at": "2026-09-20T17:32:35Z",
+      "material_change_detected": false,
+      "notes": "Currentness PASS is reused from SC900-SEPARATE-CONTENT-CORRECTION-001-Q219-PRE-IMPLEMENTATION-CURRENTNESS-REVALIDATION-001. No dedicated historical q269 currentness work ID exists.",
+      "prior_currentness_work_id": "SC900-SEPARATE-CONTENT-CORRECTION-001-Q219-PRE-IMPLEMENTATION-CURRENTNESS-REVALIDATION-001",
+      "question_id": "sc900_mlc_q269",
+      "status": "PASS",
+      "superseding_work_id_if_any": ""
+    }
+  ],
+  "work_id": "SC900-SEPARATE-CONTENT-CORRECTION-001-POST-CALIBRATION-IMPLEMENTATION-EXECUTION-001"
+}

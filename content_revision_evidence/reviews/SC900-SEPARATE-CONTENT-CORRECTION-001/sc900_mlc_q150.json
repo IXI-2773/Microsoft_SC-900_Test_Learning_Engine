@@ -1,0 +1,56 @@
+{
+  "after": {
+    "choice_explanations": {
+      "A": "An access package is the requestable bundle of resource roles and access policies within Microsoft Entra entitlement management. Entitlement management is the broader capability; access reviews, lifecycle workflows, and Privileged Identity Management address different governance tasks.",
+      "B": "An access package is the requestable bundle of resource roles and access policies within Microsoft Entra entitlement management. Entitlement management is the broader capability; access reviews, lifecycle workflows, and Privileged Identity Management address different governance tasks.",
+      "C": "An access package is the requestable bundle of resource roles and access policies within Microsoft Entra entitlement management. Entitlement management is the broader capability; access reviews, lifecycle workflows, and Privileged Identity Management address different governance tasks.",
+      "D": "An access package is the requestable bundle of resource roles and access policies within Microsoft Entra entitlement management. Entitlement management is the broader capability; access reviews, lifecycle workflows, and Privileged Identity Management address different governance tasks."
+    },
+    "choices": {
+      "A": "Access reviews",
+      "B": "An access package in Microsoft Entra entitlement management",
+      "C": "Lifecycle Workflows",
+      "D": "Privileged Identity Management"
+    },
+    "general_explanation": "An access package is the requestable bundle of resource roles and access policies within Microsoft Entra entitlement management. Entitlement management is the broader capability; access reviews, lifecycle workflows, and Privileged Identity Management address different governance tasks.",
+    "prompt": "Business users should request a governed bundle of application access that can require approval. Which Microsoft Entra ID Governance feature provides that requestable bundle?"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/id-governance/identity-governance-overview"
+  ],
+  "authorized_changed_fields": [
+    "choice_explanations",
+    "choices",
+    "general_explanation",
+    "prompt"
+  ],
+  "before": {
+    "choice_explanations": {
+      "A": "Entitlement management packages resources into requestable access packages with approval workflows.",
+      "B": "Entitlement management packages resources into requestable access packages with approval workflows.",
+      "C": "Entitlement management packages resources into requestable access packages with approval workflows.",
+      "D": "Entitlement management packages resources into requestable access packages with approval workflows."
+    },
+    "choices": {
+      "A": "Access reviews",
+      "B": "Entitlement management access packages",
+      "C": "Entitlement management",
+      "D": "Privileged Identity Management"
+    },
+    "general_explanation": "Entitlement management packages resources into requestable access packages with approval workflows.",
+    "prompt": "Business users should request access to a group of apps through a package with approval. Which Entra ID Governance feature does that?"
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "correction_spec_payload_sha256": "ea957c3657e70d425794215c76dcfef192972a75fb16f219d591d83c5a148ee3",
+  "disposition": "APPROVED_FOR_KEY_PRESERVING_CONTENT_CORRECTION",
+  "from_content_fingerprint": "97c73a6a28b9687814785d1c756e6161519a7373f8ecef21500320e0e9270bc6",
+  "objective_after": "entra_identity_protection_governance",
+  "objective_before": "entra_identity_protection_governance",
+  "question_id": "sc900_mlc_q150",
+  "to_content_fingerprint": "504f0cefd5f5c45e71b694ee5a422707facd5cea5e86a8072e942518e79d7ba6"
+}

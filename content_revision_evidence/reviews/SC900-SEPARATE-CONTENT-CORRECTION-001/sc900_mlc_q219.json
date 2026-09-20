@@ -1,0 +1,59 @@
+{
+  "after": {
+    "choice_explanations": {
+      "A": "Hybrid identity uses provisioning and synchronization to connect on-premises identity with Microsoft Entra ID. Microsoft currently recommends Cloud Sync for new deployments and describes Microsoft Entra Connect Sync as the earlier on-premises synchronization tool that Cloud Sync is replacing. Pass-through authentication and AD FS are authentication or federation approaches, not the earlier synchronization application described in the question.",
+      "B": "Hybrid identity uses provisioning and synchronization to connect on-premises identity with Microsoft Entra ID. Microsoft currently recommends Cloud Sync for new deployments and describes Microsoft Entra Connect Sync as the earlier on-premises synchronization tool that Cloud Sync is replacing. Pass-through authentication and AD FS are authentication or federation approaches, not the earlier synchronization application described in the question.",
+      "C": "Hybrid identity uses provisioning and synchronization to connect on-premises identity with Microsoft Entra ID. Microsoft currently recommends Cloud Sync for new deployments and describes Microsoft Entra Connect Sync as the earlier on-premises synchronization tool that Cloud Sync is replacing. Pass-through authentication and AD FS are authentication or federation approaches, not the earlier synchronization application described in the question.",
+      "D": "Hybrid identity uses provisioning and synchronization to connect on-premises identity with Microsoft Entra ID. Microsoft currently recommends Cloud Sync for new deployments and describes Microsoft Entra Connect Sync as the earlier on-premises synchronization tool that Cloud Sync is replacing. Pass-through authentication and AD FS are authentication or federation approaches, not the earlier synchronization application described in the question."
+    },
+    "choices": {
+      "A": "Microsoft Entra Cloud Sync",
+      "B": "Pass-through authentication",
+      "C": "Active Directory Federation Services (AD FS)",
+      "D": "Microsoft Entra Connect Sync"
+    },
+    "general_explanation": "Hybrid identity uses provisioning and synchronization to connect on-premises identity with Microsoft Entra ID. Microsoft currently recommends Cloud Sync for new deployments and describes Microsoft Entra Connect Sync as the earlier on-premises synchronization tool that Cloud Sync is replacing. Pass-through authentication and AD FS are authentication or federation approaches, not the earlier synchronization application described in the question.",
+    "prompt": "An organization's existing hybrid identity deployment uses Microsoft's earlier on-premises synchronization application to synchronize on-premises Active Directory users and groups with Microsoft Entra ID. Which tool is it using?"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/sc-900",
+    "https://learn.microsoft.com/en-us/entra/identity/hybrid/connect/how-to-connect-sync-whatis",
+    "https://learn.microsoft.com/en-us/entra/identity/hybrid/whatis-hybrid-identity",
+    "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types/4-describe-concept-of-hybrid-identity"
+  ],
+  "authorized_changed_fields": [
+    "choice_explanations",
+    "choices",
+    "general_explanation",
+    "prompt"
+  ],
+  "before": {
+    "choice_explanations": {
+      "A": "Entra Connect (and related hybrid identity tooling) synchronizes on-premises AD identities to Entra ID. WAF, Content explorer, and Bastion do not perform directory sync.",
+      "B": "Entra Connect (and related hybrid identity tooling) synchronizes on-premises AD identities to Entra ID. WAF, Content explorer, and Bastion do not perform directory sync.",
+      "C": "Entra Connect (and related hybrid identity tooling) synchronizes on-premises AD identities to Entra ID. WAF, Content explorer, and Bastion do not perform directory sync.",
+      "D": "Entra Connect (and related hybrid identity tooling) synchronizes on-premises AD identities to Entra ID. WAF, Content explorer, and Bastion do not perform directory sync."
+    },
+    "choices": {
+      "A": "Azure Web Application Firewall, which copies users during HTTP inspection",
+      "B": "Microsoft Purview Content explorer, which syncs directory objects",
+      "C": "Azure Bastion, which replicates passwords over RDP",
+      "D": "Microsoft Entra Connect, which synchronizes on-premises identities to Entra ID"
+    },
+    "general_explanation": "Entra Connect (and related hybrid identity tooling) synchronizes on-premises AD identities to Entra ID. WAF, Content explorer, and Bastion do not perform directory sync.",
+    "prompt": "An organization keeps on-premises Active Directory and needs those accounts available in Microsoft Entra ID. Which component is the usual synchronization engine for that hybrid identity?"
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "correction_spec_payload_sha256": "ea957c3657e70d425794215c76dcfef192972a75fb16f219d591d83c5a148ee3",
+  "disposition": "APPROVED_FOR_KEY_PRESERVING_CONTENT_CORRECTION",
+  "from_content_fingerprint": "da19ef5a072dfad00835a8a0377b68cd873417dccd168da2ecfadf077c8cf173",
+  "objective_after": "entra_identity_types_and_function",
+  "objective_before": "entra_identity_types_and_function",
+  "question_id": "sc900_mlc_q219",
+  "to_content_fingerprint": "3549f45915de46bc4cf45b5d91137bea01a2da25b8da9630fd867c6ce2e362c0"
+}

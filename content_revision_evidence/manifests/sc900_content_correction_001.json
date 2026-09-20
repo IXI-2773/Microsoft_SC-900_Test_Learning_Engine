@@ -1,0 +1,243 @@
+{
+  "continuity_policy": "PRESERVE_HISTORICAL_EVIDENCE_RESET_ACTIVE_AFFECTED_STATE",
+  "correction_spec": {
+    "file_sha256": "184abe88b659374013807daab61baa6dda731d9ebe52c4e6619e67ebdc98494f",
+    "filename": "sc900_content_correction_001.json",
+    "payload_sha256": "ea957c3657e70d425794215c76dcfef192972a75fb16f219d591d83c5a148ee3"
+  },
+  "currentness_record": {
+    "file_sha256": "df5a0ab594b3583d60d619c7bf1bb36fe83c72f1c4cdb3151a5d545423f94c51",
+    "filename": "sc900_content_correction_001.json",
+    "payload_sha256": "0f9f2e5f5c971213e550f00d16e6d3013d9fbdc145479a7dfeb0a8340fa95917"
+  },
+  "edges": [
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-mfa-howitworks"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "choices",
+        "general_explanation",
+        "prompt"
+      ],
+      "correct_key_unchanged": true,
+      "domain_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "090322f86867d67c51f4ce5226bc8bf3ba6e742f12d49a6edd738d9d8a46e43f",
+      "objective_unchanged": true,
+      "question_id": "sc900_mlc_q064",
+      "question_type_unchanged": true,
+      "review_artifact": "SC900-SEPARATE-CONTENT-CORRECTION-001/sc900_mlc_q064.json",
+      "review_artifact_sha256": "9afd7e921699241509d75d1454b85cb562b6f97cc80f6f9cbc1054ed21a991c9",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "a9e47b5525edc8950aadfb3a93e554edd840402a0d284ddcbc0a132bd41ad30e"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-vulnerability-management/defender-vulnerability-management",
+        "https://learn.microsoft.com/en-us/defender-vulnerability-management/defender-vulnerability-management-capabilities"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "choices",
+        "general_explanation"
+      ],
+      "correct_key_unchanged": true,
+      "domain_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "1ae83ee7c13cb67d36c4d6ac7f154591eceaaf5d68eb0dd471bdd87de79fb2a7",
+      "objective_unchanged": true,
+      "question_id": "sc900_mlc_q118",
+      "question_type_unchanged": true,
+      "review_artifact": "SC900-SEPARATE-CONTENT-CORRECTION-001/sc900_mlc_q118.json",
+      "review_artifact_sha256": "3f889b13806ef407914d38a20445fa43cdd792e52feea281ed869dfc22a1e1c9",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "abaddff647ab335935215f33e851c4ca90a619aae8973252335c1c7b114786b1"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/identity-governance-overview"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "choices",
+        "general_explanation",
+        "prompt"
+      ],
+      "correct_key_unchanged": true,
+      "domain_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "97c73a6a28b9687814785d1c756e6161519a7373f8ecef21500320e0e9270bc6",
+      "objective_unchanged": true,
+      "question_id": "sc900_mlc_q150",
+      "question_type_unchanged": true,
+      "review_artifact": "SC900-SEPARATE-CONTENT-CORRECTION-001/sc900_mlc_q150.json",
+      "review_artifact_sha256": "08f7b4259c0f716f11c500fab58bbac82907cab532b633448f2650c704790e42",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "504f0cefd5f5c45e71b694ee5a422707facd5cea5e86a8072e942518e79d7ba6"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/insider-risk-management"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "choices",
+        "general_explanation",
+        "prompt"
+      ],
+      "correct_key_unchanged": true,
+      "domain_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "e69325ad09ddfe4c958272ffbfed08b37eb0d509477de9df6949722c9a77c6ed",
+      "objective_unchanged": true,
+      "question_id": "sc900_mlc_q198",
+      "question_type_unchanged": true,
+      "review_artifact": "SC900-SEPARATE-CONTENT-CORRECTION-001/sc900_mlc_q198.json",
+      "review_artifact_sha256": "3ef37201f80ea2b409e96199821420e8751a4178001a31ac2b53d268c058fb9a",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "49a6ce1a027da6ebb2e38639f61f903c8a21b0a54d1204ab267200129d5cad1e"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/sc-900",
+        "https://learn.microsoft.com/en-us/entra/identity/hybrid/connect/how-to-connect-sync-whatis",
+        "https://learn.microsoft.com/en-us/entra/identity/hybrid/whatis-hybrid-identity",
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types/4-describe-concept-of-hybrid-identity"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "choices",
+        "general_explanation",
+        "prompt"
+      ],
+      "correct_key_unchanged": true,
+      "domain_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "da19ef5a072dfad00835a8a0377b68cd873417dccd168da2ecfadf077c8cf173",
+      "objective_unchanged": true,
+      "question_id": "sc900_mlc_q219",
+      "question_type_unchanged": true,
+      "review_artifact": "SC900-SEPARATE-CONTENT-CORRECTION-001/sc900_mlc_q219.json",
+      "review_artifact_sha256": "67535b895892a6c6dd18d5df8eb72602575ffeb1cd2c53ef6ba9ab97d11c77f4",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "3549f45915de46bc4cf45b5d91137bea01a2da25b8da9630fd867c6ce2e362c0"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/custom-overview"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "choices",
+        "general_explanation"
+      ],
+      "correct_key_unchanged": true,
+      "domain_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "fdae3f7a49e63312650179cab1d40c42135010aea0913dec0e7c5d2a1b714780",
+      "objective_unchanged": true,
+      "question_id": "sc900_mlc_q226",
+      "question_type_unchanged": true,
+      "review_artifact": "SC900-SEPARATE-CONTENT-CORRECTION-001/sc900_mlc_q226.json",
+      "review_artifact_sha256": "a9c126958d7b7bdd91839ef6e310ecddd2ceb8b6bb789fccf1c803ef82ab08b0",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "23f3921bc74781b4c01e8307840a249d65db007f323f438dbd5eb8ecbb1ac508"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "choices",
+        "general_explanation",
+        "prompt"
+      ],
+      "correct_key_unchanged": true,
+      "domain_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "952ff98814691f42ab231338f5e163e324dc897381268c11a212980162d8b2c3",
+      "objective_unchanged": true,
+      "question_id": "sc900_mlc_q242",
+      "question_type_unchanged": true,
+      "review_artifact": "SC900-SEPARATE-CONTENT-CORRECTION-001/sc900_mlc_q242.json",
+      "review_artifact_sha256": "2e5fe526753622f0e4c94caecde4156704d6125101d73276938402974e718b15",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "26d33d029c95d7e21b6552e19bd65e3e1b5a773b0344658d4425c9f6331a82f2"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "choices",
+        "general_explanation"
+      ],
+      "correct_key_unchanged": true,
+      "domain_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "2a76b7a6532dd5be97af3b27cea41cee5d4d213621519d4a5497132d53f6fa2c",
+      "objective_unchanged": true,
+      "question_id": "sc900_mlc_q249",
+      "question_type_unchanged": true,
+      "review_artifact": "SC900-SEPARATE-CONTENT-CORRECTION-001/sc900_mlc_q249.json",
+      "review_artifact_sha256": "1d7eecfdaf1587e200e18e287d2ebbd78c15c05763152d11a3be197a8dce0273",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "ca909c7c8c2af3b3032b3483d4de3da83f8cf9c2457dacc4606acdb5e8bdf1b0"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/sentinel/automate-incident-handling-with-automation-rules",
+        "https://learn.microsoft.com/en-us/azure/sentinel/automation/run-playbooks",
+        "https://learn.microsoft.com/en-us/defender-xdr/automatic-attack-disruption",
+        "https://learn.microsoft.com/en-us/defender-xdr/microsoft-365-defender"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "choices",
+        "general_explanation",
+        "prompt"
+      ],
+      "correct_key_unchanged": true,
+      "domain_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "1718c41a24fd4ef3390d8cf74faa5f9ddd630e5e44e3f6f7fafa0904822e2963",
+      "objective_unchanged": true,
+      "question_id": "sc900_mlc_q269",
+      "question_type_unchanged": true,
+      "review_artifact": "SC900-SEPARATE-CONTENT-CORRECTION-001/sc900_mlc_q269.json",
+      "review_artifact_sha256": "bc48e4371966b20e87bcefdda753f636903716e95dfb04cf18fb0ec551dcaf5b",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "647a8f059c5c2ef5f81905a85dda34a3902d82699a2814a90a4f5d4f774f13bc"
+    }
+  ],
+  "manifest_kind": "sc900_content_revision_correction",
+  "payload_sha256": "5d32c7c9b24192e6911a943fb8f9538369aad0331a6927fdbf5e95a81234c0f1",
+  "permitted_change_class": "KEY_PRESERVING_CONTENT_CORRECTION",
+  "schema_version": 2,
+  "source_bank": {
+    "content_fingerprint": "ec5ec3233c451b80dc6ce09710c8dc7272e19052d9bc2c8d22c53d0945f18766",
+    "file_sha256": "13820be0ff959c2229838088eb6380cb801acd753cb857554d0ed1869982ecfd",
+    "filename": "sc900_bank_v8_length_rebalanced_t5.json",
+    "question_count": 454
+  },
+  "target_bank": {
+    "content_fingerprint": "a0f0f57cd3919863d7878a02949c8862c6a31dbbc9ce0ee4ffc6f84a91c9358d",
+    "file_sha256": "cd699a0e8af7c366bf5672bb2b1d90547c7071e87a47cbd766512bef59b2c791",
+    "filename": "sc900_bank_v8_content_correction_001.json",
+    "question_count": 454
+  },
+  "work_id": "SC900-SEPARATE-CONTENT-CORRECTION-001-POST-CALIBRATION-IMPLEMENTATION-EXECUTION-001"
+}

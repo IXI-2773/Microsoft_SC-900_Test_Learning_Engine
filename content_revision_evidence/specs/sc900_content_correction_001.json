@@ -1,0 +1,493 @@
+{
+  "corrections": [
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-mfa-howitworks"
+      ],
+      "authorized_changed_fields": [
+        "choice_explanations",
+        "choices",
+        "general_explanation",
+        "prompt"
+      ],
+      "correct_key": [
+        "A"
+      ],
+      "currentness_class": "MODERATE",
+      "final_validation_status": "REVISED_SAFE",
+      "objective_code": "entra_authentication",
+      "question_id": "sc900_mlc_q064",
+      "semantic_validation_work_id": "SC900-SEPARATE-CONTENT-CORRECTION-001-NINE-QUESTION-FINAL-VALIDATION-CHAT-001",
+      "source_values": {
+        "choice_explanations": {
+          "A": "Conditional Access can target users or roles and then require MFA. WAF, audit search, and Key Vault soft-delete do not issue MFA challenges.",
+          "B": "Conditional Access can target users or roles and then require MFA. WAF, audit search, and Key Vault soft-delete do not issue MFA challenges.",
+          "C": "Conditional Access can target users or roles and then require MFA. WAF, audit search, and Key Vault soft-delete do not issue MFA challenges.",
+          "D": "Conditional Access can target users or roles and then require MFA. WAF, audit search, and Key Vault soft-delete do not issue MFA challenges."
+        },
+        "choices": {
+          "A": "Conditional Access targeting directory roles",
+          "B": "Self-service password reset",
+          "C": "Password protection",
+          "D": "Conditional Access"
+        },
+        "general_explanation": "Conditional Access can target users or roles and then require MFA. WAF, audit search, and Key Vault soft-delete do not issue MFA challenges.",
+        "prompt": "A policy requires MFA only for administrators. Which Microsoft Entra feature is commonly used to scope that requirement?"
+      },
+      "target_values": {
+        "choice_explanations": {
+          "A": "Conditional Access assignments can target directory roles, and Conditional Access grant controls can require multifactor authentication. Security defaults provides broad preconfigured MFA protections but does not let administrators customize exactly which administrator roles are targeted. Self-service password reset and Password Protection serve different functions.",
+          "B": "Conditional Access assignments can target directory roles, and Conditional Access grant controls can require multifactor authentication. Security defaults provides broad preconfigured MFA protections but does not let administrators customize exactly which administrator roles are targeted. Self-service password reset and Password Protection serve different functions.",
+          "C": "Conditional Access assignments can target directory roles, and Conditional Access grant controls can require multifactor authentication. Security defaults provides broad preconfigured MFA protections but does not let administrators customize exactly which administrator roles are targeted. Self-service password reset and Password Protection serve different functions.",
+          "D": "Conditional Access assignments can target directory roles, and Conditional Access grant controls can require multifactor authentication. Security defaults provides broad preconfigured MFA protections but does not let administrators customize exactly which administrator roles are targeted. Self-service password reset and Password Protection serve different functions."
+        },
+        "choices": {
+          "A": "Conditional Access targeting directory roles",
+          "B": "Self-service password reset",
+          "C": "Microsoft Entra Password Protection",
+          "D": "Security defaults"
+        },
+        "general_explanation": "Conditional Access assignments can target directory roles, and Conditional Access grant controls can require multifactor authentication. Security defaults provides broad preconfigured MFA protections but does not let administrators customize exactly which administrator roles are targeted. Self-service password reset and Password Protection serve different functions.",
+        "prompt": "A policy must require MFA for selected administrator roles and allow administrators to choose exactly which built-in roles are targeted. Which Microsoft Entra feature supports that scoping?"
+      }
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-vulnerability-management/defender-vulnerability-management",
+        "https://learn.microsoft.com/en-us/defender-vulnerability-management/defender-vulnerability-management-capabilities"
+      ],
+      "authorized_changed_fields": [
+        "choice_explanations",
+        "choices",
+        "general_explanation"
+      ],
+      "correct_key": [
+        "D"
+      ],
+      "currentness_class": "MODERATE",
+      "final_validation_status": "VALIDATED_SAFE",
+      "objective_code": "defender_xdr",
+      "question_id": "sc900_mlc_q118",
+      "semantic_validation_work_id": "SC900-SEPARATE-CONTENT-CORRECTION-001-NINE-QUESTION-FINAL-VALIDATION-CHAT-001",
+      "source_values": {
+        "choice_explanations": {
+          "A": "Vulnerability management prioritizes weaknesses. Hunting is SIEM investigation; the others are identity lifecycle or network floods.",
+          "B": "Vulnerability management prioritizes weaknesses. Hunting is SIEM investigation; the others are identity lifecycle or network floods.",
+          "C": "Vulnerability management prioritizes weaknesses. Hunting is SIEM investigation; the others are identity lifecycle or network floods.",
+          "D": "Vulnerability management prioritizes weaknesses. Hunting is SIEM investigation; the others are identity lifecycle or network floods."
+        },
+        "choices": {
+          "A": "Microsoft Sentinel hunting",
+          "B": "Microsoft Defender for Endpoint",
+          "C": "Microsoft Defender for Office 365",
+          "D": "Microsoft Defender Vulnerability Management"
+        },
+        "general_explanation": "Vulnerability management prioritizes weaknesses. Hunting is SIEM investigation; the others are identity lifecycle or network floods."
+      },
+      "target_values": {
+        "choice_explanations": {
+          "A": "Microsoft Defender Vulnerability Management is the vulnerability-management capability for discovering, assessing, prioritizing, and tracking remediation of endpoint weaknesses. Defender for Endpoint Plan 2 already includes core Defender Vulnerability Management capabilities such as vulnerability assessment and risk-based prioritization, so Defender for Endpoint should not be used as a competing distractor for this generic requirement.",
+          "B": "Microsoft Defender Vulnerability Management is the vulnerability-management capability for discovering, assessing, prioritizing, and tracking remediation of endpoint weaknesses. Defender for Endpoint Plan 2 already includes core Defender Vulnerability Management capabilities such as vulnerability assessment and risk-based prioritization, so Defender for Endpoint should not be used as a competing distractor for this generic requirement.",
+          "C": "Microsoft Defender Vulnerability Management is the vulnerability-management capability for discovering, assessing, prioritizing, and tracking remediation of endpoint weaknesses. Defender for Endpoint Plan 2 already includes core Defender Vulnerability Management capabilities such as vulnerability assessment and risk-based prioritization, so Defender for Endpoint should not be used as a competing distractor for this generic requirement.",
+          "D": "Microsoft Defender Vulnerability Management is the vulnerability-management capability for discovering, assessing, prioritizing, and tracking remediation of endpoint weaknesses. Defender for Endpoint Plan 2 already includes core Defender Vulnerability Management capabilities such as vulnerability assessment and risk-based prioritization, so Defender for Endpoint should not be used as a competing distractor for this generic requirement."
+        },
+        "choices": {
+          "A": "Microsoft Sentinel hunting",
+          "B": "Microsoft Defender for Identity",
+          "C": "Microsoft Defender for Office 365",
+          "D": "Microsoft Defender Vulnerability Management"
+        },
+        "general_explanation": "Microsoft Defender Vulnerability Management is the vulnerability-management capability for discovering, assessing, prioritizing, and tracking remediation of endpoint weaknesses. Defender for Endpoint Plan 2 already includes core Defender Vulnerability Management capabilities such as vulnerability assessment and risk-based prioritization, so Defender for Endpoint should not be used as a competing distractor for this generic requirement."
+      }
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/identity-governance-overview"
+      ],
+      "authorized_changed_fields": [
+        "choice_explanations",
+        "choices",
+        "general_explanation",
+        "prompt"
+      ],
+      "correct_key": [
+        "B"
+      ],
+      "currentness_class": "LOW",
+      "final_validation_status": "REVISED_SAFE",
+      "objective_code": "entra_identity_protection_governance",
+      "question_id": "sc900_mlc_q150",
+      "semantic_validation_work_id": "SC900-SEPARATE-CONTENT-CORRECTION-001-NINE-QUESTION-FINAL-VALIDATION-CHAT-001",
+      "source_values": {
+        "choice_explanations": {
+          "A": "Entitlement management packages resources into requestable access packages with approval workflows.",
+          "B": "Entitlement management packages resources into requestable access packages with approval workflows.",
+          "C": "Entitlement management packages resources into requestable access packages with approval workflows.",
+          "D": "Entitlement management packages resources into requestable access packages with approval workflows."
+        },
+        "choices": {
+          "A": "Access reviews",
+          "B": "Entitlement management access packages",
+          "C": "Entitlement management",
+          "D": "Privileged Identity Management"
+        },
+        "general_explanation": "Entitlement management packages resources into requestable access packages with approval workflows.",
+        "prompt": "Business users should request access to a group of apps through a package with approval. Which Entra ID Governance feature does that?"
+      },
+      "target_values": {
+        "choice_explanations": {
+          "A": "An access package is the requestable bundle of resource roles and access policies within Microsoft Entra entitlement management. Entitlement management is the broader capability; access reviews, lifecycle workflows, and Privileged Identity Management address different governance tasks.",
+          "B": "An access package is the requestable bundle of resource roles and access policies within Microsoft Entra entitlement management. Entitlement management is the broader capability; access reviews, lifecycle workflows, and Privileged Identity Management address different governance tasks.",
+          "C": "An access package is the requestable bundle of resource roles and access policies within Microsoft Entra entitlement management. Entitlement management is the broader capability; access reviews, lifecycle workflows, and Privileged Identity Management address different governance tasks.",
+          "D": "An access package is the requestable bundle of resource roles and access policies within Microsoft Entra entitlement management. Entitlement management is the broader capability; access reviews, lifecycle workflows, and Privileged Identity Management address different governance tasks."
+        },
+        "choices": {
+          "A": "Access reviews",
+          "B": "An access package in Microsoft Entra entitlement management",
+          "C": "Lifecycle Workflows",
+          "D": "Privileged Identity Management"
+        },
+        "general_explanation": "An access package is the requestable bundle of resource roles and access policies within Microsoft Entra entitlement management. Entitlement management is the broader capability; access reviews, lifecycle workflows, and Privileged Identity Management address different governance tasks.",
+        "prompt": "Business users should request a governed bundle of application access that can require approval. Which Microsoft Entra ID Governance feature provides that requestable bundle?"
+      }
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/insider-risk-management"
+      ],
+      "authorized_changed_fields": [
+        "choice_explanations",
+        "choices",
+        "general_explanation",
+        "prompt"
+      ],
+      "correct_key": [
+        "C"
+      ],
+      "currentness_class": "MODERATE",
+      "final_validation_status": "VALIDATED_SAFE",
+      "objective_code": "purview_insider_risk_ediscovery_audit",
+      "question_id": "sc900_mlc_q198",
+      "semantic_validation_work_id": "SC900-SEPARATE-CONTENT-CORRECTION-001-NINE-QUESTION-FINAL-VALIDATION-CHAT-001",
+      "source_values": {
+        "choice_explanations": {
+          "A": "Potential data theft by departing insiders is an Insider Risk Management scenario, not WAF, DDoS, or TAP.",
+          "B": "Potential data theft by departing insiders is an Insider Risk Management scenario, not WAF, DDoS, or TAP.",
+          "C": "Potential data theft by departing insiders is an Insider Risk Management scenario, not WAF, DDoS, or TAP.",
+          "D": "Potential data theft by departing insiders is an Insider Risk Management scenario, not WAF, DDoS, or TAP."
+        },
+        "choices": {
+          "A": "Data loss prevention",
+          "B": "eDiscovery",
+          "C": "Insider Risk Management",
+          "D": "Temporary Access Pass"
+        },
+        "general_explanation": "Potential data theft by departing insiders is an Insider Risk Management scenario, not WAF, DDoS, or TAP.",
+        "prompt": "HR suspects departing employees are uploading source code to personal cloud storage. Which Purview solution is designed for that internal-risk scenario?"
+      },
+      "target_values": {
+        "choice_explanations": {
+          "A": "Insider Risk Management correlates user activity and other risk indicators to identify and investigate potentially risky behavior, including unusual exfiltration by departing users. Data Loss Prevention focuses on sensitive-content policy detection and enforcement, such as restricting or blocking transfers. Because the stem asks for risk correlation and investigation rather than preventive content enforcement, Insider Risk Management is the intended answer.",
+          "B": "Insider Risk Management correlates user activity and other risk indicators to identify and investigate potentially risky behavior, including unusual exfiltration by departing users. Data Loss Prevention focuses on sensitive-content policy detection and enforcement, such as restricting or blocking transfers. Because the stem asks for risk correlation and investigation rather than preventive content enforcement, Insider Risk Management is the intended answer.",
+          "C": "Insider Risk Management correlates user activity and other risk indicators to identify and investigate potentially risky behavior, including unusual exfiltration by departing users. Data Loss Prevention focuses on sensitive-content policy detection and enforcement, such as restricting or blocking transfers. Because the stem asks for risk correlation and investigation rather than preventive content enforcement, Insider Risk Management is the intended answer.",
+          "D": "Insider Risk Management correlates user activity and other risk indicators to identify and investigate potentially risky behavior, including unusual exfiltration by departing users. Data Loss Prevention focuses on sensitive-content policy detection and enforcement, such as restricting or blocking transfers. Because the stem asks for risk correlation and investigation rather than preventive content enforcement, Insider Risk Management is the intended answer."
+        },
+        "choices": {
+          "A": "Data Loss Prevention",
+          "B": "eDiscovery",
+          "C": "Insider Risk Management",
+          "D": "Communication Compliance"
+        },
+        "general_explanation": "Insider Risk Management correlates user activity and other risk indicators to identify and investigate potentially risky behavior, including unusual exfiltration by departing users. Data Loss Prevention focuses on sensitive-content policy detection and enforcement, such as restricting or blocking transfers. Because the stem asks for risk correlation and investigation rather than preventive content enforcement, Insider Risk Management is the intended answer.",
+        "prompt": "Security wants to correlate user-behavior signals, assign risk, and investigate whether departing employees are engaging in unusual exfiltration activity. Which Microsoft Purview solution is designed for that risk-investigation workflow?"
+      }
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/sc-900",
+        "https://learn.microsoft.com/en-us/entra/identity/hybrid/connect/how-to-connect-sync-whatis",
+        "https://learn.microsoft.com/en-us/entra/identity/hybrid/whatis-hybrid-identity",
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types/4-describe-concept-of-hybrid-identity"
+      ],
+      "authorized_changed_fields": [
+        "choice_explanations",
+        "choices",
+        "general_explanation",
+        "prompt"
+      ],
+      "correct_key": [
+        "D"
+      ],
+      "currentness_class": "HIGH",
+      "final_validation_status": "Q219_REPLACEMENT_FROZEN_NINE_QUESTION_SEMANTIC_INPUT_READY",
+      "objective_code": "entra_identity_types_and_function",
+      "question_id": "sc900_mlc_q219",
+      "semantic_validation_work_id": "SC900-SEPARATE-CONTENT-CORRECTION-001-Q219-BOUNDED-REPLACEMENT-FREEZE-001",
+      "source_values": {
+        "choice_explanations": {
+          "A": "Entra Connect (and related hybrid identity tooling) synchronizes on-premises AD identities to Entra ID. WAF, Content explorer, and Bastion do not perform directory sync.",
+          "B": "Entra Connect (and related hybrid identity tooling) synchronizes on-premises AD identities to Entra ID. WAF, Content explorer, and Bastion do not perform directory sync.",
+          "C": "Entra Connect (and related hybrid identity tooling) synchronizes on-premises AD identities to Entra ID. WAF, Content explorer, and Bastion do not perform directory sync.",
+          "D": "Entra Connect (and related hybrid identity tooling) synchronizes on-premises AD identities to Entra ID. WAF, Content explorer, and Bastion do not perform directory sync."
+        },
+        "choices": {
+          "A": "Azure Web Application Firewall, which copies users during HTTP inspection",
+          "B": "Microsoft Purview Content explorer, which syncs directory objects",
+          "C": "Azure Bastion, which replicates passwords over RDP",
+          "D": "Microsoft Entra Connect, which synchronizes on-premises identities to Entra ID"
+        },
+        "general_explanation": "Entra Connect (and related hybrid identity tooling) synchronizes on-premises AD identities to Entra ID. WAF, Content explorer, and Bastion do not perform directory sync.",
+        "prompt": "An organization keeps on-premises Active Directory and needs those accounts available in Microsoft Entra ID. Which component is the usual synchronization engine for that hybrid identity?"
+      },
+      "target_values": {
+        "choice_explanations": {
+          "A": "Hybrid identity uses provisioning and synchronization to connect on-premises identity with Microsoft Entra ID. Microsoft currently recommends Cloud Sync for new deployments and describes Microsoft Entra Connect Sync as the earlier on-premises synchronization tool that Cloud Sync is replacing. Pass-through authentication and AD FS are authentication or federation approaches, not the earlier synchronization application described in the question.",
+          "B": "Hybrid identity uses provisioning and synchronization to connect on-premises identity with Microsoft Entra ID. Microsoft currently recommends Cloud Sync for new deployments and describes Microsoft Entra Connect Sync as the earlier on-premises synchronization tool that Cloud Sync is replacing. Pass-through authentication and AD FS are authentication or federation approaches, not the earlier synchronization application described in the question.",
+          "C": "Hybrid identity uses provisioning and synchronization to connect on-premises identity with Microsoft Entra ID. Microsoft currently recommends Cloud Sync for new deployments and describes Microsoft Entra Connect Sync as the earlier on-premises synchronization tool that Cloud Sync is replacing. Pass-through authentication and AD FS are authentication or federation approaches, not the earlier synchronization application described in the question.",
+          "D": "Hybrid identity uses provisioning and synchronization to connect on-premises identity with Microsoft Entra ID. Microsoft currently recommends Cloud Sync for new deployments and describes Microsoft Entra Connect Sync as the earlier on-premises synchronization tool that Cloud Sync is replacing. Pass-through authentication and AD FS are authentication or federation approaches, not the earlier synchronization application described in the question."
+        },
+        "choices": {
+          "A": "Microsoft Entra Cloud Sync",
+          "B": "Pass-through authentication",
+          "C": "Active Directory Federation Services (AD FS)",
+          "D": "Microsoft Entra Connect Sync"
+        },
+        "general_explanation": "Hybrid identity uses provisioning and synchronization to connect on-premises identity with Microsoft Entra ID. Microsoft currently recommends Cloud Sync for new deployments and describes Microsoft Entra Connect Sync as the earlier on-premises synchronization tool that Cloud Sync is replacing. Pass-through authentication and AD FS are authentication or federation approaches, not the earlier synchronization application described in the question.",
+        "prompt": "An organization's existing hybrid identity deployment uses Microsoft's earlier on-premises synchronization application to synchronize on-premises Active Directory users and groups with Microsoft Entra ID. Which tool is it using?"
+      }
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/custom-overview"
+      ],
+      "authorized_changed_fields": [
+        "choice_explanations",
+        "choices",
+        "general_explanation"
+      ],
+      "correct_key": [
+        "D"
+      ],
+      "currentness_class": "LOW",
+      "final_validation_status": "REVISED_SAFE",
+      "objective_code": "entra_access_management",
+      "question_id": "sc900_mlc_q226",
+      "semantic_validation_work_id": "SC900-SEPARATE-CONTENT-CORRECTION-001-NINE-QUESTION-FINAL-VALIDATION-CHAT-001",
+      "source_values": {
+        "choice_explanations": {
+          "A": "Azure RBAC authorizes Azure resource actions such as VM operations. Entra roles authorize directory administration. Those planes are not interchangeable.",
+          "B": "Azure RBAC authorizes Azure resource actions such as VM operations. Entra roles authorize directory administration. Those planes are not interchangeable.",
+          "C": "Azure RBAC authorizes Azure resource actions such as VM operations. Entra roles authorize directory administration. Those planes are not interchangeable.",
+          "D": "Azure RBAC authorizes Azure resource actions such as VM operations. Entra roles authorize directory administration. Those planes are not interchangeable."
+        },
+        "choices": {
+          "A": "Global Administrator, because Azure VM power-state is a directory setting",
+          "B": "Azure role-based access control",
+          "C": "Privileged Identity Management",
+          "D": "Azure resource RBAC for the subscription or resource group, not an Entra directory role"
+        },
+        "general_explanation": "Azure RBAC authorizes Azure resource actions such as VM operations. Entra roles authorize directory administration. Those planes are not interchangeable."
+      },
+      "target_values": {
+        "choice_explanations": {
+          "A": "Azure RBAC authorizes actions on Azure resources and can be scoped to a subscription, resource group, or individual resource. Microsoft Entra roles authorize administration of Microsoft Entra resources such as users, groups, and applications. Privileged Identity Management can govern activation of eligible roles, but it does not replace the underlying Azure RBAC permission.",
+          "B": "Azure RBAC authorizes actions on Azure resources and can be scoped to a subscription, resource group, or individual resource. Microsoft Entra roles authorize administration of Microsoft Entra resources such as users, groups, and applications. Privileged Identity Management can govern activation of eligible roles, but it does not replace the underlying Azure RBAC permission.",
+          "C": "Azure RBAC authorizes actions on Azure resources and can be scoped to a subscription, resource group, or individual resource. Microsoft Entra roles authorize administration of Microsoft Entra resources such as users, groups, and applications. Privileged Identity Management can govern activation of eligible roles, but it does not replace the underlying Azure RBAC permission.",
+          "D": "Azure RBAC authorizes actions on Azure resources and can be scoped to a subscription, resource group, or individual resource. Microsoft Entra roles authorize administration of Microsoft Entra resources such as users, groups, and applications. Privileged Identity Management can govern activation of eligible roles, but it does not replace the underlying Azure RBAC permission."
+        },
+        "choices": {
+          "A": "Global Administrator, because Azure VM power-state is a directory setting",
+          "B": "Microsoft Entra RBAC for directory resources such as users and groups",
+          "C": "Privileged Identity Management",
+          "D": "Azure RBAC at the subscription or resource-group scope, not a Microsoft Entra directory role"
+        },
+        "general_explanation": "Azure RBAC authorizes actions on Azure resources and can be scoped to a subscription, resource group, or individual resource. Microsoft Entra roles authorize administration of Microsoft Entra resources such as users, groups, and applications. Privileged Identity Management can govern activation of eligible roles, but it does not replace the underlying Azure RBAC permission."
+      }
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview"
+      ],
+      "authorized_changed_fields": [
+        "choice_explanations",
+        "choices",
+        "general_explanation",
+        "prompt"
+      ],
+      "correct_key": [
+        "C"
+      ],
+      "currentness_class": "MODERATE",
+      "final_validation_status": "VALIDATED_SAFE",
+      "objective_code": "entra_access_management",
+      "question_id": "sc900_mlc_q242",
+      "semantic_validation_work_id": "SC900-SEPARATE-CONTENT-CORRECTION-001-NINE-QUESTION-FINAL-VALIDATION-CHAT-001",
+      "source_values": {
+        "choice_explanations": {
+          "A": "Conditional Access can use device platform as a condition. Key Vault, DLP SITs, and vulnerability management do not select OS platforms for app access.",
+          "B": "Conditional Access can use device platform as a condition. Key Vault, DLP SITs, and vulnerability management do not select OS platforms for app access.",
+          "C": "Conditional Access can use device platform as a condition. Key Vault, DLP SITs, and vulnerability management do not select OS platforms for app access.",
+          "D": "Conditional Access can use device platform as a condition. Key Vault, DLP SITs, and vulnerability management do not select OS platforms for app access."
+        },
+        "choices": {
+          "A": "Privileged Identity Management",
+          "B": "Microsoft Entra ID Protection",
+          "C": "Device platform conditions that include or exclude operating systems",
+          "D": "Access reviews"
+        },
+        "general_explanation": "Conditional Access can use device platform as a condition. Key Vault, DLP SITs, and vulnerability management do not select OS platforms for app access.",
+        "prompt": "A payroll app should be reachable from iOS and Android managed devices but blocked from unmanaged Windows PCs. Which Conditional Access condition supports that split?"
+      },
+      "target_values": {
+        "choice_explanations": {
+          "A": "The Device platforms condition scopes a Conditional Access policy by operating-system platform. It does not prove that a device is managed or compliant. Compliance is a separate device state enforced with the Require device to be marked as compliant grant control. Device management or enrollment state is also separate; filter for devices can target registered-device attributes, including compliance and MDM-related properties, when finer device targeting is needed.",
+          "B": "The Device platforms condition scopes a Conditional Access policy by operating-system platform. It does not prove that a device is managed or compliant. Compliance is a separate device state enforced with the Require device to be marked as compliant grant control. Device management or enrollment state is also separate; filter for devices can target registered-device attributes, including compliance and MDM-related properties, when finer device targeting is needed.",
+          "C": "The Device platforms condition scopes a Conditional Access policy by operating-system platform. It does not prove that a device is managed or compliant. Compliance is a separate device state enforced with the Require device to be marked as compliant grant control. Device management or enrollment state is also separate; filter for devices can target registered-device attributes, including compliance and MDM-related properties, when finer device targeting is needed.",
+          "D": "The Device platforms condition scopes a Conditional Access policy by operating-system platform. It does not prove that a device is managed or compliant. Compliance is a separate device state enforced with the Require device to be marked as compliant grant control. Device management or enrollment state is also separate; filter for devices can target registered-device attributes, including compliance and MDM-related properties, when finer device targeting is needed."
+        },
+        "choices": {
+          "A": "Sign-in risk",
+          "B": "Named locations",
+          "C": "Device platforms",
+          "D": "Require device to be marked as compliant"
+        },
+        "general_explanation": "The Device platforms condition scopes a Conditional Access policy by operating-system platform. It does not prove that a device is managed or compliant. Compliance is a separate device state enforced with the Require device to be marked as compliant grant control. Device management or enrollment state is also separate; filter for devices can target registered-device attributes, including compliance and MDM-related properties, when finer device targeting is needed.",
+        "prompt": "An administrator wants to scope a Conditional Access policy by operating-system platform, such as including Android and iOS but excluding Windows, without making any claim about device management or compliance. Which condition is designed for that purpose?"
+      }
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview"
+      ],
+      "authorized_changed_fields": [
+        "choice_explanations",
+        "choices",
+        "general_explanation"
+      ],
+      "correct_key": [
+        "D"
+      ],
+      "currentness_class": "LOW",
+      "final_validation_status": "VALIDATED_SAFE",
+      "objective_code": "azure_infrastructure_security",
+      "question_id": "sc900_mlc_q249",
+      "semantic_validation_work_id": "SC900-SEPARATE-CONTENT-CORRECTION-001-NINE-QUESTION-FINAL-VALIDATION-CHAT-001",
+      "source_values": {
+        "choice_explanations": {
+          "A": "Virtual networks and subnets segment Azure resources into isolated private address spaces. TAP, compliance score, and Defender TI do not create network isolation.",
+          "B": "Virtual networks and subnets segment Azure resources into isolated private address spaces. TAP, compliance score, and Defender TI do not create network isolation.",
+          "C": "Virtual networks and subnets segment Azure resources into isolated private address spaces. TAP, compliance score, and Defender TI do not create network isolation.",
+          "D": "Virtual networks and subnets segment Azure resources into isolated private address spaces. TAP, compliance score, and Defender TI do not create network isolation."
+        },
+        "choices": {
+          "A": "A Temporary Access Pass issued to the payment subnet",
+          "B": "Network security groups",
+          "C": "Azure Firewall",
+          "D": "Separate virtual networks or subnets that segment the workloads"
+        },
+        "general_explanation": "Virtual networks and subnets segment Azure resources into isolated private address spaces. TAP, compliance score, and Defender TI do not create network isolation."
+      },
+      "target_values": {
+        "choice_explanations": {
+          "A": "A subnet uses an address range from its virtual network's address space. Separate subnets can segment traffic, but they do not create separate VNet address spaces. If the workloads must not share the same private address space, use separate virtual networks with non-overlapping address spaces.",
+          "B": "A subnet uses an address range from its virtual network's address space. Separate subnets can segment traffic, but they do not create separate VNet address spaces. If the workloads must not share the same private address space, use separate virtual networks with non-overlapping address spaces.",
+          "C": "A subnet uses an address range from its virtual network's address space. Separate subnets can segment traffic, but they do not create separate VNet address spaces. If the workloads must not share the same private address space, use separate virtual networks with non-overlapping address spaces.",
+          "D": "A subnet uses an address range from its virtual network's address space. Separate subnets can segment traffic, but they do not create separate VNet address spaces. If the workloads must not share the same private address space, use separate virtual networks with non-overlapping address spaces."
+        },
+        "choices": {
+          "A": "Separate subnets within the same virtual network",
+          "B": "Network security groups applied to the subnets",
+          "C": "Azure Firewall filtering traffic between the environments",
+          "D": "Separate virtual networks with non-overlapping private address spaces"
+        },
+        "general_explanation": "A subnet uses an address range from its virtual network's address space. Separate subnets can segment traffic, but they do not create separate VNet address spaces. If the workloads must not share the same private address space, use separate virtual networks with non-overlapping address spaces."
+      }
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/sentinel/automate-incident-handling-with-automation-rules",
+        "https://learn.microsoft.com/en-us/azure/sentinel/automation/run-playbooks",
+        "https://learn.microsoft.com/en-us/defender-xdr/automatic-attack-disruption",
+        "https://learn.microsoft.com/en-us/defender-xdr/microsoft-365-defender"
+      ],
+      "authorized_changed_fields": [
+        "choice_explanations",
+        "choices",
+        "general_explanation",
+        "prompt"
+      ],
+      "correct_key": [
+        "A"
+      ],
+      "currentness_class": "MODERATE",
+      "final_validation_status": "VALIDATED_SAFE",
+      "objective_code": "defender_xdr",
+      "question_id": "sc900_mlc_q269",
+      "semantic_validation_work_id": "SC900-SEPARATE-CONTENT-CORRECTION-001-NINE-QUESTION-FINAL-VALIDATION-CHAT-001",
+      "source_values": {
+        "choice_explanations": {
+          "A": "Defender XDR is built around Microsoft workload correlation and automated disruption. A SIEM such as Sentinel is broader log correlation plus SOAR you design. Neither is WAF, retention, or Key Vault.",
+          "B": "Defender XDR is built around Microsoft workload correlation and automated disruption. A SIEM such as Sentinel is broader log correlation plus SOAR you design. Neither is WAF, retention, or Key Vault.",
+          "C": "Defender XDR is built around Microsoft workload correlation and automated disruption. A SIEM such as Sentinel is broader log correlation plus SOAR you design. Neither is WAF, retention, or Key Vault.",
+          "D": "Defender XDR is built around Microsoft workload correlation and automated disruption. A SIEM such as Sentinel is broader log correlation plus SOAR you design. Neither is WAF, retention, or Key Vault."
+        },
+        "choices": {
+          "A": "XDR can take coordinated Microsoft-workload actions; a SIEM still depends on ingested data plus detection and (often) orchestrated response you configure",
+          "B": "A SIEM always automatically disables Entra users with no configuration, and XDR cannot contain anything",
+          "C": "XDR is only a WAF, and a SIEM is only a retention label",
+          "D": "They are the same because both are Azure Key Vault"
+        },
+        "general_explanation": "Defender XDR is built around Microsoft workload correlation and automated disruption. A SIEM such as Sentinel is broader log correlation plus SOAR you design. Neither is WAF, retention, or Key Vault.",
+        "prompt": "Defender XDR can automatically disrupt an in-progress attack across workloads. How should a learner contrast that with a SIEM that still needs an analyst to run a playbook?"
+      },
+      "target_values": {
+        "choice_explanations": {
+          "A": "Automatic attack disruption in Defender XDR is built in and uses high-confidence cross-workload incident signals to automatically contain compromised assets during an attack. Microsoft Sentinel automation rules can also run configured playbooks automatically. Playbooks may also be run manually, so manual execution is not the distinguishing feature.",
+          "B": "Automatic attack disruption in Defender XDR is built in and uses high-confidence cross-workload incident signals to automatically contain compromised assets during an attack. Microsoft Sentinel automation rules can also run configured playbooks automatically. Playbooks may also be run manually, so manual execution is not the distinguishing feature.",
+          "C": "Automatic attack disruption in Defender XDR is built in and uses high-confidence cross-workload incident signals to automatically contain compromised assets during an attack. Microsoft Sentinel automation rules can also run configured playbooks automatically. Playbooks may also be run manually, so manual execution is not the distinguishing feature.",
+          "D": "Automatic attack disruption in Defender XDR is built in and uses high-confidence cross-workload incident signals to automatically contain compromised assets during an attack. Microsoft Sentinel automation rules can also run configured playbooks automatically. Playbooks may also be run manually, so manual execution is not the distinguishing feature."
+        },
+        "choices": {
+          "A": "Defender XDR has built-in automatic attack disruption; Sentinel can automatically run administrator-configured playbooks through automation rules",
+          "B": "Sentinel playbooks can run only when an analyst starts them manually",
+          "C": "Defender XDR attack disruption requires a Sentinel playbook before it can contain assets",
+          "D": "Sentinel automation rules provide the same built-in attack-disruption logic as Defender XDR without configured actions"
+        },
+        "general_explanation": "Automatic attack disruption in Defender XDR is built in and uses high-confidence cross-workload incident signals to automatically contain compromised assets during an attack. Microsoft Sentinel automation rules can also run configured playbooks automatically. Playbooks may also be run manually, so manual execution is not the distinguishing feature.",
+        "prompt": "Microsoft Defender XDR can use automatic attack disruption to contain an in-progress attack. How does this differ from Microsoft Sentinel SOAR automation?"
+      }
+    }
+  ],
+  "currentness_requirements": {
+    "currentness_record_required": true,
+    "question_ids": [
+      "sc900_mlc_q118",
+      "sc900_mlc_q219",
+      "sc900_mlc_q269"
+    ],
+    "required_result": "PASS_FOR_ALL_THREE"
+  },
+  "payload_sha256": "ea957c3657e70d425794215c76dcfef192972a75fb16f219d591d83c5a148ee3",
+  "question_count": 454,
+  "schema_version": 2,
+  "source_bank": "sc900_bank_v8_length_rebalanced_t5.json",
+  "source_bank_content_fingerprint": "ec5ec3233c451b80dc6ce09710c8dc7272e19052d9bc2c8d22c53d0945f18766",
+  "source_bank_raw_sha256": "13820be0ff959c2229838088eb6380cb801acd753cb857554d0ed1869982ecfd",
+  "source_manifest_payload_sha256": "654757b22e91e3d47754095035f7c260f8b0f0b6843ca9c122d443041108eac8",
+  "source_validation_work_id": "SC900-SEPARATE-CONTENT-CORRECTION-001-NINE-QUESTION-FINAL-VALIDATION-CHAT-001",
+  "superseding_validation_work_ids": [
+    "SC900-SEPARATE-CONTENT-CORRECTION-001-Q219-BOUNDED-REPLACEMENT-FREEZE-001"
+  ],
+  "target_ids": [
+    "sc900_mlc_q064",
+    "sc900_mlc_q118",
+    "sc900_mlc_q150",
+    "sc900_mlc_q198",
+    "sc900_mlc_q219",
+    "sc900_mlc_q226",
+    "sc900_mlc_q242",
+    "sc900_mlc_q249",
+    "sc900_mlc_q269"
+  ],
+  "work_id": "SC900-SEPARATE-CONTENT-CORRECTION-001-POST-CALIBRATION-IMPLEMENTATION-EXECUTION-001"
+}

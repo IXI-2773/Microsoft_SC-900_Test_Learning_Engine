@@ -1,0 +1,53 @@
+{
+  "after": {
+    "choice_explanations": {
+      "A": "A subnet uses an address range from its virtual network's address space. Separate subnets can segment traffic, but they do not create separate VNet address spaces. If the workloads must not share the same private address space, use separate virtual networks with non-overlapping address spaces.",
+      "B": "A subnet uses an address range from its virtual network's address space. Separate subnets can segment traffic, but they do not create separate VNet address spaces. If the workloads must not share the same private address space, use separate virtual networks with non-overlapping address spaces.",
+      "C": "A subnet uses an address range from its virtual network's address space. Separate subnets can segment traffic, but they do not create separate VNet address spaces. If the workloads must not share the same private address space, use separate virtual networks with non-overlapping address spaces.",
+      "D": "A subnet uses an address range from its virtual network's address space. Separate subnets can segment traffic, but they do not create separate VNet address spaces. If the workloads must not share the same private address space, use separate virtual networks with non-overlapping address spaces."
+    },
+    "choices": {
+      "A": "Separate subnets within the same virtual network",
+      "B": "Network security groups applied to the subnets",
+      "C": "Azure Firewall filtering traffic between the environments",
+      "D": "Separate virtual networks with non-overlapping private address spaces"
+    },
+    "general_explanation": "A subnet uses an address range from its virtual network's address space. Separate subnets can segment traffic, but they do not create separate VNet address spaces. If the workloads must not share the same private address space, use separate virtual networks with non-overlapping address spaces."
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview"
+  ],
+  "authorized_changed_fields": [
+    "choice_explanations",
+    "choices",
+    "general_explanation"
+  ],
+  "before": {
+    "choice_explanations": {
+      "A": "Virtual networks and subnets segment Azure resources into isolated private address spaces. TAP, compliance score, and Defender TI do not create network isolation.",
+      "B": "Virtual networks and subnets segment Azure resources into isolated private address spaces. TAP, compliance score, and Defender TI do not create network isolation.",
+      "C": "Virtual networks and subnets segment Azure resources into isolated private address spaces. TAP, compliance score, and Defender TI do not create network isolation.",
+      "D": "Virtual networks and subnets segment Azure resources into isolated private address spaces. TAP, compliance score, and Defender TI do not create network isolation."
+    },
+    "choices": {
+      "A": "A Temporary Access Pass issued to the payment subnet",
+      "B": "Network security groups",
+      "C": "Azure Firewall",
+      "D": "Separate virtual networks or subnets that segment the workloads"
+    },
+    "general_explanation": "Virtual networks and subnets segment Azure resources into isolated private address spaces. TAP, compliance score, and Defender TI do not create network isolation."
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "correction_spec_payload_sha256": "ea957c3657e70d425794215c76dcfef192972a75fb16f219d591d83c5a148ee3",
+  "disposition": "APPROVED_FOR_KEY_PRESERVING_CONTENT_CORRECTION",
+  "from_content_fingerprint": "2a76b7a6532dd5be97af3b27cea41cee5d4d213621519d4a5497132d53f6fa2c",
+  "objective_after": "azure_infrastructure_security",
+  "objective_before": "azure_infrastructure_security",
+  "question_id": "sc900_mlc_q249",
+  "to_content_fingerprint": "ca909c7c8c2af3b3032b3483d4de3da83f8cf9c2457dacc4606acdb5e8bdf1b0"
+}

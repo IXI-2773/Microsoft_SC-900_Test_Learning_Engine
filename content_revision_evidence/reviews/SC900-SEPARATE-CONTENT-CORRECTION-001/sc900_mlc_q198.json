@@ -1,0 +1,56 @@
+{
+  "after": {
+    "choice_explanations": {
+      "A": "Insider Risk Management correlates user activity and other risk indicators to identify and investigate potentially risky behavior, including unusual exfiltration by departing users. Data Loss Prevention focuses on sensitive-content policy detection and enforcement, such as restricting or blocking transfers. Because the stem asks for risk correlation and investigation rather than preventive content enforcement, Insider Risk Management is the intended answer.",
+      "B": "Insider Risk Management correlates user activity and other risk indicators to identify and investigate potentially risky behavior, including unusual exfiltration by departing users. Data Loss Prevention focuses on sensitive-content policy detection and enforcement, such as restricting or blocking transfers. Because the stem asks for risk correlation and investigation rather than preventive content enforcement, Insider Risk Management is the intended answer.",
+      "C": "Insider Risk Management correlates user activity and other risk indicators to identify and investigate potentially risky behavior, including unusual exfiltration by departing users. Data Loss Prevention focuses on sensitive-content policy detection and enforcement, such as restricting or blocking transfers. Because the stem asks for risk correlation and investigation rather than preventive content enforcement, Insider Risk Management is the intended answer.",
+      "D": "Insider Risk Management correlates user activity and other risk indicators to identify and investigate potentially risky behavior, including unusual exfiltration by departing users. Data Loss Prevention focuses on sensitive-content policy detection and enforcement, such as restricting or blocking transfers. Because the stem asks for risk correlation and investigation rather than preventive content enforcement, Insider Risk Management is the intended answer."
+    },
+    "choices": {
+      "A": "Data Loss Prevention",
+      "B": "eDiscovery",
+      "C": "Insider Risk Management",
+      "D": "Communication Compliance"
+    },
+    "general_explanation": "Insider Risk Management correlates user activity and other risk indicators to identify and investigate potentially risky behavior, including unusual exfiltration by departing users. Data Loss Prevention focuses on sensitive-content policy detection and enforcement, such as restricting or blocking transfers. Because the stem asks for risk correlation and investigation rather than preventive content enforcement, Insider Risk Management is the intended answer.",
+    "prompt": "Security wants to correlate user-behavior signals, assign risk, and investigate whether departing employees are engaging in unusual exfiltration activity. Which Microsoft Purview solution is designed for that risk-investigation workflow?"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/purview/insider-risk-management"
+  ],
+  "authorized_changed_fields": [
+    "choice_explanations",
+    "choices",
+    "general_explanation",
+    "prompt"
+  ],
+  "before": {
+    "choice_explanations": {
+      "A": "Potential data theft by departing insiders is an Insider Risk Management scenario, not WAF, DDoS, or TAP.",
+      "B": "Potential data theft by departing insiders is an Insider Risk Management scenario, not WAF, DDoS, or TAP.",
+      "C": "Potential data theft by departing insiders is an Insider Risk Management scenario, not WAF, DDoS, or TAP.",
+      "D": "Potential data theft by departing insiders is an Insider Risk Management scenario, not WAF, DDoS, or TAP."
+    },
+    "choices": {
+      "A": "Data loss prevention",
+      "B": "eDiscovery",
+      "C": "Insider Risk Management",
+      "D": "Temporary Access Pass"
+    },
+    "general_explanation": "Potential data theft by departing insiders is an Insider Risk Management scenario, not WAF, DDoS, or TAP.",
+    "prompt": "HR suspects departing employees are uploading source code to personal cloud storage. Which Purview solution is designed for that internal-risk scenario?"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "correction_spec_payload_sha256": "ea957c3657e70d425794215c76dcfef192972a75fb16f219d591d83c5a148ee3",
+  "disposition": "APPROVED_FOR_KEY_PRESERVING_CONTENT_CORRECTION",
+  "from_content_fingerprint": "e69325ad09ddfe4c958272ffbfed08b37eb0d509477de9df6949722c9a77c6ed",
+  "objective_after": "purview_insider_risk_ediscovery_audit",
+  "objective_before": "purview_insider_risk_ediscovery_audit",
+  "question_id": "sc900_mlc_q198",
+  "to_content_fingerprint": "49a6ce1a027da6ebb2e38639f61f903c8a21b0a54d1204ab267200129d5cad1e"
+}
