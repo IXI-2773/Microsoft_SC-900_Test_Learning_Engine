@@ -1,0 +1,54 @@
+{
+  "after": {
+    "choice_explanations": {
+      "A": "Microsoft Defender Vulnerability Management is the vulnerability-management capability for discovering, assessing, prioritizing, and tracking remediation of endpoint weaknesses. Defender for Endpoint Plan 2 already includes core Defender Vulnerability Management capabilities such as vulnerability assessment and risk-based prioritization, so Defender for Endpoint should not be used as a competing distractor for this generic requirement.",
+      "B": "Microsoft Defender Vulnerability Management is the vulnerability-management capability for discovering, assessing, prioritizing, and tracking remediation of endpoint weaknesses. Defender for Endpoint Plan 2 already includes core Defender Vulnerability Management capabilities such as vulnerability assessment and risk-based prioritization, so Defender for Endpoint should not be used as a competing distractor for this generic requirement.",
+      "C": "Microsoft Defender Vulnerability Management is the vulnerability-management capability for discovering, assessing, prioritizing, and tracking remediation of endpoint weaknesses. Defender for Endpoint Plan 2 already includes core Defender Vulnerability Management capabilities such as vulnerability assessment and risk-based prioritization, so Defender for Endpoint should not be used as a competing distractor for this generic requirement.",
+      "D": "Microsoft Defender Vulnerability Management is the vulnerability-management capability for discovering, assessing, prioritizing, and tracking remediation of endpoint weaknesses. Defender for Endpoint Plan 2 already includes core Defender Vulnerability Management capabilities such as vulnerability assessment and risk-based prioritization, so Defender for Endpoint should not be used as a competing distractor for this generic requirement."
+    },
+    "choices": {
+      "A": "Microsoft Sentinel hunting",
+      "B": "Microsoft Defender for Identity",
+      "C": "Microsoft Defender for Office 365",
+      "D": "Microsoft Defender Vulnerability Management"
+    },
+    "general_explanation": "Microsoft Defender Vulnerability Management is the vulnerability-management capability for discovering, assessing, prioritizing, and tracking remediation of endpoint weaknesses. Defender for Endpoint Plan 2 already includes core Defender Vulnerability Management capabilities such as vulnerability assessment and risk-based prioritization, so Defender for Endpoint should not be used as a competing distractor for this generic requirement."
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/defender-vulnerability-management/defender-vulnerability-management",
+    "https://learn.microsoft.com/en-us/defender-vulnerability-management/defender-vulnerability-management-capabilities"
+  ],
+  "authorized_changed_fields": [
+    "choice_explanations",
+    "choices",
+    "general_explanation"
+  ],
+  "before": {
+    "choice_explanations": {
+      "A": "Vulnerability management prioritizes weaknesses. Hunting is SIEM investigation; the others are identity lifecycle or network floods.",
+      "B": "Vulnerability management prioritizes weaknesses. Hunting is SIEM investigation; the others are identity lifecycle or network floods.",
+      "C": "Vulnerability management prioritizes weaknesses. Hunting is SIEM investigation; the others are identity lifecycle or network floods.",
+      "D": "Vulnerability management prioritizes weaknesses. Hunting is SIEM investigation; the others are identity lifecycle or network floods."
+    },
+    "choices": {
+      "A": "Microsoft Sentinel hunting",
+      "B": "Microsoft Defender for Endpoint",
+      "C": "Microsoft Defender for Office 365",
+      "D": "Microsoft Defender Vulnerability Management"
+    },
+    "general_explanation": "Vulnerability management prioritizes weaknesses. Hunting is SIEM investigation; the others are identity lifecycle or network floods."
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "correction_spec_payload_sha256": "ea957c3657e70d425794215c76dcfef192972a75fb16f219d591d83c5a148ee3",
+  "disposition": "APPROVED_FOR_KEY_PRESERVING_CONTENT_CORRECTION",
+  "from_content_fingerprint": "1ae83ee7c13cb67d36c4d6ac7f154591eceaaf5d68eb0dd471bdd87de79fb2a7",
+  "objective_after": "defender_xdr",
+  "objective_before": "defender_xdr",
+  "question_id": "sc900_mlc_q118",
+  "to_content_fingerprint": "abaddff647ab335935215f33e851c4ca90a619aae8973252335c1c7b114786b1"
+}

@@ -1,0 +1,53 @@
+{
+  "after": {
+    "choice_explanations": {
+      "A": "Azure RBAC authorizes actions on Azure resources and can be scoped to a subscription, resource group, or individual resource. Microsoft Entra roles authorize administration of Microsoft Entra resources such as users, groups, and applications. Privileged Identity Management can govern activation of eligible roles, but it does not replace the underlying Azure RBAC permission.",
+      "B": "Azure RBAC authorizes actions on Azure resources and can be scoped to a subscription, resource group, or individual resource. Microsoft Entra roles authorize administration of Microsoft Entra resources such as users, groups, and applications. Privileged Identity Management can govern activation of eligible roles, but it does not replace the underlying Azure RBAC permission.",
+      "C": "Azure RBAC authorizes actions on Azure resources and can be scoped to a subscription, resource group, or individual resource. Microsoft Entra roles authorize administration of Microsoft Entra resources such as users, groups, and applications. Privileged Identity Management can govern activation of eligible roles, but it does not replace the underlying Azure RBAC permission.",
+      "D": "Azure RBAC authorizes actions on Azure resources and can be scoped to a subscription, resource group, or individual resource. Microsoft Entra roles authorize administration of Microsoft Entra resources such as users, groups, and applications. Privileged Identity Management can govern activation of eligible roles, but it does not replace the underlying Azure RBAC permission."
+    },
+    "choices": {
+      "A": "Global Administrator, because Azure VM power-state is a directory setting",
+      "B": "Microsoft Entra RBAC for directory resources such as users and groups",
+      "C": "Privileged Identity Management",
+      "D": "Azure RBAC at the subscription or resource-group scope, not a Microsoft Entra directory role"
+    },
+    "general_explanation": "Azure RBAC authorizes actions on Azure resources and can be scoped to a subscription, resource group, or individual resource. Microsoft Entra roles authorize administration of Microsoft Entra resources such as users, groups, and applications. Privileged Identity Management can govern activation of eligible roles, but it does not replace the underlying Azure RBAC permission."
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/custom-overview"
+  ],
+  "authorized_changed_fields": [
+    "choice_explanations",
+    "choices",
+    "general_explanation"
+  ],
+  "before": {
+    "choice_explanations": {
+      "A": "Azure RBAC authorizes Azure resource actions such as VM operations. Entra roles authorize directory administration. Those planes are not interchangeable.",
+      "B": "Azure RBAC authorizes Azure resource actions such as VM operations. Entra roles authorize directory administration. Those planes are not interchangeable.",
+      "C": "Azure RBAC authorizes Azure resource actions such as VM operations. Entra roles authorize directory administration. Those planes are not interchangeable.",
+      "D": "Azure RBAC authorizes Azure resource actions such as VM operations. Entra roles authorize directory administration. Those planes are not interchangeable."
+    },
+    "choices": {
+      "A": "Global Administrator, because Azure VM power-state is a directory setting",
+      "B": "Azure role-based access control",
+      "C": "Privileged Identity Management",
+      "D": "Azure resource RBAC for the subscription or resource group, not an Entra directory role"
+    },
+    "general_explanation": "Azure RBAC authorizes Azure resource actions such as VM operations. Entra roles authorize directory administration. Those planes are not interchangeable."
+  },
+  "correct_key_after": [
+    "D"
+  ],
+  "correct_key_before": [
+    "D"
+  ],
+  "correction_spec_payload_sha256": "ea957c3657e70d425794215c76dcfef192972a75fb16f219d591d83c5a148ee3",
+  "disposition": "APPROVED_FOR_KEY_PRESERVING_CONTENT_CORRECTION",
+  "from_content_fingerprint": "fdae3f7a49e63312650179cab1d40c42135010aea0913dec0e7c5d2a1b714780",
+  "objective_after": "entra_access_management",
+  "objective_before": "entra_access_management",
+  "question_id": "sc900_mlc_q226",
+  "to_content_fingerprint": "23f3921bc74781b4c01e8307840a249d65db007f323f438dbd5eb8ecbb1ac508"
+}

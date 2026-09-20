@@ -9,7 +9,7 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
-from content_revision_authority import AdmittedRevision, RevisionFailureReason, approved_lineage
+from content_revision_authority import MANIFEST_KIND, AdmittedRevision, RevisionFailureReason, approved_lineage
 from question_identity import (
     canonical_question_id,
     history_event_matches_question,
@@ -35,6 +35,7 @@ class MigrationFailureReason(StrEnum):
     LINEAGE_CONFLICT = "LINEAGE_CONFLICT"
     INVALID_SOURCE_SESSION = "INVALID_SOURCE_SESSION"
     CHANGED_QUESTION_MISSING_EDGE = "CHANGED_QUESTION_MISSING_EDGE"
+    AUTHORITY_KIND_MISMATCH = "AUTHORITY_KIND_MISMATCH"
 
 
 class ContentRevisionMigrationError(ValueError):
@@ -51,6 +52,12 @@ class PayloadMigrationResult:
     changed: bool
     status: MigrationStatus
     migration_id: str
+
+
+def _ensure_v1_equivalence_revision(revision: AdmittedRevision) -> None:
+    kind = getattr(revision, "manifest_kind", MANIFEST_KIND)
+    if kind != MANIFEST_KIND:
+        raise ContentRevisionMigrationError(MigrationFailureReason.AUTHORITY_KIND_MISMATCH, str(kind))
 
 
 def derive_migration_id(revision: AdmittedRevision) -> str:
@@ -302,6 +309,7 @@ def migrate_progress_payload(
     revision: AdmittedRevision,
     migrated_at: str,
 ) -> PayloadMigrationResult:
+    _ensure_v1_equivalence_revision(revision)
     if not isinstance(payload, Mapping):
         raise ContentRevisionMigrationError(MigrationFailureReason.INVALID_PROGRESS_PAYLOAD)
     _require_progress_payload_shape(payload)
@@ -373,6 +381,7 @@ def migrate_session_payload(
     from session_identity import canonical_session_signature, ordered_question_ids
     from session_store import migrate_session_snapshot
 
+    _ensure_v1_equivalence_revision(revision)
     if not isinstance(saved, Mapping):
         raise ContentRevisionMigrationError(MigrationFailureReason.INVALID_SOURCE_SESSION)
     saved_fp = str(saved.get("bank_fingerprint") or "").strip()

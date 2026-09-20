@@ -1,0 +1,56 @@
+{
+  "after": {
+    "choice_explanations": {
+      "A": "The Device platforms condition scopes a Conditional Access policy by operating-system platform. It does not prove that a device is managed or compliant. Compliance is a separate device state enforced with the Require device to be marked as compliant grant control. Device management or enrollment state is also separate; filter for devices can target registered-device attributes, including compliance and MDM-related properties, when finer device targeting is needed.",
+      "B": "The Device platforms condition scopes a Conditional Access policy by operating-system platform. It does not prove that a device is managed or compliant. Compliance is a separate device state enforced with the Require device to be marked as compliant grant control. Device management or enrollment state is also separate; filter for devices can target registered-device attributes, including compliance and MDM-related properties, when finer device targeting is needed.",
+      "C": "The Device platforms condition scopes a Conditional Access policy by operating-system platform. It does not prove that a device is managed or compliant. Compliance is a separate device state enforced with the Require device to be marked as compliant grant control. Device management or enrollment state is also separate; filter for devices can target registered-device attributes, including compliance and MDM-related properties, when finer device targeting is needed.",
+      "D": "The Device platforms condition scopes a Conditional Access policy by operating-system platform. It does not prove that a device is managed or compliant. Compliance is a separate device state enforced with the Require device to be marked as compliant grant control. Device management or enrollment state is also separate; filter for devices can target registered-device attributes, including compliance and MDM-related properties, when finer device targeting is needed."
+    },
+    "choices": {
+      "A": "Sign-in risk",
+      "B": "Named locations",
+      "C": "Device platforms",
+      "D": "Require device to be marked as compliant"
+    },
+    "general_explanation": "The Device platforms condition scopes a Conditional Access policy by operating-system platform. It does not prove that a device is managed or compliant. Compliance is a separate device state enforced with the Require device to be marked as compliant grant control. Device management or enrollment state is also separate; filter for devices can target registered-device attributes, including compliance and MDM-related properties, when finer device targeting is needed.",
+    "prompt": "An administrator wants to scope a Conditional Access policy by operating-system platform, such as including Android and iOS but excluding Windows, without making any claim about device management or compliance. Which condition is designed for that purpose?"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview"
+  ],
+  "authorized_changed_fields": [
+    "choice_explanations",
+    "choices",
+    "general_explanation",
+    "prompt"
+  ],
+  "before": {
+    "choice_explanations": {
+      "A": "Conditional Access can use device platform as a condition. Key Vault, DLP SITs, and vulnerability management do not select OS platforms for app access.",
+      "B": "Conditional Access can use device platform as a condition. Key Vault, DLP SITs, and vulnerability management do not select OS platforms for app access.",
+      "C": "Conditional Access can use device platform as a condition. Key Vault, DLP SITs, and vulnerability management do not select OS platforms for app access.",
+      "D": "Conditional Access can use device platform as a condition. Key Vault, DLP SITs, and vulnerability management do not select OS platforms for app access."
+    },
+    "choices": {
+      "A": "Privileged Identity Management",
+      "B": "Microsoft Entra ID Protection",
+      "C": "Device platform conditions that include or exclude operating systems",
+      "D": "Access reviews"
+    },
+    "general_explanation": "Conditional Access can use device platform as a condition. Key Vault, DLP SITs, and vulnerability management do not select OS platforms for app access.",
+    "prompt": "A payroll app should be reachable from iOS and Android managed devices but blocked from unmanaged Windows PCs. Which Conditional Access condition supports that split?"
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "correction_spec_payload_sha256": "ea957c3657e70d425794215c76dcfef192972a75fb16f219d591d83c5a148ee3",
+  "disposition": "APPROVED_FOR_KEY_PRESERVING_CONTENT_CORRECTION",
+  "from_content_fingerprint": "952ff98814691f42ab231338f5e163e324dc897381268c11a212980162d8b2c3",
+  "objective_after": "entra_access_management",
+  "objective_before": "entra_access_management",
+  "question_id": "sc900_mlc_q242",
+  "to_content_fingerprint": "26d33d029c95d7e21b6552e19bd65e3e1b5a773b0344658d4425c9f6331a82f2"
+}

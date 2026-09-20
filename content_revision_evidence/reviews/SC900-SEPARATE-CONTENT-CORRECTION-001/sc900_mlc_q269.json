@@ -1,0 +1,59 @@
+{
+  "after": {
+    "choice_explanations": {
+      "A": "Automatic attack disruption in Defender XDR is built in and uses high-confidence cross-workload incident signals to automatically contain compromised assets during an attack. Microsoft Sentinel automation rules can also run configured playbooks automatically. Playbooks may also be run manually, so manual execution is not the distinguishing feature.",
+      "B": "Automatic attack disruption in Defender XDR is built in and uses high-confidence cross-workload incident signals to automatically contain compromised assets during an attack. Microsoft Sentinel automation rules can also run configured playbooks automatically. Playbooks may also be run manually, so manual execution is not the distinguishing feature.",
+      "C": "Automatic attack disruption in Defender XDR is built in and uses high-confidence cross-workload incident signals to automatically contain compromised assets during an attack. Microsoft Sentinel automation rules can also run configured playbooks automatically. Playbooks may also be run manually, so manual execution is not the distinguishing feature.",
+      "D": "Automatic attack disruption in Defender XDR is built in and uses high-confidence cross-workload incident signals to automatically contain compromised assets during an attack. Microsoft Sentinel automation rules can also run configured playbooks automatically. Playbooks may also be run manually, so manual execution is not the distinguishing feature."
+    },
+    "choices": {
+      "A": "Defender XDR has built-in automatic attack disruption; Sentinel can automatically run administrator-configured playbooks through automation rules",
+      "B": "Sentinel playbooks can run only when an analyst starts them manually",
+      "C": "Defender XDR attack disruption requires a Sentinel playbook before it can contain assets",
+      "D": "Sentinel automation rules provide the same built-in attack-disruption logic as Defender XDR without configured actions"
+    },
+    "general_explanation": "Automatic attack disruption in Defender XDR is built in and uses high-confidence cross-workload incident signals to automatically contain compromised assets during an attack. Microsoft Sentinel automation rules can also run configured playbooks automatically. Playbooks may also be run manually, so manual execution is not the distinguishing feature.",
+    "prompt": "Microsoft Defender XDR can use automatic attack disruption to contain an in-progress attack. How does this differ from Microsoft Sentinel SOAR automation?"
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/azure/sentinel/automate-incident-handling-with-automation-rules",
+    "https://learn.microsoft.com/en-us/azure/sentinel/automation/run-playbooks",
+    "https://learn.microsoft.com/en-us/defender-xdr/automatic-attack-disruption",
+    "https://learn.microsoft.com/en-us/defender-xdr/microsoft-365-defender"
+  ],
+  "authorized_changed_fields": [
+    "choice_explanations",
+    "choices",
+    "general_explanation",
+    "prompt"
+  ],
+  "before": {
+    "choice_explanations": {
+      "A": "Defender XDR is built around Microsoft workload correlation and automated disruption. A SIEM such as Sentinel is broader log correlation plus SOAR you design. Neither is WAF, retention, or Key Vault.",
+      "B": "Defender XDR is built around Microsoft workload correlation and automated disruption. A SIEM such as Sentinel is broader log correlation plus SOAR you design. Neither is WAF, retention, or Key Vault.",
+      "C": "Defender XDR is built around Microsoft workload correlation and automated disruption. A SIEM such as Sentinel is broader log correlation plus SOAR you design. Neither is WAF, retention, or Key Vault.",
+      "D": "Defender XDR is built around Microsoft workload correlation and automated disruption. A SIEM such as Sentinel is broader log correlation plus SOAR you design. Neither is WAF, retention, or Key Vault."
+    },
+    "choices": {
+      "A": "XDR can take coordinated Microsoft-workload actions; a SIEM still depends on ingested data plus detection and (often) orchestrated response you configure",
+      "B": "A SIEM always automatically disables Entra users with no configuration, and XDR cannot contain anything",
+      "C": "XDR is only a WAF, and a SIEM is only a retention label",
+      "D": "They are the same because both are Azure Key Vault"
+    },
+    "general_explanation": "Defender XDR is built around Microsoft workload correlation and automated disruption. A SIEM such as Sentinel is broader log correlation plus SOAR you design. Neither is WAF, retention, or Key Vault.",
+    "prompt": "Defender XDR can automatically disrupt an in-progress attack across workloads. How should a learner contrast that with a SIEM that still needs an analyst to run a playbook?"
+  },
+  "correct_key_after": [
+    "A"
+  ],
+  "correct_key_before": [
+    "A"
+  ],
+  "correction_spec_payload_sha256": "ea957c3657e70d425794215c76dcfef192972a75fb16f219d591d83c5a148ee3",
+  "disposition": "APPROVED_FOR_KEY_PRESERVING_CONTENT_CORRECTION",
+  "from_content_fingerprint": "1718c41a24fd4ef3390d8cf74faa5f9ddd630e5e44e3f6f7fafa0904822e2963",
+  "objective_after": "defender_xdr",
+  "objective_before": "defender_xdr",
+  "question_id": "sc900_mlc_q269",
+  "to_content_fingerprint": "647a8f059c5c2ef5f81905a85dda34a3902d82699a2814a90a4f5d4f774f13bc"
+}
