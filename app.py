@@ -40,6 +40,12 @@ from cand01r3_runtime import sanitize_history_event
 from cert_config import QUESTION_BANK_FILENAME, USER_DATA_DIRNAME
 from config_store import DEFAULT_CONFIG, load_config, save_config
 from content_revision_authority import AdmissionResult, AdmissionStatus, AdmittedRevision
+from content_revision_correction_authority import AdmittedCorrectionRevision, CorrectionAdmissionResult
+from content_revision_explanation_authority import AdmittedExplanationRevision, ExplanationAdmissionResult
+from content_revision_explanation_migration import (
+    history_event_matches_explanation_revision,
+    history_events_for_question_explanation_revision_aware,
+)
 from content_revision_migration import (
     history_event_matches_approved_revision,
     history_events_for_question_revision_aware,
@@ -77,6 +83,7 @@ from progress_store import (
 from question_bank import adaptive_shuffle_question, load_bank, stable_shuffle_question
 from question_identity import (
     canonical_question_id,
+    history_event_matches_question,
     question_content_fingerprint,
     resolve_registered_question_id_from_number,
 )
@@ -126,6 +133,9 @@ from widget_models import (
     RewardHistoryWidgetRegistry,
     ScreenshotReviewWidgetRegistry,
 )
+
+RegisteredContentRevision = AdmittedRevision | AdmittedCorrectionRevision | AdmittedExplanationRevision
+RegisteredContentRevisionAdmission = AdmissionResult | CorrectionAdmissionResult | ExplanationAdmissionResult
 
 RESOURCE_DIR = Path(getattr(sys, "_MEIPASS", BASE_DIR))
 APP_DIR = Path(sys.executable).resolve().parent if getattr(sys, "frozen", False) else BASE_DIR
@@ -298,7 +308,7 @@ class TestingEngineApp(
         self.progress_path = None
         self.progress_data = blank_progress(app_version=APP_VERSION)
         self.progress_write_blocked = False
-        self.content_revision_authority: AdmittedRevision | None = None
+        self.content_revision_authority: RegisteredContentRevision | None = None
         self.data: QuestionBankData | None = None
         self.master_questions: list[QuestionRuntimeState] = []
         self.questions: list[QuestionRuntimeState] = []
@@ -2577,11 +2587,7 @@ class TestingEngineApp(
         return f"Coaching note: restate why {correct} wins and why {selected} misses. That contrast is where retention usually sticks."
 
     def question_volatility(self, q):
-        events = [
-            event
-            for event in self._progress_history()
-            if history_event_matches_approved_revision(event, q, getattr(self, "content_revision_authority", None))
-        ]
+        events = [event for event in self._progress_history() if self._history_event_matches_current_revision(event, q)]
         attempts = len(events)
         if attempts < 3:
             return {"score": 0.0, "attempts": attempts, "flips": 0, "label": "", "last_outcome": ""}
@@ -2624,14 +2630,36 @@ class TestingEngineApp(
         self.apply_progress_to_questions(questions)
         return questions
 
+    def _history_event_matches_current_revision(self, event, question):
+        revision = getattr(self, "content_revision_authority", None)
+        if isinstance(revision, AdmittedExplanationRevision):
+            return history_event_matches_explanation_revision(event, question, revision)
+        if isinstance(revision, AdmittedCorrectionRevision):
+            return history_event_matches_question(event, question)
+        return history_event_matches_approved_revision(event, question, revision)
+
     def revision_aware_history_events(self, history_map, question):
+        revision = getattr(self, "content_revision_authority", None)
+        if isinstance(revision, AdmittedExplanationRevision):
+            return history_events_for_question_explanation_revision_aware(
+                history_map,
+                question,
+                revision,
+            )
+        if isinstance(revision, AdmittedCorrectionRevision):
+            question_id = canonical_question_id(question)
+            return [
+                event for event in history_map.get(question_id, []) if history_event_matches_question(event, question)
+            ]
         return history_events_for_question_revision_aware(
             history_map,
             question,
-            getattr(self, "content_revision_authority", None),
+            revision,
         )
 
-    def _bind_content_revision_authority(self, result: AdmissionResult | None) -> AdmittedRevision | None:
+    def _bind_content_revision_authority(
+        self, result: RegisteredContentRevisionAdmission | None
+    ) -> RegisteredContentRevision | None:
         self.content_revision_authority = None
         if result is None:
             return None
@@ -2647,7 +2675,7 @@ class TestingEngineApp(
         logging.warning("Approved content revision progress migration failed: %s", error)
         return True
 
-    def _migrate_progress_for_admitted_revision(self, revision: AdmittedRevision) -> bool:
+    def _migrate_progress_for_admitted_revision(self, revision: RegisteredContentRevision) -> bool:
         if not self.bank_path or not self.progress_path:
             return False
         source_bank_path = Path(self.bank_path).parent / revision.source_bank_filename
@@ -2824,16 +2852,11 @@ class TestingEngineApp(
         if not hasattr(self, "general_card"):
             return
         q = self.current_question() if getattr(self, "questions", None) else None
-        if (
-            q
-            and q.get("answered")
-            and self.explanation_recall_var.get()
-            and self._question_correct(q)
-            and not q.get("recall_ready", False)
-        ):
-            self.general_card.pack_forget()
+        if not q:
+            self.explanation_wrap.pack_forget()
             return
-        self.general_card.pack(fill="x", pady=(0, 10))
+        show_exam_feedback = not (self.active_session_mode == MODE_EXAM and not self.exam_reveal)
+        self._render_general_explanation_block(q, show_exam_feedback)
 
     def _rebuild_more_menu(self, include_maintenance=False):
         signature = (

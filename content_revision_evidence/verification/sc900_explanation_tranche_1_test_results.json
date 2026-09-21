@@ -1,0 +1,59 @@
+{
+  "black": "INHERITED_ONLY",
+  "cross_authority_fail_closed": "PASS",
+  "exam_feedback_gating": "PASS",
+  "focused_suites": {
+    "tests.test_content_revision_app_integration": {
+      "count": 39,
+      "status": "PASS"
+    },
+    "tests.test_content_revision_authority": {
+      "count": 54,
+      "status": "PASS"
+    },
+    "tests.test_content_revision_explanation_authority": {
+      "count": 12,
+      "status": "PASS"
+    },
+    "tests.test_content_revision_explanation_migration": {
+      "count": 6,
+      "status": "PASS"
+    },
+    "tests.test_content_revision_migration": {
+      "count": 20,
+      "status": "PASS"
+    },
+    "tests.test_explanation_rendering": {
+      "count": 8,
+      "status": "PASS"
+    },
+    "tests.test_sc900_content_correction_001": {
+      "count": 28,
+      "status": "PASS"
+    },
+    "tests.test_sc900_explanation_tranche_1": {
+      "count": 33,
+      "status": "PASS"
+    }
+  },
+  "focused_test_count": 200,
+  "focused_tests": "PASS",
+  "full_repository_test_count": 1387,
+  "full_repository_tests": "PASS",
+  "legacy_duplicate_rendering_suppression": "PASS",
+  "legacy_validator_compatibility": "PASS",
+  "mypy": "PASS",
+  "new_quality_findings": "NONE",
+  "preliminary_deterministic_build": "PASS",
+  "progress_continuity": "PASS",
+  "quality_differential": "PASS",
+  "ruff": "INHERITED_ONLY",
+  "selected_pending_state_preserved": "PASS",
+  "semantic_correction_v2_authority_regression": "PASS",
+  "semantic_correction_v2_migration_regression": "PASS",
+  "session_continuity": "PASS",
+  "smart_practice_state_preserved": "PASS",
+  "status": "PASS",
+  "v1_authority_regression": "PASS",
+  "v1_migration_regression": "PASS"
+}

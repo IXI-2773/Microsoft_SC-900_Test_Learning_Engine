@@ -16,6 +16,8 @@ QUALITY_TARGETS = [
     "content_revision_authority.py",
     "content_revision_correction_authority.py",
     "content_revision_correction_migration.py",
+    "content_revision_explanation_authority.py",
+    "content_revision_explanation_migration.py",
     "content_revision_migration.py",
     "content_revision_registry.py",
     "answer_length_audit.py",
@@ -48,6 +50,13 @@ QUALITY_TARGETS = [
     "tools/build_package_b_tranche4.py",
     "tools/build_package_b_tranche5.py",
     "tools/build_sc900_content_correction_001.py",
+    "tools/build_sc900_explanation_tranche_1.py",
+    "app_question_render_mixin.py",
+    "app.py",
+    "tests/test_content_revision_explanation_authority.py",
+    "tests/test_content_revision_explanation_migration.py",
+    "tests/test_sc900_explanation_tranche_1.py",
+    "tests/test_explanation_rendering.py",
 ]
 
 

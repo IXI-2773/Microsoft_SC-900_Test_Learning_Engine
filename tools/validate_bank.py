@@ -137,16 +137,30 @@ def validate_bank(path: Path = DEFAULT_BANK):
             text_cleanup_artifacts.append((qnum, compact_notes))
             warnings.append((f'Q{qnum}', '; '.join(compact_notes[:4])))
 
-        for letter, text in q.get('choices', {}).items():
+        choices = q.get('choices', {})
+        choice_explanations = q.get('choice_explanations', {})
+        if not isinstance(choice_explanations, dict):
+            issues.append((f'Q{qnum}', 'Choice explanations must be a mapping.'))
+            choice_explanations = {}
+        orphan_feedback = sorted(set(choice_explanations) - set(choices))
+        for letter in orphan_feedback:
+            issues.append((f'Q{qnum}', f'Choice explanation key {letter} has no current choice.'))
+        sparse_feedback = set(choice_explanations) != set(choices)
+
+        for letter, text in choices.items():
             if not str(text).strip():
                 issues.append((f'Q{qnum}', f'Choice {letter} is empty.'))
-            choice_explanation = str(q.get('choice_explanations', {}).get(letter, '') or '').strip()
-            if letter not in q.get('choice_explanations', {}) or not choice_explanation:
+            if letter not in choice_explanations:
+                continue
+            choice_explanation = str(choice_explanations.get(letter, '') or '').strip()
+            if not choice_explanation:
                 issues.append((f'Q{qnum}', f'Choice {letter} explanation is empty.'))
                 missing_choice.append((qnum, letter))
                 continue
             explanation_lower = choice_explanation.lower()
             is_correct_letter = letter in q.get('correct', [])
+            if sparse_feedback and is_correct_letter:
+                issues.append((f'Q{qnum}', f'Sparse feedback must not target correct choice {letter}.'))
             if is_correct_letter and explanation_lower.startswith('not keyed as correct'):
                 choice_explanation_mismatches.append((qnum, letter, 'correct choice explanation is marked as incorrect'))
                 warnings.append((f'Q{qnum}', f'Choice {letter} explanation conflicts with the keyed answer.'))

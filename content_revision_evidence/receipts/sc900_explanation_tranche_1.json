@@ -1,0 +1,143 @@
+{
+  "authority_admission": "PASS",
+  "changed_fields": [
+    "choice_explanations",
+    "general_explanation"
+  ],
+  "changed_question_count": 48,
+  "changed_question_ids": [
+    "sc900_p3_q025",
+    "sc900_p3_q030",
+    "sc900_p3_q037",
+    "sc900_p3_q038",
+    "sc900_p3_q056",
+    "sc900_p3_q060",
+    "sc900_p3_q076",
+    "sc900_p3_q079",
+    "sc900_p3_q088",
+    "sc900_mlc_q029",
+    "sc900_mlc_q033",
+    "sc900_mlc_q039",
+    "sc900_mlc_q040",
+    "sc900_mlc_q041",
+    "sc900_mlc_q048",
+    "sc900_mlc_q051",
+    "sc900_mlc_q054",
+    "sc900_mlc_q058",
+    "sc900_mlc_q071",
+    "sc900_mlc_q073",
+    "sc900_mlc_q091",
+    "sc900_mlc_q100",
+    "sc900_mlc_q105",
+    "sc900_mlc_q114",
+    "sc900_mlc_q120",
+    "sc900_mlc_q130",
+    "sc900_mlc_q132",
+    "sc900_mlc_q147",
+    "sc900_mlc_q168",
+    "sc900_mlc_q174",
+    "sc900_mlc_q175",
+    "sc900_mlc_q183",
+    "sc900_mlc_q194",
+    "sc900_mlc_q195",
+    "sc900_mlc_q200",
+    "sc900_mlc_q218",
+    "sc900_mlc_q223",
+    "sc900_mlc_q225",
+    "sc900_mlc_q230",
+    "sc900_mlc_q235",
+    "sc900_mlc_q241",
+    "sc900_mlc_q243",
+    "sc900_mlc_q271",
+    "sc900_mlc_q272",
+    "sc900_mlc_q273",
+    "sc900_mlc_q288",
+    "sc900_mlc_q292",
+    "sc900_mlc_q297"
+  ],
+  "choice_explanations_changed_count": 48,
+  "general_explanation_changed_count": 48,
+  "manifest_payload_sha256": "55d362a20007054b8fe23d1bd2003ba8dc4880beb1777724ec4aad29a93ed686",
+  "payload_sha256": "226e33b6aefb26c9823020576f2604e410c0431ba0f7e6c5f61fa9811f6e4d56",
+  "production_content_activation": false,
+  "q118_unchanged": true,
+  "revision_spec_payload_sha256": "033b07455324a6fabe81785f1b00ecbe0081483148b52bd13df3d9966a047fc2",
+  "runtime_bank": "sc900_bank_v8_final.json",
+  "schema_version": 2,
+  "selected_wrong_feedback_entry_count": 106,
+  "semantic_review_ledger_payload_sha256": "e20f46110bc660f1ab75213cb7662fb66d37873488446058c05b7ed6415a9969",
+  "semantic_review_work_id": "SC900-QUESTION-EXPLANATION-QUALITY-FIRST-TRANCHE-SEMANTIC-REVIEW-CHAT-001",
+  "source_bank": {
+    "content_fingerprint": "a0f0f57cd3919863d7878a02949c8862c6a31dbbc9ce0ee4ffc6f84a91c9358d",
+    "file_sha256": "cd699a0e8af7c366bf5672bb2b1d90547c7071e87a47cbd766512bef59b2c791",
+    "filename": "sc900_bank_v8_content_correction_001.json",
+    "question_count": 454
+  },
+  "source_correction_manifest_payload_sha256": "5d32c7c9b24192e6911a943fb8f9538369aad0331a6927fdbf5e95a81234c0f1",
+  "target_bank": {
+    "content_fingerprint": "f6e0040474383b32232f149d2ee2665e6af924806e8971dd96a8658d109150ff",
+    "file_sha256": "b6006ddb62aaea9549778d91e12ae1df4e9db9001186abe565a4de0af5e672e5",
+    "filename": "sc900_bank_v8_explanation_tranche_1.json",
+    "question_count": 454
+  },
+  "verification_evidence": {
+    "black": "INHERITED_ONLY",
+    "cross_authority_fail_closed": "PASS",
+    "exam_feedback_gating": "PASS",
+    "focused_suites": {
+      "tests.test_content_revision_app_integration": {
+        "count": 39,
+        "status": "PASS"
+      },
+      "tests.test_content_revision_authority": {
+        "count": 54,
+        "status": "PASS"
+      },
+      "tests.test_content_revision_explanation_authority": {
+        "count": 12,
+        "status": "PASS"
+      },
+      "tests.test_content_revision_explanation_migration": {
+        "count": 6,
+        "status": "PASS"
+      },
+      "tests.test_content_revision_migration": {
+        "count": 20,
+        "status": "PASS"
+      },
+      "tests.test_explanation_rendering": {
+        "count": 8,
+        "status": "PASS"
+      },
+      "tests.test_sc900_content_correction_001": {
+        "count": 28,
+        "status": "PASS"
+      },
+      "tests.test_sc900_explanation_tranche_1": {
+        "count": 33,
+        "status": "PASS"
+      }
+    },
+    "focused_test_count": 200,
+    "focused_tests": "PASS",
+    "full_repository_test_count": 1387,
+    "full_repository_tests": "PASS",
+    "legacy_duplicate_rendering_suppression": "PASS",
+    "legacy_validator_compatibility": "PASS",
+    "mypy": "PASS",
+    "new_quality_findings": "NONE",
+    "preliminary_deterministic_build": "PASS",
+    "progress_continuity": "PASS",
+    "quality_differential": "PASS",
+    "ruff": "INHERITED_ONLY",
+    "selected_pending_state_preserved": "PASS",
+    "semantic_correction_v2_authority_regression": "PASS",
+    "semantic_correction_v2_migration_regression": "PASS",
+    "session_continuity": "PASS",
+    "smart_practice_state_preserved": "PASS",
+    "status": "PASS",
+    "v1_authority_regression": "PASS",
+    "v1_migration_regression": "PASS"
+  },
+  "work_id": "SC900-EXPLANATION-IMPLEMENTATION-TRANCHE-1-STALE-DISTRACTOR-REFERENCE-IMPLEMENTATION-001"
+}

@@ -1987,31 +1987,36 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         self.assertTrue(inserted)
         self.assertTrue(inserted[0]['session_tag'].startswith('Streak rescue'))
 
-    def test_correct_answer_shows_inline_explanation_on_selected_row(self):
+    def test_correct_answer_shows_distinct_general_explanation_block(self):
         app = self.make_app()
-        app.questions[0]['general_explanation'] = 'Inline explanation for the correct answer.'
+        app.explanation_recall_var.set(False)
+        app.questions[0]['general_explanation'] = 'General explanation for the correct answer.'
         app.toggle_choice('A')
         selected_row = app.choice_rows['A']
-        self.assertTrue(selected_row.detail.winfo_manager())
-        self.assertIn('Inline explanation for the correct answer.', selected_row.detail.cget('text'))
-        self.assertFalse(app.explanation_wrap.winfo_manager())
+        self.assertFalse(selected_row.detail.winfo_manager())
+        self.assertTrue(app.explanation_wrap.winfo_manager())
+        self.assertTrue(app.general_card.winfo_manager())
+        self.assertIn('General explanation for the correct answer.', app.general_card.cget('text'))
 
-    def test_wrong_answer_shows_inline_explanation_on_selected_row(self):
+    def test_wrong_answer_shows_general_block_and_sparse_selected_wrong_feedback(self):
         app = self.make_app()
-        app.questions[0]['general_explanation'] = 'Inline explanation for the wrong answer flow.'
+        app.questions[0]['general_explanation'] = 'General explanation for the wrong answer flow.'
+        app.questions[0]['choice_explanations'] = {
+            'B': 'Selected-wrong feedback for option B.'
+        }
         app.toggle_choice('B')
         wrong_row = app.choice_rows['B']
         correct_row = app.choice_rows['A']
         wrong_font = tkfont.Font(font=wrong_row.detail.cget('font'))
         self.assertTrue(wrong_row.detail.winfo_manager())
-        self.assertNotIn('Keyed answer:', wrong_row.detail.cget('text'))
-        self.assertIn('Inline explanation for the wrong answer flow.', wrong_row.detail.cget('text'))
+        self.assertEqual('Selected-wrong feedback for option B.', wrong_row.detail.cget('text'))
         self.assertEqual(app_module.DARK, wrong_row.detail.cget('fg'))
         self.assertEqual('bold', wrong_font.actual('weight'))
         self.assertGreaterEqual(wrong_font.actual('size'), 13)
         self.assertEqual('Review this one', app.status_label.cget('text'))
         self.assertFalse(correct_row.detail.winfo_manager())
-        self.assertFalse(app.explanation_wrap.winfo_manager())
+        self.assertTrue(app.explanation_wrap.winfo_manager())
+        self.assertIn('General explanation for the wrong answer flow.', app.general_card.cget('text'))
 
     def test_compact_review_mode_hides_footer_clutter_while_answering(self):
         app = self.make_app()
@@ -2025,17 +2030,21 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         self.assertTrue(app.top_feedback_label.winfo_manager())
         self.assertFalse(app.session_label.winfo_manager())
 
-    def test_choice_specific_explanations_are_removed_from_review_rows(self):
+    def test_choice_specific_explanation_is_selected_wrong_feedback_only(self):
         app = self.make_app()
-        app.questions[0]['choice_explanations'] = {'A': 'This is the right control for the scenario.', 'B': 'This sounds plausible, but it misses the main requirement.'}
+        app.questions[0]['choice_explanations'] = {
+            'B': 'This sounds plausible, but it misses the main requirement.'
+        }
         app.questions[0]['general_explanation'] = 'General explanation body.'
         app.toggle_choice('B')
         wrong_row = app.choice_rows['B']
         correct_row = app.choice_rows['A']
         self.assertTrue(wrong_row.detail.winfo_manager())
         self.assertFalse(correct_row.detail.winfo_manager())
-        self.assertIn('General explanation body.', wrong_row.detail.cget('text'))
-        self.assertNotIn('This sounds plausible', wrong_row.detail.cget('text'))
+        self.assertIn('This sounds plausible', wrong_row.detail.cget('text'))
+        self.assertNotIn('General explanation body.', wrong_row.detail.cget('text'))
+        self.assertTrue(app.general_card.winfo_manager())
+        self.assertIn('General explanation body.', app.general_card.cget('text'))
         self.assertFalse(wrong_row.mark.winfo_manager())
         self.assertEqual('OK', correct_row.mark.cget('text'))
 
@@ -2065,11 +2074,12 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         row._handle_hover(False)
         self.assertEqual(app_module.CARD, row.inner.cget('bg'))
 
-    def test_question_and_answer_fonts_are_scaled_up_for_readability(self):
+    def test_question_and_selected_wrong_feedback_fonts_are_scaled_up_for_readability(self):
         app = self.make_app()
         prompt_size = tkfont.Font(font=app.question_label.cget('font')).actual('size')
         answer_size = tkfont.Font(font=app.choice_rows['A'].text.cget('font')).actual('size')
-        app.questions[0]['general_explanation'] = 'Larger inline explanation text.'
+        app.questions[0]['general_explanation'] = 'General explanation text.'
+        app.questions[0]['choice_explanations'] = {'B': 'Larger selected-wrong feedback text.'}
         app.toggle_choice('B')
         explanation_size = tkfont.Font(font=app.choice_rows['B'].detail.cget('font')).actual('size')
         self.assertGreaterEqual(prompt_size, 14)
@@ -2092,7 +2102,7 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         app._layout_action_buttons(width=1400)
         self.assertTrue(app.flag_btn.winfo_manager())
 
-    def test_inline_explanation_omits_coaching_note_text(self):
+    def test_general_explanation_block_omits_coaching_note_text(self):
         app = self.make_app()
         q = app.questions[0]
         q['selected'] = ['B']
@@ -2100,9 +2110,12 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         q['last_confidence'] = 'Guessed'
         q['last_miss_reason'] = 'Narrowed to two'
         q['general_explanation'] = 'General explanation body.'
+        q['choice_explanations'] = {}
         app.render_question()
-        self.assertIn('General explanation body.', app.choice_rows['B'].detail.cget('text'))
-        self.assertNotIn('Coaching note:', app.choice_rows['B'].detail.cget('text'))
+        self.assertTrue(app.general_card.winfo_manager())
+        self.assertIn('General explanation body.', app.general_card.cget('text'))
+        self.assertNotIn('Coaching note:', app.general_card.cget('text'))
+        self.assertFalse(app.choice_rows['B'].detail.winfo_manager())
 
     def test_slowdown_prompt_is_not_rendered(self):
         app = self.make_app()

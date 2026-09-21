@@ -1,0 +1,677 @@
+{
+  "continuity_policy": "FULL_CONTINUITY_EXPLANATION_ONLY",
+  "edges": [
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure/",
+        "https://learn.microsoft.com/en-us/azure/firewall/domain-filtering-overview"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "f23b364be2520fbfaab6088bf89efbc5b0a3f1cb51bb336fd00d7c1b8cebd554",
+      "question_id": "sc900_p3_q025",
+      "review_entry_identity": "dde7421a2c9d56aa39f78df35ea98059ad47f6426a93ff0ae44c4076672c9547",
+      "to_content_fingerprint": "d388c55b846309a91210c0c8ce90c41cefbe6704bf1d22b7dbbb78846744081a"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance/"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "cbd668e31c80a6dd2378276cba1ba052294a2f7e671569991935fe4899502a5e",
+      "question_id": "sc900_p3_q030",
+      "review_entry_identity": "d14c0fb3d7fbd87a0fae988281b8d812988f403473c23239d8fc245a5c4143c0",
+      "to_content_fingerprint": "4919aa7f20b6ce72d49642eb806640a60bd82502dfbecfddc4866471c7757574"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure/"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "156195bfa66471dd8ac60f289ed731f6a148813f447ca78c1318979d61213b1b",
+      "question_id": "sc900_p3_q037",
+      "review_entry_identity": "a45bc7e952c918347d22bb05a552439cf611dd85e66e09b55c300e60e75a333a",
+      "to_content_fingerprint": "7490e30154cc6e9f6804543dbc7b84477ead2c3ed70d18912749efa8ccb95ea2"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/data-classification-activity-explorer",
+        "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/sc-900",
+        "https://learn.microsoft.com/en-us/purview/data-classification-data-explorer"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "cf91f8d128ecce5417a7f35f9e893ac8420a49972881edeb2a0db5e544d37ee4",
+      "question_id": "sc900_p3_q038",
+      "review_entry_identity": "082b24fadb88df03c13fc37fbbde26be9c1b1f59aa468a6adfa844f86625131d",
+      "to_content_fingerprint": "a76da8139cb39d6a3a8b4779cd5ba711f37189291cefc4ad4b2b38d754fbc8a1"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "49b92740e689dbdfdcf6ddeeda7098a522d84c431af966d1f44ad7e700b96cb0",
+      "question_id": "sc900_p3_q056",
+      "review_entry_identity": "1b31987a0e8988bd0c224a996d29367f63d86991c2af179b5be1a9ea9c4f9bde",
+      "to_content_fingerprint": "5ed86fe4639af5a5287ca93057108d53f510c81fdd060d03eaf0851acd237fac"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-compliance-management-capabilities-microsoft/",
+        "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/sc-900"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "874fd87bfc664e4c6ba23f0550fd5178d5a4757e99e9d50f4b0ed8002561d88f",
+      "question_id": "sc900_p3_q060",
+      "review_entry_identity": "1a7db1e7e0b5643a73c7aa986107fbc82c856ffb7fc13169241fddbbdbf02959",
+      "to_content_fingerprint": "066ba052cb9586e1214ebd054ba1d85a91f3488b780088b8f560eb931dac814d"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/",
+        "https://learn.microsoft.com/en-us/defender-cloud-apps/anomaly-detection-policy"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "55e2003877b3e3b61ca6405a6ca38dfec6e68265861607ad6c34d50176c1d368",
+      "question_id": "sc900_p3_q076",
+      "review_entry_identity": "8cd4d3ca75ca522e2ccd2091f12e5f196f6bb063b5d636fc97db23fc108329e3",
+      "to_content_fingerprint": "caec2fbd275c6849207ea2e57a415310b974975e158839671d38fce5b4011572"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance/"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "969d289ea1ec01b984e0ed1885b8b517f76f625c481e719d1e28be73f4f0fdd7",
+      "question_id": "sc900_p3_q079",
+      "review_entry_identity": "2c807d9bff03fbf80d66d7b67008bd08ab8efc5b381fd588072b02a2a5bae7b0",
+      "to_content_fingerprint": "685463f6d7b5a07495bb34c94b3968d787d3071e6fcdb3f972f28ea946cfd39a"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/",
+        "https://learn.microsoft.com/en-us/defender-vulnerability-management/tvm-security-recommendation"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "9b5c77fb3fe82f390ba7a5f1b8f2dabd02ed383b9f81c9582ae4d5f615b2083f",
+      "question_id": "sc900_p3_q088",
+      "review_entry_identity": "fa88abd93232a0b8f76c650fdf4e627fda572cdc12745cb51627a1cabc36801f",
+      "to_content_fingerprint": "6c359427a3c44fa556731e8f4ed02fd320d0fbd521460959fb107f0081301b6e"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities/"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "2ae4ce56b6ad14864929bfd2f1ce1f3725fd0eddebf12bbc9a7e725354940833",
+      "question_id": "sc900_mlc_q029",
+      "review_entry_identity": "77af3528d32fa30bac5434af7655f4b0745951c3ba18501a4c4145bf4c9a2929",
+      "to_content_fingerprint": "501ae2f510f5a5abb637fe182da482c19a1ffcad35fc4be8eb7d1ebb0e160a91"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/what-are-lifecycle-workflows"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "377ba1bf21d7a946296087b5c128762f741057a154cab9941bf41420f1b86470",
+      "question_id": "sc900_mlc_q033",
+      "review_entry_identity": "cd8abe4810e6c8c5a9964aab8fb651f62082c695a2183f32e08c19cce1190b00",
+      "to_content_fingerprint": "13d12e525883b8c26eb543dcaa7723830ae5f8a9402f4aa16c36d8bfc4c40677"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/howto-authentication-temporary-access-pass"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "c7df364318646b70b7f20f02a5f5e79dea2760188b212ab7510240d8c2851d1f",
+      "question_id": "sc900_mlc_q039",
+      "review_entry_identity": "1b0976fe9f07a2ea93549d8870cba2caa0f1fd640c95745b25f37149aa71267e",
+      "to_content_fingerprint": "d01f4b29635f411e8c1bbb94dd68412d171ac9bea655ae5fab9747d876b14104"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities/"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "ad700c8f06a2afb02d8d11406137521b6dbb5eb6dfae4e8a1ed07ac7d12baaa4",
+      "question_id": "sc900_mlc_q040",
+      "review_entry_identity": "599c1903cebdedd8ba06f82dd5ed81838aa434e5fc42180bce3fa25199f5f9d2",
+      "to_content_fingerprint": "d067675541948371d7e605b72ec64e116bc72aee2115bc175519c2ea510153db"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "832d9f2d33c89e7e9a304768d61c909e5c6f6c3ed3c22b930f6c1a63f1ff8480",
+      "question_id": "sc900_mlc_q041",
+      "review_entry_identity": "a3fc43c3b3a5cec5f60007bb2152d634f6183b90f641c1af82ba673fe0d2d502",
+      "to_content_fingerprint": "341812c3e44ca8835b3edd99b4a0fe186e3eaa2d718385c6fd386bc4dc67f1e4"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-mfa-howitworks"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "53acec0bb46b23ba53b6beb8fbe1616deb1347d9f7ae25ec32e4ca336b685b34",
+      "question_id": "sc900_mlc_q048",
+      "review_entry_identity": "ab6699b7c7546cea7ec40895e5ed358520c94a6dcf95c36b514e0b665c231ba2",
+      "to_content_fingerprint": "74a603bb20393fd996f9133980f193c439736eee6ed6f7092a9321e939d87e5c"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/fundamentals/whatis"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "727a310236e5ccbf4699a43250949a6b085944688fafd76d8d01f55079fe4917",
+      "question_id": "sc900_mlc_q051",
+      "review_entry_identity": "3aadbe22a89f5ef902631638d87d3dedf68a022f93b2e0be0e920f11c39ba5fe",
+      "to_content_fingerprint": "5b1bb3d63a30f9e96f701803b51e301f5680fb0aec49e4922d5234dc3679583e"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-password-ban-bad"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "b79def762874033a0ca19b55e6692a6a145880ceae9aca70b5fe99a87504e0e5",
+      "question_id": "sc900_mlc_q054",
+      "review_entry_identity": "48903bbacbb127580aa24757e683e710006d34a4aa19978b064c238b0965b383",
+      "to_content_fingerprint": "5f89c4637486bc21f7670670298664f0ad9590ba88a82335e03c6d3de1b19585"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/access-reviews-overview"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "e7519fe32919113f90b8e45a1b8841b2b84ba1901f05716369874ce4b1a17e9a",
+      "question_id": "sc900_mlc_q058",
+      "review_entry_identity": "a6c9a99c76aab87567398a0f0529254b229c69a38668f3a43880a1cf1b8618c7",
+      "to_content_fingerprint": "1155d5b53ac59f2336a06d5f80d3184fafaedcfea0069feb2ceb91094314dda1"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types/"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "aae44ba5f2df2df944254ab69b00644cfa75c03214108dc04044810cf5400e1a",
+      "question_id": "sc900_mlc_q071",
+      "review_entry_identity": "0fb2746f35882a867a373fd5ecd757e3d37771a0918ebf5ce50c02b435210bbe",
+      "to_content_fingerprint": "f5d36d057917ed47b76e8e5a19c4bc5c250d1b5e416db677b155d7a9f85ebcc1"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities/"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "499d19f5e8857f602bcf535121b37e5fb1586bc5566156be0a599eacc179062a",
+      "question_id": "sc900_mlc_q073",
+      "review_entry_identity": "4bd936a9ca4b7881ef8f82848c9e3135c2791d63272ff9d68278b04ba35d9859",
+      "to_content_fingerprint": "5647669a92a831b4797bfc1a68b88870426e77cf116feed00548c1711e339e13"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-endpoint"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "9eabcaca056c85842e333ebd75cf1144e91065a9796d2bb039dcae018df9aabe",
+      "question_id": "sc900_mlc_q091",
+      "review_entry_identity": "37a1816c8d0ae13100a175a65f237efb57565b7a09a2b7fe823ef78a3286cdcd",
+      "to_content_fingerprint": "ff2bf09b84d3cf160342d6c6e88fc15bcf9221db2cecde930982131fba6d2e90"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel/",
+        "https://learn.microsoft.com/en-us/azure/sentinel/automate-incident-handling-with-automation-rules",
+        "https://learn.microsoft.com/en-us/azure/sentinel/automation/run-playbooks"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "8be424ef7803e030374a53a278e128d91293757e9e89429d19561e4df5092c80",
+      "question_id": "sc900_mlc_q100",
+      "review_entry_identity": "00113c3fa765246ac735e4167e2d0058085a91112674297f612e506bb76e411c",
+      "to_content_fingerprint": "276336c6ffba12f1d263b73b563be58a712e5a3bdbe2a709c7d4cfbbe7af4288"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "c32aa1eb2369a9b6487ee9d0f2d4c3e3f6fbbfd23fbfc964c1e96be7c33827de",
+      "question_id": "sc900_mlc_q105",
+      "review_entry_identity": "45560d4b5c5d68179fa8a6ee2f12bfdc43435de8f98eefcc9401a85f66089695",
+      "to_content_fingerprint": "a690362c80f6b608c66699c73856afbb4911a1b53c6c103547249ac0c533e979"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "e2df7be9144eba856853de24623de52382aedc3abf2dcc3a421d9b2eb6be90fb",
+      "question_id": "sc900_mlc_q114",
+      "review_entry_identity": "1e43ca4dd3586e440a3863a030fbd0ae4096d554112cc44aa74a576eeda488cf",
+      "to_content_fingerprint": "aeea576b8d97d0ca181c82c3d7a61f26616e54f741101ed3a5459cad0b597cfc"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/",
+        "https://learn.microsoft.com/en-us/defender-xdr/unified-security-operations-overview",
+        "https://learn.microsoft.com/en-us/defender-xdr/microsoft-365-defender-portal"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "d736a94f5989512d1bbe8d29ea8178e21a80bde2376e6a20b70d622e40844179",
+      "question_id": "sc900_mlc_q120",
+      "review_entry_identity": "04128a007359b9703ebed9a09ab15f8de3641e550997e6b83d23b920ef8d75a0",
+      "to_content_fingerprint": "3d7ada2b9b0acc1fa4fe0759f9b3f7949c7f1d7ca3a7b0103b25867fbf56807b"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-office-365/mdo-about"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "6a9afec3808fe829f9d94a9702d6abde7d223cd0b7f6642545a6d2a01f0fc296",
+      "question_id": "sc900_mlc_q130",
+      "review_entry_identity": "031c71472912f8dd99ef0ab4f57ee4b6ffd0632d900f585b6dd4b74f37240626",
+      "to_content_fingerprint": "6cb28f2d04d81da103eadfcee2f7b3008225f45f4ebb383240f708785cb52cf0"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-xdr/microsoft-365-defender-portal",
+        "https://learn.microsoft.com/en-us/defender-xdr/unified-security-operations-overview"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "dba704e1d820028460cff213db556bf4e6a5ab132033156444e13c2e3edbb198",
+      "question_id": "sc900_mlc_q132",
+      "review_entry_identity": "f20734d2245a877152f5ab5add8b633d599183c7da05d5d3b79ef7231eb9b5f0",
+      "to_content_fingerprint": "506108497d0b4c6fd1227556d4b11627787205c09fdf03836b42665133dd4d44"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/sentinel/overview"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "0ed818a7648c4d71003d65d74530a484e6f54db60ce5a84d0e22cadfd070e240",
+      "question_id": "sc900_mlc_q147",
+      "review_entry_identity": "c22b19114aa5acb450bebf2e6231cd778ad5e1cee76e96a085b135bb249efe9a",
+      "to_content_fingerprint": "165dc2390be16d7ef8c18d9beca65f28c180f71b63cf1151bd237ef0ec95262f"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions/",
+        "https://learn.microsoft.com/en-us/purview/create-sensitivity-labels"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "be94973f8d57aa957aa893e0210e142d63c930d3e39f27afa9bd8355b03cc521",
+      "question_id": "sc900_mlc_q168",
+      "review_entry_identity": "03028f18adb9ce2d89cf6cbbb12444ec952e8593cb4e1cf1e85c3828b887a846",
+      "to_content_fingerprint": "a9f37531f7e23564f9c8d26c4def9e0ea16953b4d22ff1dc38dc0a561170b115"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance/"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "8195b0efaa2dbed7d02379f7c10cbb4902cc1655c23945d15d8d0e419ed243d0",
+      "question_id": "sc900_mlc_q174",
+      "review_entry_identity": "13631a990d61565d7ba880895865c855dc952e6cccc878c0fd2a6cfc0675690d",
+      "to_content_fingerprint": "4022762110769666c7d6e9a9ceb4b60ccc5459e4fdc04210b8bb6f2ec6150b2e"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions/",
+        "https://learn.microsoft.com/en-us/purview/data-classification-data-explorer"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "ed6c69e6719fc162c1b76d6862c5449801171698013b593d0d4863a19052f4d3",
+      "question_id": "sc900_mlc_q175",
+      "review_entry_identity": "040d67e9e5d3909949cf46013d3ef2c614891960fb46e7ba3b3c445f4e67b712",
+      "to_content_fingerprint": "450beabb0611734e4769738345d080db9d22ccd01d0fe9d1949da5a2e2b079c2"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/compliance-manager"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "51dd9e1affa52e45280d8a62625e819e889db85c8799ffb88429447aa4741ed6",
+      "question_id": "sc900_mlc_q183",
+      "review_entry_identity": "8b620ce75fd2b7569de15ccb76227bfdcd6fa8e7c7e3c1f7f9c811871c9a072f",
+      "to_content_fingerprint": "615e5871dfedf0cea723f750e030711067ead9c8582087bd6c1424294ac20ef5"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+        "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/sc-900"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "2d290a5c6b8a6e7f6452dc08b41531b8474f955e3c4940421f240cc9992887f7",
+      "question_id": "sc900_mlc_q194",
+      "review_entry_identity": "2127a8b0f2095ee76d1b02bd572a01437ecee5ff0d3d4470615dce3f5151ebfe",
+      "to_content_fingerprint": "39ac98416bea4d6c49834960c13acfd0455a5b3e3be29504d4d4356c52009a4e"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/compliance-manager-scoring",
+        "https://learn.microsoft.com/en-us/purview/compliance-manager"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "223acd7590e1107cfa3e7a6e39e49c0ca8d2c2e2f82c72ee6a07ed8e8f393be1",
+      "question_id": "sc900_mlc_q195",
+      "review_entry_identity": "a9b2f383a6c8dc4ffcfb35ef7ffcd2886df7d518f01b00ac6dbef53edfcea537",
+      "to_content_fingerprint": "84fce3d9428a26c8688e5ed44280ca22f2b53594a86081cd61486bb87ea5b431"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/audit-solutions-overview"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "b3edbe8da1c421c9149e160fb168899980f1c2a8408d15d8407f8f65e1150c0d",
+      "question_id": "sc900_mlc_q200",
+      "review_entry_identity": "e795644b027ff966a8a8b59592b68ec9d60ee564ff699bcc89d7f278fd6194df",
+      "to_content_fingerprint": "18e483eb94c8890da0612145d90700463d9e1818b25b424e2482826f1c4daccc"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types/"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "d5cccc3dda182b492a6a2ffa16605d9b35b72dcce3a3bbcf01044d9e01b68836",
+      "question_id": "sc900_mlc_q218",
+      "review_entry_identity": "932c9bc3ab9a5485fab50cf6abf06bc97a87dc97f94cd3701d8ff26383c229ac",
+      "to_content_fingerprint": "88a50f9e4a14336bab66f649dcbaacdf52d4f205eed4ebeb0ce687845c2597ef"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview",
+        "https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-conditions"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "d1b312a5d2a926ebdd476c4e930fe7bc649ea6405023ee9e59d5b13b533d810e",
+      "question_id": "sc900_mlc_q223",
+      "review_entry_identity": "1b097c643d60aa5812d348be5634f410a200ac339d89b9717d5c630db62b598d",
+      "to_content_fingerprint": "1434df4eaba9803f67d3f1a23d8cd73066c49634a15f7f7564e6ef576cf5f506"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "a890daba456a03ab34b2246c0d89a96006b4a0d91f1e80903454e92614d70256",
+      "question_id": "sc900_mlc_q225",
+      "review_entry_identity": "6175d6fcf9b9c818fa03298710e46e9374b77ae5acc4e58782e48525c3778d77",
+      "to_content_fingerprint": "3f361bd938046fea356dc871950d7e7492735d9055bace751410781cff477020"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-protection/overview-identity-protection",
+        "https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-policies"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "9d6bf78afa05680085324613307808bbf242f3adfd926f4648d530412e38aa3b",
+      "question_id": "sc900_mlc_q230",
+      "review_entry_identity": "ffa47a65e087f2b1eff365230a8ba7850df56c790ba759fe5640ad09a56dd04c",
+      "to_content_fingerprint": "724fbcc5449ae46a17e7726d6db6f6092c8aad0d239409eb91e7e0a86cb9d676"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/fundamentals/whatis"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "629010482d4dfb45c0067e8e520d7ec373465796896d2870ccfdc2891c4189ef",
+      "question_id": "sc900_mlc_q235",
+      "review_entry_identity": "e4211400724ca938c00480822657000f27017557ede4811890ff77a322d13f2f",
+      "to_content_fingerprint": "db40993540f0b85056d94b2126b79f7b617ddd853eabdb0a32706f96a707d3f6"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "2dbe58cf58309c13192f1ccddf58c78b38e90bdab5d07dc95136d9b7b2622b97",
+      "question_id": "sc900_mlc_q241",
+      "review_entry_identity": "3bb00f1ae7b45286d9addf0ccaba387a1d5cdedfc691158e980e7f14b057ba68",
+      "to_content_fingerprint": "97bc9da8a4c293a53a441772fa13b6755ff2fd72d7d41ea4ac28c50d34687442"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts/"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "04e6982792ae7ac6c9d0bb98d7bf1d9d06eb41616e20ffc83f72847def7df485",
+      "question_id": "sc900_mlc_q243",
+      "review_entry_identity": "926e5deefc459db164f3b00e0370de23a10bd381ad458cdb998fdc8a40e22f23",
+      "to_content_fingerprint": "d022eab45ea986ed491dbe61b207896fc93ff245f2f435a9f4b1131e2c1ca760"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-endpoint"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "31811dcaa124ad6fe09bba1a1e1f87c894dc87e9ee5c782aaf9a259ac1402940",
+      "question_id": "sc900_mlc_q271",
+      "review_entry_identity": "2b7dd557f9062d6f9252f720cafc202f210df8a3efadfcae3259a0f937f52430",
+      "to_content_fingerprint": "19d67f027638dda4db10fcf1c29ffb2c5708d1c616022c79536693a3a33a7626"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-cloud-apps/what-is-defender-for-cloud-apps",
+        "https://learn.microsoft.com/en-us/defender-cloud-apps/conditional-access-app-control-how-to-overview"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "3131435c3a42c70621d148307fea98a846ba5e75fcec126df7557f4bea6ceddb",
+      "question_id": "sc900_mlc_q272",
+      "review_entry_identity": "6bb1432bc35c0a1a1e5d4ba5dcdc68ecddae6dd0ee41e2bbe5f5888887ec5f18",
+      "to_content_fingerprint": "c0059a821845cff70fe3b6416979e8d49ff40e80b3e2e2ab00b0123beb132a4e"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-for-identity/what-is",
+        "https://learn.microsoft.com/en-us/defender-for-identity/deploy/install-sensor",
+        "https://learn.microsoft.com/en-us/defender-for-identity/deploy/activate-sensor"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "ef8fd55c37ac889083314e3c59a71ac24c08591613cb07545a5a66f43fdb0ff4",
+      "question_id": "sc900_mlc_q273",
+      "review_entry_identity": "7983c5e4088f913ca5a3e5e8a28baf84322c16fff05d4d8af75f90ccf465937f",
+      "to_content_fingerprint": "132ec337eeea9c04ef8d96088753b30978a1667f1d687f5759e62779b570f556"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/records-management",
+        "https://learn.microsoft.com/en-us/purview/retention"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "65072c407ca96fa294527a51662566a1d9898242ce9617500d91461adcd31d31",
+      "question_id": "sc900_mlc_q288",
+      "review_entry_identity": "574c65b2ec47e248315ccda9dbc897c842fb04142d1e1d4b77b4ea1826dc0bd3",
+      "to_content_fingerprint": "a6c3fadd5f848d1c41c3596127f131bceb6ed933d689e3cf15e528638078e3f4"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/audit-solutions-overview"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "be80d8da56dfad9612c5d4e6784bb3023346fcc4e3167ca2d675da8ca55bc2ae",
+      "question_id": "sc900_mlc_q292",
+      "review_entry_identity": "e862ea0bb48fd33ee78f48a4e4b7d8e80249e42dd731169d7e9c7a85b4fc614b",
+      "to_content_fingerprint": "6e2bfed7e8ee58b8c7aec2d92f432aaf7df99e51f5d68f19b4f0f61645e749f9"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/ediscovery"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "191fc4f12e89adbc1669248f4e8fb3535328ea97c07dac6c8600589713ab512c",
+      "question_id": "sc900_mlc_q297",
+      "review_entry_identity": "4c84fd541434c65d37cb254d75b8a1a27dc1c7573a28b66bc872a187a5868579",
+      "to_content_fingerprint": "16d5385587d493755a2e3101c7297b3c17832e9d22869e523a408cc3c2df3e0f"
+    }
+  ],
+  "manifest_kind": "sc900_content_revision_explanation",
+  "payload_sha256": "55d362a20007054b8fe23d1bd2003ba8dc4880beb1777724ec4aad29a93ed686",
+  "permitted_change_class": "EXPLANATION_ONLY_INSTRUCTIONAL_REVISION",
+  "revision_spec": {
+    "file_sha256": "a792b25946cf123037d376b8c3e915de841c020fc62d20ab38d6c7d9f1fb50ed",
+    "filename": "content_revision_evidence/specs/sc900_explanation_tranche_1.json",
+    "payload_sha256": "033b07455324a6fabe81785f1b00ecbe0081483148b52bd13df3d9966a047fc2"
+  },
+  "schema_version": 2,
+  "semantic_review_ledger": {
+    "file_sha256": "e3500e4676ed962a0e5f1e3cd8ede38e686258f9187451f545384601b2fd6563",
+    "filename": "content_revision_evidence/reviews/SC900-EXPLANATION-TRANCHE-1/semantic_review_ledger.json",
+    "payload_sha256": "e20f46110bc660f1ab75213cb7662fb66d37873488446058c05b7ed6415a9969"
+  },
+  "source_bank": {
+    "content_fingerprint": "a0f0f57cd3919863d7878a02949c8862c6a31dbbc9ce0ee4ffc6f84a91c9358d",
+    "file_sha256": "cd699a0e8af7c366bf5672bb2b1d90547c7071e87a47cbd766512bef59b2c791",
+    "filename": "sc900_bank_v8_content_correction_001.json",
+    "question_count": 454
+  },
+  "target_bank": {
+    "content_fingerprint": "f6e0040474383b32232f149d2ee2665e6af924806e8971dd96a8658d109150ff",
+    "file_sha256": "b6006ddb62aaea9549778d91e12ae1df4e9db9001186abe565a4de0af5e672e5",
+    "filename": "sc900_bank_v8_explanation_tranche_1.json",
+    "question_count": 454
+  },
+  "work_id": "SC900-EXPLANATION-IMPLEMENTATION-TRANCHE-1-STALE-DISTRACTOR-REFERENCE-IMPLEMENTATION-001"
+}
