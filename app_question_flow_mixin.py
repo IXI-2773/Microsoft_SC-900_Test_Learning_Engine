@@ -1219,6 +1219,7 @@ class QuestionFlowMixin:
                     self.maybe_queue_delayed_recall_probe(q)
         self.schedule_progress_save()
         self.maybe_trigger_boss_round(q)
+        self.schedule_smart_practice_online_replacement()
         self.refresh_session_quests()
         self._unlock_quest_rewards()
         self.schedule_session_save(delay_ms=125)

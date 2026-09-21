@@ -6,7 +6,7 @@ from typing import cast
 
 from app_constants import MODE_EXAM, MODE_PRACTICE, MODE_SMART_PRACTICE
 from builder_identity import builder_context_fingerprint
-from cand01r3_runtime import partition_cache_identity, training_source_questions
+from cand01r3_runtime import is_cand01r3_active, partition_cache_identity, training_source_questions
 from exam_runtime_eligibility import filter_new_exam_pool
 from progress_store import (
     is_active_weak,
@@ -42,6 +42,11 @@ from smart_practice_core import (
     target6_suppression_tiers,
 )
 from smart_practice_measurement import attach_prediction_to_question, normalize_measurement_store
+from smart_practice_online import (
+    OnlineQueueProposal,
+    build_online_queue_proposal,
+    validate_online_replacement_contract,
+)
 from smart_practice_policy import active_policy, cross_session_spacing_threshold_hours, normalize_governance
 from smart_practice_profile import (
     SMART_PRACTICE_POLICY_VERSION,
@@ -53,6 +58,7 @@ from smart_practice_question_value import (
 )
 from smart_practice_worker import (
     SmartPracticeWorkerSnapshot,
+    build_detached_online_universe,
     build_detached_signal_payload,
     create_detached_context,
 )
@@ -75,7 +81,7 @@ class SessionBuilderMixin:
             }
         )
 
-    def _smart_practice_worker_snapshot(self, *, base_pool=None):
+    def _smart_practice_worker_snapshot(self, *, base_pool=None, builder_context_fingerprint_override=None):
         meta = self.progress_data.setdefault("meta", {})
         master = training_source_questions(self.master_questions)
         scoped_base = training_source_questions(base_pool) if base_pool is not None else None
@@ -99,9 +105,13 @@ class SessionBuilderMixin:
                 else datetime.now()
             ),
             builder_context_fingerprint=(
-                self._smart_practice_builder_fingerprint()
-                if hasattr(self, "_smart_practice_builder_fingerprint")
-                else str(getattr(self, "smart_practice_builder_context_fingerprint", "") or "")
+                str(builder_context_fingerprint_override)
+                if builder_context_fingerprint_override is not None
+                else (
+                    self._smart_practice_builder_fingerprint()
+                    if hasattr(self, "_smart_practice_builder_fingerprint")
+                    else str(getattr(self, "smart_practice_builder_context_fingerprint", "") or "")
+                )
             ),
             bank_content_fingerprint=(
                 self._smart_practice_bank_fingerprint()
@@ -110,6 +120,211 @@ class SessionBuilderMixin:
             ),
             content_revision_authority=getattr(self, "content_revision_authority", None),
         )
+
+    def _smart_practice_online_locked(self, question, index: int) -> bool:
+        if index <= int(getattr(self, "index", 0)) + 1:
+            return True
+        return bool(
+            question.get("answered")
+            or question.get("flagged")
+            or question.get("suspended")
+            or str(question.get("session_tag") or "").strip()
+            or str(question.get("repair_stage") or "").strip()
+        )
+
+    def _smart_practice_online_base_pool(self):
+        context = dict(getattr(self, "current_builder_context_data", {}) or {})
+        domain = context.get("domain_filter")
+        topic = context.get("topic_filter")
+        status = context.get("status_filter")
+        records = self._progress_questions()
+        return [
+            question
+            for question in training_source_questions(self.master_questions)
+            if self._question_matches_filters(
+                question,
+                domain=domain,
+                topic=topic,
+                status=status,
+                rec=records.get(self._question_key(question), {}),
+            )
+        ]
+
+    def _smart_practice_online_token(self):
+        return self._freeze_signal_value(
+            {
+                "revision": self._smart_practice_worker_revision(),
+                "index": int(getattr(self, "index", 0)),
+                "builder_context_fingerprint": builder_context_fingerprint(
+                    dict(getattr(self, "current_builder_context_data", {}) or {})
+                ),
+                "queue": [
+                    (
+                        canonical_question_id(question),
+                        bool(question.get("answered")),
+                        bool(question.get("flagged")),
+                        bool(question.get("suspended")),
+                        str(question.get("session_tag") or ""),
+                        str(question.get("repair_stage") or ""),
+                    )
+                    for question in self.questions
+                ],
+            }
+        )
+
+    def _apply_smart_practice_online_proposal(
+        self,
+        proposal: OnlineQueueProposal,
+        scored_universe,
+        *,
+        eligible_challenger_ids: set[str],
+        token,
+        generation: int,
+    ) -> bool:
+        if generation != int(getattr(self, "_smart_practice_online_generation", 0)):
+            return False
+        if self.active_session_mode != MODE_SMART_PRACTICE or is_cand01r3_active():
+            return False
+        if token != self._smart_practice_online_token():
+            return False
+        current_ids = tuple(canonical_question_id(question) for question in self.questions)
+        if current_ids != proposal.expected_ids or len(proposal.proposed_ids) != len(current_ids):
+            return False
+        if len(set(proposal.proposed_ids)) != len(proposal.proposed_ids):
+            return False
+        for index, question in enumerate(self.questions):
+            if (
+                self._smart_practice_online_locked(question, index)
+                and proposal.proposed_ids[index] != current_ids[index]
+            ):
+                return False
+        governance = normalize_governance(
+            self.progress_data.setdefault("meta", {}).get("smart_practice_policy_governance")
+        )
+        current_policy = active_policy(governance)
+        if (
+            str(current_policy.get("policy_id") or "") != proposal.policy_id
+            or str(current_policy.get("policy_version") or "") != proposal.policy_version
+            or str(current_policy.get("checksum") or "") != proposal.policy_checksum
+            or builder_context_fingerprint(dict(getattr(self, "current_builder_context_data", {}) or {}))
+            != proposal.builder_context_fingerprint
+        ):
+            return False
+        if any(
+            int(proposal.protected_after.get(role, 0)) < int(proposal.protected_before.get(role, 0))
+            for role in proposal.protected_before
+        ):
+            return False
+        if not validate_online_replacement_contract(
+            proposal,
+            scored_universe,
+            eligible_challenger_ids=eligible_challenger_ids,
+        ):
+            return False
+        if proposal.proposed_ids == proposal.expected_ids:
+            return False
+
+        current_by_id = {canonical_question_id(question): question for question in self.questions}
+        rescored_by_id = {
+            canonical_question_id(question): question for question in scored_universe if canonical_question_id(question)
+        }
+        rebuilt = []
+        staged_smart_updates: dict[str, dict[str, object]] = {}
+        for index, question_id in enumerate(proposal.proposed_ids):
+            question = current_by_id.get(question_id)
+            if question is None:
+                source = rescored_by_id.get(question_id)
+                if source is None:
+                    return False
+                question = self._clone_questions([source])[0]
+                self._reset_runtime_question_state([question])
+            elif index > self.index + 1:
+                rescored = rescored_by_id.get(question_id)
+                if rescored is not None:
+                    staged_smart_updates[question_id] = {
+                        key: copy.deepcopy(value) for key, value in rescored.items() if str(key).startswith("smart_")
+                    }
+            rebuilt.append(question)
+
+        if tuple(canonical_question_id(question) for question in rebuilt) != proposal.proposed_ids:
+            return False
+        for question in rebuilt:
+            question_id = canonical_question_id(question)
+            for key, value in staged_smart_updates.get(question_id, {}).items():
+                question[key] = value
+        self.questions = rebuilt
+        self.mark_question_list_dirty()
+        self.schedule_session_save(delay_ms=125)
+        self.refresh_question_list()
+        return True
+
+    def schedule_smart_practice_online_replacement(self) -> None:
+        if self.active_session_mode != MODE_SMART_PRACTICE or is_cand01r3_active():
+            return
+        if len(self.questions) <= int(self.index) + 2:
+            return
+        generation = int(getattr(self, "_smart_practice_online_generation", 0)) + 1
+        self._smart_practice_online_generation = generation
+        token = self._smart_practice_online_token()
+        revision = self._smart_practice_worker_revision()
+        base_pool = self._smart_practice_online_base_pool()
+        frozen_builder_fingerprint = builder_context_fingerprint(
+            dict(getattr(self, "current_builder_context_data", {}) or {})
+        )
+        snapshot = self._smart_practice_worker_snapshot(
+            base_pool=base_pool,
+            builder_context_fingerprint_override=frozen_builder_fingerprint,
+        )
+        governance = normalize_governance(
+            snapshot.progress_data.setdefault("meta", {}).get("smart_practice_policy_governance")
+        )
+        policy = active_policy(governance)
+        current_index = int(self.index)
+
+        def worker():
+            proposal = None
+            scored_universe = []
+            eligible_ids: set[str] = set()
+            try:
+                scored_universe, eligible_ids = build_detached_online_universe(type(self), snapshot)
+                proposal = build_online_queue_proposal(
+                    snapshot.questions,
+                    scored_universe,
+                    eligible_challenger_ids=set(eligible_ids),
+                    current_index=current_index,
+                    policy_id=str(policy.get("policy_id") or ""),
+                    policy_version=str(policy.get("policy_version") or ""),
+                    policy_checksum=str(policy.get("checksum") or ""),
+                    learner_revision=revision,
+                    builder_context_fingerprint=snapshot.builder_context_fingerprint,
+                    evaluation_time_key=(
+                        snapshot.evaluation_time.isoformat()
+                        if hasattr(snapshot.evaluation_time, "isoformat")
+                        else str(snapshot.evaluation_time or "")
+                    ),
+                )
+            except Exception:
+                proposal = None
+
+            def finish():
+                if getattr(self, "_app_closing", False) or proposal is None:
+                    return
+                if proposal.learner_revision != self._smart_practice_worker_revision():
+                    return
+                self._apply_smart_practice_online_proposal(
+                    proposal,
+                    scored_universe,
+                    eligible_challenger_ids=set(eligible_ids),
+                    token=token,
+                    generation=generation,
+                )
+
+            try:
+                self.root.after(0, finish)
+            except Exception:
+                pass
+
+        threading.Thread(target=worker, daemon=True, name="smart-practice-online-rescore").start()
 
     def _captured_smart_practice_evaluation_time(self) -> datetime:
         pinned = getattr(self, "smart_practice_evaluation_time", None)
