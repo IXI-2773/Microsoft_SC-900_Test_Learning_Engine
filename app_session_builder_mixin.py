@@ -42,7 +42,11 @@ from smart_practice_core import (
     target6_suppression_tiers,
 )
 from smart_practice_measurement import attach_prediction_to_question, normalize_measurement_store
-from smart_practice_online import OnlineQueueProposal, build_online_queue_proposal
+from smart_practice_online import (
+    OnlineQueueProposal,
+    build_online_queue_proposal,
+    validate_online_replacement_contract,
+)
 from smart_practice_policy import active_policy, cross_session_spacing_threshold_hours, normalize_governance
 from smart_practice_profile import (
     SMART_PRACTICE_POLICY_VERSION,
@@ -210,12 +214,17 @@ class SessionBuilderMixin:
             for role in proposal.protected_before
         ):
             return False
+        if not validate_online_replacement_contract(proposal, scored_universe):
+            return False
+        if proposal.proposed_ids == proposal.expected_ids:
+            return False
 
         current_by_id = {canonical_question_id(question): question for question in self.questions}
         rescored_by_id = {
             canonical_question_id(question): question for question in scored_universe if canonical_question_id(question)
         }
         rebuilt = []
+        staged_smart_updates: dict[str, dict[str, object]] = {}
         for index, question_id in enumerate(proposal.proposed_ids):
             question = current_by_id.get(question_id)
             if question is None:
@@ -227,15 +236,19 @@ class SessionBuilderMixin:
             elif index > self.index + 1:
                 rescored = rescored_by_id.get(question_id)
                 if rescored is not None:
-                    for key, value in rescored.items():
-                        if str(key).startswith("smart_"):
-                            question[key] = copy.deepcopy(value)
+                    staged_smart_updates[question_id] = {
+                        key: copy.deepcopy(value)
+                        for key, value in rescored.items()
+                        if str(key).startswith("smart_")
+                    }
             rebuilt.append(question)
 
         if tuple(canonical_question_id(question) for question in rebuilt) != proposal.proposed_ids:
             return False
-        if proposal.proposed_ids == proposal.expected_ids:
-            return False
+        for question in rebuilt:
+            question_id = canonical_question_id(question)
+            for key, value in staged_smart_updates.get(question_id, {}).items():
+                question[key] = value
         self.questions = rebuilt
         self.mark_question_list_dirty()
         self.schedule_session_save(delay_ms=125)
