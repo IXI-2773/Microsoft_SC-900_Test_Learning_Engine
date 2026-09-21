@@ -3,12 +3,15 @@ import unittest
 from unittest import mock
 
 from app_constants import MODE_SMART_PRACTICE
+from builder_identity import builder_context_fingerprint
 from smart_practice_online import (
     MAX_REPLACEMENTS_PER_ANSWER,
     MINIMUM_SCORE_DELTA_FOR_REPLACEMENT,
     OnlineQueueProposal,
     build_online_queue_proposal,
+    validate_online_replacement_contract,
 )
+from smart_practice_policy import active_policy, normalize_governance
 from tests.test_smart_practice_continuity_spacing_tranche_a import (
     SmartPracticeSpacingAppTests,
     _question,
@@ -98,6 +101,29 @@ class SmartPracticeOnlinePureTests(unittest.TestCase):
         self.assertEqual(1, len(outside))
         self.assertEqual("challenger-a", proposal.replacement.challenger_id)
 
+    def test_main_thread_contract_rejects_multiple_outside_replacements(self):
+        session = [
+            _q("answered", 1, answered=True),
+            _q("next", 2),
+            _q("victim-a", 1),
+            _q("victim-b", 2),
+        ]
+        challengers = [_q("challenger-a", 50), _q("challenger-b", 40)]
+        malformed = OnlineQueueProposal(
+            expected_ids=tuple(q["id"] for q in session),
+            proposed_ids=("answered", "next", "challenger-a", "challenger-b"),
+            replacement=None,
+            protected_before={"weak_repair": 0, "due_retention": 0, "blueprint_coverage": 0},
+            protected_after={"weak_repair": 0, "due_retention": 0, "blueprint_coverage": 0},
+            policy_id="policy",
+            policy_version="v1",
+            policy_checksum="checksum",
+            learner_revision=("revision", 1),
+            builder_context_fingerprint="builder",
+            evaluation_time_key="2026-09-21T16:00:00",
+        )
+        self.assertFalse(validate_online_replacement_contract(malformed, session + challengers))
+
     def test_protected_role_count_cannot_drop(self):
         session = [
             _q("answered", 1, answered=True),
@@ -172,6 +198,32 @@ class SmartPracticeOnlineAppTests(unittest.TestCase):
 
     def install(self, app, questions):
         SmartPracticeSpacingAppTests._install(self, app, questions, [])
+
+    def _start_smart_session(self, app, questions):
+        app.start_session_from_pool(
+            questions,
+            mode=MODE_SMART_PRACTICE,
+            count="All visible",
+            randomize=False,
+            reset_clock=True,
+            preserve_if_saved=False,
+            builder_context=app.current_builder_context(
+                mode=MODE_SMART_PRACTICE,
+                count="All visible",
+                randomize=False,
+            ),
+        )
+
+    def _actual_policy_fields(self, app):
+        governance = normalize_governance(
+            app.progress_data.setdefault("meta", {}).get("smart_practice_policy_governance")
+        )
+        policy = active_policy(governance)
+        return (
+            str(policy.get("policy_id") or ""),
+            str(policy.get("policy_version") or ""),
+            str(policy.get("checksum") or ""),
+        )
 
     def test_committed_smart_practice_answer_triggers_online_rescore(self):
         app = self.make_app()

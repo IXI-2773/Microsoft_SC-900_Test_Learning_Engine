@@ -68,6 +68,46 @@ def _preserves(after: Mapping[str, int], before: Mapping[str, int]) -> bool:
     return all(int(after.get(role, 0)) >= int(before.get(role, 0)) for role in PROTECTED_ROLES)
 
 
+def validate_online_replacement_contract(
+    proposal: OnlineQueueProposal,
+    rescored_universe: Sequence[Mapping[str, Any]],
+) -> bool:
+    expected = set(proposal.expected_ids)
+    proposed = set(proposal.proposed_ids)
+    added = proposed - expected
+    removed = expected - proposed
+    if not added and not removed:
+        return proposal.replacement is None
+    if (
+        len(added) > MAX_REPLACEMENTS_PER_ANSWER
+        or len(removed) > MAX_REPLACEMENTS_PER_ANSWER
+        or len(added) != len(removed)
+        or proposal.replacement is None
+    ):
+        return False
+    challenger_id = next(iter(added))
+    victim_id = next(iter(removed))
+    if (
+        proposal.replacement.challenger_id != challenger_id
+        or proposal.replacement.victim_id != victim_id
+    ):
+        return False
+    scored = {
+        canonical_question_id(question): question
+        for question in rescored_universe
+        if canonical_question_id(question)
+    }
+    challenger_score = _score(scored.get(challenger_id))
+    victim_score = _score(scored.get(victim_id))
+    if challenger_score is None or victim_score is None:
+        return False
+    delta = challenger_score - victim_score
+    return (
+        delta >= MINIMUM_SCORE_DELTA_FOR_REPLACEMENT
+        and proposal.replacement.score_delta == round(delta, 3)
+    )
+
+
 def build_online_queue_proposal(
     session_questions: Sequence[Mapping[str, Any]],
     rescored_universe: Sequence[Mapping[str, Any]],
