@@ -3,6 +3,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
+from question_identity import canonical_question_id
+from smart_practice_policy import active_policy, cross_session_spacing_threshold_hours, normalize_governance
+
 
 @dataclass(frozen=True)
 class SmartPracticeWorkerSnapshot:
@@ -70,3 +73,22 @@ def build_detached_pool(
 ):
     context = create_detached_context(owner_cls, snapshot)
     return context._build_smart_practice_pool_compat(count, randomize=randomize, base_pool=base_pool)
+
+
+def build_detached_online_universe(owner_cls: type, snapshot: SmartPracticeWorkerSnapshot):
+    context = create_detached_context(owner_cls, snapshot)
+    base_pool = list(snapshot.base_pool if snapshot.base_pool is not None else snapshot.master_questions)
+    scored = context._build_smart_practice_pool_compat("All visible", randomize=False, base_pool=base_pool)
+    governance = normalize_governance(
+        (snapshot.progress_data.get("meta", {}) or {}).get("smart_practice_policy_governance")
+    )
+    policy = active_policy(governance)
+    threshold = cross_session_spacing_threshold_hours(policy.get("policy_values") or {})
+    spacing_by_qnum, _token = context._exact_exposure_index(scored, snapshot.evaluation_time, threshold)
+    eligible_ids = {
+        canonical_question_id(question)
+        for question in scored
+        if canonical_question_id(question)
+        and spacing_by_qnum[int(question.get("question_number") or 0)].normally_eligible
+    }
+    return scored, eligible_ids
