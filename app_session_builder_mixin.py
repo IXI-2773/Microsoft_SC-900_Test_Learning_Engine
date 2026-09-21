@@ -1,9 +1,10 @@
 import copy
-import random
 import threading
+from datetime import datetime
 from tkinter import messagebox
 
 from app_constants import MODE_EXAM, MODE_PRACTICE, MODE_SMART_PRACTICE
+from builder_identity import builder_context_fingerprint
 from cand01r3_runtime import partition_cache_identity, training_source_questions
 from exam_runtime_eligibility import filter_new_exam_pool
 from progress_store import (
@@ -19,6 +20,7 @@ from question_identity import (
     canonical_question_history_map,
     canonical_question_id,
     history_event_question_id,
+    history_events_for_question,
 )
 from session_models import QuestionRuntimeState, reset_runtime_question_state
 from smart_practice_concept_graph import (
@@ -28,12 +30,18 @@ from smart_practice_concept_graph import (
     store_diagnosis,
 )
 from smart_practice_core import (
+    EXPOSURE_NEVER,
     SmartPracticeCandidate,
+    apply_target6_suppression,
     build_smart_practice_score,
     build_smart_practice_selection,
+    local_smart_practice_rng,
+    order_recent_exact_fallback,
+    spacing_membership_token,
+    summarize_exact_exposure,
 )
 from smart_practice_measurement import attach_prediction_to_question, normalize_measurement_store
-from smart_practice_policy import active_policy, normalize_governance
+from smart_practice_policy import active_policy, cross_session_spacing_threshold_hours, normalize_governance
 from smart_practice_profile import (
     SMART_PRACTICE_POLICY_VERSION,
     SMART_PRACTICE_SCORING,
@@ -84,7 +92,131 @@ class SessionBuilderMixin:
             progress_meta_cache_raw=copy.deepcopy(meta if isinstance(meta, dict) else {}),
             progress_meta_cache_value=None,
             base_pool=copy.deepcopy(list(scoped_base) if scoped_base is not None else None),
+            evaluation_time=(
+                self._captured_smart_practice_evaluation_time()
+                if hasattr(self, "_captured_smart_practice_evaluation_time")
+                else datetime.now()
+            ),
+            builder_context_fingerprint=(
+                self._smart_practice_builder_fingerprint()
+                if hasattr(self, "_smart_practice_builder_fingerprint")
+                else str(getattr(self, "smart_practice_builder_context_fingerprint", "") or "")
+            ),
+            bank_content_fingerprint=(
+                self._smart_practice_bank_fingerprint()
+                if hasattr(self, "_smart_practice_bank_fingerprint")
+                else str(getattr(self, "smart_practice_bank_content_fingerprint", "") or "")
+            ),
+            content_revision_authority=getattr(self, "content_revision_authority", None),
         )
+
+    def _captured_smart_practice_evaluation_time(self) -> datetime:
+        pinned = getattr(self, "smart_practice_evaluation_time", None)
+        if isinstance(pinned, datetime):
+            return pinned
+        return datetime.now()
+
+    def _smart_practice_builder_fingerprint(self) -> str:
+        pinned = getattr(self, "smart_practice_builder_context_fingerprint", None)
+        if pinned:
+            return str(pinned)
+        method = getattr(self, "current_builder_context", None)
+        if not callable(method):
+            return ""
+        return builder_context_fingerprint(method(mode=MODE_SMART_PRACTICE))
+
+    def _smart_practice_bank_fingerprint(self) -> str:
+        pinned = getattr(self, "smart_practice_bank_content_fingerprint", None)
+        if pinned:
+            return str(pinned)
+        method = getattr(self, "current_bank_fingerprint", None)
+        if not callable(method):
+            return ""
+        return str(method())
+
+    def _smart_practice_ordering_material(self, active_smart_policy: dict) -> dict:
+        return {
+            "builder_context_fingerprint": self._smart_practice_builder_fingerprint(),
+            "bank_content_fingerprint": self._smart_practice_bank_fingerprint(),
+            "policy_id": str(active_smart_policy.get("policy_id") or ""),
+            "policy_version": str(active_smart_policy.get("policy_version") or ""),
+            "policy_checksum": str(active_smart_policy.get("checksum") or ""),
+            "learner_state_revision": (
+                self._smart_practice_worker_revision() if hasattr(self, "_smart_practice_worker_revision") else None
+            ),
+        }
+
+    def _exact_exposure_index(self, questions, evaluation_time: datetime, threshold_hours: float):
+        history = list(self._progress_history() or [])
+        history_map = canonical_question_history_map(history)
+        matcher = getattr(self, "revision_aware_history_events", None)
+
+        def matching_events(question):
+            if callable(matcher):
+                return [event for event in matcher(history_map, question) if isinstance(event, dict)]
+            return list(history_events_for_question(history_map, question))
+
+        by_qnum = {}
+        token_rows = []
+        for question in questions:
+            qnum = int(question.get("question_number") or 0)
+            summary = summarize_exact_exposure(
+                question,
+                evaluation_time=evaluation_time,
+                threshold_hours=threshold_hours,
+                matching_events=matching_events(question),
+            )
+            by_qnum[qnum] = summary
+            token_rows.append((summary.canonical_id or f"number:{qnum}", summary.status))
+        return by_qnum, spacing_membership_token(token_rows)
+
+    def _tranche_a_spacing_candidates(self, candidates):
+        if str(getattr(self, "active_session_mode", "") or "") != MODE_SMART_PRACTICE:
+            return list(candidates)
+        governance = normalize_governance(
+            (self.progress_data.get("meta", {}) or {}).get("smart_practice_policy_governance")
+        )
+        threshold = cross_session_spacing_threshold_hours(active_policy(governance).get("policy_values") or {})
+        evaluation_time = self._captured_smart_practice_evaluation_time()
+        history = list(self._progress_history() or [])
+        history_map = canonical_question_history_map(history)
+        matcher = getattr(self, "revision_aware_history_events", None)
+        existing = {str(question_id) for question_id in self._session_question_ids() if str(question_id)}
+        available = []
+        seen: set[str] = set()
+        summaries = {}
+        for index, candidate in enumerate(candidates):
+            canonical_id = canonical_question_id(candidate)
+            if not canonical_id or canonical_id in existing or canonical_id in seen:
+                continue
+            seen.add(canonical_id)
+            if callable(matcher):
+                events = [event for event in matcher(history_map, candidate) if isinstance(event, dict)]
+            else:
+                events = list(history_events_for_question(history_map, candidate))
+            summaries[canonical_id] = summarize_exact_exposure(
+                candidate,
+                evaluation_time=evaluation_time,
+                threshold_hours=threshold,
+                matching_events=events,
+            )
+            available.append((index, candidate))
+        normal = [
+            candidate
+            for _index, candidate in available
+            if summaries[canonical_question_id(candidate)].normally_eligible
+        ]
+        if normal:
+            return normal
+        ranked = [candidate for _index, candidate in available]
+
+        def adaptive_score(question) -> float:
+            for index, candidate in available:
+                if candidate is question:
+                    return float(len(available) - index)
+            return 0.0
+
+        return list(order_recent_exact_fallback(ranked, summaries, adaptive_score))
 
     def _normalized_study_label(self, value: str) -> str:
         return normalized_study_label(value)
@@ -670,7 +802,7 @@ class SessionBuilderMixin:
                     "progress_meta": copy.deepcopy(snapshot.progress_data.get("meta", {})),
                     "signal_cache_key": copy.deepcopy(signal_key),
                     "signal_cache_payload": copy.deepcopy(detached_signal_payload),
-                    "pool_cache": copy.deepcopy(snapshot.smart_practice_pool_cache),
+                    "pool_cache": copy.deepcopy(context.smart_practice_pool_cache),
                 }
             except Exception as exc:
                 error = exc
@@ -1028,6 +1160,8 @@ class SessionBuilderMixin:
         bad_key_min_samples = int(active_policy_values.get("possible_bad_key_minimum_samples", 20) or 20)
         quality_risk_max = float(active_policy_values.get("quality_risk_maximum", 4.0) or 4.0)
         role_shares = dict(active_policy_values.get("role_shares") or {})
+        spacing_threshold_hours = cross_session_spacing_threshold_hours(active_policy_values)
+        evaluation_time = self._captured_smart_practice_evaluation_time()
         pool = list(base_pool) if base_pool is not None else self.get_filtered_master_pool()
         if not pool:
             return []
@@ -1035,15 +1169,22 @@ class SessionBuilderMixin:
         existing_signal_payload = getattr(self, "smart_practice_signal_cache_payload", None)
         existing_pool_cache = getattr(self, "smart_practice_pool_cache", {})
         pool_qnums = tuple(int(question.get("question_number") or 0) for question in pool)
+        spacing_by_qnum, spacing_token = self._exact_exposure_index(pool, evaluation_time, spacing_threshold_hours)
+
+        def cached_pool(cache_key):
+            cached_qnums = existing_pool_cache.get(cache_key)
+            if cached_qnums is None:
+                return None
+            question_map = {int(question.get("question_number") or 0): question for question in pool}
+            cached_order = [qnum for qnum in cached_qnums if qnum in question_map]
+            if len(cached_order) != len(tuple(cached_qnums)):
+                return None
+            return [question_map[qnum] for qnum in cached_order]
+
         if existing_signal_key is not None and existing_signal_payload is not None:
-            quick_cache_key = (existing_signal_key, str(count), pool_qnums, bool(randomize))
-            cached_qnums = existing_pool_cache.get(quick_cache_key)
-            if cached_qnums is not None:
-                question_map = {int(question.get("question_number") or 0): question for question in pool}
-                cached_order = [qnum for qnum in cached_qnums if qnum in question_map]
-                if randomize:
-                    random.shuffle(cached_order)
-                return [question_map[qnum] for qnum in cached_order]
+            quick_cached = cached_pool((existing_signal_key, str(count), pool_qnums, bool(randomize), spacing_token))
+            if quick_cached is not None:
+                return quick_cached
         records = self._progress_questions()
         progress_history = self._progress_history()
         meta = self.progress_data.setdefault("meta", {})
@@ -1057,14 +1198,11 @@ class SessionBuilderMixin:
             str(count),
             pool_qnums,
             bool(randomize),
+            spacing_token,
         )
-        cached_qnums = getattr(self, "smart_practice_pool_cache", {}).get(pool_cache_key)
-        if cached_qnums is not None:
-            question_map = {int(question.get("question_number") or 0): question for question in pool}
-            cached_order = [qnum for qnum in cached_qnums if qnum in question_map]
-            if randomize:
-                random.shuffle(cached_order)
-            return [question_map[qnum] for qnum in cached_order]
+        cached = cached_pool(pool_cache_key)
+        if cached is not None:
+            return cached
         signal_payload = getattr(self, "smart_practice_signal_cache_payload", None)
         if signal_cache_key != getattr(self, "smart_practice_signal_cache_key", None) or signal_payload is None:
             prewarm = getattr(self, "smart_practice_prewarm", None)
@@ -1731,15 +1869,17 @@ class SessionBuilderMixin:
             and not is_active_weak(question_meta.get(int(q.get("question_number") or 0), {}).get("record", {}))
             and not is_review_due(question_meta.get(int(q.get("question_number") or 0), {}).get("record", {}))
         }
-        suppressed_qnums = super_confident_qnums | freshness_suppressed_qnums
-        non_super_count = len(pool) - len(super_confident_qnums)
-        available_count = len(pool) - len(suppressed_qnums)
-        if super_confident_qnums and non_super_count >= max(1, target):
-            working_pool = [q for q in pool if q.get("question_number") not in super_confident_qnums]
-        elif available_count >= max(1, target):
-            working_pool = [q for q in pool if q.get("question_number") not in suppressed_qnums]
-        else:
-            working_pool = list(pool)
+        working_pool = list(apply_target6_suppression(pool, super_confident_qnums, freshness_suppressed_qnums, target))
+        recent_pool = [
+            question
+            for question in working_pool
+            if not spacing_by_qnum[int(question.get("question_number") or 0)].normally_eligible
+        ]
+        working_pool = [
+            question
+            for question in working_pool
+            if spacing_by_qnum[int(question.get("question_number") or 0)].normally_eligible
+        ]
 
         working_qnums = {int(question.get("question_number") or 0) for question in working_pool}
 
@@ -1814,15 +1954,11 @@ class SessionBuilderMixin:
             near_miss_focus,
         ) = groups
         for group in groups:
-            if randomize:
-                random.shuffle(group)
-            initial_order = {int(item.get("question_number") or 0): idx for idx, item in enumerate(group)}
             group.sort(
                 key=lambda item: (
-                    smart_priority(item),
-                    -initial_order.get(int(item.get("question_number") or 0), 0),
-                ),
-                reverse=True,
+                    -smart_priority(item),
+                    canonical_question_id(item),
+                )
             )
 
         objective_cap = smart_practice_objective_cap(target, profile)
@@ -1886,6 +2022,7 @@ class SessionBuilderMixin:
                 return cached
             smart_priority(question)
             meta = question_meta.get(qnum, {})
+            exposure = spacing_by_qnum.get(qnum)
             candidate = SmartPracticeCandidate(
                 question=question,
                 qnum=qnum,
@@ -1899,6 +2036,15 @@ class SessionBuilderMixin:
                 primary_topic=primary_topic_label(question),
                 normalized_domain=normalized_study_label(str(question.get("domain") or "")),
                 raw_domain=str(question.get("domain") or "").strip(),
+                canonical_id=canonical_question_id(question),
+                exact_exposure_count=0 if exposure is None else exposure.exact_exposure_count,
+                exposure_status="" if exposure is None else exposure.status,
+                exposure_at_key=(
+                    ""
+                    if exposure is None or exposure.latest_at is None or exposure.status == EXPOSURE_NEVER
+                    else exposure.latest_at.isoformat()
+                ),
+                spacing_order_active=True,
             )
             candidate_cache[qnum] = candidate
             return candidate
@@ -1920,6 +2066,34 @@ class SessionBuilderMixin:
         )
         ordered = list(selection_result.ordered_questions)
         role_seed = list(selection_result.role_seed_questions)
+        selected_ids = {canonical_question_id(question) for question in ordered if canonical_question_id(question)}
+        fallback_used = False
+        if len(ordered) < target and recent_pool:
+            for question in recent_pool:
+                smart_priority(question)
+            recent_summaries = {
+                canonical_question_id(question): spacing_by_qnum[int(question.get("question_number") or 0)]
+                for question in recent_pool
+                if canonical_question_id(question)
+            }
+            eligible_recent = [
+                question
+                for question in recent_pool
+                if canonical_question_id(question) and canonical_question_id(question) not in selected_ids
+            ]
+            for question in order_recent_exact_fallback(
+                eligible_recent,
+                recent_summaries,
+                lambda question: float(priority_cache.get(int(question.get("question_number") or 0), 0.0)),
+            ):
+                if len(ordered) >= target:
+                    break
+                canonical_id = canonical_question_id(question)
+                if not canonical_id or canonical_id in selected_ids:
+                    continue
+                ordered.append(question)
+                selected_ids.add(canonical_id)
+                fallback_used = True
         self.last_smart_practice_set_quality = {
             "score": selection_result.quality_score,
             "retry_used": selection_result.retry_used,
@@ -1940,9 +2114,9 @@ class SessionBuilderMixin:
             baseline_counts = protected_role_counts(baseline)
             return all(candidate_counts[role] >= baseline_counts[role] for role in baseline_counts)
 
-        def final_selection(selection: list[QuestionRuntimeState]) -> list[QuestionRuntimeState]:
-            result = self._interleave_questions(selection[:target])
-            if not preserves_protected_roles(result, role_seed):
+        def publish_selection(selection: list[QuestionRuntimeState], *, interleave: bool) -> list[QuestionRuntimeState]:
+            result = self._interleave_questions(selection[:target]) if interleave else list(selection[:target])
+            if interleave and not preserves_protected_roles(result, role_seed):
                 result = self._interleave_questions(role_seed[:target])
             measurement = normalize_measurement_store(
                 self.progress_data.setdefault("meta", {}).get("smart_practice_measurement")
@@ -1955,15 +2129,19 @@ class SessionBuilderMixin:
             self.progress_data.setdefault("meta", {})["smart_practice_measurement"] = measurement
             final_signal_key = self._smart_practice_signal_key()
             self.smart_practice_signal_cache_key = final_signal_key
-            self.smart_practice_pool_cache[(final_signal_key, str(count), pool_qnums, bool(randomize))] = tuple(
-                int(question.get("question_number") or 0) for question in result
-            )
-            return result[:target]
+            published = result[:target]
+            self.smart_practice_pool_cache[
+                (final_signal_key, str(count), pool_qnums, bool(randomize), spacing_token)
+            ] = tuple(int(question.get("question_number") or 0) for question in published)
+            return published
 
+        published = publish_selection(ordered, interleave=not fallback_used)
         if not randomize:
-            result = final_selection(ordered)
-            return result
-
-        mixed = list(ordered[:target])
-        random.shuffle(mixed)
-        return final_selection(mixed)
+            return published
+        mixed = list(published)
+        local_smart_practice_rng(self._smart_practice_ordering_material(active_smart_policy)).shuffle(mixed)
+        final_signal_key = self._smart_practice_signal_key()
+        self.smart_practice_pool_cache[(final_signal_key, str(count), pool_qnums, True, spacing_token)] = tuple(
+            int(question.get("question_number") or 0) for question in mixed
+        )
+        return mixed

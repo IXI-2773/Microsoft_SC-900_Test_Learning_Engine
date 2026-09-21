@@ -17,6 +17,10 @@ class SmartPracticeWorkerSnapshot:
     progress_meta_cache_raw: dict[str, Any]
     progress_meta_cache_value: Any
     base_pool: list[dict[str, Any]] | None
+    evaluation_time: Any = None
+    builder_context_fingerprint: str = ""
+    bank_content_fingerprint: str = ""
+    content_revision_authority: Any = None
 
 
 class DetachedSmartPracticeContext:
@@ -33,6 +37,10 @@ class DetachedSmartPracticeContext:
         self.progress_meta_cache_raw = snapshot.progress_meta_cache_raw
         self.progress_meta_cache_value = snapshot.progress_meta_cache_value
         self.base_pool = snapshot.base_pool
+        self.smart_practice_evaluation_time = snapshot.evaluation_time
+        self.smart_practice_builder_context_fingerprint = snapshot.builder_context_fingerprint
+        self.smart_practice_bank_content_fingerprint = snapshot.bank_content_fingerprint
+        self.content_revision_authority = snapshot.content_revision_authority
         self.smart_practice_prewarm = None
         self.render_cache = None
         self.root = None

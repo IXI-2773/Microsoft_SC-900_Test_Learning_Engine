@@ -6,6 +6,7 @@ from typing import Any
 
 from app_constants import (
     MODE_EXAM,
+    MODE_SMART_PRACTICE,
     QUESTION_TAG_CONFUSION_PAIR,
     QUESTION_TAG_DELAYED_RECALL_PROBE,
     QUESTION_TAG_RETRIEVAL_RAMP,
@@ -409,6 +410,10 @@ class QuestionFlowMixin:
     ) -> list[QuestionRuntimeState]:
         if not candidates:
             return []
+        if self.active_session_mode == MODE_SMART_PRACTICE and hasattr(self, "_tranche_a_spacing_candidates"):
+            candidates = self._tranche_a_spacing_candidates(candidates)
+            if not candidates:
+                return []
         if is_cand01r3_active():
             candidates = [
                 candidate
@@ -441,6 +446,10 @@ class QuestionFlowMixin:
     ) -> list[QuestionRuntimeState]:
         if not candidates:
             return []
+        if self.active_session_mode == MODE_SMART_PRACTICE and hasattr(self, "_tranche_a_spacing_candidates"):
+            candidates = self._tranche_a_spacing_candidates(candidates)
+            if not candidates:
+                return []
         if is_cand01r3_active():
             candidates = [
                 candidate
@@ -894,8 +903,11 @@ class QuestionFlowMixin:
             )
             ranked.append((score, int(candidate.get("question_number") or 0), candidate))
         ranked.sort(key=lambda row: (row[0], -row[1]), reverse=True)
+        ranked_candidates = [candidate for _score, _qnum, candidate in ranked]
+        if self.active_session_mode == MODE_SMART_PRACTICE and hasattr(self, "_tranche_a_spacing_candidates"):
+            ranked_candidates = self._tranche_a_spacing_candidates(ranked_candidates)
         inserted = self._insert_followup_questions(
-            q, [candidate for _score, _qnum, candidate in ranked[:3]], f"{QUESTION_TAG_STREAK_RESCUE_PREFIX}{domain}"
+            q, ranked_candidates[:3], f"{QUESTION_TAG_STREAK_RESCUE_PREFIX}{domain}"
         )
         if inserted:
             self.rescue_domains_triggered.add(domain)

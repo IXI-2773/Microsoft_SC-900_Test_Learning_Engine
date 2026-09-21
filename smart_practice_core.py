@@ -1,12 +1,17 @@
 from __future__ import annotations
 
-from collections.abc import Mapping
+import hashlib
+import random
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Any
 
 from progress_store import is_active_weak, is_review_due, is_super_confident_active
 from question_identity import canonical_question_id
 from smart_practice_concept_graph import GRAPH_VERSION, diagnose_root_cause
+from smart_practice_measurement import parse_timestamp
+from smart_practice_policy import canonical_json
 from smart_practice_profile import (
     SMART_PRACTICE_POLICY_VERSION,
     SmartPracticeScoringProfile,
@@ -39,6 +44,28 @@ class SmartPracticeCandidate:
     primary_topic: str
     normalized_domain: str
     raw_domain: str
+    canonical_id: str = ""
+    exact_exposure_count: int = 0
+    exposure_status: str = ""
+    exposure_at_key: str = ""
+    spacing_order_active: bool = False
+
+
+EXPOSURE_NEVER = "NEVER_EXPOSED"
+EXPOSURE_NORMAL = "NORMALLY_ELIGIBLE"
+EXPOSURE_RECENT = "RECENT_EXACT"
+EXPOSURE_INVALID = "INVALID_CHRONOLOGY"
+SMART_PRACTICE_ORDERING_PURPOSE = "smart-practice-initial-v1"
+
+
+@dataclass(frozen=True)
+class ExactExposureSummary:
+    canonical_id: str
+    exact_exposure_count: int
+    status: str
+    normally_eligible: bool
+    chronology_comparable: bool
+    latest_at: datetime | None
 
 
 @dataclass(frozen=True)
@@ -492,17 +519,34 @@ def build_smart_practice_selection(
     high_signal_qnums: set[int],
     freshness_map: Mapping[int, float],
 ) -> SmartPracticeSelectionResult:
-    def candidate_score(candidate: SmartPracticeCandidate) -> tuple[float, int]:
-        return (-(candidate.priority + candidate.selection_bonus), candidate.qnum)
+    def candidate_score(candidate: SmartPracticeCandidate) -> tuple[Any, ...]:
+        priority = -(candidate.priority + candidate.selection_bonus)
+        if not candidate.spacing_order_active:
+            return (priority, candidate.qnum)
+        never_first = 0 if candidate.exposure_status == EXPOSURE_NEVER else 1
+        age_key = "" if never_first == 0 else candidate.exposure_at_key
+        identity = candidate.canonical_id or f"~{candidate.qnum:08d}"
+        return (priority, never_first, age_key, candidate.exact_exposure_count, identity)
+
+    def identity_blocked(candidate: SmartPracticeCandidate, seen_ids: set[str]) -> bool:
+        canonical_id = str(candidate.canonical_id or "")
+        return bool(canonical_id) and canonical_id in seen_ids
+
+    def remember_identity(candidate: SmartPracticeCandidate, seen_ids: set[str]) -> None:
+        canonical_id = str(candidate.canonical_id or "")
+        if canonical_id:
+            seen_ids.add(canonical_id)
 
     def unique_candidates(*groups: list[SmartPracticeCandidate]) -> list[SmartPracticeCandidate]:
         unique: list[SmartPracticeCandidate] = []
         used_qnums: set[int] = set()
+        used_ids: set[str] = set()
         for group in groups:
             for candidate in group:
-                if candidate.qnum in used_qnums:
+                if candidate.qnum in used_qnums or identity_blocked(candidate, used_ids):
                     continue
                 used_qnums.add(candidate.qnum)
+                remember_identity(candidate, used_ids)
                 unique.append(candidate)
         unique.sort(key=candidate_score)
         return unique
@@ -511,10 +555,12 @@ def build_smart_practice_selection(
     buckets: dict[str, list[SmartPracticeCandidate]] = {role: [] for role in allocations}
     ranked_unique: list[SmartPracticeCandidate] = []
     used_qnums: set[int] = set()
+    used_ids: set[str] = set()
     for candidate in working_candidates:
-        if candidate.qnum in used_qnums:
+        if candidate.qnum in used_qnums or identity_blocked(candidate, used_ids):
             continue
         used_qnums.add(candidate.qnum)
+        remember_identity(candidate, used_ids)
         role = candidate.primary_role if candidate.primary_role in buckets else "blueprint_coverage"
         buckets[role].append(candidate)
         ranked_unique.append(candidate)
@@ -522,11 +568,13 @@ def build_smart_practice_selection(
         bucket.sort(key=candidate_score)
     selected: list[SmartPracticeCandidate] = []
     selected_qnums: set[int] = set()
+    selected_ids: set[str] = set()
 
     def add(candidate: SmartPracticeCandidate) -> bool:
-        if candidate.qnum in selected_qnums or len(selected) >= target:
+        if candidate.qnum in selected_qnums or identity_blocked(candidate, selected_ids) or len(selected) >= target:
             return False
         selected_qnums.add(candidate.qnum)
+        remember_identity(candidate, selected_ids)
         selected.append(candidate)
         return True
 
@@ -557,12 +605,13 @@ def build_smart_practice_selection(
         max_source = source_label_cap()
         shaped: list[SmartPracticeCandidate] = []
         shaped_qnums: set[int] = set()
+        shaped_ids: set[str] = set()
         shaped_objectives: dict[str, int] = {}
         shaped_source_labels: dict[str, int] = {}
         pinned_count = min(target, max(profile.variety_pinned_min, round(target * profile.variety_pinned_ratio)))
 
         def can_add(candidate: SmartPracticeCandidate, strict_source: bool, strict_objective: bool = True) -> bool:
-            if candidate.qnum in shaped_qnums or len(shaped) >= target:
+            if candidate.qnum in shaped_qnums or identity_blocked(candidate, shaped_ids) or len(shaped) >= target:
                 return False
             if (
                 strict_objective
@@ -582,6 +631,7 @@ def build_smart_practice_selection(
             if not can_add(candidate, strict_source, strict_objective):
                 return False
             shaped_qnums.add(candidate.qnum)
+            remember_identity(candidate, shaped_ids)
             shaped.append(candidate)
             if candidate.objective_code:
                 shaped_objectives[candidate.objective_code] = shaped_objectives.get(candidate.objective_code, 0) + 1
@@ -718,3 +768,159 @@ def build_smart_practice_selection(
         quality_score=primary_quality,
         retry_used=retry_used,
     )
+
+
+def _invalid_exposure(canonical_id: str, exact_exposure_count: int) -> ExactExposureSummary:
+    return ExactExposureSummary(
+        canonical_id=canonical_id,
+        exact_exposure_count=exact_exposure_count,
+        status=EXPOSURE_INVALID,
+        normally_eligible=False,
+        chronology_comparable=False,
+        latest_at=None,
+    )
+
+
+def summarize_exact_exposure(
+    question: Mapping[str, Any],
+    *,
+    evaluation_time: datetime,
+    threshold_hours: float,
+    matching_events: Sequence[Mapping[str, Any]],
+) -> ExactExposureSummary:
+    """Classify one canonical question from already-authoritative matching events.
+
+    Event order is the repository history order. The last event is authoritative.
+    Timestamps are not used to choose which event is latest.
+    """
+
+    canonical_id = canonical_question_id(question)
+    events = [event for event in matching_events if isinstance(event, Mapping)]
+    exact_exposure_count = len(events)
+    if exact_exposure_count == 0:
+        return ExactExposureSummary(
+            canonical_id=canonical_id,
+            exact_exposure_count=0,
+            status=EXPOSURE_NEVER,
+            normally_eligible=True,
+            chronology_comparable=False,
+            latest_at=None,
+        )
+    latest = events[-1]
+    parsed = parse_timestamp(latest.get("at"))
+    if parsed is None or (parsed.tzinfo is None) != (evaluation_time.tzinfo is None):
+        return _invalid_exposure(canonical_id, exact_exposure_count)
+    try:
+        elapsed_hours = (evaluation_time - parsed).total_seconds() / 3600.0
+    except TypeError:
+        return _invalid_exposure(canonical_id, exact_exposure_count)
+    if elapsed_hours < 0:
+        return _invalid_exposure(canonical_id, exact_exposure_count)
+    if elapsed_hours < float(threshold_hours):
+        return ExactExposureSummary(
+            canonical_id=canonical_id,
+            exact_exposure_count=exact_exposure_count,
+            status=EXPOSURE_RECENT,
+            normally_eligible=False,
+            chronology_comparable=True,
+            latest_at=parsed,
+        )
+    return ExactExposureSummary(
+        canonical_id=canonical_id,
+        exact_exposure_count=exact_exposure_count,
+        status=EXPOSURE_NORMAL,
+        normally_eligible=True,
+        chronology_comparable=True,
+        latest_at=parsed,
+    )
+
+
+def spacing_membership_token(rows: Sequence[tuple[str, str]]) -> str:
+    payload = {"membership": [list(row) for row in sorted(rows)]}
+    return hashlib.sha256(canonical_json(payload).encode("utf-8")).hexdigest()
+
+
+def recent_exact_fallback_key(summary: ExactExposureSummary, adaptive_score: float) -> tuple[Any, ...]:
+    if summary.status == EXPOSURE_RECENT and summary.chronology_comparable and summary.latest_at is not None:
+        age_group = 0
+        age_key = summary.latest_at.isoformat()
+    else:
+        age_group = 1
+        age_key = ""
+    return (
+        age_group,
+        age_key,
+        int(summary.exact_exposure_count),
+        -float(adaptive_score),
+        str(summary.canonical_id or ""),
+    )
+
+
+def order_recent_exact_fallback(
+    questions: Sequence[Mapping[str, Any]],
+    summaries: Mapping[str, ExactExposureSummary],
+    adaptive_score_for: Callable[[Mapping[str, Any]], float],
+) -> list[Mapping[str, Any]]:
+    ordered = sorted(
+        list(questions),
+        key=lambda question: recent_exact_fallback_key(
+            summaries[canonical_question_id(question)],
+            adaptive_score_for(question),
+        ),
+    )
+    picked: list[Mapping[str, Any]] = []
+    seen: set[str] = set()
+    for question in ordered:
+        canonical_id = canonical_question_id(question)
+        if canonical_id and canonical_id in seen:
+            continue
+        if canonical_id:
+            seen.add(canonical_id)
+        picked.append(question)
+    return picked
+
+
+def apply_target6_suppression(
+    pool: Sequence[Mapping[str, Any]],
+    super_confident_qnums: set[Any],
+    freshness_suppressed_qnums: set[Any],
+    target: int,
+) -> list[Mapping[str, Any]]:
+    union = set(super_confident_qnums) | set(freshness_suppressed_qnums)
+
+    def without(excluded: set[Any]) -> list[Mapping[str, Any]]:
+        return [question for question in pool if question.get("question_number") not in excluded]
+
+    joint = without(union)
+    if len(joint) >= max(1, target):
+        return joint
+    if super_confident_qnums and len(without(set(super_confident_qnums))) >= max(1, target):
+        return without(set(super_confident_qnums))
+    return list(pool)
+
+
+def _json_ready(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return {str(key): _json_ready(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_json_ready(item) for item in value]
+    if isinstance(value, (str, int, float, bool)) or value is None:
+        return value
+    return str(value)
+
+
+def smart_practice_ordering_seed(material: Mapping[str, Any]) -> str:
+    payload = {
+        "purpose": SMART_PRACTICE_ORDERING_PURPOSE,
+        "builder_context_fingerprint": str(material.get("builder_context_fingerprint") or ""),
+        "bank_content_fingerprint": str(material.get("bank_content_fingerprint") or ""),
+        "policy_id": str(material.get("policy_id") or ""),
+        "policy_version": str(material.get("policy_version") or ""),
+        "policy_checksum": str(material.get("policy_checksum") or ""),
+        "learner_state_revision": _json_ready(material.get("learner_state_revision")),
+    }
+    return hashlib.sha256(canonical_json(payload).encode("utf-8")).hexdigest()
+
+
+def local_smart_practice_rng(material: Mapping[str, Any]) -> random.Random:
+    return random.Random(smart_practice_ordering_seed(material))

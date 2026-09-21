@@ -1481,6 +1481,9 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         app.append_answer_history(app.master_questions[0], False, {'confidence': 'Unsure', 'miss_reason': 'Narrowed to two', 'response_seconds': 11.0})
         app.master_questions[0]['selected'] = ['A']
         app.append_answer_history(app.master_questions[0], True, {'confidence': 'Guessed', 'miss_reason': '', 'response_seconds': 10.5})
+        boundary = (datetime.now() - timedelta(hours=72)).replace(microsecond=0).isoformat()
+        for event in app._progress_history():
+            event['at'] = boundary
         pool = app.build_smart_practice_pool('2', randomize=False)
         self.assertEqual({1, 2}, {q['question_number'] for q in pool[:2]})
 
@@ -1675,6 +1678,9 @@ class SC900TestLearningEngineGuiTests(unittest.TestCase):
         app.master_questions[1]['selected'] = ['A']
         app.append_answer_history(app.master_questions[1], True, {'confidence': 'Sure', 'miss_reason': ''})
         app.append_answer_history(app.master_questions[1], True, {'confidence': 'Sure', 'miss_reason': ''})
+        boundary = (datetime.now() - timedelta(hours=72)).replace(microsecond=0).isoformat()
+        for event in app._progress_history():
+            event['at'] = boundary
         app._progress_questions()['engine-q3'] = update_progress_record({}, ['A'], True, seen_on='2026-05-14', confidence='Sure')
         pool = app.build_smart_practice_pool('1', randomize=False)
         self.assertEqual([1], [q['question_number'] for q in pool])
