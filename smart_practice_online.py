@@ -71,6 +71,8 @@ def _preserves(after: Mapping[str, int], before: Mapping[str, int]) -> bool:
 def validate_online_replacement_contract(
     proposal: OnlineQueueProposal,
     rescored_universe: Sequence[Mapping[str, Any]],
+    *,
+    eligible_challenger_ids: set[str],
 ) -> bool:
     expected = set(proposal.expected_ids)
     proposed = set(proposal.proposed_ids)
@@ -87,25 +89,23 @@ def validate_online_replacement_contract(
         return False
     challenger_id = next(iter(added))
     victim_id = next(iter(removed))
-    if (
-        proposal.replacement.challenger_id != challenger_id
-        or proposal.replacement.victim_id != victim_id
-    ):
+    if proposal.replacement.challenger_id != challenger_id or proposal.replacement.victim_id != victim_id:
         return False
     scored = {
-        canonical_question_id(question): question
-        for question in rescored_universe
-        if canonical_question_id(question)
+        canonical_question_id(question): question for question in rescored_universe if canonical_question_id(question)
     }
+    if challenger_id not in eligible_challenger_ids:
+        return False
+    protected_before = _protected_counts(proposal.expected_ids, scored)
+    protected_after = _protected_counts(proposal.proposed_ids, scored)
+    if not _preserves(protected_after, protected_before):
+        return False
     challenger_score = _score(scored.get(challenger_id))
     victim_score = _score(scored.get(victim_id))
     if challenger_score is None or victim_score is None:
         return False
     delta = challenger_score - victim_score
-    return (
-        delta >= MINIMUM_SCORE_DELTA_FOR_REPLACEMENT
-        and proposal.replacement.score_delta == round(delta, 3)
-    )
+    return delta >= MINIMUM_SCORE_DELTA_FOR_REPLACEMENT and proposal.replacement.score_delta == round(delta, 3)
 
 
 def build_online_queue_proposal(

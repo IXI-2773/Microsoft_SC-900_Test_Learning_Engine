@@ -177,6 +177,7 @@ class SessionBuilderMixin:
         proposal: OnlineQueueProposal,
         scored_universe,
         *,
+        eligible_challenger_ids: set[str],
         token,
         generation: int,
     ) -> bool:
@@ -214,7 +215,11 @@ class SessionBuilderMixin:
             for role in proposal.protected_before
         ):
             return False
-        if not validate_online_replacement_contract(proposal, scored_universe):
+        if not validate_online_replacement_contract(
+            proposal,
+            scored_universe,
+            eligible_challenger_ids=eligible_challenger_ids,
+        ):
             return False
         if proposal.proposed_ids == proposal.expected_ids:
             return False
@@ -237,9 +242,7 @@ class SessionBuilderMixin:
                 rescored = rescored_by_id.get(question_id)
                 if rescored is not None:
                     staged_smart_updates[question_id] = {
-                        key: copy.deepcopy(value)
-                        for key, value in rescored.items()
-                        if str(key).startswith("smart_")
+                        key: copy.deepcopy(value) for key, value in rescored.items() if str(key).startswith("smart_")
                     }
             rebuilt.append(question)
 
@@ -281,6 +284,7 @@ class SessionBuilderMixin:
         def worker():
             proposal = None
             scored_universe = []
+            eligible_ids: set[str] = set()
             try:
                 scored_universe, eligible_ids = build_detached_online_universe(type(self), snapshot)
                 proposal = build_online_queue_proposal(
@@ -310,6 +314,7 @@ class SessionBuilderMixin:
                 self._apply_smart_practice_online_proposal(
                     proposal,
                     scored_universe,
+                    eligible_challenger_ids=set(eligible_ids),
                     token=token,
                     generation=generation,
                 )

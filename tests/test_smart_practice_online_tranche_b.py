@@ -3,11 +3,11 @@ import unittest
 from unittest import mock
 
 from app_constants import MODE_SMART_PRACTICE
-from builder_identity import builder_context_fingerprint
 from smart_practice_online import (
     MAX_REPLACEMENTS_PER_ANSWER,
     MINIMUM_SCORE_DELTA_FOR_REPLACEMENT,
     OnlineQueueProposal,
+    OnlineReplacement,
     build_online_queue_proposal,
     validate_online_replacement_contract,
 )
@@ -122,7 +122,58 @@ class SmartPracticeOnlinePureTests(unittest.TestCase):
             builder_context_fingerprint="builder",
             evaluation_time_key="2026-09-21T16:00:00",
         )
-        self.assertFalse(validate_online_replacement_contract(malformed, session + challengers))
+        self.assertFalse(
+            validate_online_replacement_contract(
+                malformed,
+                session + challengers,
+                eligible_challenger_ids={"challenger-a", "challenger-b"},
+            )
+        )
+
+    def test_main_thread_contract_rejects_spacing_ineligible_challenger(self):
+        session = [_q("answered", 1, answered=True), _q("next", 2), _q("victim", 1)]
+        challenger = _q("challenger", 20)
+        proposal = _proposal(session, session + [challenger], {"challenger"})
+        self.assertIsNotNone(proposal.replacement)
+        self.assertFalse(
+            validate_online_replacement_contract(
+                proposal,
+                session + [challenger],
+                eligible_challenger_ids=set(),
+            )
+        )
+
+    def test_main_thread_contract_recomputes_protected_role_preservation(self):
+        session = [
+            _q("answered", 1, answered=True),
+            _q("next", 2),
+            _q("protected", 1, role="weak_repair"),
+        ]
+        challenger = _q("challenger", 20, role="transfer")
+        malformed = OnlineQueueProposal(
+            expected_ids=("answered", "next", "protected"),
+            proposed_ids=("answered", "next", "challenger"),
+            replacement=OnlineReplacement(
+                victim_id="protected",
+                challenger_id="challenger",
+                score_delta=19.0,
+            ),
+            protected_before={"weak_repair": 0, "due_retention": 0, "blueprint_coverage": 0},
+            protected_after={"weak_repair": 0, "due_retention": 0, "blueprint_coverage": 0},
+            policy_id="policy",
+            policy_version="v1",
+            policy_checksum="checksum",
+            learner_revision=("revision", 1),
+            builder_context_fingerprint="builder",
+            evaluation_time_key="2026-09-21T16:00:00",
+        )
+        self.assertFalse(
+            validate_online_replacement_contract(
+                malformed,
+                session + [challenger],
+                eligible_challenger_ids={"challenger"},
+            )
+        )
 
     def test_protected_role_count_cannot_drop(self):
         session = [
@@ -285,6 +336,7 @@ class SmartPracticeOnlineAppTests(unittest.TestCase):
         applied = app._apply_smart_practice_online_proposal(
             proposal,
             list(app.questions),
+            eligible_challenger_ids=set(),
             token=("stale",),
             generation=1,
         )
