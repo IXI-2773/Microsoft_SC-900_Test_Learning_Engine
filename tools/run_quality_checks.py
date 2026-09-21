@@ -51,11 +51,13 @@ QUALITY_TARGETS = [
     "tools/build_package_b_tranche5.py",
     "tools/build_sc900_content_correction_001.py",
     "tools/build_sc900_explanation_tranche_1.py",
+    "tools/build_sc900_explanation_q118_repair.py",
     "app_question_render_mixin.py",
     "app.py",
     "tests/test_content_revision_explanation_authority.py",
     "tests/test_content_revision_explanation_migration.py",
     "tests/test_sc900_explanation_tranche_1.py",
+    "tests/test_sc900_explanation_q118_repair.py",
     "tests/test_explanation_rendering.py",
 ]
 

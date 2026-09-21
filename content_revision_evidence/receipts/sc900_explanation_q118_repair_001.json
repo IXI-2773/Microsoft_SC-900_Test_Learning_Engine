@@ -1,0 +1,79 @@
+{
+  "authority_admission": "PASS",
+  "changed_fields": [
+    "choice_explanations",
+    "general_explanation"
+  ],
+  "changed_question_count": 1,
+  "changed_question_ids": [
+    "sc900_mlc_q118"
+  ],
+  "choice_explanations_changed_count": 1,
+  "choices_changed_count": 0,
+  "correct_choice_feedback_present": false,
+  "correct_key_changed_count": 0,
+  "general_explanation_changed_count": 1,
+  "independent_pre_implementation_semantic_review": false,
+  "manifest_payload_sha256": "c938805a9c73e3d73047fa7518fa9adfc7ff23c7baa9769387a30a7b0a8e9730",
+  "objective_changed_count": 0,
+  "payload_sha256": "19aadb7da01387be39c2077af11c221194076a858603eeac7eafcfd89d7aee78",
+  "pr37_nine_question_correction_preserved": true,
+  "pr38_48_question_delta_preserved": true,
+  "production_content_activation": false,
+  "prompt_changed_count": 0,
+  "protected_metadata_changed_count": 0,
+  "q118_source_content_fingerprint": "abaddff647ab335935215f33e851c4ca90a619aae8973252335c1c7b114786b1",
+  "q118_target_content_fingerprint": "73a81f5a7c49ce8843b165ab747bb604323fec780f6fa55d64d03ea65e87d3c8",
+  "question_order_changed": false,
+  "revision_spec_payload_sha256": "a28adc881d1efe154e005b96deb971e94ad06303f2185ec0150756b9928fe582",
+  "runtime_bank": "sc900_bank_v8_final.json",
+  "schema_version": 2,
+  "selected_wrong_feedback_entry_count": 3,
+  "semantic_review_ledger_payload_sha256": "8c2cbdc571e86d20f8730bd7ec964af83c5c833e586996345603112fc9f2126a",
+  "semantic_review_work_id": "SC900-EXPLANATION-Q118-POST-CORRECTION-AUTHOR-NOTE-REPAIR-001",
+  "source_bank": {
+    "content_fingerprint": "f6e0040474383b32232f149d2ee2665e6af924806e8971dd96a8658d109150ff",
+    "file_sha256": "b6006ddb62aaea9549778d91e12ae1df4e9db9001186abe565a4de0af5e672e5",
+    "filename": "sc900_bank_v8_explanation_tranche_1.json",
+    "question_count": 454
+  },
+  "target_bank": {
+    "content_fingerprint": "875ba756392033279c8ab86abbbed287ca290ba780acd7852fe359b80752c8a6",
+    "file_sha256": "f18b2ad5174518f1c992c59663b93ad48d69483cefc1b72675af6d1486b1976d",
+    "filename": "sc900_bank_v8_explanation_q118_repair.json",
+    "question_count": 454
+  },
+  "tested_decision_changed_count": 0,
+  "verification_evidence": {
+    "black": "INHERITED_ONLY",
+    "errors": 0,
+    "existing_tranche1_authority_regression": "PASS",
+    "explanation_authority_profile_extension": "PASS",
+    "failures": 0,
+    "focused_test_count": 23,
+    "focused_tests": "PASS",
+    "full_repository_test_count": 1410,
+    "full_repository_tests": "PASS",
+    "historical_continuity": "PASS",
+    "inherited_quality_files": [
+      "answer_length_audit.py",
+      "tools/build_package_b_tranche1.py"
+    ],
+    "mypy": "PASS",
+    "new_quality_findings": "NONE",
+    "production_content_activation": false,
+    "progress_continuity": "PASS",
+    "quality_differential": "PASS",
+    "relevant_explanation_suite_count": 223,
+    "relevant_explanation_suites": "PASS",
+    "ruff": "INHERITED_ONLY",
+    "runtime_bank": "sc900_bank_v8_final.json",
+    "selected_pending_state_preserved": "PASS",
+    "session_continuity": "PASS",
+    "smart_practice_state_preserved": "PASS",
+    "status": "PASS",
+    "unknown_profile_fail_closed": "PASS"
+  },
+  "wording_authority": "EXPLICIT_IMPLEMENTATION_DIRECTIVE",
+  "work_id": "SC900-EXPLANATION-Q118-POST-CORRECTION-AUTHOR-NOTE-REPAIR-001"
+}

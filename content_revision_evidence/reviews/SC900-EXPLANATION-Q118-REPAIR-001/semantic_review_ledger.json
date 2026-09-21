@@ -1,0 +1,41 @@
+{
+  "entries": [
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-vulnerability-management/defender-vulnerability-management",
+        "https://learn.microsoft.com/en-us/azure/sentinel/hunting",
+        "https://learn.microsoft.com/en-us/defender-for-identity/what-is",
+        "https://learn.microsoft.com/en-us/defender-office-365/mdo-about"
+      ],
+      "authorized_changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "exact_head_governance_review": "PENDING_AFTER_PR",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "WORDING_AUTHORITY = EXPLICIT_IMPLEMENTATION_DIRECTIVE\nWORK_ID = SC900-EXPLANATION-Q118-POST-CORRECTION-AUTHOR-NOTE-REPAIR-001\nA separate independent pre-implementation semantic review did not occur.\nThe exact wording authority is this explicit implementation directive.\nExact-head governance review occurs after PR creation.\nSOURCE_CONTENT_FINGERPRINT = abaddff647ab335935215f33e851c4ca90a619aae8973252335c1c7b114786b1\nTARGET_CONTENT_FINGERPRINT = 73a81f5a7c49ce8843b165ab747bb604323fec780f6fa55d64d03ea65e87d3c8\nAUTHORIZED_CHANGED_FIELDS = general_explanation, choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nTARGET_COUNT = 1\nSELECTED_WRONG_FEEDBACK = A, B, C\nCORRECT_CHOICE_D_FEEDBACK = NO ENTRY\n",
+      "independent_pre_implementation_semantic_review": false,
+      "question_id": "sc900_mlc_q118",
+      "semantic_review_disposition": "EXPLICIT_IMPLEMENTATION_DIRECTIVE",
+      "source_content_fingerprint": "abaddff647ab335935215f33e851c4ca90a619aae8973252335c1c7b114786b1",
+      "target_content_fingerprint": "73a81f5a7c49ce8843b165ab747bb604323fec780f6fa55d64d03ea65e87d3c8",
+      "wording_authority": "EXPLICIT_IMPLEMENTATION_DIRECTIVE"
+    }
+  ],
+  "exact_head_governance_review": "PENDING_AFTER_PR",
+  "independent_pre_implementation_semantic_review": false,
+  "payload_sha256": "8c2cbdc571e86d20f8730bd7ec964af83c5c833e586996345603112fc9f2126a",
+  "reconciliation_work_id": "SC900-EXPLANATION-DEFECT-QUEUE-POST-CORRECTION-RECONCILIATION-CHAT-001",
+  "schema_version": 2,
+  "selected_wrong_feedback_entry_count": 3,
+  "semantic_review_work_id": "SC900-EXPLANATION-Q118-POST-CORRECTION-AUTHOR-NOTE-REPAIR-001",
+  "source_bank": "sc900_bank_v8_explanation_tranche_1.json",
+  "source_bank_content_fingerprint": "f6e0040474383b32232f149d2ee2665e6af924806e8971dd96a8658d109150ff",
+  "source_bank_raw_sha256": "b6006ddb62aaea9549778d91e12ae1df4e9db9001186abe565a4de0af5e672e5",
+  "target_count": 1,
+  "wording_authority": "EXPLICIT_IMPLEMENTATION_DIRECTIVE",
+  "work_id": "SC900-EXPLANATION-Q118-POST-CORRECTION-AUTHOR-NOTE-REPAIR-001"
+}
