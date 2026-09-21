@@ -32,6 +32,8 @@ class QuestionRenderSnapshot:
     miss_reason: str
     session_tag: str
     ladder_stage: str
+    general_explanation: str
+    general_explanation_visible: bool
 
 
 class QuestionRenderCache:

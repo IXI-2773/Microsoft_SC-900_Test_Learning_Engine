@@ -5,6 +5,9 @@ from pathlib import Path
 from typing import Any
 
 from content_revision_authority import (
+    MANIFEST_KIND as EQUIVALENCE_MANIFEST_KIND,
+)
+from content_revision_authority import (
     AdmissionResult,
     AdmissionStatus,
     ContentRevisionManifestError,
@@ -13,6 +16,18 @@ from content_revision_authority import (
     canonical_manifest_sha256,
     contained_relative_path,
     parse_json_duplicate_safe,
+)
+from content_revision_correction_authority import (
+    MANIFEST_KIND as CORRECTION_MANIFEST_KIND,
+)
+from content_revision_correction_authority import (
+    admit_content_correction,
+)
+from content_revision_explanation_authority import (
+    MANIFEST_KIND as EXPLANATION_MANIFEST_KIND,
+)
+from content_revision_explanation_authority import (
+    admit_explanation_revision,
 )
 from question_bank import load_bank
 from question_identity import register_progress_identity_bank, registered_progress_identity_bank
@@ -25,13 +40,42 @@ def _fail(reason: RevisionFailureReason) -> AdmissionResult:
     return AdmissionResult(AdmissionStatus.FAIL, (reason,), None)
 
 
+def _read_json_object(path: Path) -> dict[str, Any] | None:
+    try:
+        payload = parse_json_duplicate_safe(Path(path).read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    return payload if isinstance(payload, dict) else None
+
+
+def _artifact_path(root: Path, binding: Any, subdir: str) -> Path | None:
+    if not isinstance(binding, Mapping):
+        return None
+    filename = str(binding.get("filename") or "").strip()
+    if not filename:
+        return None
+    relative = Path(filename)
+    if relative.is_absolute() or ".." in relative.parts:
+        return None
+    repo_root = root.parent
+    if relative.parts and relative.parts[0] == "content_revision_evidence":
+        candidate = repo_root / relative
+    else:
+        candidate = root / subdir / relative
+    try:
+        candidate.resolve().relative_to(repo_root.resolve())
+    except ValueError:
+        return None
+    return candidate
+
+
 def resolve_registered_revision_for_target(
     target_bank_path: Path,
     *,
     evidence_root: Path | None = None,
     review_root: Path | None = None,
     registry: Mapping[str, str] | None = None,
-) -> AdmissionResult | None:
+) -> Any:
     pinned = AUTHORIZED_CONTENT_REVISION_MANIFESTS if registry is None else registry
     if not pinned:
         return None
@@ -67,6 +111,7 @@ def resolve_registered_revision_for_target(
         return None
     if len(matches) > 1:
         return _fail(RevisionFailureReason.LINEAGE_CONFLICT)
+
     _relative_path, manifest = matches[0]
     source_binding = manifest.get("source_bank")
     if not isinstance(source_binding, Mapping):
@@ -75,6 +120,7 @@ def resolve_registered_revision_for_target(
     if not source_name or source_name == target_name:
         return _fail(RevisionFailureReason.SCHEMA_UNSUPPORTED)
     source_bank_path = Path(target_bank_path).parent / source_name
+
     prior_questions = registered_progress_identity_bank()
     target_questions: tuple[Any, ...] = ()
     try:
@@ -87,14 +133,52 @@ def resolve_registered_revision_for_target(
             source_data = load_bank(source_bank_path)
         except Exception:
             return _fail(RevisionFailureReason.SOURCE_BANK_FILE_HASH_MISMATCH)
-        return admit_content_revision(
-            manifest,
-            source_questions=source_data["questions"],
-            target_questions=target_data["questions"],
-            source_bank_path=source_bank_path,
-            target_bank_path=Path(target_bank_path),
-            review_root=reviews,
-        )
+
+        manifest_kind = str(manifest.get("manifest_kind") or "")
+        if manifest_kind == EQUIVALENCE_MANIFEST_KIND:
+            return admit_content_revision(
+                manifest,
+                source_questions=source_data["questions"],
+                target_questions=target_data["questions"],
+                source_bank_path=source_bank_path,
+                target_bank_path=Path(target_bank_path),
+                review_root=reviews,
+            )
+
+        if manifest_kind == CORRECTION_MANIFEST_KIND:
+            spec_path = _artifact_path(root, manifest.get("correction_spec"), "specs")
+            currentness_path = _artifact_path(root, manifest.get("currentness_record"), "currentness")
+            if spec_path is None or currentness_path is None:
+                return _fail(RevisionFailureReason.SCHEMA_UNSUPPORTED)
+            spec = _read_json_object(spec_path)
+            currentness = _read_json_object(currentness_path)
+            if spec is None or currentness is None:
+                return _fail(RevisionFailureReason.SCHEMA_UNSUPPORTED)
+            return admit_content_correction(
+                manifest,
+                spec=spec,
+                currentness_record=currentness,
+                source_bank_path=source_bank_path,
+                target_bank_path=Path(target_bank_path),
+                spec_path=spec_path,
+                currentness_path=currentness_path,
+                review_root=reviews,
+            )
+
+        if manifest_kind == EXPLANATION_MANIFEST_KIND:
+            spec_path = _artifact_path(root, manifest.get("revision_spec"), "specs")
+            ledger_path = _artifact_path(root, manifest.get("semantic_review_ledger"), "reviews")
+            if spec_path is None or ledger_path is None:
+                return _fail(RevisionFailureReason.SCHEMA_UNSUPPORTED)
+            return admit_explanation_revision(
+                manifest,
+                source_bank_path=source_bank_path,
+                target_bank_path=Path(target_bank_path),
+                spec_path=spec_path,
+                ledger_path=ledger_path,
+            )
+
+        return _fail(RevisionFailureReason.SCHEMA_UNSUPPORTED)
     finally:
         restore = target_questions or prior_questions
         if restore:

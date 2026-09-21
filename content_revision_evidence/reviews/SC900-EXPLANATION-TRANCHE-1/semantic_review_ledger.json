@@ -1,0 +1,707 @@
+{
+  "entries": [
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-basic-security-capabilities-azure/",
+        "https://learn.microsoft.com/en-us/azure/firewall/domain-filtering-overview"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\nf23b364be2520fbfaab6088bf89efbc5b0a3f1cb51bb336fd00d7c1b8cebd554\n\nTARGET_CONTENT_FINGERPRINT =\nd388c55b846309a91210c0c8ce90c41cefbe6704bf1d22b7dbbb78846744081a\n\nDEFECT_CLASS =\nCOMMON_DEFECT_CLASS\n\nDEFECT_PROVENANCE =\nCOMMON_DEFECT_PROVENANCE\n\nSTALE_REFERENCE_TEXT =\n\"Identity Protection, Activity explorer, and Defender for Identity\"\n\nSTALE_REFERENCE_REASON =\nNone is a current answer choice; the sentence explains removed distractors instead of the current NSG/WAF/DDoS alternatives.\n\nCURRENT_TESTED_CONCEPT =\nCentralized FQDN-aware outbound filtering in a hub/spoke design\n(tested_decision=hub_firewall_fqdn_rules)\n\nCURRENT_CORRECT_ANSWER_REASON =\nAzure Firewall supplies centralized firewalling and FQDN-aware application filtering.\n\nCURRENTNESS_RESEARCH_REQUIRED =\nYES\n\nCURRENTNESS_STATUS =\nPASS\n\nCURRENTNESS_CHECKED_AT =\n2026-09-21\n\nAUTHORITY_REFS =\nSOURCE_REF + C02\n\nSOURCE_GENERAL_EXPLANATION =\nAzure Firewall can sit in a hub and use application rules, including FQDN-based filtering, to inspect traffic from spoke networks. Identity Protection, Activity explorer, and Defender for Identity do not provide that network filtering.\n\nTARGET_GENERAL_EXPLANATION =\nAzure Firewall is designed for centralized network filtering in a hub-and-spoke topology. Its application rules can filter outbound HTTP/S traffic by FQDN, which is the requirement in this scenario.\n\nSOURCE_CHOICE_EXPLANATIONS =\nSOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  B: \"Network security groups filter traffic at the subnet or network-interface level by network-layer properties; they are not the centralized FQDN application-filtering service described here.\",\n  C: \"Azure Web Application Firewall protects web applications from web-layer attacks; it is not the hub egress firewall for spoke networks.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nB=YES; C=YES; D=NO\n\nAUTHORIZED_CHANGED_FIELDS =\ngeneral_explanation\nchoice_explanations\n\nEXPLANATION_ONLY_REPAIR_SUFFICIENT =\nYES\n\nCONTENT_CORRECTION_REQUIRED =\nNO\n\nSEMANTIC_REVIEW_DISPOSITION =\nAPPROVED\n",
+      "question_id": "sc900_p3_q025",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "f23b364be2520fbfaab6088bf89efbc5b0a3f1cb51bb336fd00d7c1b8cebd554",
+      "target_content_fingerprint": "d388c55b846309a91210c0c8ce90c41cefbe6704bf1d22b7dbbb78846744081a"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance/"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\ncbd668e31c80a6dd2378276cba1ba052294a2f7e671569991935fe4899502a5e\n\nTARGET_CONTENT_FINGERPRINT =\n4919aa7f20b6ce72d49642eb806640a60bd82502dfbecfddc4866471c7757574\n\nDEFECT_CLASS =\nCOMMON_DEFECT_CLASS\n\nDEFECT_PROVENANCE =\nCOMMON_DEFECT_PROVENANCE\n\nSTALE_REFERENCE_TEXT =\n\"Password protection, WAF, and vulnerability management\"\n\nSTALE_REFERENCE_REASON =\nThose are removed distractors; current alternatives are Audit, Insider Risk Management, and DLP.\n\nCURRENT_TESTED_CONCEPT =\nLegal hold/preservation and legal-case review belong to eDiscovery\n(tested_decision=legal_hold_is_ediscovery)\n\nCURRENT_CORRECT_ANSWER_REASON =\nPurview eDiscovery provides case-based preservation, search, review, and export.\n\nCURRENTNESS_RESEARCH_REQUIRED =\nNO\n\nCURRENTNESS_STATUS =\nPASS\n\nCURRENTNESS_CHECKED_AT =\n2026-09-21\n\nAUTHORITY_REFS =\nSOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nMicrosoft Purview eDiscovery supports placing content on hold in a case and then searching and reviewing that content. Password protection, WAF, and vulnerability management are not eDiscovery case tools.\n\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Purview eDiscovery is the case-centered solution for preserving content with holds and then searching, reviewing, and exporting relevant Microsoft 365 content for legal matters.\n\nSOURCE_CHOICE_EXPLANATIONS =\nSOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Purview Audit records user and administrator activity; it does not place case content on legal hold.\",\n  C: \"Insider Risk Management detects potentially risky internal user behavior; it is not the legal case preservation and review workflow.\",\n  D: \"Data loss prevention helps detect and restrict risky handling of sensitive data; it does not provide eDiscovery case holds.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; C=YES; D=YES\n\nAUTHORIZED_CHANGED_FIELDS =\ngeneral_explanation\nchoice_explanations\n\nEXPLANATION_ONLY_REPAIR_SUFFICIENT =\nYES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_p3_q030",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "cbd668e31c80a6dd2378276cba1ba052294a2f7e671569991935fe4899502a5e",
+      "target_content_fingerprint": "4919aa7f20b6ce72d49642eb806640a60bd82502dfbecfddc4866471c7757574"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-management-capabilities-of-azure/"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n156195bfa66471dd8ac60f289ed731f6a148813f447ca78c1318979d61213b1b\n\nTARGET_CONTENT_FINGERPRINT =\n7490e30154cc6e9f6804543dbc7b84477ead2c3ed70d18912749efa8ccb95ea2\n\nSTALE_REFERENCE_TEXT =\n\"eDiscovery, PIM activation, and Service Trust Portal downloads\"\n\nSTALE_REFERENCE_REASON =\nNone exists in the current choice set.\n\nCURRENT_TESTED_CONCEPT =\nCSPM finds cloud misconfiguration/exposure before exploitation\n(tested_decision=cspm_finds_exposed_ports_and_missing_encryption)\n\nCURRENT_CORRECT_ANSWER_REASON =\nCSPM continuously evaluates cloud security posture and identifies configuration weaknesses.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nFinding and remediating misconfigurations such as exposed ports or missing encryption is a CSPM activity. eDiscovery, PIM activation, and Service Trust Portal downloads are different compliance or identity tasks.\n\nTARGET_GENERAL_EXPLANATION =\nCloud security posture management (CSPM) identifies security misconfigurations and exposures in cloud resources, such as unnecessarily exposed management ports or missing encryption, so they can be remediated before exploitation.\n\nSOURCE_CHOICE_EXPLANATIONS =\nSOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  B: \"Cloud workload protection focuses on protecting running workloads and detecting or responding to threats; the stem is asking for proactive posture and misconfiguration assessment.\",\n  D: \"Microsoft Sentinel is a SIEM and security operations platform for collecting and analyzing security data; it is not the cloud posture discipline named by the stem.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nB=YES; C=NO; D=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_p3_q037",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "156195bfa66471dd8ac60f289ed731f6a148813f447ca78c1318979d61213b1b",
+      "target_content_fingerprint": "7490e30154cc6e9f6804543dbc7b84477ead2c3ed70d18912749efa8ccb95ea2"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/data-classification-activity-explorer",
+        "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/sc-900",
+        "https://learn.microsoft.com/en-us/purview/data-classification-data-explorer"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\ncf91f8d128ecce5417a7f35f9e893ac8420a49972881edeb2a0db5e544d37ee4\n\nTARGET_CONTENT_FINGERPRINT =\na76da8139cb39d6a3a8b4779cd5ba711f37189291cefc4ad4b2b38d754fbc8a1\n\nSTALE_REFERENCE_TEXT =\n\"DDoS\"\n\nSTALE_REFERENCE_REASON =\nDDoS is absent from the current choice set.\n\nCURRENT_TESTED_CONCEPT =\nContent explorer answers where content is; Activity explorer answers what happened to it\n(tested_decision=content_where_activity_what)\n\nCURRENT_CORRECT_ANSWER_REASON =\nThe two explorers provide complementary content-location and historical-activity views.\n\nCURRENTNESS_RESEARCH_REQUIRED = YES\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF + C01 + C03\n\nSOURCE_GENERAL_EXPLANATION =\nContent explorer helps analysts see where sensitive or labeled content currently exists, while Activity explorer shows historical activities on labeled content. Together they support data classification and information protection, not identity, DDoS, or role assignment.\n\nTARGET_GENERAL_EXPLANATION =\nContent explorer answers where sensitive or labeled content is located. Activity explorer answers what users and services have done with labeled content over time, so the two views complement each other for data classification and information protection.\n\nSOURCE_CHOICE_EXPLANATIONS =\nSOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"DLP policies enforce rules for sensitive-data handling; that does not describe the distinct purposes of Content explorer and Activity explorer.\",\n  C: \"Sensitivity labels classify content and can apply protection, but this choice does not explain the two explorer views.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; C=YES; D=NO\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_p3_q038",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "cf91f8d128ecce5417a7f35f9e893ac8420a49972881edeb2a0db5e544d37ee4",
+      "target_content_fingerprint": "a76da8139cb39d6a3a8b4779cd5ba711f37189291cefc4ad4b2b38d754fbc8a1"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n49b92740e689dbdfdcf6ddeeda7098a522d84c431af966d1f44ad7e700b96cb0\n\nTARGET_CONTENT_FINGERPRINT =\n5ed86fe4639af5a5287ca93057108d53f510c81fdd060d03eaf0851acd237fac\n\nSTALE_REFERENCE_TEXT =\n\"Compliance Manager, Key Vault, and Entra ID Governance\"\n\nSTALE_REFERENCE_REASON =\nNone is a current distractor.\n\nCURRENT_TESTED_CONCEPT =\nEndpoint EDR/automated investigation and response belongs to Defender for Endpoint\n(tested_decision=mde_device_isolation_response_action)\n\nCURRENT_CORRECT_ANSWER_REASON =\nDefender for Endpoint is the endpoint detection, investigation, and response workload.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nDefender for Endpoint includes automated investigation and response capabilities on devices. Compliance Manager, Key Vault, and Entra ID Governance are not endpoint automated-investigation services.\n\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Defender for Endpoint provides endpoint detection and response plus automated investigation and response on devices. That makes it the Defender workload designed to investigate alerts and take response actions on a laptop.\n\nSOURCE_CHOICE_EXPLANATIONS =\nSOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Defender for Identity focuses on identity signals from on-premises Active Directory environments, not endpoint response actions on a laptop.\",\n  B: \"Defender for Office 365 protects email and collaboration workloads, not device-level EDR response.\",\n  C: \"Defender Vulnerability Management focuses on discovering and prioritizing vulnerabilities and exposures; it is not the endpoint incident-response workload.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=YES; C=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_p3_q056",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "49b92740e689dbdfdcf6ddeeda7098a522d84c431af966d1f44ad7e700b96cb0",
+      "target_content_fingerprint": "5ed86fe4639af5a5287ca93057108d53f510c81fdd060d03eaf0851acd237fac"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-compliance-management-capabilities-microsoft/",
+        "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/sc-900"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n874fd87bfc664e4c6ba23f0550fd5178d5a4757e99e9d50f4b0ed8002561d88f\n\nTARGET_CONTENT_FINGERPRINT =\n066ba052cb9586e1214ebd054ba1d85a91f3488b780088b8f560eb931dac814d\n\nSTALE_REFERENCE_TEXT =\n\"Conditional Access templates, DNAT rules, and device isolation\"\n\nSTALE_REFERENCE_REASON =\nNone corresponds to a current answer option.\n\nCURRENT_TESTED_CONCEPT =\nService Trust Portal as the Microsoft trust/privacy-document source\n(tested_decision=stp_privacy_trust_documents)\n\nCURRENT_CORRECT_ANSWER_REASON =\nSTP supplies Microsoft cloud trust, compliance, and privacy documentation.\n\nCURRENTNESS_RESEARCH_REQUIRED = YES\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF + C01\n\nSOURCE_GENERAL_EXPLANATION =\nThe Service Trust Portal includes privacy and other trust documentation about Microsoft cloud services. Conditional Access templates, DNAT rules, and device isolation are operational controls, not STP privacy offerings.\n\nTARGET_GENERAL_EXPLANATION =\nThe Service Trust Portal provides Microsoft trust, compliance, and privacy documentation about Microsoft cloud services. A customer security or privacy reviewer uses those documents rather than an operational security or compliance console.\n\nSOURCE_CHOICE_EXPLANATIONS =\nSOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Compliance Manager helps an organization assess and improve its own compliance posture; it is not the repository for Microsoft's service trust and privacy documents.\",\n  B: \"The Microsoft Purview portal is used to operate Purview compliance and data-governance solutions; the requested Microsoft-authored trust documentation is in the Service Trust Portal.\",\n  C: \"The Microsoft Defender portal is a security operations experience, not the trust-document repository requested here.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=YES; C=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_p3_q060",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "874fd87bfc664e4c6ba23f0550fd5178d5a4757e99e9d50f4b0ed8002561d88f",
+      "target_content_fingerprint": "066ba052cb9586e1214ebd054ba1d85a91f3488b780088b8f560eb931dac814d"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/",
+        "https://learn.microsoft.com/en-us/defender-cloud-apps/anomaly-detection-policy"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n55e2003877b3e3b61ca6405a6ca38dfec6e68265861607ad6c34d50176c1d368\n\nTARGET_CONTENT_FINGERPRINT =\ncaec2fbd275c6849207ea2e57a415310b974975e158839671d38fce5b4011572\n\nSTALE_REFERENCE_TEXT =\n\"Records management, Key Vault\"\n\nSTALE_REFERENCE_REASON =\nThose products/features are absent from the current choice set; Entra Domain Services remains a current distractor and is therefore not classified as stale.\n\nCURRENT_TESTED_CONCEPT =\nDefender for Cloud Apps cloud-application visibility/anomaly detection\n(tested_decision=mcas_session_control_after_ca_grant)\n\nCURRENT_CORRECT_ANSWER_REASON =\nDefender for Cloud Apps observes connected-cloud-app activity and detects anomalous behavior such as unusual downloads.\n\nCURRENTNESS_RESEARCH_REQUIRED = YES\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF + C04\n\nSOURCE_GENERAL_EXPLANATION =\nDefender for Cloud Apps monitors cloud-application activity and can alert on unusual behavior such as abnormal downloads. Records management, Key Vault, and Entra Domain Services do not provide that cloud-app anomaly monitoring.\n\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Defender for Cloud Apps monitors activity in cloud applications and can detect anomalous behavior such as unusual download activity. That matches a sanctioned SaaS application with an abnormal data-download pattern.\n\nSOURCE_CHOICE_EXPLANATIONS =\nSOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Defender for Office 365 focuses on email and collaboration threats, not general SaaS application activity monitoring.\",\n  B: \"Defender for Endpoint focuses on devices and endpoint threats, not cloud-app session activity.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=YES; C=NO\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_p3_q076",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "55e2003877b3e3b61ca6405a6ca38dfec6e68265861607ad6c34d50176c1d368",
+      "target_content_fingerprint": "caec2fbd275c6849207ea2e57a415310b974975e158839671d38fce5b4011572"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance/"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n969d289ea1ec01b984e0ed1885b8b517f76f625c481e719d1e28be73f4f0fdd7\n\nTARGET_CONTENT_FINGERPRINT =\n685463f6d7b5a07495bb34c94b3968d787d3071e6fcdb3f972f28ea946cfd39a\n\nSTALE_REFERENCE_TEXT =\n\"WAF\" / \"Bastion\"\n\nSTALE_REFERENCE_REASON =\nThose removed distractors remain in the explanation; Verified ID is still a current option.\n\nCURRENT_TESTED_CONCEPT =\nPurview Audit answers who performed an administrative action and when\n(tested_decision=audit_answers_who_changed_policy_not_mailbox_export)\n\nCURRENT_CORRECT_ANSWER_REASON =\nPurview Audit stores searchable supported user/admin activity records.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nMicrosoft Purview Audit provides searchable records of user and administrator activities in supported Microsoft services. WAF, Verified ID, and Bastion do not provide that Microsoft 365 activity-log search.\n\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Purview Audit provides searchable records of supported user and administrator activities, including when administrative actions occurred. That is the capability used to determine who performed a Microsoft 365 admin action and when.\n\nSOURCE_CHOICE_EXPLANATIONS =\nSOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"DLP enforces policies for sensitive-data handling; it does not serve as the activity-log search for administrator actions.\",\n  D: \"eDiscovery collects and reviews content for legal matters; it is not the primary activity-log search described here.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=NO; D=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_p3_q079",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "969d289ea1ec01b984e0ed1885b8b517f76f625c481e719d1e28be73f4f0fdd7",
+      "target_content_fingerprint": "685463f6d7b5a07495bb34c94b3968d787d3071e6fcdb3f972f28ea946cfd39a"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/",
+        "https://learn.microsoft.com/en-us/defender-vulnerability-management/tvm-security-recommendation"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n9b5c77fb3fe82f390ba7a5f1b8f2dabd02ed383b9f81c9582ae4d5f615b2083f\n\nTARGET_CONTENT_FINGERPRINT =\n6c359427a3c44fa556731e8f4ed02fd320d0fbd521460959fb107f0081301b6e\n\nSTALE_REFERENCE_TEXT =\n\"eDiscovery\" / \"DNAT\"\n\nSTALE_REFERENCE_REASON =\nNeither is a current option.\n\nCURRENT_TESTED_CONCEPT =\nVulnerability/exposure management versus active endpoint incident response\n(tested_decision=mdvm_not_siem_timeline)\n\nCURRENT_CORRECT_ANSWER_REASON =\nMDVM discovers, assesses, prioritizes, and helps remediate vulnerabilities/exposure.\n\nCURRENTNESS_RESEARCH_REQUIRED = YES\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF + C05\n\nSOURCE_GENERAL_EXPLANATION =\nDefender Vulnerability Management is a posture and exposure capability: find and prioritize vulnerabilities. Incident-response consoles focus on active attacks. eDiscovery, access packages, and DNAT are different tools.\n\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Defender Vulnerability Management is an exposure-management capability for discovering, assessing, and prioritizing vulnerabilities so they can be remediated. That differs from endpoint incident response, which focuses on detecting and responding to active attacks on devices.\n\nSOURCE_CHOICE_EXPLANATIONS =\nSOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Defender for Endpoint is the closer fit for active endpoint detection and response; the question asks how vulnerability management differs from that incident-response function.\",\n  C: \"Defender for Office 365 protects email and collaboration workloads, not endpoint vulnerability prioritization.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=NO; C=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_p3_q088",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "9b5c77fb3fe82f390ba7a5f1b8f2dabd02ed383b9f81c9582ae4d5f615b2083f",
+      "target_content_fingerprint": "6c359427a3c44fa556731e8f4ed02fd320d0fbd521460959fb107f0081301b6e"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-access-management-capabilities/"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n2ae4ce56b6ad14864929bfd2f1ce1f3725fd0eddebf12bbc9a7e725354940833\n\nTARGET_CONTENT_FINGERPRINT =\n501ae2f510f5a5abb637fe182da482c19a1ffcad35fc4be8eb7d1ebb0e160a91\n\nSTALE_REFERENCE_TEXT =\n\"Retention, WAF, and STP\"\n\nSTALE_REFERENCE_REASON =\nNone is in the current choice set.\n\nCURRENT_TESTED_CONCEPT =\nConditional Access location condition plus MFA grant control\n(tested_decision=ca_requires_mfa_from_untrusted_location)\n\nCURRENT_CORRECT_ANSWER_REASON =\nConditional Access evaluates sign-in signals and enforces MFA based on policy.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nRequiring MFA based on user and location is a Conditional Access decision. Retention, WAF, and STP do not evaluate those sign-in signals.\n\nTARGET_GENERAL_EXPLANATION =\nConditional Access evaluates sign-in conditions such as user and network location and can enforce grant controls such as requiring multifactor authentication. That is how an organization can require MFA when Finance users are outside named locations.\n\nSOURCE_CHOICE_EXPLANATIONS =\nSOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  B: \"Identity Protection supplies risk detections that can be used by Conditional Access, but the location-based MFA enforcement in the stem is a Conditional Access policy decision.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=NO; B=YES; D=NO\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q029",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "2ae4ce56b6ad14864929bfd2f1ce1f3725fd0eddebf12bbc9a7e725354940833",
+      "target_content_fingerprint": "501ae2f510f5a5abb637fe182da482c19a1ffcad35fc4be8eb7d1ebb0e160a91"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/what-are-lifecycle-workflows"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n377ba1bf21d7a946296087b5c128762f741057a154cab9941bf41420f1b86470\n\nTARGET_CONTENT_FINGERPRINT =\n13d12e525883b8c26eb543dcaa7723830ae5f8a9402f4aa16c36d8bfc4c40677\n\nSTALE_REFERENCE_TEXT =\n\"Firewall DNAT, Content explorer\"\n\nSTALE_REFERENCE_REASON =\nThose are removed distractors; Defender TI remains a current option.\n\nCURRENT_TESTED_CONCEPT =\nJoiner/mover/leaver automation\n(tested_decision=lifecycle_workflows_mover_automation)\n\nCURRENT_CORRECT_ANSWER_REASON =\nLifecycle Workflows automates user lifecycle tasks, including mover events.\n\nCURRENTNESS_RESEARCH_REQUIRED = YES\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF + C06\n\nSOURCE_GENERAL_EXPLANATION =\nLifecycle Workflows automate joiner, mover, and leaver tasks. Firewall DNAT, Content explorer, and threat intel are unrelated.\n\nTARGET_GENERAL_EXPLANATION =\nLifecycle Workflows is the Microsoft Entra ID Governance capability for automating joiner, mover, and leaver tasks. A department change is a mover event, so it is the direct fit for automatically adjusting lifecycle-related access tasks.\n\nSOURCE_CHOICE_EXPLANATIONS =\nSOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  B: \"Access reviews periodically recertify whether existing access is still needed; they are not the joiner/mover/leaver workflow engine.\",\n  C: \"Entitlement management governs access requests and assignments through access packages; it is not the lifecycle workflow engine for mover events.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nB=YES; C=YES; D=NO\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q033",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "377ba1bf21d7a946296087b5c128762f741057a154cab9941bf41420f1b86470",
+      "target_content_fingerprint": "13d12e525883b8c26eb543dcaa7723830ae5f8a9402f4aa16c36d8bfc4c40677"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/howto-authentication-temporary-access-pass"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\nc7df364318646b70b7f20f02a5f5e79dea2760188b212ab7510240d8c2851d1f\n\nTARGET_CONTENT_FINGERPRINT =\nd01f4b29635f411e8c1bbb94dd68412d171ac9bea655ae5fab9747d876b14104\n\nSTALE_REFERENCE_TEXT =\n\"DLP, NSGs\"\n\nSTALE_REFERENCE_REASON =\nNeither is in the current choice set; threat intelligence remains represented by option D.\n\nCURRENT_TESTED_CONCEPT =\nTAP as temporary bootstrap authentication\n(tested_decision=tap_bootstrap_new_hire_registration)\n\nCURRENT_CORRECT_ANSWER_REASON =\nA Temporary Access Pass is a time-limited sign-in credential used to register stronger authentication methods.\n\nCURRENTNESS_RESEARCH_REQUIRED = YES\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF + C07\n\nSOURCE_GENERAL_EXPLANATION =\nTemporary Access Pass is a time-limited passcode for bootstrapping passwordless registration. DLP, NSGs, and threat intel are not sign-in methods.\n\nTARGET_GENERAL_EXPLANATION =\nTemporary Access Pass is a time-limited sign-in credential designed to bootstrap authentication-method registration, including registering Microsoft Authenticator for a new user.\n\nSOURCE_CHOICE_EXPLANATIONS =\nSOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Windows Hello for Business is a passwordless authentication method a user can register; it is not the temporary bootstrap credential requested here.\",\n  B: \"Microsoft Authenticator passwordless sign-in is a target authentication method, whereas Temporary Access Pass is designed to help bootstrap its registration.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=YES; D=NO\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q039",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "c7df364318646b70b7f20f02a5f5e79dea2760188b212ab7510240d8c2851d1f",
+      "target_content_fingerprint": "d01f4b29635f411e8c1bbb94dd68412d171ac9bea655ae5fab9747d876b14104"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-authentication-capabilities/"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\nad700c8f06a2afb02d8d11406137521b6dbb5eb6dfae4e8a1ed07ac7d12baaa4\n\nTARGET_CONTENT_FINGERPRINT =\nd067675541948371d7e605b72ec64e116bc72aee2115bc175519c2ea510153db\n\nSTALE_REFERENCE_TEXT =\n\"hashing\" / \"WAF inspection\"\n\nSTALE_REFERENCE_REASON =\nNeither appears in the current choices.\n\nCURRENT_TESTED_CONCEPT =\nMFA requires distinct authentication-factor categories\n(tested_decision=mfa_two_factor_categories)\n\nCURRENT_CORRECT_ANSWER_REASON =\nPassword is knowledge and fingerprint is inherence, producing two factor categories.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nMFA combines distinct factor categories such as knowledge and inherence. The second factor is not authorization, hashing, or WAF inspection.\n\nTARGET_GENERAL_EXPLANATION =\nA password is a knowledge factor and a fingerprint is an inherence factor. Using factors from two different authentication categories is what makes this sign-in multifactor authentication.\n\nSOURCE_CHOICE_EXPLANATIONS =\nSOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Authentication verifies identity; authorization determines what an authenticated identity may access. A fingerprint is an authentication factor, not a replacement for authorization.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=NO; D=NO\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q040",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "ad700c8f06a2afb02d8d11406137521b6dbb5eb6dfae4e8a1ed07ac7d12baaa4",
+      "target_content_fingerprint": "d067675541948371d7e605b72ec64e116bc72aee2115bc175519c2ea510153db"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n832d9f2d33c89e7e9a304768d61c909e5c6f6c3ed3c22b930f6c1a63f1ff8480\n\nTARGET_CONTENT_FINGERPRINT =\n341812c3e44ca8835b3edd99b4a0fe186e3eaa2d718385c6fd386bc4dc67f1e4\n\nSTALE_REFERENCE_TEXT =\n\"SIEM\" / \"DDoS protection\"\n\nSTALE_REFERENCE_REASON =\nNeither is a current option.\n\nCURRENT_TESTED_CONCEPT =\nConditional Access conditions lead to grant/session controls\n(tested_decision=ca_grant_controls_not_siem)\n\nCURRENT_CORRECT_ANSWER_REASON =\nConditional Access can require MFA or compliant-device state when configured policy conditions match.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nConditional Access enforces session and grant controls when policy conditions match. It is not SIEM, records management, or DDoS protection.\n\nTARGET_GENERAL_EXPLANATION =\nConditional Access applies if-then access policies: when configured conditions match, it can enforce controls such as requiring multifactor authentication or a compliant device.\n\nSOURCE_CHOICE_EXPLANATIONS =\nSOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Privileged Identity Management governs privileged-role eligibility and activation; it is not the general Conditional Access policy engine.\",\n  D: \"Identity Protection produces identity-risk signals that Conditional Access can use, but risk detection itself is not the Conditional Access enforcement capability.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=NO; D=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q041",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "832d9f2d33c89e7e9a304768d61c909e5c6f6c3ed3c22b930f6c1a63f1ff8480",
+      "target_content_fingerprint": "341812c3e44ca8835b3edd99b4a0fe186e3eaa2d718385c6fd386bc4dc67f1e4"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-mfa-howitworks"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n53acec0bb46b23ba53b6beb8fbe1616deb1347d9f7ae25ec32e4ca336b685b34\n\nTARGET_CONTENT_FINGERPRINT =\n74a603bb20393fd996f9133980f193c439736eee6ed6f7092a9321e939d87e5c\n\nSTALE_REFERENCE_TEXT =\n\"Retention, DDoS, and Content explorer\"\n\nSTALE_REFERENCE_REASON =\nNone appears in the current choices.\n\nCURRENT_TESTED_CONCEPT =\nMFA prevents password-only replay\n(tested_decision=mfa_stops_password_replay_without_second_factor)\n\nCURRENT_CORRECT_ANSWER_REASON =\nThe attacker lacks the required second authentication factor.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nMFA requires another factor the attacker likely does not have. Retention, DDoS, and Content explorer do not challenge extra sign-in factors.\n\nTARGET_GENERAL_EXPLANATION =\nMultifactor authentication requires an additional authentication factor beyond the password. If an attacker has only the user's password and not the required second factor, MFA is the control that directly prevents the sign-in from completing.\n\nSOURCE_CHOICE_EXPLANATIONS =\nSOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  B: \"Password Protection helps prevent weak or banned passwords; it does not add a second factor when a valid password has already been stolen.\",\n  C: \"Conditional Access can require MFA based on policy conditions, but the control that defeats a password-only attacker in this scenario is multifactor authentication itself.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=NO; B=YES; C=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q048",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "53acec0bb46b23ba53b6beb8fbe1616deb1347d9f7ae25ec32e4ca336b685b34",
+      "target_content_fingerprint": "74a603bb20393fd996f9133980f193c439736eee6ed6f7092a9321e939d87e5c"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/fundamentals/whatis"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n727a310236e5ccbf4699a43250949a6b085944688fafd76d8d01f55079fe4917\n\nTARGET_CONTENT_FINGERPRINT =\n5b1bb3d63a30f9e96f701803b51e301f5680fb0aec49e4922d5234dc3679583e\n\nSTALE_REFERENCE_TEXT =\n\"badge printer, VNet replacement, or DDoS service\"\n\nSTALE_REFERENCE_REASON =\nAll are from an obsolete distractor set.\n\nCURRENT_TESTED_CONCEPT =\nMicrosoft Entra ID as Microsoft's cloud IAM service\n(tested_decision=entra_id_not_network_or_ddos)\n\nCURRENT_CORRECT_ANSWER_REASON =\nEntra ID supplies cloud identity, authentication, and access-management functions.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nEntra ID is cloud IAM. It is not a badge printer, VNet replacement, or DDoS service.\n\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Entra ID is Microsoft's cloud identity and access management service for users, applications, authentication, and access. The other choices are related identity services or technologies, but they are not the cloud IAM service described by this statement.\n\nSOURCE_CHOICE_EXPLANATIONS =\nSOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Active Directory Domain Services is the traditional domain service used for on-premises Windows domain environments; it is not Microsoft Entra ID.\",\n  C: \"Microsoft Entra Domain Services provides managed domain capabilities such as domain join and LDAP without managing domain controllers; it is distinct from Microsoft Entra ID.\",\n  D: \"Microsoft Entra External ID addresses external identities and collaboration or customer identity scenarios; it is not the general Microsoft cloud IAM service named in the stem.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; C=YES; D=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q051",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "727a310236e5ccbf4699a43250949a6b085944688fafd76d8d01f55079fe4917",
+      "target_content_fingerprint": "5b1bb3d63a30f9e96f701803b51e301f5680fb0aec49e4922d5234dc3679583e"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-password-ban-bad"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\nb79def762874033a0ca19b55e6692a6a145880ceae9aca70b5fe99a87504e0e5\n\nTARGET_CONTENT_FINGERPRINT =\n5f89c4637486bc21f7670670298664f0ad9590ba88a82335e03c6d3de1b19585\n\nSTALE_REFERENCE_TEXT =\n\"NSG\"\n\nSTALE_REFERENCE_REASON =\nNSG is absent from the current answer set.\n\nCURRENT_TESTED_CONCEPT =\nEntra Password Protection custom/global banned-password lists\n(tested_decision=custom_banned_password_list)\n\nCURRENT_CORRECT_ANSWER_REASON =\nPassword Protection evaluates proposed passwords against banned-password lists.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nPassword Protection evaluates passwords against banned lists. It is not a SIEM, NSG, or records feature.\n\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Entra Password Protection evaluates password changes against global and custom banned-password lists, helping block weak or organization-specific prohibited passwords.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Self-service password reset lets users recover or change forgotten passwords; it is not the banned-password evaluation capability.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=NO; D=NO\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q054",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "b79def762874033a0ca19b55e6692a6a145880ceae9aca70b5fe99a87504e0e5",
+      "target_content_fingerprint": "5f89c4637486bc21f7670670298664f0ad9590ba88a82335e03c6d3de1b19585"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/access-reviews-overview"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\ne7519fe32919113f90b8e45a1b8841b2b84ba1901f05716369874ce4b1a17e9a\n\nTARGET_CONTENT_FINGERPRINT =\n1155d5b53ac59f2336a06d5f80d3184fafaedcfea0069feb2ceb91094314dda1\n\nSTALE_REFERENCE_TEXT =\n\"WAF, endpoint detection, and DDoS Protection\"\n\nSTALE_REFERENCE_REASON =\nNone is a current choice.\n\nCURRENT_TESTED_CONCEPT =\nAccess reviews recertify guest/group access\n(tested_decision=reviews_for_guest_group_cleanup)\n\nCURRENT_CORRECT_ANSWER_REASON =\nAccess reviews ask reviewers whether existing access should continue and can remove denied access.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nAccess reviews recertify guest and group access. WAF, endpoint detection, and DDoS Protection do not recertify group membership.\n\nTARGET_GENERAL_EXPLANATION =\nAccess reviews let designated reviewers periodically confirm whether users or guests still need existing access and can remove access that is no longer justified. That directly fits guest cleanup in a Teams-connected group.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  B: \"Entitlement management governs access requests and assignments through access packages; access reviews are the capability specifically used to recertify continued access.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=NO; B=YES; D=NO\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q058",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "e7519fe32919113f90b8e45a1b8841b2b84ba1901f05716369874ce4b1a17e9a",
+      "target_content_fingerprint": "1155d5b53ac59f2336a06d5f80d3184fafaedcfea0069feb2ceb91094314dda1"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types/"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\naae44ba5f2df2df944254ab69b00644cfa75c03214108dc04044810cf5400e1a\n\nTARGET_CONTENT_FINGERPRINT =\nf5d36d057917ed47b76e8e5a19c4bc5c250d1b5e416db677b155d7a9f85ebcc1\n\nSTALE_REFERENCE_TEXT =\n\"DDoS, Content explorer, and Sentinel\"\n\nSTALE_REFERENCE_REASON =\nNone is a current identity-service option.\n\nCURRENT_TESTED_CONCEPT =\nApplications trusting Entra ID for Microsoft 365 workforce identities\n(tested_decision=apps_trust_entra_for_work_accounts)\n\nCURRENT_CORRECT_ANSWER_REASON =\nMicrosoft 365 work accounts are represented by Microsoft Entra ID.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nCustom apps trust Entra ID as the identity provider for work accounts. DDoS, Content explorer, and Sentinel are not directories.\n\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Entra ID is the identity provider and cloud directory used by Microsoft 365 work accounts. A custom application that should accept those existing workforce identities should trust Microsoft Entra ID.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Active Directory Domain Services is an on-premises domain service, not the Microsoft 365 cloud identity provider requested here.\",\n  B: \"Microsoft Entra Domain Services supplies managed legacy domain protocols and domain-join capabilities; it is not the primary cloud identity provider for Microsoft 365 work accounts.\",\n  C: \"Microsoft Entra External ID is designed for external identity scenarios; the stem asks about employees' existing Microsoft 365 work accounts.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=YES; C=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q071",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "aae44ba5f2df2df944254ab69b00644cfa75c03214108dc04044810cf5400e1a",
+      "target_content_fingerprint": "f5d36d057917ed47b76e8e5a19c4bc5c250d1b5e416db677b155d7a9f85ebcc1"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-protection-governance-capabilities/"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n499d19f5e8857f602bcf535121b37e5fb1586bc5566156be0a599eacc179062a\n\nTARGET_CONTENT_FINGERPRINT =\n5647669a92a831b4797bfc1a68b88870426e77cf116feed00548c1711e339e13\n\nSTALE_REFERENCE_TEXT =\n\"Key Vault rotation\" / \"firewall rules\"\n\nSTALE_REFERENCE_REASON =\nNeither is a current choice.\n\nCURRENT_TESTED_CONCEPT =\nAccess reviews can remove access reviewers no longer approve\n(tested_decision=reviews_can_remove_unjustified_access)\n\nCURRENT_CORRECT_ANSWER_REASON =\nAn access review is a recertification decision, and denied access can be removed.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nReviewers can approve or deny continued access, and denied access can be removed. OS patching, Key Vault rotation, and firewall rules are different controls.\n\nTARGET_GENERAL_EXPLANATION =\nAccess reviews support recertification decisions about whether assigned access should continue. When reviewers deny continued access, the reviewed access can be removed according to the review configuration.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  B: \"Privileged Identity Management controls privileged-role eligibility and activation; it is not the periodic access-recertification capability described here.\",\n  C: \"Entitlement management packages resources and access policies for governed requests and assignments; access reviews decide whether existing access remains justified.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=NO; B=YES; C=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q073",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "499d19f5e8857f602bcf535121b37e5fb1586bc5566156be0a599eacc179062a",
+      "target_content_fingerprint": "5647669a92a831b4797bfc1a68b88870426e77cf116feed00548c1711e339e13"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-endpoint"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n9eabcaca056c85842e333ebd75cf1144e91065a9796d2bb039dcae018df9aabe\n\nTARGET_CONTENT_FINGERPRINT =\nff2bf09b84d3cf160342d6c6e88fc15bcf9221db2cecde930982131fba6d2e90\n\nSTALE_REFERENCE_TEXT =\n\"Reviews, DDoS, and records management\"\n\nSTALE_REFERENCE_REASON =\nNone is a current Defender-workload choice.\n\nCURRENT_TESTED_CONCEPT =\nDefender for Endpoint as laptop/device EDR\n(tested_decision=mde_for_laptop_edr)\n\nCURRENT_CORRECT_ANSWER_REASON =\nMDE handles endpoint detection, investigation, and response.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nDefender for Endpoint is EDR/device protection. Reviews, DDoS, and records management are different jobs.\n\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Defender for Endpoint is the Defender workload for endpoint protection, endpoint detection and response, investigation, and response on devices such as employee laptops.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Defender for Identity focuses on identity threats using Active Directory-related signals, not laptop EDR.\",\n  B: \"Defender for Office 365 protects email and collaboration workloads, not endpoint EDR.\",\n  D: \"Defender Vulnerability Management focuses on vulnerability and exposure assessment; it is not the primary behavioral EDR workload.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=YES; D=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q091",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "9eabcaca056c85842e333ebd75cf1144e91065a9796d2bb039dcae018df9aabe",
+      "target_content_fingerprint": "ff2bf09b84d3cf160342d6c6e88fc15bcf9221db2cecde930982131fba6d2e90"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-capabilities-of-azure-sentinel/",
+        "https://learn.microsoft.com/en-us/azure/sentinel/automate-incident-handling-with-automation-rules",
+        "https://learn.microsoft.com/en-us/azure/sentinel/automation/run-playbooks"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n8be424ef7803e030374a53a278e128d91293757e9e89429d19561e4df5092c80\n\nTARGET_CONTENT_FINGERPRINT =\n276336c6ffba12f1d263b73b563be58a712e5a3bdbe2a709c7d4cfbbe7af4288\n\nSTALE_REFERENCE_TEXT =\n\"WAF\" / \"records management\"\n\nSTALE_REFERENCE_REASON =\nNeither is a current choice; TAP remains a current distractor.\n\nCURRENT_TESTED_CONCEPT =\nSentinel SIEM analytics plus SOAR automation/playbooks\n(tested_decision=sentinel_rules_and_playbooks)\n\nCURRENT_CORRECT_ANSWER_REASON =\nSentinel analytics produce detections/incidents and automation rules/playbooks orchestrate response.\n\nCURRENTNESS_RESEARCH_REQUIRED = YES\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF + C08\n\nSOURCE_GENERAL_EXPLANATION =\nSentinel analytics rules detect and playbooks automate response. WAF, TAP, and records management do not provide that SIEM/SOAR pairing.\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Sentinel provides SIEM detection through analytics rules and SOAR automation through automation rules and playbooks. That combination matches creating incidents from detections and automatically running response actions.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Defender XDR correlates and responds to threats across Defender workloads, but the analytics-rule plus playbook SIEM/SOAR terminology in the stem points to Microsoft Sentinel.\",\n  C: \"Defender for Cloud focuses on cloud security posture and workload protection; it is not the SIEM/SOAR service described here.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=NO; C=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q100",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "8be424ef7803e030374a53a278e128d91293757e9e89429d19561e4df5092c80",
+      "target_content_fingerprint": "276336c6ffba12f1d263b73b563be58a712e5a3bdbe2a709c7d4cfbbe7af4288"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\nc32aa1eb2369a9b6487ee9d0f2d4c3e3f6fbbfd23fbfc964c1e96be7c33827de\n\nTARGET_CONTENT_FINGERPRINT =\na690362c80f6b608c66699c73856afbb4911a1b53c6c103547249ac0c533e979\n\nSTALE_REFERENCE_TEXT =\n\"SIEM, DLP, or an identity provider\"\n\nSTALE_REFERENCE_REASON =\nNone is in the current Azure-network-security answer set.\n\nCURRENT_TESTED_CONCEPT =\nAzure Bastion as managed RDP/SSH access without exposed VM management ports\n(tested_decision=bastion_not_siem_or_idp)\n\nCURRENT_CORRECT_ANSWER_REASON =\nBastion provides the secure interactive VM-access path described.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nBastion is a jump-host service. It is not SIEM, DLP, or an identity provider.\n\nTARGET_GENERAL_EXPLANATION =\nAzure Bastion provides managed RDP and SSH access to Azure virtual machines without requiring the target VMs to expose public RDP or SSH ports.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Network security groups filter network traffic to subnets and network interfaces; they do not provide the managed interactive RDP/SSH access service.\",\n  B: \"Azure Firewall provides centralized network filtering; it is not the managed jump-access service for VM administration.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=YES; C=NO\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q105",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "c32aa1eb2369a9b6487ee9d0f2d4c3e3f6fbbfd23fbfc964c1e96be7c33827de",
+      "target_content_fingerprint": "a690362c80f6b608c66699c73856afbb4911a1b53c6c103547249ac0c533e979"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\ne2df7be9144eba856853de24623de52382aedc3abf2dcc3a421d9b2eb6be90fb\n\nTARGET_CONTENT_FINGERPRINT =\naeea576b8d97d0ca181c82c3d7a61f26616e54f741101ed3a5459cad0b597cfc\n\nSTALE_REFERENCE_TEXT =\n\"DDoS\" / \"Key Vault\"\n\nSTALE_REFERENCE_REASON =\nNeither is a current option.\n\nCURRENT_TESTED_CONCEPT =\nSafe Links and Safe Attachments are Defender for Office 365 capabilities\n(tested_decision=safe_links_attachments_are_mdo)\n\nCURRENT_CORRECT_ANSWER_REASON =\nThey protect email/collaboration from malicious URLs and files.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nTime-of-click link checking and attachment detonation are Defender for Office 365 features, not DDoS, PIM, or Key Vault.\n\nTARGET_GENERAL_EXPLANATION =\nSafe Links and Safe Attachments are Microsoft Defender for Office 365 protections for email and collaboration: Safe Links evaluates URLs, while Safe Attachments analyzes potentially malicious files.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Defender for Endpoint protects devices and provides endpoint detection and response; Safe Links and Safe Attachments are Defender for Office 365 capabilities.\",\n  D: \"Defender for Cloud Apps provides cloud-app visibility and control; it is not the workload that owns Safe Links and Safe Attachments.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; C=NO; D=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q114",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "e2df7be9144eba856853de24623de52382aedc3abf2dcc3a421d9b2eb6be90fb",
+      "target_content_fingerprint": "aeea576b8d97d0ca181c82c3d7a61f26616e54f741101ed3a5459cad0b597cfc"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-threat-protection-with-microsoft-365-defender/",
+        "https://learn.microsoft.com/en-us/defender-xdr/unified-security-operations-overview",
+        "https://learn.microsoft.com/en-us/defender-xdr/microsoft-365-defender-portal"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\nd736a94f5989512d1bbe8d29ea8178e21a80bde2376e6a20b70d622e40844179\n\nTARGET_CONTENT_FINGERPRINT =\n3d7ada2b9b0acc1fa4fe0759f9b3f7949c7f1d7ca3a7b0103b25867fbf56807b\n\nSTALE_REFERENCE_TEXT =\n\"STP, Key Vault, and Content explorer\"\n\nSTALE_REFERENCE_REASON =\nNone is a current choice.\n\nCURRENT_TESTED_CONCEPT =\nOne unified incident queue in the Microsoft Defender portal\n(tested_decision=one_queue_in_defender_portal)\n\nCURRENT_CORRECT_ANSWER_REASON =\nThe question asks for the portal/UI, not the Defender XDR or Sentinel product name.\n\nCURRENTNESS_RESEARCH_REQUIRED = YES\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF + C09\n\nSOURCE_GENERAL_EXPLANATION =\nThe Defender portal unifies XDR incident queues. STP, Key Vault, and Content explorer are not that operations console.\n\nTARGET_GENERAL_EXPLANATION =\nThe Microsoft Defender portal is the unified security operations portal that presents a combined incident queue across Microsoft security workloads. The question asks for the portal experience, so the portal itself is the correct choice.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Microsoft Defender XDR is a security solution whose incidents are surfaced and investigated in the Microsoft Defender portal; it is not the name of the portal asked for here.\",\n  B: \"Microsoft Sentinel can be integrated into the Microsoft Defender portal, but Microsoft Sentinel is the SIEM and security platform, not the portal name requested by the stem.\",\n  D: \"The Microsoft Purview portal is for compliance and data-governance solutions, not the unified Defender incident queue.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=YES; D=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q120",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "d736a94f5989512d1bbe8d29ea8178e21a80bde2376e6a20b70d622e40844179",
+      "target_content_fingerprint": "3d7ada2b9b0acc1fa4fe0759f9b3f7949c7f1d7ca3a7b0103b25867fbf56807b"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-office-365/mdo-about"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n6a9afec3808fe829f9d94a9702d6abde7d223cd0b7f6642545a6d2a01f0fc296\n\nTARGET_CONTENT_FINGERPRINT =\n6cb28f2d04d81da103eadfcee2f7b3008225f45f4ebb383240f708785cb52cf0\n\nSTALE_REFERENCE_TEXT =\n\"PIM\" / \"classification browsing\"\n\nSTALE_REFERENCE_REASON =\nNeither is in the current choices; Azure Firewall remains a current distractor.\n\nCURRENT_TESTED_CONCEPT =\nDefender for Office 365 protects email/collaboration\n(tested_decision=mdo_not_azure_firewall)\n\nCURRENT_CORRECT_ANSWER_REASON =\nMDO owns phishing, malicious-link, attachment, and collaboration protection.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nMDO is email/collaboration threat protection, not Firewall, PIM, or classification browsing.\n\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Defender for Office 365 protects email and collaboration services from threats such as phishing, malicious links, and malicious attachments.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  B: \"Defender for Endpoint protects devices and provides endpoint detection and response; it is not the email and collaboration protection workload.\",\n  D: \"Defender for Cloud Apps provides visibility and control for cloud-app use and sessions; it is not the email-threat protection workload.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=NO; B=YES; D=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q130",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "6a9afec3808fe829f9d94a9702d6abde7d223cd0b7f6642545a6d2a01f0fc296",
+      "target_content_fingerprint": "6cb28f2d04d81da103eadfcee2f7b3008225f45f4ebb383240f708785cb52cf0"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-xdr/microsoft-365-defender-portal",
+        "https://learn.microsoft.com/en-us/defender-xdr/unified-security-operations-overview"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\ndba704e1d820028460cff213db556bf4e6a5ab132033156444e13c2e3edbb198\n\nTARGET_CONTENT_FINGERPRINT =\n506108497d0b4c6fd1227556d4b11627787205c09fdf03836b42665133dd4d44\n\nSTALE_REFERENCE_TEXT =\n\"Key Vault\" / \"Conditional Access\"\n\nSTALE_REFERENCE_REASON =\nNeither is a current choice. The Service Trust Portal/ISO-document distinction remains relevant to current option D.\n\nCURRENT_TESTED_CONCEPT =\nMicrosoft Defender portal versus the security products surfaced within it\n(tested_decision=defender_portal_not_stp)\n\nCURRENT_CORRECT_ANSWER_REASON =\nThe Defender portal is the unified operational user experience for Defender XDR and integrated security services.\n\nCURRENTNESS_RESEARCH_REQUIRED = YES\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF + C09\n\nSOURCE_GENERAL_EXPLANATION =\nThe Defender portal is XDR operations. ISO reports are Service Trust Portal. Key Vault and Conditional Access are other consoles/capabilities.\n\nTARGET_GENERAL_EXPLANATION =\nThe Microsoft Defender portal is the unified security operations experience used to investigate and respond to Defender XDR incidents and alerts. Microsoft Sentinel can also be integrated into this portal, but the portal remains the user interface rather than either product name.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Microsoft Defender XDR is the cross-domain detection and response solution; the question asks about the portal that provides its unified operations experience.\",\n  C: \"Microsoft Sentinel is the SIEM and security platform and can be integrated into the Defender portal; it is not the portal itself.\",\n  D: \"Service Trust Portal provides Microsoft trust and compliance documentation, not security-operations incident handling.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; C=YES; D=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q132",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "dba704e1d820028460cff213db556bf4e6a5ab132033156444e13c2e3edbb198",
+      "target_content_fingerprint": "506108497d0b4c6fd1227556d4b11627787205c09fdf03836b42665133dd4d44"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/sentinel/overview"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n0ed818a7648c4d71003d65d74530a484e6f54db60ce5a84d0e22cadfd070e240\n\nTARGET_CONTENT_FINGERPRINT =\n165dc2390be16d7ef8c18d9beca65f28c180f71b63cf1151bd237ef0ec95262f\n\nSTALE_REFERENCE_TEXT =\n\"Bastion\" / \"labels\"\n\nSTALE_REFERENCE_REASON =\nNeither is a current choice; TAP remains represented.\n\nCURRENT_TESTED_CONCEPT =\nSentinel as multi-source SIEM\n(tested_decision=sentinel_ingests_many_log_sources)\n\nCURRENT_CORRECT_ANSWER_REASON =\nSentinel ingests and analyzes security data from many heterogeneous sources.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nSentinel ingests many data sources for SIEM detection. Bastion, TAP, and labels do not do that.\n\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Sentinel is Microsoft's SIEM and security operations platform for ingesting security data from many sources, applying analytics, and creating alerts and incidents for investigation.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Defender XDR correlates signals across Defender workloads, but the stem emphasizes broad log ingestion from Microsoft 365, Azure, and firewalls, which is a Sentinel SIEM scenario.\",\n  D: \"Defender for Cloud focuses on cloud security posture and workload protection rather than serving as the multi-source SIEM described here.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; C=NO; D=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q147",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "0ed818a7648c4d71003d65d74530a484e6f54db60ce5a84d0e22cadfd070e240",
+      "target_content_fingerprint": "165dc2390be16d7ef8c18d9beca65f28c180f71b63cf1151bd237ef0ec95262f"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions/",
+        "https://learn.microsoft.com/en-us/purview/create-sensitivity-labels"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\nbe94973f8d57aa957aa893e0210e142d63c930d3e39f27afa9bd8355b03cc521\n\nTARGET_CONTENT_FINGERPRINT =\na9f37531f7e23564f9c8d26c4def9e0ea16953b4d22ff1dc38dc0a561170b115\n\nSTALE_REFERENCE_TEXT =\n\"Network and Bastion controls\"\n\nSTALE_REFERENCE_REASON =\nNeither appears in the current choices.\n\nCURRENT_TESTED_CONCEPT =\nSensitivity-label policies publish labels to scoped users\n(tested_decision=label_policies_publish_to_users)\n\nCURRENT_CORRECT_ANSWER_REASON =\nThe label policy determines which labels/settings are made available to selected users/groups.\n\nCURRENTNESS_RESEARCH_REQUIRED = YES\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF + C10\n\nSOURCE_GENERAL_EXPLANATION =\nLabel policies publish labels to scoped users. Network and Bastion controls do not publish labels.\n\nTARGET_GENERAL_EXPLANATION =\nSensitivity label policies determine which sensitivity labels are published to selected users and groups and which label-policy settings apply to them. Scoping the policy to the legal team controls who sees those published labels in supported apps.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Data loss prevention enforces rules for sensitive-data handling; it is not the mechanism that publishes label choices to users.\",\n  C: \"Data classification helps discover and understand sensitive information; it does not publish sensitivity labels to selected users.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=NO; C=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q168",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "be94973f8d57aa957aa893e0210e142d63c930d3e39f27afa9bd8355b03cc521",
+      "target_content_fingerprint": "a9f37531f7e23564f9c8d26c4def9e0ea16953b4d22ff1dc38dc0a561170b115"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-risk-compliance-governance/"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n8195b0efaa2dbed7d02379f7c10cbb4902cc1655c23945d15d8d0e419ed243d0\n\nTARGET_CONTENT_FINGERPRINT =\n4022762110769666c7d6e9a9ceb4b60ccc5459e4fdc04210b8bb6f2ec6150b2e\n\nSTALE_REFERENCE_TEXT =\n\"DDoS and password reset\"\n\nSTALE_REFERENCE_REASON =\nNeither is a current choice.\n\nCURRENT_TESTED_CONCEPT =\nLegal hold/export is eDiscovery rather than Insider Risk Management\n(tested_decision=legal_hold_is_ediscovery)\n\nCURRENT_CORRECT_ANSWER_REASON =\neDiscovery provides legal preservation, search, review, and export.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nLegal hold and export are eDiscovery. Exfiltration scoring is closer to insider risk. DDoS and password reset are unrelated.\n\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Purview eDiscovery supports legal-case workflows such as placing content on hold, searching and reviewing relevant content, and exporting results. Insider Risk Management instead focuses on potentially risky internal user behavior.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  B: \"Scoring or investigating employee exfiltration risk is an Insider Risk Management scenario, not an eDiscovery legal-case workflow.\",\n  C: \"Purview Audit records searchable user and administrator activity; it is not the legal hold and export workflow.\",\n  D: \"Insider Risk Management detects and investigates potentially risky internal behavior; the stem asks for the eDiscovery task instead.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nB=YES; C=YES; D=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q174",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "8195b0efaa2dbed7d02379f7c10cbb4902cc1655c23945d15d8d0e419ed243d0",
+      "target_content_fingerprint": "4022762110769666c7d6e9a9ceb4b60ccc5459e4fdc04210b8bb6f2ec6150b2e"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-purview-data-solutions/",
+        "https://learn.microsoft.com/en-us/purview/data-classification-data-explorer"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\ned6c69e6719fc162c1b76d6862c5449801171698013b593d0d4863a19052f4d3\n\nTARGET_CONTENT_FINGERPRINT =\n450beabb0611734e4769738345d080db9d22ccd01d0fe9d1949da5a2e2b079c2\n\nSTALE_REFERENCE_TEXT =\n\"Bastion\" / \"Firewall\"\n\nSTALE_REFERENCE_REASON =\nNeither is a current choice.\n\nCURRENT_TESTED_CONCEPT =\nDiscover/classify sensitive data before applying DLP/protection\n(tested_decision=classify_before_dlp_to_know_what_exists)\n\nCURRENT_CORRECT_ANSWER_REASON =\nData classification identifies what sensitive information exists before governance/protection policy is designed.\n\nCURRENTNESS_RESEARCH_REQUIRED = YES\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF + C11\n\nSOURCE_GENERAL_EXPLANATION =\nClassification discovers what sensitive data exists. Bastion, PIM, and Firewall do not inventory health data in content.\n\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Purview data classification capabilities help an organization discover and understand what sensitive information exists in its data estate. That discovery step comes before deciding how labels or DLP policies should protect or govern the data.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Sensitivity labels classify and can protect content once labeling is designed and applied; they are not the discovery answer to whether the tenant contains the target sensitive information.\",\n  C: \"Data loss prevention enforces policies on sensitive-data use and sharing; it depends on knowing what sensitive information should be detected rather than being the initial inventory capability.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=NO; C=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q175",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "ed6c69e6719fc162c1b76d6862c5449801171698013b593d0d4863a19052f4d3",
+      "target_content_fingerprint": "450beabb0611734e4769738345d080db9d22ccd01d0fe9d1949da5a2e2b079c2"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/compliance-manager"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n51dd9e1affa52e45280d8a62625e819e889db85c8799ffb88429447aa4741ed6\n\nTARGET_CONTENT_FINGERPRINT =\n615e5871dfedf0cea723f750e030711067ead9c8582087bd6c1424294ac20ef5\n\nSTALE_REFERENCE_TEXT =\n\"XDR, DDoS, or Bastion\"\n\nSTALE_REFERENCE_REASON =\nNone appears in the current answer set.\n\nCURRENT_TESTED_CONCEPT =\nCompliance Manager assessments and improvement actions\n(tested_decision=cm_not_ddos)\n\nCURRENT_CORRECT_ANSWER_REASON =\nCompliance Manager is the customer-facing assessment and improvement-action workflow.\n\nCURRENTNESS_RESEARCH_REQUIRED = YES\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF + C12\n\nSOURCE_GENERAL_EXPLANATION =\nCompliance Manager is the customer's assessment tool, not XDR, DDoS, or Bastion.\n\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Purview Compliance Manager helps organizations assess compliance, track improvement actions, and measure progress. That is the customer-facing assessment and remediation capability described by the correct choice.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  B: \"Service Trust Portal provides Microsoft-authored trust and compliance documentation; it is not the customer's Compliance Manager assessment workflow.\",\n  C: \"Compliance score is a metric within Compliance Manager used to reflect and prioritize progress; it is not the broader assessment-management capability.\",\n  D: \"Purview Audit provides activity records for investigation; it is not the compliance-assessment tool.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nB=YES; C=YES; D=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q183",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "51dd9e1affa52e45280d8a62625e819e889db85c8799ffb88429447aa4741ed6",
+      "target_content_fingerprint": "615e5871dfedf0cea723f750e030711067ead9c8582087bd6c1424294ac20ef5"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+        "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/sc-900"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n2d290a5c6b8a6e7f6452dc08b41531b8474f955e3c4940421f240cc9992887f7\n\nTARGET_CONTENT_FINGERPRINT =\n39ac98416bea4d6c49834960c13acfd0455a5b3e3be29504d4d4356c52009a4e\n\nSTALE_REFERENCE_TEXT =\n\"XDR, NSGs, or PIM\"\n\nSTALE_REFERENCE_REASON =\nNone is a current answer option.\n\nCURRENT_TESTED_CONCEPT =\nService Trust Portal as Microsoft's trust/compliance-document portal\n(tested_decision=stp_not_defender_endpoint)\n\nCURRENT_CORRECT_ANSWER_REASON =\nSTP is the Microsoft source for the requested trust/compliance documentation.\n\nCURRENTNESS_RESEARCH_REQUIRED = YES\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF + C01\n\nSOURCE_GENERAL_EXPLANATION =\nSTP is Microsoft's trust documentation portal, not XDR, NSGs, or PIM.\n\nTARGET_GENERAL_EXPLANATION =\nThe Service Trust Portal is Microsoft's portal for trust, privacy, audit, and compliance documentation about Microsoft cloud services.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Compliance Manager helps a customer assess and improve its own compliance posture; the Service Trust Portal supplies Microsoft's trust and compliance documentation.\",\n  B: \"The Microsoft Purview portal hosts operational compliance and data-governance solutions; it is not the trust-document portal described here.\",\n  C: \"The Microsoft Defender portal is for security operations and threat investigation, not Microsoft trust documentation.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=YES; C=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q194",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "2d290a5c6b8a6e7f6452dc08b41531b8474f955e3c4940421f240cc9992887f7",
+      "target_content_fingerprint": "39ac98416bea4d6c49834960c13acfd0455a5b3e3be29504d4d4356c52009a4e"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/compliance-manager-scoring",
+        "https://learn.microsoft.com/en-us/purview/compliance-manager"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n223acd7590e1107cfa3e7a6e39e49c0ca8d2c2e2f82c72ee6a07ed8e8f393be1\n\nTARGET_CONTENT_FINGERPRINT =\n84fce3d9428a26c8688e5ed44280ca22f2b53594a86081cd61486bb87ea5b431\n\nSTALE_REFERENCE_TEXT =\n\"network or Key Vault SKU\"\n\nSTALE_REFERENCE_REASON =\nNeither is a current alternative.\n\nCURRENT_TESTED_CONCEPT =\nCompliance score measures/prioritizes Compliance Manager progress\n(tested_decision=score_prioritizes_remaining_actions)\n\nCURRENT_CORRECT_ANSWER_REASON =\nCompliance score reflects progress on improvement actions and helps prioritize remaining work.\n\nCURRENTNESS_RESEARCH_REQUIRED = YES\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF + C12\n\nSOURCE_GENERAL_EXPLANATION =\nCompliance score is a Compliance Manager progress metric, not a network or Key Vault SKU.\n\nTARGET_GENERAL_EXPLANATION =\nCompliance score is a Microsoft Purview Compliance Manager metric that reflects progress on recommended improvement actions and helps prioritize remaining work.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Improvement actions are the individual actions tracked in Compliance Manager; compliance score is the metric that summarizes and helps prioritize that work.\",\n  D: \"Defender for Cloud secure score measures cloud security posture, which is different from Compliance Manager's compliance score.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; C=NO; D=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q195",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "223acd7590e1107cfa3e7a6e39e49c0ca8d2c2e2f82c72ee6a07ed8e8f393be1",
+      "target_content_fingerprint": "84fce3d9428a26c8688e5ed44280ca22f2b53594a86081cd61486bb87ea5b431"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/audit-solutions-overview"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\nb3edbe8da1c421c9149e160fb168899980f1c2a8408d15d8407f8f65e1150c0d\n\nTARGET_CONTENT_FINGERPRINT =\n18e483eb94c8890da0612145d90700463d9e1818b25b424e2482826f1c4daccc\n\nSTALE_REFERENCE_TEXT =\n\"DDoS, Windows Hello, and Bastion\"\n\nSTALE_REFERENCE_REASON =\nNone is a current option.\n\nCURRENT_TESTED_CONCEPT =\nAudit tracks administrative DLP-policy changes\n(tested_decision=audit_tracks_dlp_policy_changes)\n\nCURRENT_CORRECT_ANSWER_REASON =\nPurview Audit supplies the user/admin activity record needed to determine who changed configuration and when.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nAudit records administrative configuration changes. DDoS, Windows Hello, and Bastion do not provide that compliance trail.\n\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Purview Audit records supported user and administrator activities, including administrative configuration changes. Investigators use those audit records to determine who changed a DLP policy and when.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"DLP is the policy capability being changed; it does not by itself provide the administrative activity trail requested here.\",\n  B: \"eDiscovery searches and reviews content for legal matters; it is not the primary record of who changed an administrative policy.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=YES; D=NO\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q200",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "b3edbe8da1c421c9149e160fb168899980f1c2a8408d15d8407f8f65e1150c0d",
+      "target_content_fingerprint": "18e483eb94c8890da0612145d90700463d9e1818b25b424e2482826f1c4daccc"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/explore-basic-services-identity-types/"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\nd5cccc3dda182b492a6a2ffa16605d9b35b72dcce3a3bbcf01044d9e01b68836\n\nTARGET_CONTENT_FINGERPRINT =\n88a50f9e4a14336bab66f649dcbaacdf52d4f205eed4ebeb0ce687845c2597ef\n\nSTALE_REFERENCE_TEXT =\n\"Key Vault, retention labels, and vulnerability management\"\n\nSTALE_REFERENCE_REASON =\nNone is a current identity-type choice.\n\nCURRENT_TESTED_CONCEPT =\nExternal identities for supplier/partner/customer humans\n(tested_decision=external_guest_identities_for_partners)\n\nCURRENT_CORRECT_ANSWER_REASON =\nExternal identity capabilities are intended for people outside the workforce boundary.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nExternal/guest identities let partners or customers authenticate without becoming full internal employees. Key Vault, retention labels, and vulnerability management are not identity types.\n\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Entra external identities support partner and customer collaboration so people outside the organization can authenticate to applications without being treated as ordinary internal workforce users.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Ordinary user identities can represent people, but the scenario specifically calls for an external partner identity approach rather than full internal workforce accounts.\",\n  B: \"Workload identities represent applications, services, and other non-human workloads, not supplier employees.\",\n  D: \"Managed identities are Azure-managed workload identities for resources and services, not human partner identities.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=YES; D=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q218",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "d5cccc3dda182b492a6a2ffa16605d9b35b72dcce3a3bbcf01044d9e01b68836",
+      "target_content_fingerprint": "88a50f9e4a14336bab66f649dcbaacdf52d4f205eed4ebeb0ce687845c2597ef"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview",
+        "https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-conditions"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\nd1b312a5d2a926ebdd476c4e930fe7bc649ea6405023ee9e59d5b13b533d810e\n\nTARGET_CONTENT_FINGERPRINT =\n1434df4eaba9803f67d3f1a23d8cd73066c49634a15f7f7564e6ef576cf5f506\n\nSTALE_REFERENCE_TEXT =\n\"Retention labels, Bastion, and Insider Risk Management\"\n\nSTALE_REFERENCE_REASON =\nNone is a current answer option.\n\nCURRENT_TESTED_CONCEPT =\nNamed network location as a Conditional Access signal\n(tested_decision=ca_named_location_as_condition_signal)\n\nCURRENT_CORRECT_ANSWER_REASON =\nA named location represents the headquarters/network-location distinction in the policy.\n\nCURRENTNESS_RESEARCH_REQUIRED = YES\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF + C13\n\nSOURCE_GENERAL_EXPLANATION =\nConditional Access can use named or trusted locations as a condition and then require MFA or allow access. Retention labels, Bastion, and Insider Risk Management do not supply that location signal.\n\nTARGET_GENERAL_EXPLANATION =\nConditional Access can use a named network location as a policy condition. The policy can then require multifactor authentication for Finance users when their sign-in originates outside the headquarters location.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"User risk is another Conditional Access signal, but it does not express the headquarters-versus-other-network condition in the stem.\",\n  B: \"Device compliance is another Conditional Access signal or grant condition, but it does not identify whether the sign-in originates outside headquarters.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=YES; C=NO\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q223",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "d1b312a5d2a926ebdd476c4e930fe7bc649ea6405023ee9e59d5b13b533d810e",
+      "target_content_fingerprint": "1434df4eaba9803f67d3f1a23d8cd73066c49634a15f7f7564e6ef576cf5f506"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\na890daba456a03ab34b2246c0d89a96006b4a0d91f1e80903454e92614d70256\n\nTARGET_CONTENT_FINGERPRINT =\n3f361bd938046fea356dc871950d7e7492735d9055bace751410781cff477020\n\nSTALE_REFERENCE_TEXT =\n\"Retention, WAF, and Content explorer\"\n\nSTALE_REFERENCE_REASON =\nNone is a current option.\n\nCURRENT_TESTED_CONCEPT =\nPIM activation requiring MFA/justification\n(tested_decision=pim_activation_requires_mfa_and_justification)\n\nCURRENT_CORRECT_ANSWER_REASON =\nPIM role-activation settings control conditions an eligible user must satisfy before activation.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nPIM activation can demand extra authentication, justification, and related checks before a privileged role becomes active. Retention, WAF, and Content explorer do not control Entra role activation.\n\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Entra Privileged Identity Management role-activation settings can require controls such as multifactor authentication and justification before an eligible privileged-role assignment becomes active.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Access reviews recertify whether existing access should continue; they do not define the controls required at privileged-role activation time.\",\n  B: \"Entitlement management governs access packages and access requests; it is not the PIM role-activation settings capability.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=YES; C=NO\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q225",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "a890daba456a03ab34b2246c0d89a96006b4a0d91f1e80903454e92614d70256",
+      "target_content_fingerprint": "3f361bd938046fea356dc871950d7e7492735d9055bace751410781cff477020"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-protection/overview-identity-protection",
+        "https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-policies"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n9d6bf78afa05680085324613307808bbf242f3adfd926f4648d530412e38aa3b\n\nTARGET_CONTENT_FINGERPRINT =\n724fbcc5449ae46a17e7726d6db6f6092c8aad0d239409eb91e7e0a86cb9d676\n\nSTALE_REFERENCE_TEXT =\n\"Bastion, records, and Safe Attachments\"\n\nSTALE_REFERENCE_REASON =\nNone is in the current governance-choice set.\n\nCURRENT_TESTED_CONCEPT =\nID Protection risk enforced/remediated through risk-based Conditional Access\n(tested_decision=id_protection_risk_remediation_via_ca)\n\nCURRENT_CORRECT_ANSWER_REASON =\nConditional Access applies the block/remediation control based on the user-risk signal.\n\nCURRENTNESS_RESEARCH_REQUIRED = YES\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF + C14\n\nSOURCE_GENERAL_EXPLANATION =\nID Protection calculates identity risk and Conditional Access can require remediation such as password reset or block. Bastion, records, and Safe Attachments are not leaked-credential identity-risk engines.\n\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Entra ID Protection supplies user-risk detections, and risk-based Conditional Access policies can block risky users or require remediation such as a secure password change. That makes Conditional Access the enforcement capability in this scenario.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Privileged Identity Management governs privileged-role eligibility and activation; it does not enforce leaked-credential user-risk remediation.\",\n  C: \"Access reviews recertify whether access remains justified; they do not respond to sign-in or user-risk detections.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; C=YES; D=NO\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q230",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "9d6bf78afa05680085324613307808bbf242f3adfd926f4648d530412e38aa3b",
+      "target_content_fingerprint": "724fbcc5449ae46a17e7726d6db6f6092c8aad0d239409eb91e7e0a86cb9d676"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/fundamentals/whatis"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n629010482d4dfb45c0067e8e520d7ec373465796896d2870ccfdc2891c4189ef\n\nTARGET_CONTENT_FINGERPRINT =\ndb40993540f0b85056d94b2126b79f7b617ddd853eabdb0a32706f96a707d3f6\n\nSTALE_REFERENCE_TEXT =\n\"DDoS Protection, Activity explorer, and Bastion\"\n\nSTALE_REFERENCE_REASON =\nNone appears in the current identity-service choices.\n\nCURRENT_TESTED_CONCEPT =\nApplications use Entra ID as centralized cloud IAM rather than per-app credential stores\n(tested_decision=entra_replaces_per_app_password_stores)\n\nCURRENT_CORRECT_ANSWER_REASON =\nEntra ID is the cloud identity directory/authentication authority in the scenario.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nEntra ID is the cloud IAM directory apps can trust. DDoS Protection, Activity explorer, and Bastion are not identity directories.\n\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Entra ID is the cloud identity and access management directory that applications can trust for centralized authentication instead of maintaining separate username and password stores in each app.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Active Directory Domain Services is the traditional domain service for on-premises Windows environments; it is not the Microsoft cloud IAM directory requested here.\",\n  B: \"Microsoft Entra Domain Services supplies managed domain capabilities for legacy protocols and domain join; it is not the primary cloud identity provider for modern app authentication.\",\n  C: \"Microsoft Entra External ID addresses external identity scenarios; the stem asks for the general cloud IAM directory used by line-of-business applications.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=YES; C=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q235",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "629010482d4dfb45c0067e8e520d7ec373465796896d2870ccfdc2891c4189ef",
+      "target_content_fingerprint": "db40993540f0b85056d94b2126b79f7b617ddd853eabdb0a32706f96a707d3f6"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n2dbe58cf58309c13192f1ccddf58c78b38e90bdab5d07dc95136d9b7b2622b97\n\nTARGET_CONTENT_FINGERPRINT =\n97bc9da8a4c293a53a441772fa13b6755ff2fd72d7d41ea4ac28c50d34687442\n\nSTALE_REFERENCE_TEXT =\n\"Labels, eDiscovery, and Bastion\"\n\nSTALE_REFERENCE_REASON =\nNone is a current choice.\n\nCURRENT_TESTED_CONCEPT =\nPIM eligible versus permanent active assignment\n(tested_decision=pim_eligible_assignment_not_permanent_active)\n\nCURRENT_CORRECT_ANSWER_REASON =\nEligibility provides potential privilege that must be activated instead of standing active privilege.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nPIM eligible assignments avoid standing active privilege until activation. Labels, eDiscovery, and Bastion do not convert directory roles to eligible.\n\nTARGET_GENERAL_EXPLANATION =\nA PIM eligible assignment gives a user the ability to activate a privileged role when needed without leaving that role permanently active. This reduces standing privileged access.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"A permanent active assignment creates the standing privilege that PIM eligibility is intended to avoid in this scenario.\",\n  B: \"Access reviews recertify whether access remains appropriate; they do not make a privileged role eligible for just-in-time activation.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=YES; D=NO\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q241",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "2dbe58cf58309c13192f1ccddf58c78b38e90bdab5d07dc95136d9b7b2622b97",
+      "target_content_fingerprint": "97bc9da8a4c293a53a441772fa13b6755ff2fd72d7d41ea4ac28c50d34687442"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-identity-principles-concepts/"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n04e6982792ae7ac6c9d0bb98d7bf1d9d06eb41616e20ffc83f72847def7df485\n\nTARGET_CONTENT_FINGERPRINT =\nd022eab45ea986ed491dbe61b207896fc93ff245f2f435a9f4b1131e2c1ca760\n\nSTALE_REFERENCE_TEXT =\n\"CWP\" / \"records management\"\n\nSTALE_REFERENCE_REASON =\nNeither appears in the current choices; hashing remains represented by option A.\n\nCURRENT_TESTED_CONCEPT =\nFederation means relying-party trust in an external identity provider's claims\n(tested_decision=relying_party_trusts_partner_idp_claims)\n\nCURRENT_CORRECT_ANSWER_REASON =\nFederation is the cross-domain identity trust relationship described.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nFederation lets a relying party trust another organization's IdP. Hashing, CWP, and records management are not token-trust relationships.\n\nTARGET_GENERAL_EXPLANATION =\nFederation is a trust relationship in which a relying application accepts identity claims or tokens issued by an external identity provider instead of authenticating that external user directly.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  B: \"Authentication is the process of proving identity; federation describes the cross-organization trust that lets this application rely on another identity provider's authentication.\",\n  D: \"Authorization decides what an authenticated identity may access; it does not describe trusting tokens from an external identity provider.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=NO; B=YES; D=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q243",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "04e6982792ae7ac6c9d0bb98d7bf1d9d06eb41616e20ffc83f72847def7df485",
+      "target_content_fingerprint": "d022eab45ea986ed491dbe61b207896fc93ff245f2f435a9f4b1131e2c1ca760"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-endpoint"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n31811dcaa124ad6fe09bba1a1e1f87c894dc87e9ee5c782aaf9a259ac1402940\n\nTARGET_CONTENT_FINGERPRINT =\n19d67f027638dda4db10fcf1c29ffb2c5708d1c616022c79536693a3a33a7626\n\nSTALE_REFERENCE_TEXT =\n\"Compliance Manager, WAF, and STP\"\n\nSTALE_REFERENCE_REASON =\nNone is a current Defender-workload option.\n\nCURRENT_TESTED_CONCEPT =\nEndpoint device isolation as Defender for Endpoint response\n(tested_decision=mde_device_isolation_response_action)\n\nCURRENT_CORRECT_ANSWER_REASON =\nDevice isolation is an endpoint response action supplied by MDE.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nDevice isolation and related EDR response actions belong to Defender for Endpoint. Compliance Manager, WAF, and STP do not isolate endpoints.\n\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Defender for Endpoint provides endpoint detection and response actions on devices, including isolating a compromised device from the network during investigation and response.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  B: \"Defender for Identity focuses on identity threats and Active Directory signals, not endpoint device isolation.\",\n  D: \"Defender Vulnerability Management identifies and prioritizes vulnerabilities and exposures; device isolation is an active endpoint response action provided by Defender for Endpoint.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nB=YES; C=NO; D=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q271",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "31811dcaa124ad6fe09bba1a1e1f87c894dc87e9ee5c782aaf9a259ac1402940",
+      "target_content_fingerprint": "19d67f027638dda4db10fcf1c29ffb2c5708d1c616022c79536693a3a33a7626"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-cloud-apps/what-is-defender-for-cloud-apps",
+        "https://learn.microsoft.com/en-us/defender-cloud-apps/conditional-access-app-control-how-to-overview"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n3131435c3a42c70621d148307fea98a846ba5e75fcec126df7557f4bea6ceddb\n\nTARGET_CONTENT_FINGERPRINT =\nc0059a821845cff70fe3b6416979e8d49ff40e80b3e2e2ab00b0123beb132a4e\n\nSTALE_REFERENCE_TEXT =\n\"Key Vault\"\n\nSTALE_REFERENCE_REASON =\nKey Vault is not a current choice; the Entra-ID and endpoint-sensor contrasts still correspond to current distractors.\n\nCURRENT_TESTED_CONCEPT =\nDefender for Cloud Apps session controls after the initial access decision\n(tested_decision=mcas_session_control_after_ca_grant)\n\nCURRENT_CORRECT_ANSWER_REASON =\nThe CASB supplies real-time in-app/session visibility and control without replacing identity or endpoint telemetry.\n\nCURRENTNESS_RESEARCH_REQUIRED = YES\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF + C15\n\nSOURCE_GENERAL_EXPLANATION =\nThe CASB adds SaaS app discovery and in-app/session controls. It does not replace Entra ID, Key Vault, or endpoint sensors.\n\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Defender for Cloud Apps adds cloud-app visibility and real-time session controls after the access decision, such as monitoring or restricting actions within a SaaS session. It complements Conditional Access rather than replacing Microsoft Entra ID or endpoint telemetry.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Defender for Cloud Apps integrates with Conditional Access; it does not replace Microsoft Entra ID as the identity provider or policy decision point.\",\n  C: \"Cloud-app session control does not replace endpoint sensors; endpoint telemetry and SaaS session controls address different control planes.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=NO; C=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q272",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "3131435c3a42c70621d148307fea98a846ba5e75fcec126df7557f4bea6ceddb",
+      "target_content_fingerprint": "c0059a821845cff70fe3b6416979e8d49ff40e80b3e2e2ab00b0123beb132a4e"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-for-identity/what-is",
+        "https://learn.microsoft.com/en-us/defender-for-identity/deploy/install-sensor",
+        "https://learn.microsoft.com/en-us/defender-for-identity/deploy/activate-sensor"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\nef8fd55c37ac889083314e3c59a71ac24c08591613cb07545a5a66f43fdb0ff4\n\nTARGET_CONTENT_FINGERPRINT =\n132ec337eeea9c04ef8d96088753b30978a1667f1d687f5759e62779b570f556\n\nSTALE_REFERENCE_TEXT =\n\"DDoS metrics, retention analytics, and STP PDFs\"\n\nSTALE_REFERENCE_REASON =\nNone appears in the current choices.\n\nCURRENT_TESTED_CONCEPT =\nDefender for Identity uses signals from on-premises Active Directory infrastructure\n(tested_decision=mdi_uses_ad_environment_signals)\n\nCURRENT_CORRECT_ANSWER_REASON =\nMDI sensors on supported identity infrastructure collect the AD signals used to detect identity attacks.\n\nCURRENTNESS_RESEARCH_REQUIRED = YES\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF + C16\n\nSOURCE_GENERAL_EXPLANATION =\nDefender for Identity is built on Active Directory signals, typically collected with sensors in the AD environment. DDoS metrics, retention analytics, and STP PDFs are not that source.\n\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Defender for Identity detects identity threats by analyzing signals from on-premises Active Directory environments. Its sensors run on or monitor supported identity infrastructure such as domain controllers, providing the directory activity needed to detect reconnaissance and lateral movement.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Defender for Endpoint supplies endpoint telemetry and response, not the primary Active Directory identity-sensor signal source described here.\",\n  C: \"Microsoft Entra ID Protection evaluates cloud identity risk and risky sign-ins; the stem asks for signals originating in on-premises Active Directory.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; C=YES; D=NO\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q273",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "ef8fd55c37ac889083314e3c59a71ac24c08591613cb07545a5a66f43fdb0ff4",
+      "target_content_fingerprint": "132ec337eeea9c04ef8d96088753b30978a1667f1d687f5759e62779b570f556"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/records-management",
+        "https://learn.microsoft.com/en-us/purview/retention"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n65072c407ca96fa294527a51662566a1d9898242ce9617500d91461adcd31d31\n\nTARGET_CONTENT_FINGERPRINT =\na6c3fadd5f848d1c41c3596127f131bceb6ed933d689e3cf15e528638078e3f4\n\nSTALE_REFERENCE_TEXT =\n\"WAF\" / \"Entra access reviews\"\n\nSTALE_REFERENCE_REASON =\nNeither is a current option; Safe Links remains option D.\n\nCURRENT_TESTED_CONCEPT =\nDisposition review before records/content are permanently destroyed\n(tested_decision=records_disposition_review_before_destruction)\n\nCURRENT_CORRECT_ANSWER_REASON =\nDisposition review is the review/approval step at the end of retention before deletion.\n\nCURRENTNESS_RESEARCH_REQUIRED = YES\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF + C17\n\nSOURCE_GENERAL_EXPLANATION =\nRecords management can require disposition review so records are not silently deleted when the retention period ends. WAF, Entra access reviews, and Safe Links are not records disposition.\n\nTARGET_GENERAL_EXPLANATION =\nDisposition review is the records-management process that requires review and approval before retained content is permanently deleted at the end of its retention period.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  B: \"A retention label can configure retention behavior, including disposition review, but the review-and-approval step itself is the disposition review named in the correct choice.\",\n  C: \"Retention policies apply retention broadly to locations and do not provide the disposition-review capability described here.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nB=YES; C=YES; D=NO\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q288",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "65072c407ca96fa294527a51662566a1d9898242ce9617500d91461adcd31d31",
+      "target_content_fingerprint": "a6c3fadd5f848d1c41c3596127f131bceb6ed933d689e3cf15e528638078e3f4"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/audit-solutions-overview"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\nbe80d8da56dfad9612c5d4e6784bb3023346fcc4e3167ca2d675da8ca55bc2ae\n\nTARGET_CONTENT_FINGERPRINT =\n6e2bfed7e8ee58b8c7aec2d92f432aaf7df99e51f5d68f19b4f0f61645e749f9\n\nSTALE_REFERENCE_TEXT =\n\"Bastion, lifecycle workflows, and DDoS reports\"\n\nSTALE_REFERENCE_REASON =\nNone is a current choice.\n\nCURRENT_TESTED_CONCEPT =\nAudit answers who performed an administrative action and when; eDiscovery answers legal-content search/export\n(tested_decision=audit_answers_who_changed_policy_not_mailbox_export)\n\nCURRENT_CORRECT_ANSWER_REASON =\nPurview Audit is the activity trail for user/admin actions.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\nPurview audit records who did what, when, and where. Exporting a mailbox for court is eDiscovery. Bastion, lifecycle workflows, and DDoS reports are not that activity trail.\n\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Purview Audit records supported user and administrator activities so investigators can determine who performed an action and when it occurred. eDiscovery is used to search, review, and export content for legal matters instead.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"DLP is the policy capability whose configuration may be audited; it is not the activity-log search that identifies who changed the policy.\",\n  B: \"eDiscovery is the right tool for legal content search and export, but the stem asks for an administrative activity trail rather than a legal production set.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; B=YES; D=NO\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q292",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "be80d8da56dfad9612c5d4e6784bb3023346fcc4e3167ca2d675da8ca55bc2ae",
+      "target_content_fingerprint": "6e2bfed7e8ee58b8c7aec2d92f432aaf7df99e51f5d68f19b4f0f61645e749f9"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/ediscovery"
+      ],
+      "content_correction_required": false,
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "frozen_semantic_entry_text": "SOURCE_CONTENT_FINGERPRINT =\n191fc4f12e89adbc1669248f4e8fb3535328ea97c07dac6c8600589713ab512c\n\nTARGET_CONTENT_FINGERPRINT =\n16d5385587d493755a2e3101c7297b3c17832e9d22869e523a408cc3c2df3e0f\n\nSTALE_REFERENCE_TEXT =\n\"DDoS, password protection, and VNet peering\"\n\nSTALE_REFERENCE_REASON =\nNone appears in the current choices.\n\nCURRENT_TESTED_CONCEPT =\neDiscovery continues from legal hold through search, review, and export\n(tested_decision=ediscovery_search_review_export_after_hold)\n\nCURRENT_CORRECT_ANSWER_REASON =\nThe described downstream legal-production workflow remains an eDiscovery function.\n\nCURRENTNESS_RESEARCH_REQUIRED = NO\nCURRENTNESS_STATUS = PASS\nCURRENTNESS_CHECKED_AT = 2026-09-21\nAUTHORITY_REFS = SOURCE_REF\n\nSOURCE_GENERAL_EXPLANATION =\neDiscovery covers hold, search, review, and export for legal matters. DDoS, password protection, and VNet peering do not produce a legal production set.\n\nTARGET_GENERAL_EXPLANATION =\nMicrosoft Purview eDiscovery covers the legal-case workflow for preserving, searching, reviewing, and exporting relevant Microsoft 365 content. After a hold is in place, the continued search, review, and export work remains an eDiscovery function.\n\nSOURCE_CHOICE_EXPLANATIONS = SOURCE_CHOICE_EXPLANATIONS_FULL_DUP\n\nTARGET_CHOICE_EXPLANATIONS =\n{\n  A: \"Purview Audit records user and administrator activities; it does not provide the legal content review and export workflow.\",\n  C: \"Insider Risk Management investigates potentially risky internal user behavior; it is not the legal-case production workflow.\",\n  D: \"DLP detects or restricts risky handling of sensitive data; it does not review and export evidence for counsel.\"\n}\n\nSELECTED_WRONG_FEEDBACK_DECISIONS =\nA=YES; C=YES; D=YES\n\nAUTHORIZED_CHANGED_FIELDS = general_explanation + choice_explanations\nEXPLANATION_ONLY_REPAIR_SUFFICIENT = YES\nCONTENT_CORRECTION_REQUIRED = NO\nSEMANTIC_REVIEW_DISPOSITION = APPROVED\n",
+      "question_id": "sc900_mlc_q297",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "191fc4f12e89adbc1669248f4e8fb3535328ea97c07dac6c8600589713ab512c",
+      "target_content_fingerprint": "16d5385587d493755a2e3101c7297b3c17832e9d22869e523a408cc3c2df3e0f"
+    }
+  ],
+  "payload_sha256": "e20f46110bc660f1ab75213cb7662fb66d37873488446058c05b7ed6415a9969",
+  "reconciliation_work_id": "SC900-EXPLANATION-DEFECT-QUEUE-POST-CORRECTION-RECONCILIATION-CHAT-001",
+  "schema_version": 2,
+  "selected_wrong_feedback_entry_count": 106,
+  "semantic_review_work_id": "SC900-QUESTION-EXPLANATION-QUALITY-FIRST-TRANCHE-SEMANTIC-REVIEW-CHAT-001",
+  "source_bank": "sc900_bank_v8_content_correction_001.json",
+  "source_bank_content_fingerprint": "a0f0f57cd3919863d7878a02949c8862c6a31dbbc9ce0ee4ffc6f84a91c9358d",
+  "source_bank_raw_sha256": "cd699a0e8af7c366bf5672bb2b1d90547c7071e87a47cbd766512bef59b2c791",
+  "target_count": 48,
+  "work_id": "SC900-EXPLANATION-IMPLEMENTATION-TRANCHE-1-STALE-DISTRACTOR-REFERENCE-IMPLEMENTATION-001"
+}

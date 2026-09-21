@@ -8,6 +8,21 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from content_revision_correction_authority import AdmittedCorrectionRevision
+from content_revision_correction_migration import (
+    ContentCorrectionMigrationError,
+    derive_correction_migration_id,
+    migrate_correction_progress_payload,
+    migrate_correction_session_payload,
+)
+from content_revision_explanation_authority import AdmittedExplanationRevision
+from content_revision_explanation_migration import (
+    ContentExplanationMigrationError,
+    accepted_explanation_migration_lineage_identities,
+    derive_explanation_migration_id,
+    migrate_explanation_progress_payload,
+    migrate_explanation_session_payload,
+)
 from content_revision_migration import (
     ContentRevisionMigrationError,
     MigrationFailureReason,
@@ -24,6 +39,44 @@ from question_identity import (
     registered_progress_identity_bank,
 )
 from storage_utils import backup_bad_json_file, load_json_or_backup, safe_write_json
+
+
+def _migrate_progress_for_revision(payload, target_questions, revision, migrated_at):
+    if isinstance(revision, AdmittedExplanationRevision):
+        return migrate_explanation_progress_payload(payload, target_questions, revision, migrated_at)
+    if isinstance(revision, AdmittedCorrectionRevision):
+        return migrate_correction_progress_payload(payload, target_questions, revision, migrated_at)
+    return migrate_progress_payload(payload, target_questions, revision, migrated_at)
+
+
+def _migrate_session_for_revision(saved, target_questions, revision, target_bank_file, *, source_questions=None):
+    if isinstance(revision, AdmittedExplanationRevision):
+        return migrate_explanation_session_payload(
+            saved, target_questions, revision, target_bank_file, source_questions=source_questions
+        )
+    if isinstance(revision, AdmittedCorrectionRevision):
+        return migrate_correction_session_payload(
+            saved, target_questions, revision, target_bank_file, source_questions=source_questions
+        )
+    return migrate_session_payload(
+        saved, target_questions, revision, target_bank_file, source_questions=source_questions
+    )
+
+
+def _derive_migration_id_for_revision(revision) -> str:
+    if isinstance(revision, AdmittedExplanationRevision):
+        return derive_explanation_migration_id(revision)
+    if isinstance(revision, AdmittedCorrectionRevision):
+        return derive_correction_migration_id(revision)
+    return derive_migration_id(revision)
+
+
+def _accepted_migration_identities_for_revision(revision):
+    if isinstance(revision, AdmittedExplanationRevision):
+        return accepted_explanation_migration_lineage_identities(revision)
+    if isinstance(revision, AdmittedCorrectionRevision):
+        return frozenset({(revision.manifest_sha256, derive_correction_migration_id(revision))})
+    return accepted_migration_lineage_identities(revision)
 
 
 @dataclass(slots=True)
@@ -241,9 +294,13 @@ class RuntimePersistence:
                         ),
                     )
                 try:
-                    expected = migrate_progress_payload(leftover, target_questions, revision, migrated_at)
-                    verified = migrate_progress_payload(existing, target_questions, revision, migrated_at)
-                except ContentRevisionMigrationError as exc:
+                    expected = _migrate_progress_for_revision(leftover, target_questions, revision, migrated_at)
+                    verified = _migrate_progress_for_revision(existing, target_questions, revision, migrated_at)
+                except (
+                    ContentRevisionMigrationError,
+                    ContentCorrectionMigrationError,
+                    ContentExplanationMigrationError,
+                ) as exc:
                     return None, None, exc
                 if expected.status != MigrationStatus.APPLIED:
                     return (
@@ -281,8 +338,12 @@ class RuntimePersistence:
                         return existing, archive, exc
                 return existing, archive, None
         try:
-            result = migrate_progress_payload(transform_source, target_questions, revision, migrated_at)
-        except ContentRevisionMigrationError as exc:
+            result = _migrate_progress_for_revision(transform_source, target_questions, revision, migrated_at)
+        except (
+            ContentRevisionMigrationError,
+            ContentCorrectionMigrationError,
+            ContentExplanationMigrationError,
+        ) as exc:
             return None, None, exc
         if result.status == MigrationStatus.MIGRATION_ALREADY_APPLIED:
             return result.payload, None, None
@@ -302,8 +363,12 @@ class RuntimePersistence:
         if reread_error is not None or reread is None:
             return None, archive, reread_error
         try:
-            verified = migrate_progress_payload(reread, target_questions, revision, migrated_at)
-        except ContentRevisionMigrationError as exc:
+            verified = _migrate_progress_for_revision(reread, target_questions, revision, migrated_at)
+        except (
+            ContentRevisionMigrationError,
+            ContentCorrectionMigrationError,
+            ContentExplanationMigrationError,
+        ) as exc:
             return None, archive, exc
         if verified.status != MigrationStatus.MIGRATION_ALREADY_APPLIED:
             return (
@@ -339,14 +404,18 @@ class RuntimePersistence:
         if error is not None or payload is None:
             return None, None, error
         try:
-            expected = migrate_session_payload(
+            expected = _migrate_session_for_revision(
                 payload,
                 target_questions,
                 revision,
                 target_bank_file,
                 source_questions=source_questions,
             )
-        except ContentRevisionMigrationError as exc:
+        except (
+            ContentRevisionMigrationError,
+            ContentCorrectionMigrationError,
+            ContentExplanationMigrationError,
+        ) as exc:
             return None, None, exc
         if target_path.exists() and not same_path:
             existing, existing_error = self._read_json_nonmutating(target_path)
@@ -410,8 +479,8 @@ def _progress_payloads_equal_ignoring_retry_migrated_at(
 def _payload_for_recovery_compare(payload: dict[str, Any], revision) -> str:
     normalized = json.loads(json.dumps(payload))
     lineage = normalized.get("content_revision_lineage")
-    canonical_migration_id = derive_migration_id(revision)
-    accepted_identities = accepted_migration_lineage_identities(revision)
+    canonical_migration_id = _derive_migration_id_for_revision(revision)
+    accepted_identities = _accepted_migration_identities_for_revision(revision)
     if isinstance(lineage, list):
         for row in lineage:
             if not isinstance(row, dict):

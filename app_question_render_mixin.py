@@ -6,7 +6,7 @@ from cand01r3_runtime import get_context, is_cand01r3_active, revalidate_trainin
 from progress_store import is_super_confident_active, recovery_ladder_stage, study_status_name
 from render_cache import ChoiceRenderSnapshot, QuestionRenderSnapshot
 from source_trust import derive_source_trust_warning
-from ui_theme import BLUE, DARK, RED, TEXT
+from ui_theme import BLUE, DARK, RED
 
 
 class QuestionRenderMixin:
@@ -91,13 +91,54 @@ class QuestionRenderMixin:
         self._render_answer_toast()
         return self._progress_record(q, create=False)
 
+    def _general_explanation_for_question(self, q, show_exam_feedback):
+        if not q.get("answered") or not show_exam_feedback:
+            return ""
+        return str(q.get("general_explanation", "")).strip() or "No explanation is available for this question yet."
+
+    def _choice_feedback_is_legacy_blanket_duplicate(self, q):
+        choices = q.get("choices")
+        feedback = q.get("choice_explanations")
+        general = str(q.get("general_explanation", "") or "").strip()
+        if not isinstance(choices, dict) or not isinstance(feedback, dict) or not feedback:
+            return False
+        if set(feedback) != set(choices):
+            return False
+        return bool(general) and all(str(value or "").strip() == general for value in feedback.values())
+
+    def _selected_wrong_feedback_for_letter(self, q, letter, show_exam_feedback):
+        if not q.get("answered") or not show_exam_feedback:
+            return ""
+        selected = set(q.get("selected", []))
+        correct = set(q.get("correct", []))
+        if letter not in selected or letter in correct:
+            return ""
+        feedback = q.get("choice_explanations")
+        if not isinstance(feedback, dict) or self._choice_feedback_is_legacy_blanket_duplicate(q):
+            return ""
+        return str(feedback.get(letter, "") or "").strip()
+
+    def _inline_explanation_for_question(self, q, show_exam_feedback):
+        for letter in q.get("selected", []):
+            text = self._selected_wrong_feedback_for_letter(q, letter, show_exam_feedback)
+            if text:
+                return letter, text
+        return None, ""
+
+    def _general_explanation_visible(self, q, show_exam_feedback):
+        if not self._general_explanation_for_question(q, show_exam_feedback):
+            return False
+        recall_var = getattr(self, "explanation_recall_var", None)
+        recall_enabled = bool(recall_var is not None and recall_var.get())
+        return not (recall_enabled and self._question_correct(q) and not q.get("recall_ready", False))
+
     def _build_question_render_snapshot(self, q, show_exam_feedback, ladder_stage, trust_warning):
         header_text = self._question_header_text(q)
         meta_text = self._question_meta_text(q, trust_warning)
         selected = set(q.get("selected", []))
         pending = set(q.get("pending", []))
         correct = set(q.get("correct", []))
-        inline_letter, inline_text = self._inline_explanation_for_question(q, show_exam_feedback)
+        general_explanation = self._general_explanation_for_question(q, show_exam_feedback)
         choice_snapshots = []
         for letter in sorted(q.get("choices", {})):
             state = "default"
@@ -113,13 +154,14 @@ class QuestionRenderMixin:
                     state = "pending"
             elif letter in pending:
                 state = "pending"
+            detail = self._selected_wrong_feedback_for_letter(q, letter, show_exam_feedback)
             choice_snapshots.append(
                 ChoiceRenderSnapshot(
                     letter=letter,
                     text=str(q.get("choices", {}).get(letter) or ""),
                     state=state,
-                    detail=inline_text if letter == inline_letter else "",
-                    detail_emphasis=bool(letter == inline_letter and letter in selected and letter not in correct),
+                    detail=detail,
+                    detail_emphasis=bool(detail),
                 )
             )
         width = max(0, int(self.content_canvas.winfo_width() or 0))
@@ -143,6 +185,8 @@ class QuestionRenderMixin:
             miss_reason=str(q.get("last_miss_reason") or ""),
             session_tag=str(q.get("session_tag") or ""),
             ladder_stage=str(ladder_stage or ""),
+            general_explanation=general_explanation,
+            general_explanation_visible=self._general_explanation_visible(q, show_exam_feedback),
         )
         cache_key = (snapshot.question_number, snapshot)
         return self.render_cache.get(cache_key) or self.render_cache.put(cache_key, snapshot)
@@ -164,23 +208,7 @@ class QuestionRenderMixin:
             )
         return answer_meta
 
-    def _inline_explanation_for_question(self, q, show_exam_feedback):
-        inline_explanation_text = ""
-        inline_explanation_letter = None
-        if q.get("answered") and show_exam_feedback:
-            explanation_text = (
-                str(q.get("general_explanation", "")).strip() or "No explanation is available for this question yet."
-            )
-            inline_explanation_text = explanation_text
-            selected_letters = [letter for letter in q.get("selected", []) if q["choices"].get(letter)]
-            if selected_letters:
-                inline_explanation_letter = selected_letters[0]
-            else:
-                correct_letters = [letter for letter in q.get("correct", []) if q["choices"].get(letter)]
-                inline_explanation_letter = correct_letters[0] if correct_letters else None
-        return inline_explanation_letter, inline_explanation_text
-
-    def _render_choice_rows(self, q, show_exam_feedback, inline_explanation_letter, inline_explanation_text):
+    def _render_choice_rows(self, q, show_exam_feedback):
         pending = set(q.get("pending", []))
         selected = set(q.get("selected", []))
         correct = set(q.get("correct", []))
@@ -201,15 +229,17 @@ class QuestionRenderMixin:
                             row.mark_selected_wrong()
                         elif letter in correct:
                             row.mark_correct_unselected()
-                        if letter == inline_explanation_letter and inline_explanation_text:
-                            is_wrong_review = bool(letter in selected and letter not in correct)
+                        selected_wrong_feedback = self._selected_wrong_feedback_for_letter(
+                            q, letter, show_exam_feedback
+                        )
+                        if selected_wrong_feedback:
                             row.set_detail(
-                                inline_explanation_text,
+                                selected_wrong_feedback,
                                 bg=row.inner.cget("bg"),
-                                fg=(DARK if is_wrong_review else TEXT),
+                                fg=DARK,
                                 expanded=True,
                                 show_toggle=False,
-                                emphasis=is_wrong_review,
+                                emphasis=True,
                             )
                     elif letter in selected:
                         row.mark_pending(multi=q.get("question_type") == "multi")
@@ -219,6 +249,22 @@ class QuestionRenderMixin:
                         row.mark_pending(multi=q.get("question_type") == "multi")
             else:
                 row.pack_forget()
+
+    def _render_general_explanation_block(self, q, show_exam_feedback):
+        general_text = self._general_explanation_for_question(q, show_exam_feedback)
+        if not general_text:
+            self.recall_prompt_wrap.pack_forget()
+            self.general_card.pack_forget()
+            self.explanation_wrap.pack_forget()
+            return
+        self.general_card.configure(text=general_text)
+        self.explanation_wrap.pack(fill="x", pady=(10, 0))
+        if self._general_explanation_visible(q, show_exam_feedback):
+            self.recall_prompt_wrap.pack_forget()
+            self.general_card.pack(fill="x", pady=(0, 10))
+        else:
+            self.general_card.pack_forget()
+            self.recall_prompt_wrap.pack(fill="x", pady=(0, 8))
 
     def _render_question_actions(self, q):
         self.flag_btn.configure(text="UNFLAG" if q.get("flagged") else "FLAG")
@@ -326,13 +372,10 @@ class QuestionRenderMixin:
         if snapshot != self.last_render_snapshot:
             self._render_question_header(q, trust_warning)
             answer_meta = self._question_answer_meta(q, ladder_stage)
-            inline_explanation_letter, inline_explanation_text = self._inline_explanation_for_question(
-                q, show_exam_feedback
-            )
-            self._render_choice_rows(q, show_exam_feedback, inline_explanation_letter, inline_explanation_text)
+            self._render_choice_rows(q, show_exam_feedback)
             self._render_question_actions(q)
             self._render_review_panel(q, show_exam_feedback, answer_meta)
-            self.explanation_wrap.pack_forget()
+            self._render_general_explanation_block(q, show_exam_feedback)
             self.last_render_snapshot = snapshot
         self._update_progress()
         self._apply_compact_review_visibility(q)
