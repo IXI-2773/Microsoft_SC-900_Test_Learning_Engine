@@ -5,7 +5,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 
-from app_constants import MODE_EXAM, MODE_PRACTICE
+from app_constants import MODE_EXAM, MODE_PRACTICE, QUESTION_TAG_STREAK_RESCUE_PREFIX
 from app_info import APP_VERSION
 from builder_identity import (
     builder_identities_match,
@@ -773,8 +773,28 @@ class SessionPersistenceMixin:
         )
         if progress_changed:
             self.save_progress()
+        self._reconstruct_rescue_domains_triggered()
         self.refresh_session_quests()
         self.refresh_reward_badges()
+
+    def _reconstruct_rescue_domains_triggered(self) -> None:
+        prefix = QUESTION_TAG_STREAK_RESCUE_PREFIX
+        domains: set[str] = set()
+
+        def absorb(tag: object) -> None:
+            text = str(tag or "")
+            if not text.startswith(prefix):
+                return
+            domain = text[len(prefix) :].strip()
+            if domain:
+                domains.add(domain)
+
+        for question in list(getattr(self, "questions", []) or []):
+            absorb(question.get("session_tag"))
+        for event in list(getattr(self, "session_answer_history", []) or []):
+            if isinstance(event, dict):
+                absorb(event.get("session_tag"))
+        self.rescue_domains_triggered = domains
 
     def _migrate_legacy_repair_concept_key(self, question, answer_state):
         legacy_key = answer_state.get("repair_concept_key")

@@ -657,7 +657,10 @@ class GameRewardsMixin:
             ranked.append((score, qnum, candidate))
         ranked.sort(key=lambda row: (row[0], -row[1]), reverse=True)
         inserted = self._insert_followup_questions(
-            current_q, [candidate for _score, _qnum, candidate in ranked[:1]], QUESTION_TAG_BOSS_ROUND
+            current_q,
+            [candidate for _score, _qnum, candidate in ranked],
+            QUESTION_TAG_BOSS_ROUND,
+            maximum=1,
         )
         if inserted:
             self.session_boss_markers.add(answered_count)
@@ -747,7 +750,10 @@ class GameRewardsMixin:
             ranked.append((score, int(candidate_qnum or 0), candidate))
         ranked.sort(key=lambda row: (row[0], -row[1]), reverse=True)
         inserted = self._insert_followup_questions(
-            current_q, [candidate for _score, _qnum, candidate in ranked[:1]], QUESTION_TAG_STEALTH_CHECKPOINT
+            current_q,
+            [candidate for _score, _qnum, candidate in ranked],
+            QUESTION_TAG_STEALTH_CHECKPOINT,
+            maximum=1,
         )
         if inserted:
             self.session_stealth_markers.add(answered_count)

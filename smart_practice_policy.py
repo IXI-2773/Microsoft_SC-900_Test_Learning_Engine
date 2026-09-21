@@ -111,7 +111,21 @@ def default_policy_values() -> dict[str, Any]:
         "minimum_question_quality_samples": 10,
         "possible_bad_key_minimum_samples": 20,
         "quality_risk_maximum": 4.0,
+        "cross_session_spacing_threshold_hours": 72,
     }
+
+
+def cross_session_spacing_threshold_hours(policy_values: Mapping[str, Any] | None) -> float:
+    values = dict(policy_values or {})
+    if "cross_session_spacing_threshold_hours" not in values:
+        return 72.0
+    try:
+        hours = float(values["cross_session_spacing_threshold_hours"])
+    except (TypeError, ValueError):
+        return 72.0
+    if hours != hours or hours <= 0.0 or hours == float("inf"):
+        return 72.0
+    return hours
 
 
 def make_policy(
@@ -296,6 +310,13 @@ def validate_policy_values(values: Mapping[str, Any]) -> tuple[bool, list[str]]:
         reasons.append("possible_bad_key_samples_out_of_bounds")
     if float(values.get("quality_risk_maximum", 4.0) or 4.0) < 0.0 or float(values.get("quality_risk_maximum", 4.0) or 4.0) > 6.0:
         reasons.append("quality_risk_maximum_out_of_bounds")
+    if "cross_session_spacing_threshold_hours" in values:
+        try:
+            spacing_hours = float(values.get("cross_session_spacing_threshold_hours"))
+        except (TypeError, ValueError):
+            spacing_hours = float("nan")
+        if spacing_hours != spacing_hours or spacing_hours <= 0.0 or spacing_hours == float("inf"):
+            reasons.append("cross_session_spacing_threshold_hours_invalid")
     return not reasons, reasons
 
 
