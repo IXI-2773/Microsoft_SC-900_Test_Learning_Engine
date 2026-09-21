@@ -1,0 +1,48 @@
+{
+  "continuity_policy": "FULL_CONTINUITY_EXPLANATION_ONLY",
+  "edges": [
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-vulnerability-management/defender-vulnerability-management",
+        "https://learn.microsoft.com/en-us/azure/sentinel/hunting",
+        "https://learn.microsoft.com/en-us/defender-for-identity/what-is",
+        "https://learn.microsoft.com/en-us/defender-office-365/mdo-about"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "abaddff647ab335935215f33e851c4ca90a619aae8973252335c1c7b114786b1",
+      "question_id": "sc900_mlc_q118",
+      "review_entry_identity": "b8c3b4bc5e54365b93b40cf0b0cca3c22f0f11ccdbaa24e01c2df082a505e959",
+      "to_content_fingerprint": "73a81f5a7c49ce8843b165ab747bb604323fec780f6fa55d64d03ea65e87d3c8"
+    }
+  ],
+  "manifest_kind": "sc900_content_revision_explanation",
+  "payload_sha256": "c938805a9c73e3d73047fa7518fa9adfc7ff23c7baa9769387a30a7b0a8e9730",
+  "permitted_change_class": "EXPLANATION_ONLY_INSTRUCTIONAL_REVISION",
+  "revision_spec": {
+    "file_sha256": "3511d9d841602533d24d4f63c0a2196fd9a4e5e0b6d9ba5a1f290da464d8f2dc",
+    "filename": "content_revision_evidence/specs/sc900_explanation_q118_repair_001.json",
+    "payload_sha256": "a28adc881d1efe154e005b96deb971e94ad06303f2185ec0150756b9928fe582"
+  },
+  "schema_version": 2,
+  "semantic_review_ledger": {
+    "file_sha256": "20389170c8cfd33c732bf5ab56beeb548797939cf6fd82e3a462b5bfc84eee32",
+    "filename": "content_revision_evidence/reviews/SC900-EXPLANATION-Q118-REPAIR-001/semantic_review_ledger.json",
+    "payload_sha256": "8c2cbdc571e86d20f8730bd7ec964af83c5c833e586996345603112fc9f2126a"
+  },
+  "source_bank": {
+    "content_fingerprint": "f6e0040474383b32232f149d2ee2665e6af924806e8971dd96a8658d109150ff",
+    "file_sha256": "b6006ddb62aaea9549778d91e12ae1df4e9db9001186abe565a4de0af5e672e5",
+    "filename": "sc900_bank_v8_explanation_tranche_1.json",
+    "question_count": 454
+  },
+  "target_bank": {
+    "content_fingerprint": "875ba756392033279c8ab86abbbed287ca290ba780acd7852fe359b80752c8a6",
+    "file_sha256": "f18b2ad5174518f1c992c59663b93ad48d69483cefc1b72675af6d1486b1976d",
+    "filename": "sc900_bank_v8_explanation_q118_repair.json",
+    "question_count": 454
+  },
+  "work_id": "SC900-EXPLANATION-Q118-POST-CORRECTION-AUTHOR-NOTE-REPAIR-001"
+}

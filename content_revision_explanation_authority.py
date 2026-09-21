@@ -29,6 +29,46 @@ EXPECTED_SOURCE_CONTENT_FINGERPRINT = "a0f0f57cd3919863d7878a02949c8862c6a31dbbc
 REQUIRED_QUESTION_COUNT = 454
 AUTHORIZED_CHANGED_FIELDS = ("choice_explanations", "general_explanation")
 MS_LEARN_PREFIX = "https://learn.microsoft.com/"
+Q118_WORK_ID = "SC900-EXPLANATION-Q118-POST-CORRECTION-AUTHOR-NOTE-REPAIR-001"
+Q118_SEMANTIC_REVIEW_WORK_ID = "SC900-EXPLANATION-Q118-POST-CORRECTION-AUTHOR-NOTE-REPAIR-001"
+Q118_SOURCE_BANK_FILENAME = "sc900_bank_v8_explanation_tranche_1.json"
+Q118_TARGET_BANK_FILENAME = "sc900_bank_v8_explanation_q118_repair.json"
+Q118_TARGET_COUNT = 1
+Q118_WORDING_AUTHORITY = "EXPLICIT_IMPLEMENTATION_DIRECTIVE"
+Q118_SEMANTIC_REVIEW_DISPOSITION = "EXPLICIT_IMPLEMENTATION_DIRECTIVE"
+
+
+@dataclass(frozen=True, slots=True)
+class ExplanationPackageProfile:
+    work_id: str
+    semantic_review_work_id: str
+    source_bank_filename: str
+    target_bank_filename: str
+    target_count: int
+    semantic_review_disposition: str = "APPROVED"
+    wording_authority: str = ""
+
+
+TRANCHE_1_PROFILE = ExplanationPackageProfile(
+    work_id=WORK_ID,
+    semantic_review_work_id=SEMANTIC_REVIEW_WORK_ID,
+    source_bank_filename=SOURCE_BANK_FILENAME,
+    target_bank_filename=TARGET_BANK_FILENAME,
+    target_count=48,
+)
+Q118_PROFILE = ExplanationPackageProfile(
+    work_id=Q118_WORK_ID,
+    semantic_review_work_id=Q118_SEMANTIC_REVIEW_WORK_ID,
+    source_bank_filename=Q118_SOURCE_BANK_FILENAME,
+    target_bank_filename=Q118_TARGET_BANK_FILENAME,
+    target_count=Q118_TARGET_COUNT,
+    semantic_review_disposition=Q118_SEMANTIC_REVIEW_DISPOSITION,
+    wording_authority=Q118_WORDING_AUTHORITY,
+)
+EXPLANATION_PACKAGE_PROFILES = {
+    TRANCHE_1_PROFILE.work_id: TRANCHE_1_PROFILE,
+    Q118_PROFILE.work_id: Q118_PROFILE,
+}
 
 
 class ExplanationFailureReason(StrEnum):
@@ -240,10 +280,12 @@ def admit_explanation_revision(
     if (
         manifest["schema_version"] != SCHEMA_VERSION
         or manifest["manifest_kind"] != MANIFEST_KIND
-        or manifest["work_id"] != WORK_ID
         or manifest["continuity_policy"] != CONTINUITY_POLICY
         or manifest["permitted_change_class"] != PERMITTED_CHANGE_CLASS
     ):
+        return _fail(ExplanationFailureReason.AUTHORITY_KIND_MISMATCH)
+    profile = EXPLANATION_PACKAGE_PROFILES.get(manifest["work_id"]) if isinstance(manifest["work_id"], str) else None
+    if profile is None:
         return _fail(ExplanationFailureReason.AUTHORITY_KIND_MISMATCH)
     if canonical_manifest_sha256(manifest) != manifest["payload_sha256"]:
         return _fail(ExplanationFailureReason.MANIFEST_HASH_MISMATCH)
@@ -284,13 +326,20 @@ def admit_explanation_revision(
         return _fail(ExplanationFailureReason.LEDGER_HASH_MISMATCH)
 
     if (
-        spec.get("work_id") != WORK_ID
-        or spec.get("semantic_review_work_id") != SEMANTIC_REVIEW_WORK_ID
+        spec.get("work_id") != profile.work_id
+        or spec.get("semantic_review_work_id") != profile.semantic_review_work_id
         or spec.get("permitted_change_class") != PERMITTED_CHANGE_CLASS
         or spec.get("continuity_policy") != CONTINUITY_POLICY
-        or ledger.get("work_id") != WORK_ID
-        or ledger.get("semantic_review_work_id") != SEMANTIC_REVIEW_WORK_ID
-        or ledger.get("target_count") != 48
+        or ledger.get("work_id") != profile.work_id
+        or ledger.get("semantic_review_work_id") != profile.semantic_review_work_id
+        or ledger.get("target_count") != profile.target_count
+    ):
+        return _fail(ExplanationFailureReason.SEMANTIC_REVIEW_BINDING_MISMATCH)
+    if profile.wording_authority and (
+        ledger.get("independent_pre_implementation_semantic_review") is not False
+        or ledger.get("wording_authority") != profile.wording_authority
+        or spec.get("independent_pre_implementation_semantic_review") is not False
+        or spec.get("wording_authority") != profile.wording_authority
     ):
         return _fail(ExplanationFailureReason.SEMANTIC_REVIEW_BINDING_MISMATCH)
 
@@ -308,9 +357,9 @@ def admit_explanation_revision(
         return _fail(ExplanationFailureReason.SOURCE_CONTENT_FINGERPRINT_MISMATCH)
     if bank_content_fingerprint(target_questions) != manifest["target_bank"]["content_fingerprint"]:
         return _fail(ExplanationFailureReason.TARGET_CONTENT_FINGERPRINT_MISMATCH)
-    if manifest["source_bank"]["filename"] != SOURCE_BANK_FILENAME:
+    if manifest["source_bank"]["filename"] != profile.source_bank_filename:
         return _fail(ExplanationFailureReason.SOURCE_CONTENT_FINGERPRINT_MISMATCH)
-    if manifest["target_bank"]["filename"] != TARGET_BANK_FILENAME:
+    if manifest["target_bank"]["filename"] != profile.target_bank_filename:
         return _fail(ExplanationFailureReason.TARGET_CONTENT_FINGERPRINT_MISMATCH)
 
     source_index = _index(source_questions)
@@ -326,13 +375,17 @@ def admit_explanation_revision(
     spec_by_id = {str(row.get("question_id")): row for row in revisions if isinstance(row, Mapping)}
     ledger_by_id = {str(row.get("question_id")): row for row in ledger_entries if isinstance(row, Mapping)}
     expected_ids = list(spec.get("target_ids") or [])
-    if len(expected_ids) != 48 or set(spec_by_id) != set(expected_ids) or set(ledger_by_id) != set(expected_ids):
+    if (
+        len(expected_ids) != profile.target_count
+        or set(spec_by_id) != set(expected_ids)
+        or set(ledger_by_id) != set(expected_ids)
+    ):
         return _fail(ExplanationFailureReason.TARGET_SET_MISMATCH)
-    if len(edges) != 48:
+    if len(edges) != profile.target_count:
         return _fail(ExplanationFailureReason.TARGET_SET_MISMATCH)
 
     actual_changed_ids = [qid for qid in source_ids if source_index[qid] != target_index[qid]]
-    if set(actual_changed_ids) != set(expected_ids) or len(actual_changed_ids) != 48:
+    if set(actual_changed_ids) != set(expected_ids) or len(actual_changed_ids) != profile.target_count:
         return _fail(ExplanationFailureReason.TARGET_SET_MISMATCH)
 
     admitted_edges: list[ExplanationEdge] = []
@@ -376,9 +429,15 @@ def admit_explanation_revision(
         if (
             ledger_row.get("source_content_fingerprint") != source_fp
             or ledger_row.get("target_content_fingerprint") != target_fp
-            or ledger_row.get("semantic_review_disposition") != "APPROVED"
+            or ledger_row.get("semantic_review_disposition") != profile.semantic_review_disposition
         ):
             return _fail(ExplanationFailureReason.REVIEW_NOT_APPROVED, qid)
+        if profile.wording_authority and (
+            ledger_row.get("independent_pre_implementation_semantic_review") is not False
+            or ledger_row.get("wording_authority") != profile.wording_authority
+            or ledger_row.get("semantic_review_disposition") != profile.wording_authority
+        ):
+            return _fail(ExplanationFailureReason.SEMANTIC_REVIEW_BINDING_MISMATCH, qid)
         if canonical_manifest_sha256(ledger_row) != edge["review_entry_identity"]:
             return _fail(ExplanationFailureReason.SEMANTIC_REVIEW_BINDING_MISMATCH, qid)
         if list(edge["authority_refs"]) != list(spec_row.get("authority_refs") or []):

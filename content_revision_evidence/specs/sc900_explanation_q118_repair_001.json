@@ -1,0 +1,73 @@
+{
+  "continuity_policy": "FULL_CONTINUITY_EXPLANATION_ONLY",
+  "exact_head_governance_review": "PENDING_AFTER_PR",
+  "independent_pre_implementation_semantic_review": false,
+  "payload_sha256": "a28adc881d1efe154e005b96deb971e94ad06303f2185ec0150756b9928fe582",
+  "permitted_change_class": "EXPLANATION_ONLY_INSTRUCTIONAL_REVISION",
+  "predecessor_explanation_work_id": "SC900-EXPLANATION-IMPLEMENTATION-TRANCHE-1-STALE-DISTRACTOR-REFERENCE-IMPLEMENTATION-001",
+  "reconciliation_work_id": "SC900-EXPLANATION-DEFECT-QUEUE-POST-CORRECTION-RECONCILIATION-CHAT-001",
+  "revisions": [
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-vulnerability-management/defender-vulnerability-management",
+        "https://learn.microsoft.com/en-us/azure/sentinel/hunting",
+        "https://learn.microsoft.com/en-us/defender-for-identity/what-is",
+        "https://learn.microsoft.com/en-us/defender-office-365/mdo-about"
+      ],
+      "authorized_changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "choices": {
+        "A": "Microsoft Sentinel hunting",
+        "B": "Microsoft Defender for Identity",
+        "C": "Microsoft Defender for Office 365",
+        "D": "Microsoft Defender Vulnerability Management"
+      },
+      "content_correction_required": false,
+      "correct_key": [
+        "D"
+      ],
+      "currentness_checked_at": "2026-09-21",
+      "currentness_status": "PASS",
+      "explanation_only_repair_sufficient": true,
+      "objective_code": "defender_xdr",
+      "prompt": "Leadership wants a prioritized list of exposed software weaknesses on endpoints, not a SIEM correlation timeline. Which capability fits?",
+      "question_id": "sc900_mlc_q118",
+      "question_number": 272,
+      "semantic_review_work_id": "SC900-EXPLANATION-Q118-POST-CORRECTION-AUTHOR-NOTE-REPAIR-001",
+      "source_choice_explanations": {
+        "A": "Microsoft Defender Vulnerability Management is the vulnerability-management capability for discovering, assessing, prioritizing, and tracking remediation of endpoint weaknesses. Defender for Endpoint Plan 2 already includes core Defender Vulnerability Management capabilities such as vulnerability assessment and risk-based prioritization, so Defender for Endpoint should not be used as a competing distractor for this generic requirement.",
+        "B": "Microsoft Defender Vulnerability Management is the vulnerability-management capability for discovering, assessing, prioritizing, and tracking remediation of endpoint weaknesses. Defender for Endpoint Plan 2 already includes core Defender Vulnerability Management capabilities such as vulnerability assessment and risk-based prioritization, so Defender for Endpoint should not be used as a competing distractor for this generic requirement.",
+        "C": "Microsoft Defender Vulnerability Management is the vulnerability-management capability for discovering, assessing, prioritizing, and tracking remediation of endpoint weaknesses. Defender for Endpoint Plan 2 already includes core Defender Vulnerability Management capabilities such as vulnerability assessment and risk-based prioritization, so Defender for Endpoint should not be used as a competing distractor for this generic requirement.",
+        "D": "Microsoft Defender Vulnerability Management is the vulnerability-management capability for discovering, assessing, prioritizing, and tracking remediation of endpoint weaknesses. Defender for Endpoint Plan 2 already includes core Defender Vulnerability Management capabilities such as vulnerability assessment and risk-based prioritization, so Defender for Endpoint should not be used as a competing distractor for this generic requirement."
+      },
+      "source_content_fingerprint": "abaddff647ab335935215f33e851c4ca90a619aae8973252335c1c7b114786b1",
+      "source_general_explanation": "Microsoft Defender Vulnerability Management is the vulnerability-management capability for discovering, assessing, prioritizing, and tracking remediation of endpoint weaknesses. Defender for Endpoint Plan 2 already includes core Defender Vulnerability Management capabilities such as vulnerability assessment and risk-based prioritization, so Defender for Endpoint should not be used as a competing distractor for this generic requirement.",
+      "target_choice_explanations": {
+        "A": "Microsoft Sentinel hunting is used to investigate security data with hunting queries; it does not provide the endpoint vulnerability-prioritization capability asked for here.",
+        "B": "Microsoft Defender for Identity focuses on identity-related threats involving Active Directory and hybrid identities, not prioritized endpoint software vulnerabilities.",
+        "C": "Microsoft Defender for Office 365 protects email and collaboration workloads from threats; it is not the endpoint vulnerability-management capability."
+      },
+      "target_content_fingerprint": "73a81f5a7c49ce8843b165ab747bb604323fec780f6fa55d64d03ea65e87d3c8",
+      "target_general_explanation": "Microsoft Defender Vulnerability Management helps organizations discover, assess, prioritize, and remediate vulnerabilities and misconfigurations across endpoints. A request for a prioritized list of exposed software weaknesses therefore maps to Defender Vulnerability Management.",
+      "tested_decision": "mdvm_not_siem_timeline",
+      "wording_authority": "EXPLICIT_IMPLEMENTATION_DIRECTIVE"
+    }
+  ],
+  "schema_version": 2,
+  "semantic_review_work_id": "SC900-EXPLANATION-Q118-POST-CORRECTION-AUTHOR-NOTE-REPAIR-001",
+  "source_bank": {
+    "content_fingerprint": "f6e0040474383b32232f149d2ee2665e6af924806e8971dd96a8658d109150ff",
+    "file_sha256": "b6006ddb62aaea9549778d91e12ae1df4e9db9001186abe565a4de0af5e672e5",
+    "filename": "sc900_bank_v8_explanation_tranche_1.json",
+    "question_count": 454
+  },
+  "target_bank_filename": "sc900_bank_v8_explanation_q118_repair.json",
+  "target_count": 1,
+  "target_ids": [
+    "sc900_mlc_q118"
+  ],
+  "wording_authority": "EXPLICIT_IMPLEMENTATION_DIRECTIVE",
+  "work_id": "SC900-EXPLANATION-Q118-POST-CORRECTION-AUTHOR-NOTE-REPAIR-001"
+}
