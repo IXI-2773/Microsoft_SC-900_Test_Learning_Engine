@@ -880,23 +880,42 @@ def order_recent_exact_fallback(
     return picked
 
 
+def target6_suppression_tiers(
+    pool: Sequence[Mapping[str, Any]],
+    super_confident_qnums: set[Any],
+    freshness_suppressed_qnums: set[Any],
+) -> list[list[Mapping[str, Any]]]:
+    """Frozen suppression relaxation order.
+
+    1. super-confident UNION freshness suppressed
+    2. super-confident suppressed only, when that set is non-empty
+    3. full pool
+    """
+
+    union = set(super_confident_qnums) | set(freshness_suppressed_qnums)
+
+    def without(excluded: set[Any]) -> list[Mapping[str, Any]]:
+        return [question for question in pool if question.get("question_number") not in excluded]
+
+    tiers = [without(union)]
+    if super_confident_qnums:
+        tiers.append(without(set(super_confident_qnums)))
+    tiers.append(list(pool))
+    return tiers
+
+
 def apply_target6_suppression(
     pool: Sequence[Mapping[str, Any]],
     super_confident_qnums: set[Any],
     freshness_suppressed_qnums: set[Any],
     target: int,
 ) -> list[Mapping[str, Any]]:
-    union = set(super_confident_qnums) | set(freshness_suppressed_qnums)
-
-    def without(excluded: set[Any]) -> list[Mapping[str, Any]]:
-        return [question for question in pool if question.get("question_number") not in excluded]
-
-    joint = without(union)
-    if len(joint) >= max(1, target):
-        return joint
-    if super_confident_qnums and len(without(set(super_confident_qnums))) >= max(1, target):
-        return without(set(super_confident_qnums))
-    return list(pool)
+    tiers = target6_suppression_tiers(pool, super_confident_qnums, freshness_suppressed_qnums)
+    minimum = max(1, target)
+    for tier in tiers[:-1]:
+        if len(tier) >= minimum:
+            return tier
+    return list(tiers[-1])
 
 
 def _json_ready(value: Any) -> Any:

@@ -405,23 +405,51 @@ class QuestionFlowMixin:
         q["recall_ready"] = True
         self.render_question()
 
+    def _prepare_spaced_followups(
+        self,
+        candidates: list[QuestionRuntimeState],
+        tag: str,
+        *,
+        maximum: int | None = None,
+    ) -> list[QuestionRuntimeState]:
+        """Order hard eligibility, spacing, then maximum truncation.
+
+        ``candidates`` must already be the caller's complete bounded class in
+        adaptive rank order. Recent-exact fallback runs only when no normally
+        spacing-eligible candidate remains after hard eligibility and
+        same-session exclusion. ``maximum`` is a cap, not a required count.
+        """
+
+        prepared = [
+            candidate for candidate in candidates if revalidate_training_question(candidate, action=tag).role == "TRAIN"
+        ]
+        if (
+            prepared
+            and self.active_session_mode == MODE_SMART_PRACTICE
+            and hasattr(self, "_tranche_a_spacing_candidates")
+        ):
+            prepared = list(self._tranche_a_spacing_candidates(prepared))
+        if maximum is not None:
+            prepared = prepared[: max(0, int(maximum))]
+        return prepared
+
     def _insert_followup_questions(
-        self, current_q: QuestionRuntimeState, candidates: list[QuestionRuntimeState], tag: str
+        self,
+        current_q: QuestionRuntimeState,
+        candidates: list[QuestionRuntimeState],
+        tag: str,
+        *,
+        maximum: int | None = None,
     ) -> list[QuestionRuntimeState]:
         if not candidates:
             return []
-        if self.active_session_mode == MODE_SMART_PRACTICE and hasattr(self, "_tranche_a_spacing_candidates"):
-            candidates = self._tranche_a_spacing_candidates(candidates)
-            if not candidates:
-                return []
-        if is_cand01r3_active():
-            candidates = [
-                candidate
-                for candidate in candidates
-                if revalidate_training_question(candidate, action=tag).role == "TRAIN"
-            ]
-            if not candidates:
-                return []
+        prepare = getattr(self, "_prepare_spaced_followups", None)
+        if prepare is None:
+            candidates = QuestionFlowMixin._prepare_spaced_followups(self, candidates, tag, maximum=maximum)
+        else:
+            candidates = prepare(candidates, tag, maximum=maximum)
+        if not candidates:
+            return []
         existing_ids = self._session_question_ids()
         unique_candidates = [
             q for q in candidates if canonical_question_id(q) and canonical_question_id(q) not in existing_ids
@@ -442,22 +470,23 @@ class QuestionFlowMixin:
         return inserted
 
     def _insert_delayed_followup_questions(
-        self, current_q: QuestionRuntimeState, candidates: list[QuestionRuntimeState], tag: str, delay_slots: int = 3
+        self,
+        current_q: QuestionRuntimeState,
+        candidates: list[QuestionRuntimeState],
+        tag: str,
+        delay_slots: int = 3,
+        *,
+        maximum: int | None = None,
     ) -> list[QuestionRuntimeState]:
         if not candidates:
             return []
-        if self.active_session_mode == MODE_SMART_PRACTICE and hasattr(self, "_tranche_a_spacing_candidates"):
-            candidates = self._tranche_a_spacing_candidates(candidates)
-            if not candidates:
-                return []
-        if is_cand01r3_active():
-            candidates = [
-                candidate
-                for candidate in candidates
-                if revalidate_training_question(candidate, action=tag).role == "TRAIN"
-            ]
-            if not candidates:
-                return []
+        prepare = getattr(self, "_prepare_spaced_followups", None)
+        if prepare is None:
+            candidates = QuestionFlowMixin._prepare_spaced_followups(self, candidates, tag, maximum=maximum)
+        else:
+            candidates = prepare(candidates, tag, maximum=maximum)
+        if not candidates:
+            return []
         existing_ids = self._session_question_ids()
         unique_candidates = [
             q for q in candidates if canonical_question_id(q) and canonical_question_id(q) not in existing_ids
@@ -520,7 +549,7 @@ class QuestionFlowMixin:
             inserted.append(clone)
         return inserted
 
-    def find_question_twins(self, q: QuestionRuntimeState, limit: int = 2) -> list[QuestionRuntimeState]:
+    def find_question_twins(self, q: QuestionRuntimeState, limit: int | None = 2) -> list[QuestionRuntimeState]:
         topics = {str(topic).strip() for topic in q.get("topics", []) if str(topic).strip()}
         domain = q.get("domain")
         records = self._progress_questions()
@@ -547,7 +576,8 @@ class QuestionFlowMixin:
             )
             ranked.append((score, int(candidate.get("question_number") or 0), candidate))
         ranked.sort(key=lambda row: (row[0], -row[1]), reverse=True)
-        return [candidate for _score, _qnum, candidate in ranked[:limit]]
+        chosen = ranked if limit is None else ranked[:limit]
+        return [candidate for _score, _qnum, candidate in chosen]
 
     def _rebuild_followup_candidate_index(self) -> None:
         by_unit = {}
@@ -632,8 +662,8 @@ class QuestionFlowMixin:
     def maybe_queue_question_twins(self, q: QuestionRuntimeState) -> list[QuestionRuntimeState]:
         if self.active_session_mode == MODE_EXAM:
             return []
-        twins = self.find_question_twins(q, limit=2)
-        return self._insert_followup_questions(q, twins, QUESTION_TAG_TWIN)
+        twins = self.find_question_twins(q, limit=None)
+        return self._insert_followup_questions(q, twins, QUESTION_TAG_TWIN, maximum=2)
 
     def maybe_queue_delayed_recall_probe(self, q: QuestionRuntimeState) -> list[QuestionRuntimeState]:
         if self.active_session_mode == MODE_EXAM:
@@ -675,7 +705,10 @@ class QuestionFlowMixin:
             ranked.append((score, int(candidate.get("question_number") or 0), candidate))
         ranked.sort(key=lambda row: (row[0], -row[1]), reverse=True)
         return self._insert_delayed_followup_questions(
-            q, [candidate for _score, _qnum, candidate in ranked[:1]], QUESTION_TAG_DELAYED_RECALL_PROBE
+            q,
+            [candidate for _score, _qnum, candidate in ranked],
+            QUESTION_TAG_DELAYED_RECALL_PROBE,
+            maximum=1,
         )
 
     def _concept_memory_row_for_question(self, q: QuestionRuntimeState) -> dict[str, Any]:
@@ -691,7 +724,7 @@ class QuestionFlowMixin:
         return memory_map.get(f"{kind}::{unit}", {"state": "new", "evidence_count": 0, "next_ramp": "recognition"})
 
     def find_memory_ramp_candidates(
-        self, q: QuestionRuntimeState, limit: int = 1
+        self, q: QuestionRuntimeState, limit: int | None = 1
     ) -> tuple[str, list[QuestionRuntimeState]]:
         memory_row = self._concept_memory_row_for_question(q)
         if int(memory_row.get("evidence_count", 0)) < 2:
@@ -742,21 +775,22 @@ class QuestionFlowMixin:
             )
             ranked.append((score, int(candidate.get("question_number") or 0), candidate))
         ranked.sort(key=lambda row: (row[0], -row[1]), reverse=True)
-        return tag, [candidate for _score, _qnum, candidate in ranked[:limit]]
+        chosen = ranked if limit is None else ranked[:limit]
+        return tag, [candidate for _score, _qnum, candidate in chosen]
 
     def maybe_queue_memory_ramp(self, q: QuestionRuntimeState) -> list[QuestionRuntimeState]:
         if self.active_session_mode == MODE_EXAM:
             return []
         if str(q.get("session_tag") or "") in {QUESTION_TAG_RETRIEVAL_RAMP, QUESTION_TAG_TRANSFER_CHECK}:
             return []
-        tag, candidates = self.find_memory_ramp_candidates(q, limit=1)
+        tag, candidates = self.find_memory_ramp_candidates(q, limit=None)
         if not tag:
             return []
         delay = 2 if tag == QUESTION_TAG_RETRIEVAL_RAMP else 3
-        return self._insert_delayed_followup_questions(q, candidates, tag, delay_slots=delay)
+        return self._insert_delayed_followup_questions(q, candidates, tag, delay_slots=delay, maximum=1)
 
     def find_wrong_answer_memory_candidates(
-        self, q: QuestionRuntimeState, limit: int = 1
+        self, q: QuestionRuntimeState, limit: int | None = 1
     ) -> list[QuestionRuntimeState]:
         wrong_labels = [
             self._choice_concept_label(str(q.get("choices", {}).get(letter, "")))
@@ -802,17 +836,20 @@ class QuestionFlowMixin:
             )
             ranked.append((score, int(candidate.get("question_number") or 0), candidate))
         ranked.sort(key=lambda row: (row[0], -row[1]), reverse=True)
-        return [candidate for _score, _qnum, candidate in ranked[:limit]]
+        chosen = ranked if limit is None else ranked[:limit]
+        return [candidate for _score, _qnum, candidate in chosen]
 
     def maybe_queue_wrong_answer_memory(self, q: QuestionRuntimeState) -> list[QuestionRuntimeState]:
         if self.active_session_mode == MODE_EXAM:
             return []
         if str(q.get("session_tag") or "") == QUESTION_TAG_WRONG_ANSWER_MEMORY:
             return []
-        candidates = self.find_wrong_answer_memory_candidates(q, limit=1)
-        return self._insert_followup_questions(q, candidates, QUESTION_TAG_WRONG_ANSWER_MEMORY)
+        candidates = self.find_wrong_answer_memory_candidates(q, limit=None)
+        return self._insert_followup_questions(q, candidates, QUESTION_TAG_WRONG_ANSWER_MEMORY, maximum=1)
 
-    def find_confusion_pair_candidates(self, q: QuestionRuntimeState, limit: int = 1) -> list[QuestionRuntimeState]:
+    def find_confusion_pair_candidates(
+        self, q: QuestionRuntimeState, limit: int | None = 1
+    ) -> list[QuestionRuntimeState]:
         wrong_labels = [
             self._choice_concept_label(str(q.get("choices", {}).get(letter, "")))
             for letter in q.get("selected", [])
@@ -859,13 +896,14 @@ class QuestionFlowMixin:
             )
             ranked.append((score, int(candidate.get("question_number") or 0), candidate))
         ranked.sort(key=lambda row: (row[0], -row[1]), reverse=True)
-        return [candidate for _score, _qnum, candidate in ranked[:limit]]
+        chosen = ranked if limit is None else ranked[:limit]
+        return [candidate for _score, _qnum, candidate in chosen]
 
     def maybe_queue_confusion_pair_drill(self, q: QuestionRuntimeState) -> list[QuestionRuntimeState]:
         if self.active_session_mode == MODE_EXAM:
             return []
-        candidates = self.find_confusion_pair_candidates(q, limit=1)
-        return self._insert_followup_questions(q, candidates, QUESTION_TAG_CONFUSION_PAIR)
+        candidates = self.find_confusion_pair_candidates(q, limit=None)
+        return self._insert_followup_questions(q, candidates, QUESTION_TAG_CONFUSION_PAIR, maximum=1)
 
     def _domain_wrong_streak(self, domain: str) -> int:
         streak = 0
@@ -904,10 +942,11 @@ class QuestionFlowMixin:
             ranked.append((score, int(candidate.get("question_number") or 0), candidate))
         ranked.sort(key=lambda row: (row[0], -row[1]), reverse=True)
         ranked_candidates = [candidate for _score, _qnum, candidate in ranked]
-        if self.active_session_mode == MODE_SMART_PRACTICE and hasattr(self, "_tranche_a_spacing_candidates"):
-            ranked_candidates = self._tranche_a_spacing_candidates(ranked_candidates)
         inserted = self._insert_followup_questions(
-            q, ranked_candidates[:3], f"{QUESTION_TAG_STREAK_RESCUE_PREFIX}{domain}"
+            q,
+            ranked_candidates,
+            f"{QUESTION_TAG_STREAK_RESCUE_PREFIX}{domain}",
+            maximum=3,
         )
         if inserted:
             self.rescue_domains_triggered.add(domain)
@@ -1000,10 +1039,12 @@ class QuestionFlowMixin:
         if not is_correct and root_cause == "transfer_failure":
             candidates = [
                 candidate
-                for candidate in self.find_question_twins(q, limit=3)
+                for candidate in self.find_question_twins(q, limit=None)
                 if int(candidate.get("question_number") or 0) != int(q.get("question_number") or 0)
             ]
-            inserted = self._insert_delayed_followup_questions(q, candidates, "Transfer repair", delay_slots=2)
+            inserted = self._insert_delayed_followup_questions(
+                q, candidates, "Transfer repair", delay_slots=2, maximum=3
+            )
             if inserted:
                 for item in inserted:
                     item["repair_stage"] = "transfer"
@@ -1024,12 +1065,12 @@ class QuestionFlowMixin:
             elif str(row.get("status") or "") in {"unresolved", "blocked", ""}:
                 row["status"] = "provisional"
                 row["stage"] = "transfer"
-                tag, candidates = self.find_memory_ramp_candidates(q, limit=1)
+                tag, candidates = self.find_memory_ramp_candidates(q, limit=None)
                 if not candidates:
-                    candidates = self.find_question_twins(q, limit=1)
+                    candidates = self.find_question_twins(q, limit=None)
                     tag = QUESTION_TAG_TRANSFER_CHECK
                 inserted = self._insert_delayed_followup_questions(
-                    q, candidates, tag or QUESTION_TAG_TRANSFER_CHECK, delay_slots=3
+                    q, candidates, tag or QUESTION_TAG_TRANSFER_CHECK, delay_slots=3, maximum=1
                 )
                 if inserted:
                     for item in inserted:

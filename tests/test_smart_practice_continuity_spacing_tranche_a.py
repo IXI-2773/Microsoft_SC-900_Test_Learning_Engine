@@ -4,7 +4,7 @@ import random
 import sys
 import tempfile
 import unittest
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from unittest import mock
 
@@ -691,6 +691,451 @@ class SmartPracticeSpacingAppTests(unittest.TestCase):
         inserted = app._insert_followup_questions(app.questions[0], [dict(questions[1]), dict(questions[0])], "repair")
         self.assertEqual([], inserted)
         self.assertEqual(["c", "a", "b"], [question["id"] for question in app.questions])
+
+    def _weak_record(self):
+        return {
+            "attempts": 2,
+            "wrong_count": 2,
+            "correct_count": 0,
+            "last_correct": False,
+            "correct_streak": 0,
+        }
+
+    def _open_single(self, app, questions):
+        app.start_session_from_pool(
+            [dict(questions[0])],
+            mode=MODE_SMART_PRACTICE,
+            count="All visible",
+            randomize=False,
+            reset_clock=False,
+            preserve_if_saved=False,
+        )
+        app.session_question_limit = 12
+        return app.questions[0]
+
+    def _capture_followup_class(self, app, invoke):
+        captured = {}
+        original = app._prepare_spaced_followups
+
+        def spy(candidates, tag, maximum=None):
+            captured["ids"] = [candidate.get("id") for candidate in candidates]
+            captured["maximum"] = maximum
+            return original(candidates, tag, maximum=maximum)
+
+        app._prepare_spaced_followups = spy
+        try:
+            inserted = invoke()
+        finally:
+            app._prepare_spaced_followups = original
+        return captured, inserted
+
+    def _assert_normal_survives_pretruncation(self, app, invoke, recent_ids, normal_id):
+        captured, inserted = self._capture_followup_class(app, invoke)
+        ids = captured["ids"]
+        self.assertIn(normal_id, ids)
+        for recent_id in recent_ids:
+            self.assertIn(recent_id, ids)
+            self.assertLess(ids.index(recent_id), ids.index(normal_id))
+        self.assertEqual([normal_id], [item["id"] for item in inserted])
+        self.assertNotIn(normal_id, recent_ids)
+
+    def test_repair_a_twins_prefer_normal_candidate_hidden_by_old_limit(self):
+        app = self.make_app()
+        questions = [
+            _question("current", 1, domain="Shared", topic="Shared Topic"),
+            _question("recent-a", 2, domain="Shared", topic="Shared Topic"),
+            _question("recent-b", 3, domain="Shared", topic="Shared Topic"),
+            _question("normal", 4, domain="Shared", topic="Shared Topic"),
+        ]
+        self._install(
+            app,
+            questions,
+            [
+                self._event("recent-a", 2, _at(-timedelta(hours=2))),
+                self._event("recent-b", 3, _at(-timedelta(hours=3))),
+            ],
+        )
+        records = app._progress_questions()
+        records["recent-a"] = self._weak_record()
+        records["recent-b"] = self._weak_record()
+        self._open_single(app, questions)
+        window = [item["id"] for item in app.find_question_twins(app.questions[0], limit=2)]
+        self.assertEqual(["recent-a", "recent-b"], window)
+        self._assert_normal_survives_pretruncation(
+            app,
+            lambda: app.maybe_queue_question_twins(app.questions[0]),
+            ["recent-a", "recent-b"],
+            "normal",
+        )
+
+    def test_repair_b_wrong_answer_memory_prefers_normal_candidate(self):
+        app = self.make_app()
+        questions = [
+            _question("current", 1, domain="Shared", topic="Shared Topic"),
+            _question("recent", 2, domain="Shared", topic="Shared Topic"),
+            _question("normal", 3, domain="Shared", topic="Shared Topic"),
+        ]
+        for question in questions:
+            question["choices"] = {"A": "Approved (RIGHT)", "B": "Rejected (WRONG)"}
+            question["prompt"] = f"{question['prompt']} RIGHT WRONG"
+        self._install(app, questions, [self._event("recent", 2, _at(-timedelta(hours=2)))])
+        recent_record = self._weak_record()
+        recent_record["wrong_count"] = 8
+        app._progress_questions()["recent"] = recent_record
+        current = self._open_single(app, questions)
+        wrong_letter = next(letter for letter in current["choices"] if letter not in set(current.get("correct") or []))
+        current["selected"] = [wrong_letter]
+        window = [item["id"] for item in app.find_wrong_answer_memory_candidates(current, limit=1)]
+        self.assertEqual(["recent"], window)
+        self._assert_normal_survives_pretruncation(
+            app,
+            lambda: app.maybe_queue_wrong_answer_memory(current),
+            ["recent"],
+            "normal",
+        )
+
+    def test_repair_c_confusion_pair_prefers_normal_candidate(self):
+        app = self.make_app()
+        questions = [
+            _question("current", 1, domain="Shared", topic="Shared Topic"),
+            _question("recent", 2, domain="Shared", topic="Shared Topic"),
+            _question("normal", 3, domain="Shared", topic="Shared Topic"),
+        ]
+        for question in questions:
+            question["choices"] = {"A": "Approved (RIGHT)", "B": "Rejected (WRONG)"}
+            question["prompt"] = f"{question['prompt']} RIGHT WRONG"
+        self._install(app, questions, [self._event("recent", 2, _at(-timedelta(hours=2)))])
+        app._progress_questions()["recent"] = self._weak_record()
+        current = self._open_single(app, questions)
+        wrong_letter = next(letter for letter in current["choices"] if letter not in set(current.get("correct") or []))
+        current["selected"] = [wrong_letter]
+        window = [item["id"] for item in app.find_confusion_pair_candidates(current, limit=1)]
+        self.assertEqual(["recent"], window)
+        self._assert_normal_survives_pretruncation(
+            app,
+            lambda: app.maybe_queue_confusion_pair_drill(current),
+            ["recent"],
+            "normal",
+        )
+
+    def test_repair_d_delayed_recall_prefers_normal_candidate(self):
+        app = self.make_app()
+        questions = [
+            _question("current", 1, domain="Shared", topic="Shared Topic", objective="1.1"),
+            _question("recent", 2, domain="Shared", topic="Shared Topic", objective="1.1"),
+            _question("normal", 3, domain="Shared", topic="Shared Topic", objective="1.1"),
+        ]
+        self._install(app, questions, [self._event("recent", 2, _at(-timedelta(hours=2)))])
+        app._progress_questions()["normal"] = {
+            "attempts": 6,
+            "wrong_count": 0,
+            "correct_count": 6,
+            "last_correct": True,
+            "correct_streak": 6,
+        }
+        current = self._open_single(app, questions)
+        current["last_confidence"] = "Sure"
+        self._assert_normal_survives_pretruncation(
+            app,
+            lambda: app.maybe_queue_delayed_recall_probe(current),
+            ["recent"],
+            "normal",
+        )
+
+    def test_repair_e_memory_ramp_prefers_normal_candidate(self):
+        app = self.make_app()
+        questions = [
+            _question("current", 1, domain="Shared", topic="Shared Topic", objective="1.1"),
+            _question("recent", 2, domain="Shared", topic="Shared Topic", objective="1.1"),
+            _question("normal", 3, domain="Shared", topic="Shared Topic", objective="1.1"),
+        ]
+        self._install(
+            app,
+            questions,
+            [
+                self._event("current", 1, _at(-timedelta(days=10))),
+                self._event("current", 1, _at(-timedelta(days=9))),
+                self._event("recent", 2, _at(-timedelta(hours=2))),
+            ],
+        )
+        for event in app.progress_data["history"]:
+            event["correct"] = False
+        app._progress_questions()["normal"] = {
+            "attempts": 5,
+            "wrong_count": 0,
+            "correct_count": 5,
+            "last_correct": True,
+            "correct_streak": 5,
+        }
+        current = self._open_single(app, questions)
+        tag, window = app.find_memory_ramp_candidates(current, limit=1)
+        self.assertTrue(tag)
+        self.assertEqual(["recent"], [item["id"] for item in window])
+        self._assert_normal_survives_pretruncation(
+            app,
+            lambda: app.maybe_queue_memory_ramp(current),
+            ["recent"],
+            "normal",
+        )
+
+    def test_repair_f_misconception_repair_prefers_normal_candidate(self):
+        app = self.make_app()
+        questions = [
+            _question("current", 1, domain="Shared", topic="Shared Topic"),
+            _question("recent", 2, domain="Shared", topic="Shared Topic"),
+            _question("normal", 3, domain="Shared", topic="Shared Topic"),
+        ]
+        for question in questions:
+            question["choices"] = {"A": "Approved (RIGHT)", "B": "Rejected (WRONG)"}
+            question["prompt"] = f"{question['prompt']} RIGHT WRONG"
+        self._install(app, questions, [self._event("recent", 2, _at(-timedelta(hours=2)))])
+        app._progress_questions()["recent"] = self._weak_record()
+        current = self._open_single(app, questions)
+        wrong_letter = next(letter for letter in current["choices"] if letter not in set(current.get("correct") or []))
+        current["selected"] = [wrong_letter]
+        current["smart_root_cause"] = "concept_confusion"
+        inserted_box = {}
+
+        def invoke():
+            inserted_box["items"] = app.plan_misconception_repair(current, is_correct=False)
+            return inserted_box["items"]
+
+        self._assert_normal_survives_pretruncation(app, invoke, ["recent"], "normal")
+        self.assertEqual("contrast", inserted_box["items"][0]["repair_stage"])
+        self.assertEqual("Confusion pair drill", inserted_box["items"][0]["session_tag"])
+
+    def test_repair_g_streak_rescue_still_spaces_before_limit(self):
+        app = self.make_app()
+        questions = [_question("current", 1, domain="Shared", topic="Shared Topic")]
+        questions.extend(
+            _question(f"recent-{index}", index + 1, domain="Shared", topic=f"Topic {index}") for index in range(1, 4)
+        )
+        questions.append(_question("normal", 5, domain="Shared", topic="Other"))
+        history = [self._event(f"recent-{index}", index + 1, _at(-timedelta(hours=2))) for index in range(1, 4)]
+        self._install(app, questions, history)
+        records = app._progress_questions()
+        for index in range(1, 4):
+            records[f"recent-{index}"] = {
+                "attempts": 4,
+                "wrong_count": 5 - index,
+                "correct_count": 0,
+                "last_correct": False,
+                "correct_streak": 0,
+            }
+        current = self._open_single(app, questions)
+        app.session_answer_history = [
+            {"question_id": "current", "question_number": 1, "domain": "Shared", "correct": False},
+            {"question_id": "current", "question_number": 1, "domain": "Shared", "correct": False},
+        ]
+        self._assert_normal_survives_pretruncation(
+            app,
+            lambda: app.maybe_trigger_streak_rescue(current),
+            ["recent-1", "recent-2", "recent-3"],
+            "normal",
+        )
+
+    def test_repair_h_non_insertable_normal_does_not_block_fallback(self):
+        app = self.make_app()
+        questions = [
+            _question("current", 1, domain="Shared", topic="Shared Topic"),
+            _question("blocked-normal", 2, domain="Shared", topic="Shared Topic"),
+            _question("legal-recent", 3, domain="Shared", topic="Shared Topic"),
+        ]
+        self._install(app, questions, [self._event("legal-recent", 3, _at(-timedelta(hours=2)))])
+        app._progress_questions()["blocked-normal"] = self._weak_record()
+        current = self._open_single(app, questions)
+
+        def fake_revalidate(question, action="RENDER"):
+            role = "NOT_ELIGIBLE" if question.get("id") == "blocked-normal" else "TRAIN"
+            return type("EligibilityDecision", (), {"role": role})()
+
+        with mock.patch("app_question_flow_mixin.revalidate_training_question", side_effect=fake_revalidate):
+            captured, inserted = self._capture_followup_class(app, lambda: app.maybe_queue_question_twins(current))
+        self.assertLess(captured["ids"].index("blocked-normal"), captured["ids"].index("legal-recent"))
+        self.assertEqual(["legal-recent"], [item["id"] for item in inserted])
+
+    def _target6_questions(self):
+        return [
+            _question("kept", 1, domain="Domain A", topic="A", objective="1.1"),
+            _question("recent", 2, domain="Domain B", topic="B", objective="2.1"),
+            _question("relaxed", 3, domain="Domain C", topic="C", objective="3.1"),
+        ]
+
+    def test_repair_i_target6_uses_next_tier_instead_of_recent_fallback(self):
+        app = self.make_app()
+        questions = self._target6_questions()
+        moment = datetime.now().replace(microsecond=0)
+        self._install(app, questions, [self._event("recent", 2, (moment - timedelta(hours=24)).isoformat())])
+        app.smart_practice_evaluation_time = moment
+        records = app._progress_questions()
+        records["recent"] = self._weak_record()
+        records["relaxed"] = {"attempts": 0, "last_seen": (date.today() + timedelta(days=1)).isoformat()}
+        pool = [question["id"] for question in app.build_smart_practice_pool("2", randomize=False)]
+        self.assertEqual({"kept", "relaxed"}, set(pool))
+        self.assertNotIn("recent", pool)
+        app.smart_practice_builder_context_fingerprint = "builder-frozen"
+        app.smart_practice_bank_content_fingerprint = app.current_bank_fingerprint()
+        app.smart_practice_pool_cache = {}
+        app.smart_practice_signal_cache_key = None
+        snapshot = app._smart_practice_worker_snapshot(base_pool=list(questions))
+        foreground = [
+            question["id"]
+            for question in app.build_smart_practice_pool("2", randomize=False, base_pool=list(questions))
+        ]
+        detached = build_detached_pool(type(app), snapshot, count="2", randomize=False, base_pool=list(questions))
+        self.assertEqual(foreground, [question["id"] for question in detached])
+        self.assertEqual({"kept", "relaxed"}, set(foreground))
+
+    def test_repair_j_target6_respects_downstream_membership_constraint(self):
+        app = self.make_app()
+        questions = [
+            _question("dup", 1, domain="Domain A", topic="A", objective="1.1"),
+            _question("dup", 2, domain="Domain B", topic="B", objective="2.1"),
+            _question("other", 3, domain="Domain C", topic="C", objective="3.1"),
+            _question("recent", 4, domain="Domain D", topic="D", objective="4.1"),
+        ]
+        moment = datetime.now().replace(microsecond=0)
+        self._install(app, questions, [self._event("recent", 4, (moment - timedelta(hours=24)).isoformat())])
+        app.smart_practice_evaluation_time = moment
+        records = app._progress_questions()
+        records["recent"] = self._weak_record()
+        records["other"] = {"attempts": 0, "last_seen": (date.today() + timedelta(days=1)).isoformat()}
+        pool = [question["id"] for question in app.build_smart_practice_pool("2", randomize=False)]
+        self.assertEqual(["dup", "other"], pool)
+        self.assertNotIn("recent", pool)
+
+    def test_repair_k_target6_fallback_only_after_full_tier_shortfall(self):
+        app = self.make_app()
+        questions = [
+            _question("kept", 1, domain="Domain A", topic="A", objective="1.1"),
+            _question("newer", 2, domain="Domain B", topic="B", objective="2.1"),
+            _question("older", 3, domain="Domain C", topic="C", objective="3.1"),
+        ]
+        moment = datetime.now().replace(microsecond=0)
+        self._install(
+            app,
+            questions,
+            [
+                self._event("newer", 2, (moment - timedelta(hours=5)).isoformat()),
+                self._event("older", 3, (moment - timedelta(hours=40)).isoformat()),
+            ],
+        )
+        app.smart_practice_evaluation_time = moment
+        app._progress_questions()["newer"] = self._weak_record()
+        pool = [question["id"] for question in app.build_smart_practice_pool("2", randomize=False)]
+        self.assertEqual(["kept", "older"], pool)
+
+    def test_repair_l_invalid_chronology_stays_fail_closed(self):
+        app = self.make_app()
+        questions = [
+            _question("current", 1, domain="Shared", topic="Shared Topic"),
+            _question("invalid-a", 2, domain="Shared", topic="Shared Topic"),
+            _question("invalid-b", 3, domain="Shared", topic="Shared Topic"),
+            _question("normal", 4, domain="Shared", topic="Shared Topic"),
+        ]
+        self._install(
+            app,
+            questions,
+            [
+                self._event("invalid-a", 2, "not-a-timestamp"),
+                self._event("invalid-b", 3, "also-bad"),
+            ],
+        )
+        records = app._progress_questions()
+        records["invalid-a"] = self._weak_record()
+        records["invalid-b"] = self._weak_record()
+        current = self._open_single(app, questions)
+        self._assert_normal_survives_pretruncation(
+            app,
+            lambda: app.maybe_queue_question_twins(current),
+            ["invalid-a", "invalid-b"],
+            "normal",
+        )
+        summary = _summary(questions[1], [{"at": "not-a-timestamp", "question_id": "invalid-a"}])
+        self.assertEqual(EXPOSURE_INVALID, summary.status)
+        self.assertNotEqual(EXPOSURE_NEVER, summary.status)
+
+        app = self.make_app()
+        questions = [
+            _question("current", 1, domain="Shared", topic="Shared Topic"),
+            _question("invalid", 2, domain="Shared", topic="Shared Topic"),
+            _question("recent", 3, domain="Shared", topic="Shared Topic"),
+        ]
+        for question in questions:
+            question["choices"] = {"A": "Approved (RIGHT)", "B": "Rejected (WRONG)"}
+            question["prompt"] = f"{question['prompt']} RIGHT WRONG"
+        self._install(
+            app,
+            questions,
+            [
+                self._event("invalid", 2, "not-a-timestamp"),
+                self._event("recent", 3, _at(-timedelta(hours=10))),
+            ],
+        )
+        app._progress_questions()["invalid"] = self._weak_record()
+        current = self._open_single(app, questions)
+        wrong_letter = next(letter for letter in current["choices"] if letter not in set(current.get("correct") or []))
+        current["selected"] = [wrong_letter]
+        captured, inserted = self._capture_followup_class(app, lambda: app.maybe_queue_confusion_pair_drill(current))
+        self.assertLess(captured["ids"].index("invalid"), captured["ids"].index("recent"))
+        self.assertEqual(["recent"], [item["id"] for item in inserted])
+
+        app = self.make_app()
+        questions = [
+            _question("kept", 1, domain="Domain A", topic="A", objective="1.1"),
+            _question("invalid", 2, domain="Domain B", topic="B", objective="2.1"),
+            _question("relaxed", 3, domain="Domain C", topic="C", objective="3.1"),
+        ]
+        self._install(app, questions, [self._event("invalid", 2, "not-a-timestamp")])
+        app._progress_questions()["relaxed"] = {
+            "attempts": 0,
+            "last_seen": (date.today() + timedelta(days=1)).isoformat(),
+        }
+        pool = [question["id"] for question in app.build_smart_practice_pool("2", randomize=False)]
+        self.assertEqual({"kept", "relaxed"}, set(pool))
+        self.assertNotIn("invalid", pool)
+
+    def test_repair_m_repaired_paths_are_deterministic(self):
+        def twin_ids():
+            app = self.make_app()
+            questions = [
+                _question("current", 1, domain="Shared", topic="Shared Topic"),
+                _question("recent-a", 2, domain="Shared", topic="Shared Topic"),
+                _question("recent-b", 3, domain="Shared", topic="Shared Topic"),
+                _question("normal", 4, domain="Shared", topic="Shared Topic"),
+            ]
+            self._install(
+                app,
+                questions,
+                [
+                    self._event("recent-a", 2, _at(-timedelta(hours=2))),
+                    self._event("recent-b", 3, _at(-timedelta(hours=3))),
+                ],
+            )
+            records = app._progress_questions()
+            records["recent-a"] = self._weak_record()
+            records["recent-b"] = self._weak_record()
+            self._open_single(app, questions)
+            return [item["id"] for item in app.maybe_queue_question_twins(app.questions[0])]
+
+        self.assertEqual(twin_ids(), twin_ids())
+
+        def pool_ids():
+            app = self.make_app()
+            questions = self._target6_questions()
+            moment = datetime.now().replace(microsecond=0)
+            self._install(app, questions, [self._event("recent", 2, (moment - timedelta(hours=24)).isoformat())])
+            app.smart_practice_evaluation_time = moment
+            records = app._progress_questions()
+            records["recent"] = self._weak_record()
+            records["relaxed"] = {"attempts": 0, "last_seen": (date.today() + timedelta(days=1)).isoformat()}
+            first = [question["id"] for question in app.build_smart_practice_pool("2", randomize=False)]
+            second = [question["id"] for question in app.build_smart_practice_pool("2", randomize=False)]
+            return first, second
+
+        first, second = pool_ids()
+        self.assertEqual(first, second)
+        self.assertEqual({"kept", "relaxed"}, set(first))
 
 
 if __name__ == "__main__":
