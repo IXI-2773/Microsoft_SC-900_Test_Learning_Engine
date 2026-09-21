@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any
@@ -33,13 +34,21 @@ class OnlineQueueProposal:
     evaluation_time_key: str
 
 
-def _score(question: Mapping[str, Any] | None) -> float:
-    if not question:
-        return float("-inf")
+def _score(question: Mapping[str, Any] | None) -> float | None:
+    if not question or "smart_utility" not in question:
+        return None
     try:
-        return float(question.get("smart_utility", float("-inf")))
+        score = float(question.get("smart_utility"))
     except (TypeError, ValueError):
-        return float("-inf")
+        return None
+    return score if math.isfinite(score) else None
+
+
+def _required_score(question: Mapping[str, Any] | None) -> float:
+    score = _score(question)
+    if score is None:
+        raise ValueError("INCOMPARABLE_SMART_UTILITY")
+    return score
 
 
 def _role(question: Mapping[str, Any] | None) -> str:
@@ -90,11 +99,11 @@ def build_online_queue_proposal(
         if str(question.get("repair_stage") or "").strip():
             continue
         question_id = canonical_question_id(question)
-        if question_id and question_id in scored:
+        if question_id and question_id in scored and _score(scored.get(question_id)) is not None:
             mutable_indices.append(index)
 
     mutable_ids = [expected[index] for index in mutable_indices]
-    mutable_ids.sort(key=lambda qid: (-_score(scored.get(qid)), qid))
+    mutable_ids.sort(key=lambda qid: (-_required_score(scored.get(qid)), qid))
     for index, question_id in zip(mutable_indices, mutable_ids, strict=True):
         proposed[index] = question_id
 
@@ -107,15 +116,15 @@ def build_online_queue_proposal(
         challengers = [
             question_id
             for question_id in eligible_challenger_ids
-            if question_id in scored and question_id not in session_ids
+            if question_id in scored and question_id not in session_ids and _score(scored.get(question_id)) is not None
         ]
-        challengers.sort(key=lambda qid: (-_score(scored[qid]), qid))
+        challengers.sort(key=lambda qid: (-_required_score(scored[qid]), qid))
         victims = [proposed[index] for index in mutable_indices]
-        victims.sort(key=lambda qid: (_score(scored.get(qid)), qid))
+        victims.sort(key=lambda qid: (_required_score(scored.get(qid)), qid))
         for challenger_id in challengers:
-            challenger_score = _score(scored[challenger_id])
+            challenger_score = _required_score(scored[challenger_id])
             for victim_id in victims:
-                victim_score = _score(scored.get(victim_id))
+                victim_score = _required_score(scored.get(victim_id))
                 delta = challenger_score - victim_score
                 if delta < float(minimum_score_delta):
                     continue
@@ -141,7 +150,7 @@ def build_online_queue_proposal(
                 break
 
     final_mutable = [proposed[index] for index in mutable_indices]
-    final_mutable.sort(key=lambda qid: (-_score(scored.get(qid)), qid))
+    final_mutable.sort(key=lambda qid: (-_required_score(scored.get(qid)), qid))
     for index, question_id in zip(mutable_indices, final_mutable, strict=True):
         proposed[index] = question_id
     protected_after = _protected_counts(proposed[current_index + 1 :], scored)

@@ -60,6 +60,21 @@ class SmartPracticeOnlinePureTests(unittest.TestCase):
         self.assertIsNone(proposal.replacement)
         self.assertEqual(tuple(q["id"] for q in session), proposal.proposed_ids)
 
+    def test_missing_challenger_utility_is_incomparable(self):
+        session = [_q("answered", 1, answered=True), _q("next", 2), _q("victim", 10)]
+        challenger = _q("challenger", 100)
+        challenger.pop("smart_utility")
+        proposal = _proposal(session, session + [challenger], {"challenger"})
+        self.assertIsNone(proposal.replacement)
+        self.assertEqual(tuple(q["id"] for q in session), proposal.proposed_ids)
+
+    def test_nonfinite_utilities_fail_closed(self):
+        session = [_q("answered", 1, answered=True), _q("next", 2), _q("victim", float("nan"))]
+        challenger = _q("challenger", float("nan"))
+        proposal = _proposal(session, session + [challenger], {"challenger"})
+        self.assertIsNone(proposal.replacement)
+        self.assertEqual(tuple(q["id"] for q in session), proposal.proposed_ids)
+
     def test_immediate_next_is_immutable(self):
         session = [_q("answered", 1, answered=True), _q("next", 1), _q("victim", 10)]
         challenger = _q("challenger", 50)
