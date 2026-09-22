@@ -1,0 +1,16 @@
+{
+  "authority_requested": "SEPARATE_CONTENT_CORRECTION",
+  "questions": [
+    {
+      "DEFECT": "sc900_p2_q001 asks which operation lets a recipient recover plaintext. Key B is Encryption. Choice D, Encryption for confidentiality, is also a correct description of that operation. The explanation distinguishes hashing from encryption and does not show why D is wrong, because D is not factually wrong. Prompt, choices, and key were not changed.",
+      "QUESTION_ID": "sc900_p2_q001",
+      "required_authority": "Prompt, choice, or key correction. Not authorized in this explanation package."
+    },
+    {
+      "DEFECT": "sc900_p3_q071 asks for the integrity check that does not recover file contents. Key C is Hashing. Choice A, Hashing for integrity, states that same operation and purpose. The explanation correctly contrasts hashing with encryption but does not make A incorrect. Prompt, choices, and key were not changed.",
+      "QUESTION_ID": "sc900_p3_q071",
+      "required_authority": "Prompt, choice, or key correction. Not authorized in this explanation package."
+    }
+  ],
+  "work_id": "SC900-FINAL-454-QUESTION-EXPLANATION-AUDIT-AND-REPAIR-001"
+}

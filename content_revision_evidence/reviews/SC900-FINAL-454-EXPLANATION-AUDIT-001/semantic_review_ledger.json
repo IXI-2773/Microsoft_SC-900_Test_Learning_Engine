@@ -1,0 +1,51 @@
+{
+  "entries": [
+    {
+      "evidence": "Source sc900_mlc_q045 key B, Microsoft Entra ID. Choices A, C, and D are other identity services. The source explanation says those other tools are network, records, or vulnerability products, which is not true of the choices. Microsoft Learn what-is-entra, retrieved 2026-09-22, identifies Entra ID as the cloud IAM service.",
+      "question_id": "sc900_mlc_q045",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "4924659ea638108dcdc483d44fd481b6d8dbbcc74063ff099bb2c510b5bedeb3",
+      "target_content_fingerprint": "c40f3a74e42e9959e8d739a68658619574105abc4be837947ada0be144276a08"
+    },
+    {
+      "evidence": "Source sc900_mlc_q068 key B. Choice A swaps Lifecycle Workflows and access reviews. The identical source explanation says lifecycle automation versus recertification without assigning either job to a named capability, so the swapped pairing is not corrected. Microsoft Learn lifecycle workflows and access-reviews-overview, retrieved 2026-09-22, assign those jobs as the successor explanation does.",
+      "question_id": "sc900_mlc_q068",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "6bfdff0acb352815a5a3461009a8d66afa3c8c5773462b478076e7addf88491c",
+      "target_content_fingerprint": "e83f314398d260d1168f7adf7622649f5c8626686fcd838494c627c02b64d70a"
+    },
+    {
+      "evidence": "Source sc900_mlc_q111 key B states the SIEM/SOAR pairing. Choice A reverses it. The source explanation only says that a fundamentals distinction is taught with Sentinel and does not state which role detects and which role automates response. Microsoft Learn Sentinel overview, retrieved 2026-09-22, describes Sentinel as SIEM and SOAR.",
+      "question_id": "sc900_mlc_q111",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "f83ef974ff9df4cb3c02385df2bdbdbec6e166936dfc62f53b8a0a25c3d4b969",
+      "target_content_fingerprint": "3b3bad020bb8fa46950934ed638a9056b86559ce069aff015dc6d767f823bdc7"
+    },
+    {
+      "evidence": "Source sc900_mlc_q261 key D pairs Endpoint with device EDR and Identity with Active Directory attacks. Choice A calls Defender for Identity the laptop EDR agent. The identical source explanation says the workloads differ but does not map either workload to the workstation or the domain controller. Microsoft Learn Defender for Endpoint and Defender for Identity, retrieved 2026-09-22, support that mapping.",
+      "question_id": "sc900_mlc_q261",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "78b1fc740264bf0856204147e3681feb9ebbf0d8a6e2fba7316e1b1ccd00c355",
+      "target_content_fingerprint": "21c85cf72e0b9da4a86db8eda0a403d17c00a630fe2c50bcf41bc63ee2abb477"
+    },
+    {
+      "evidence": "Source sc900_p1_q048 key D. Choice A names the improvement actions, while D names progress completing them. The source general explanation and all four choice explanations were the same sentence, which rules out a legal guarantee but does not say why A is not the score. Microsoft Learn compliance-manager-scoring, retrieved 2026-09-22, says the score measures progress completing recommended improvement actions. Successor feedback states that distinction.",
+      "question_id": "sc900_p1_q048",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "486015a1e42a7e062eb06b9d1bca43a6b3a18efee9933a6ff38c6503fb71ef91",
+      "target_content_fingerprint": "dabc8a137984d47e382a446eef5d37edc0fc39f029a92b4acc27e616d1366fbd"
+    },
+    {
+      "evidence": "Source sc900_p3_q007 key C is Microsoft Defender for Cloud. The source explanation names Microsoft Sentinel, which is not a choice, and says the other options address compliance or identity. Choices A and B are Defender XDR and Defender for Endpoint, not compliance products. Microsoft Learn defender-for-cloud-introduction, retrieved 2026-09-22, describes cloud posture management.",
+      "question_id": "sc900_p3_q007",
+      "semantic_review_disposition": "APPROVED",
+      "source_content_fingerprint": "59357bc1a0a0eebd057b07f0dc6211278e42c4f507e269c95c2f38c54ab43817",
+      "target_content_fingerprint": "10421af6bfd30f296351647cd5d519a19891885950762ba94cc5fab227565210"
+    }
+  ],
+  "payload_sha256": "1bca48b2aaa28873539cb20c6a886b67b9108c81cd2ecebe7a4fc5ad189be6ce",
+  "schema_version": 2,
+  "semantic_review_work_id": "SC900-FINAL-454-QUESTION-EXPLANATION-AUDIT-AND-REPAIR-001",
+  "target_count": 6,
+  "work_id": "SC900-FINAL-454-QUESTION-EXPLANATION-AUDIT-AND-REPAIR-001"
+}

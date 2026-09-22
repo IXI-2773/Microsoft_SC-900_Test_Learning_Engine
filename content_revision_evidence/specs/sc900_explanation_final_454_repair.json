@@ -1,0 +1,172 @@
+{
+  "continuity_policy": "FULL_CONTINUITY_EXPLANATION_ONLY",
+  "payload_sha256": "83bbcc4e4aed13fedef7694e84dcb9ca71b6011d50067fbcf5f313fbb0895b80",
+  "permitted_change_class": "EXPLANATION_ONLY_INSTRUCTIONAL_REVISION",
+  "revisions": [
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/fundamentals/what-is-entra"
+      ],
+      "authorized_changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "question_id": "sc900_mlc_q045",
+      "source_choice_explanations": {
+        "A": "Entra ID is the cloud directory for users and app access, including Microsoft 365. The other tools are network, records, or vulnerability products.",
+        "B": "Entra ID is the cloud directory for users and app access, including Microsoft 365. The other tools are network, records, or vulnerability products.",
+        "C": "Entra ID is the cloud directory for users and app access, including Microsoft 365. The other tools are network, records, or vulnerability products.",
+        "D": "Entra ID is the cloud directory for users and app access, including Microsoft 365. The other tools are network, records, or vulnerability products."
+      },
+      "source_content_fingerprint": "4924659ea638108dcdc483d44fd481b6d8dbbcc74063ff099bb2c510b5bedeb3",
+      "source_general_explanation": "Entra ID is the cloud directory for users and app access, including Microsoft 365. The other tools are network, records, or vulnerability products.",
+      "target_choice_explanations": {
+        "A": "Active Directory Domain Services is the on-premises domain service, not the cloud directory for Microsoft 365.",
+        "C": "Microsoft Entra Domain Services provides managed domain services such as domain join. It is not the cloud IAM directory.",
+        "D": "Microsoft Entra External ID is for external or customer identities, not the organization's workforce cloud directory."
+      },
+      "target_content_fingerprint": "c40f3a74e42e9959e8d739a68658619574105abc4be837947ada0be144276a08",
+      "target_general_explanation": "Microsoft Entra ID is the cloud directory for an organization's users, applications, and Microsoft 365 access."
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/what-is-lifecycle-workflows",
+        "https://learn.microsoft.com/en-us/entra/id-governance/access-reviews-overview"
+      ],
+      "authorized_changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "question_id": "sc900_mlc_q068",
+      "source_choice_explanations": {
+        "A": "Those two ID Governance capabilities cover automation of lifecycle versus periodic recertification.",
+        "B": "Those two ID Governance capabilities cover automation of lifecycle versus periodic recertification.",
+        "C": "Those two ID Governance capabilities cover automation of lifecycle versus periodic recertification.",
+        "D": "Those two ID Governance capabilities cover automation of lifecycle versus periodic recertification."
+      },
+      "source_content_fingerprint": "6bfdff0acb352815a5a3461009a8d66afa3c8c5773462b478076e7addf88491c",
+      "source_general_explanation": "Those two ID Governance capabilities cover automation of lifecycle versus periodic recertification.",
+      "target_choice_explanations": {
+        "A": "A reverses those jobs. Lifecycle Workflows automate joiner, mover, and leaver tasks; access reviews recertify access.",
+        "C": "Neither capability replaces Privileged Identity Management or Conditional Access.",
+        "D": "They are ID Governance capabilities, not Microsoft Entra ID Protection risk policies."
+      },
+      "target_content_fingerprint": "e83f314398d260d1168f7adf7622649f5c8626686fcd838494c627c02b64d70a",
+      "target_general_explanation": "Lifecycle Workflows automate joiner, mover, and leaver tasks. Access reviews recertify whether access should continue."
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/sentinel/overview"
+      ],
+      "authorized_changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "question_id": "sc900_mlc_q111",
+      "source_choice_explanations": {
+        "A": "That is the fundamentals SIEM versus SOAR distinction taught with Sentinel.",
+        "B": "That is the fundamentals SIEM versus SOAR distinction taught with Sentinel.",
+        "C": "That is the fundamentals SIEM versus SOAR distinction taught with Sentinel.",
+        "D": "That is the fundamentals SIEM versus SOAR distinction taught with Sentinel."
+      },
+      "source_content_fingerprint": "f83ef974ff9df4cb3c02385df2bdbdbec6e166936dfc62f53b8a0a25c3d4b969",
+      "source_general_explanation": "That is the fundamentals SIEM versus SOAR distinction taught with Sentinel.",
+      "target_choice_explanations": {
+        "A": "A reverses the jobs. A SIEM detects and investigates; SOAR automates response.",
+        "C": "Microsoft Defender for Cloud Apps and Azure Web Application Firewall are not the SIEM and SOAR roles.",
+        "D": "A SIEM does not replace Microsoft Entra ID as the identity provider."
+      },
+      "target_content_fingerprint": "3b3bad020bb8fa46950934ed638a9056b86559ce069aff015dc6d767f823bdc7",
+      "target_general_explanation": "A SIEM detects and investigates by collecting and correlating security data. SOAR automates response. Microsoft Sentinel includes both, and the jobs are not interchangeable."
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-endpoint",
+        "https://learn.microsoft.com/en-us/defender-for-identity/what-is"
+      ],
+      "authorized_changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "question_id": "sc900_mlc_q261",
+      "source_choice_explanations": {
+        "A": "Endpoint EDR and Active Directory identity threat detection are different Defender workloads. Mixing them is a common SC-900 error.",
+        "B": "Endpoint EDR and Active Directory identity threat detection are different Defender workloads. Mixing them is a common SC-900 error.",
+        "C": "Endpoint EDR and Active Directory identity threat detection are different Defender workloads. Mixing them is a common SC-900 error.",
+        "D": "Endpoint EDR and Active Directory identity threat detection are different Defender workloads. Mixing them is a common SC-900 error."
+      },
+      "source_content_fingerprint": "78b1fc740264bf0856204147e3681feb9ebbf0d8a6e2fba7316e1b1ccd00c355",
+      "source_general_explanation": "Endpoint EDR and Active Directory identity threat detection are different Defender workloads. Mixing them is a common SC-900 error.",
+      "target_choice_explanations": {
+        "A": "Defender for Identity is not the laptop EDR agent. Device EDR is Defender for Endpoint.",
+        "B": "Defender for Endpoint provides device EDR. It is not primarily a domain-controller ticket-theft monitor; that identity signal belongs to Defender for Identity.",
+        "C": "The stem asks for the pairing of device EDR and Active Directory attack detection, not one product name."
+      },
+      "target_content_fingerprint": "21c85cf72e0b9da4a86db8eda0a403d17c00a630fe2c50bcf41bc63ee2abb477",
+      "target_general_explanation": "Defender for Endpoint is the device EDR workload for the workstation. Defender for Identity detects Active Directory attacks such as ticket theft on a domain controller."
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/compliance-manager",
+        "https://learn.microsoft.com/en-us/purview/compliance-manager-scoring"
+      ],
+      "authorized_changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "question_id": "sc900_p1_q048",
+      "source_choice_explanations": {
+        "A": "Compliance score helps organizations understand and track progress on recommended improvement actions; it does not itself guarantee legal or regulatory compliance.",
+        "B": "Compliance score helps organizations understand and track progress on recommended improvement actions; it does not itself guarantee legal or regulatory compliance.",
+        "C": "Compliance score helps organizations understand and track progress on recommended improvement actions; it does not itself guarantee legal or regulatory compliance.",
+        "D": "Compliance score helps organizations understand and track progress on recommended improvement actions; it does not itself guarantee legal or regulatory compliance."
+      },
+      "source_content_fingerprint": "486015a1e42a7e062eb06b9d1bca43a6b3a18efee9933a6ff38c6503fb71ef91",
+      "source_general_explanation": "Compliance score helps organizations understand and track progress on recommended improvement actions; it does not itself guarantee legal or regulatory compliance.",
+      "target_choice_explanations": {
+        "A": "Improvement actions are the tasks that can add points. The score is the progress measure earned by completing them, not the actions themselves.",
+        "B": "A compliance score does not certify that the organization is legally compliant.",
+        "C": "Service Trust Portal reports describe Microsoft's services and controls. They are not the compliance score."
+      },
+      "target_content_fingerprint": "dabc8a137984d47e382a446eef5d37edc0fc39f029a92b4acc27e616d1366fbd",
+      "target_general_explanation": "Compliance score measures progress completing recommended improvement actions. It is the points earned from those actions, not the list of actions, and it does not certify legal compliance or replace Service Trust Portal reports."
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction"
+      ],
+      "authorized_changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "question_id": "sc900_p3_q007",
+      "source_choice_explanations": {
+        "A": "Microsoft Defender for Cloud is the Microsoft service used to assess and improve cloud security posture, including configuration recommendations and a secure-score style measurement for Azure and connected cloud resources. Sentinel is a SIEM/SOAR service, and the other options address compliance or identity.",
+        "B": "Microsoft Defender for Cloud is the Microsoft service used to assess and improve cloud security posture, including configuration recommendations and a secure-score style measurement for Azure and connected cloud resources. Sentinel is a SIEM/SOAR service, and the other options address compliance or identity.",
+        "C": "Microsoft Defender for Cloud is the Microsoft service used to assess and improve cloud security posture, including configuration recommendations and a secure-score style measurement for Azure and connected cloud resources. Sentinel is a SIEM/SOAR service, and the other options address compliance or identity.",
+        "D": "Microsoft Defender for Cloud is the Microsoft service used to assess and improve cloud security posture, including configuration recommendations and a secure-score style measurement for Azure and connected cloud resources. Sentinel is a SIEM/SOAR service, and the other options address compliance or identity."
+      },
+      "source_content_fingerprint": "59357bc1a0a0eebd057b07f0dc6211278e42c4f507e269c95c2f38c54ab43817",
+      "source_general_explanation": "Microsoft Defender for Cloud is the Microsoft service used to assess and improve cloud security posture, including configuration recommendations and a secure-score style measurement for Azure and connected cloud resources. Sentinel is a SIEM/SOAR service, and the other options address compliance or identity.",
+      "target_choice_explanations": {
+        "A": "Microsoft Defender XDR correlates incidents across Microsoft 365 security workloads. It is not the cloud posture service.",
+        "B": "Defender for Endpoint protects devices. It is not the cloud-resource posture service.",
+        "D": "Microsoft Entra Verified ID is a verifiable-credentials service, not cloud security posture management."
+      },
+      "target_content_fingerprint": "10421af6bfd30f296351647cd5d519a19891885950762ba94cc5fab227565210",
+      "target_general_explanation": "Microsoft Defender for Cloud assesses cloud security posture and gives recommendations and a secure-score style view for Azure and connected clouds."
+    }
+  ],
+  "schema_version": 2,
+  "semantic_review_work_id": "SC900-FINAL-454-QUESTION-EXPLANATION-AUDIT-AND-REPAIR-001",
+  "target_count": 6,
+  "target_ids": [
+    "sc900_mlc_q045",
+    "sc900_mlc_q068",
+    "sc900_mlc_q111",
+    "sc900_mlc_q261",
+    "sc900_p1_q048",
+    "sc900_p3_q007"
+  ],
+  "work_id": "SC900-FINAL-454-QUESTION-EXPLANATION-AUDIT-AND-REPAIR-001"
+}
