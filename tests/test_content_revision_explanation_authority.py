@@ -139,8 +139,8 @@ class ExplanationAuthorityTests(unittest.TestCase):
         self.assertEqual(AdmissionStatus.PASS, result.status)
         self.assertIsInstance(result.admitted, AdmittedCorrectionRevision)
 
-    def test_production_registry_remains_empty(self):
-        self.assertEqual({}, AUTHORIZED_CONTENT_REVISION_MANIFESTS)
+    def test_production_registry_is_activated(self):
+        self.assertEqual(8, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
 
     def test_manifest_target_binding_matches_actual_candidate(self):
         target = _load(TARGET_PATH)

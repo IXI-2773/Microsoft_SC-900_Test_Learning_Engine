@@ -380,9 +380,13 @@ class FingerprintBridgeTests(unittest.TestCase):
         verify_bridge_artifact(DEFAULT_BRIDGE_PATH, repo_root=ROOT)
         self.assertEqual(sentinel, registered_progress_identity_bank())
 
-    def test_package_c_remains_inactive(self):
-        self.assertEqual({}, AUTHORIZED_CONTENT_REVISION_MANIFESTS)
-        self.assertEqual("sc900_bank_v8_final.json", cert_config.QUESTION_BANK_FILENAME)
+    def test_package_c_production_lineage_is_activated(self):
+        self.assertIn(
+            "manifests/sc900_explanation_q118_repair_001.json",
+            AUTHORIZED_CONTENT_REVISION_MANIFESTS,
+        )
+        self.assertEqual(8, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
+        self.assertEqual("sc900_bank_v8_explanation_q118_repair.json", cert_config.QUESTION_BANK_FILENAME)
         self.assertEqual(5, SESSION_SCHEMA_VERSION)
         self.assertEqual(2, PROGRESS_CONTENT_EPOCH_VERSION)
 

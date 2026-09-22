@@ -79,6 +79,19 @@ def _derive_migration_id_for_revision(revision) -> str:
     return derive_migration_id(revision)
 
 
+def supported_revision_transaction_failpoints(entry_count: int) -> tuple[str, ...]:
+    if entry_count < 1:
+        raise ValueError("A revision transaction failpoint set requires at least one entry.")
+    points = ["after_transform"]
+    points.extend(f"after_stage_{index}" for index in range(entry_count))
+    points.extend(("after_staging", "before_journal", "after_journal"))
+    for index in range(entry_count):
+        points.append(f"before_replace_{index}")
+        points.append(f"after_replace_{index}")
+    points.extend(("before_receipt", "after_receipt"))
+    return tuple(points)
+
+
 def _accepted_migration_identities_for_revision(revision):
     raw = unwrap_revision(revision)
     if isinstance(raw, AdmittedExplanationRevision):
@@ -270,6 +283,35 @@ class RuntimePersistence:
             "target_fingerprint_domain": RUNTIME_FINGERPRINT_DOMAIN,
         }
 
+    def _lineage_transaction_identity(self, revisions: Sequence[Any]) -> dict[str, Any]:
+        if not revisions:
+            raise ValueError("Lineage transaction requires at least one revision.")
+        hop_ids = [_derive_migration_id_for_revision(revision) for revision in revisions]
+        manifest_sha256s = [str(unwrap_revision(revision).manifest_sha256) for revision in revisions]
+        bridge_sha256 = str(revisions[0].bridge_sha256)
+        if any(str(revision.bridge_sha256) != bridge_sha256 for revision in revisions):
+            raise ValueError("Lineage transaction bridge identity diverges.")
+        material = {
+            "bridge_sha256": bridge_sha256,
+            "hop_migration_ids": hop_ids,
+            "manifest_sha256s": manifest_sha256s,
+            "source_bank_node_id": str(revisions[0].source_node.bank_node_id),
+            "target_bank_node_id": str(revisions[-1].target_node.bank_node_id),
+        }
+        encoded = json.dumps(material, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        manifest_encoded = json.dumps(manifest_sha256s, separators=(",", ":")).encode("utf-8")
+        return {
+            "migration_family": "lineage",
+            "migration_id": hashlib.sha256(encoded).hexdigest(),
+            "manifest_sha256": hashlib.sha256(manifest_encoded).hexdigest(),
+            "bridge_sha256": bridge_sha256,
+            "source_bank_node_id": material["source_bank_node_id"],
+            "target_bank_node_id": material["target_bank_node_id"],
+            "fingerprint_schema_version": FINGERPRINT_SCHEMA_VERSION,
+            "source_fingerprint_domain": RUNTIME_FINGERPRINT_DOMAIN,
+            "target_fingerprint_domain": RUNTIME_FINGERPRINT_DOMAIN,
+        }
+
     def _validate_committed_revision_receipt(
         self,
         receipt: Mapping[str, Any],
@@ -392,6 +434,109 @@ class RuntimePersistence:
         journal_path.unlink(missing_ok=True)
         return receipt
 
+    def _resume_or_lock_revision_transaction(
+        self,
+        root: Path,
+        transaction_identity: Mapping[str, Any],
+        failpoint: str | None,
+        preflight=None,
+    ) -> tuple[dict[str, Any] | None, Exception | None, Path | None]:
+        migration_id = str(transaction_identity["migration_id"])
+        lock_path, journal_path, receipt_path = self._revision_transaction_paths(root, migration_id)
+        if journal_path.exists():
+            try:
+                return (
+                    self.recover_revision_state_transaction(
+                        journal_path,
+                        expected_identity=transaction_identity,
+                        failpoint=failpoint,
+                    ),
+                    None,
+                    None,
+                )
+            except Exception as exc:
+                return None, exc, None
+        if receipt_path.exists():
+            receipt, error = self._read_json_nonmutating(receipt_path)
+            if error is not None or receipt is None:
+                return None, error or ValueError("Revision transaction receipt unavailable."), None
+            try:
+                return (
+                    self._validate_committed_revision_receipt(
+                        receipt,
+                        expected_identity=transaction_identity,
+                    ),
+                    None,
+                    None,
+                )
+            except Exception as exc:
+                return None, exc, None
+        if preflight is not None:
+            preflight_error = preflight()
+            if preflight_error is not None:
+                return None, preflight_error, None
+        try:
+            fd = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+            os.close(fd)
+        except FileExistsError as exc:
+            return None, exc, None
+        return None, None, lock_path
+
+    def _stage_and_commit_revision_plans(
+        self,
+        *,
+        plans: Sequence[Mapping[str, Any]],
+        transaction_identity: Mapping[str, Any],
+        root: Path,
+        failpoint: str | None,
+    ) -> dict[str, Any]:
+        migration_id = str(transaction_identity["migration_id"])
+        _lock_path, journal_path, receipt_path = self._revision_transaction_paths(root, migration_id)
+        self._transaction_failpoint(failpoint, "after_transform")
+        entries: list[dict[str, Any]] = []
+        for index, plan in enumerate(plans):
+            source = Path(str(plan["source_path"]))
+            target = Path(str(plan["target_path"]))
+            if source.resolve() == target.resolve():
+                raise ValueError("Atomic revision transaction requires distinct source and target paths.")
+            if not source.exists():
+                raise FileNotFoundError(source)
+            payload_bytes = self._transaction_payload_bytes(plan["payload"])
+            expected_sha = hashlib.sha256(payload_bytes).hexdigest()
+            stage = target.with_name(f".{target.name}.{migration_id}.stage")
+            if target.exists():
+                if self._transaction_file_sha256(target) != expected_sha:
+                    raise OSError(f"Conflicting transaction target exists: {target}")
+            else:
+                stage.parent.mkdir(parents=True, exist_ok=True)
+                stage.write_bytes(payload_bytes)
+            self._transaction_failpoint(failpoint, f"after_stage_{index}")
+            entries.append(
+                {
+                    "label": str(plan["label"]),
+                    "source_path": str(source),
+                    "source_sha256": self._transaction_file_sha256(source),
+                    "target_path": str(target),
+                    "target_sha256": expected_sha,
+                    "stage_path": str(stage),
+                }
+            )
+        self._transaction_failpoint(failpoint, "after_staging")
+        journal = {
+            "transaction_version": 1,
+            **dict(transaction_identity),
+            "receipt_path": str(receipt_path),
+            "entries": entries,
+        }
+        self._transaction_failpoint(failpoint, "before_journal")
+        safe_write_json(journal_path, journal, indent=2)
+        self._transaction_failpoint(failpoint, "after_journal")
+        return self.recover_revision_state_transaction(
+            journal_path,
+            expected_identity=transaction_identity,
+            failpoint=failpoint,
+        )
+
     def migrate_revision_state_transaction(
         self,
         *,
@@ -406,41 +551,11 @@ class RuntimePersistence:
         failpoint: str | None = None,
     ) -> tuple[dict[str, Any] | None, Exception | None]:
         transaction_identity = self._revision_transaction_identity(revision)
-        migration_id = str(transaction_identity["migration_id"])
         root = Path(progress_target_path).parent
         root.mkdir(parents=True, exist_ok=True)
-        lock_path, journal_path, receipt_path = self._revision_transaction_paths(root, migration_id)
-        if journal_path.exists():
-            try:
-                return (
-                    self.recover_revision_state_transaction(
-                        journal_path,
-                        expected_identity=transaction_identity,
-                        failpoint=failpoint,
-                    ),
-                    None,
-                )
-            except Exception as exc:
-                return None, exc
-        if receipt_path.exists():
-            receipt, error = self._read_json_nonmutating(receipt_path)
-            if error is not None or receipt is None:
-                return None, error or ValueError("Revision transaction receipt unavailable.")
-            try:
-                return (
-                    self._validate_committed_revision_receipt(
-                        receipt,
-                        expected_identity=transaction_identity,
-                    ),
-                    None,
-                )
-            except Exception as exc:
-                return None, exc
-        try:
-            fd = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
-            os.close(fd)
-        except FileExistsError as exc:
-            return None, exc
+        resumed, error, lock_path = self._resume_or_lock_revision_transaction(root, transaction_identity, failpoint)
+        if lock_path is None:
+            return resumed, error
         try:
             plans: list[dict[str, Any]] = []
             source_progress, error = self._read_json_nonmutating(Path(progress_source_path))
@@ -474,50 +589,96 @@ class RuntimePersistence:
                         "payload": session_result.payload,
                     }
                 )
-            self._transaction_failpoint(failpoint, "after_transform")
+            receipt = self._stage_and_commit_revision_plans(
+                plans=plans,
+                transaction_identity=transaction_identity,
+                root=root,
+                failpoint=failpoint,
+            )
+            return receipt, None
+        except Exception as exc:
+            return None, exc
+        finally:
+            lock_path.unlink(missing_ok=True)
 
-            entries: list[dict[str, Any]] = []
-            for index, plan in enumerate(plans):
-                source = Path(str(plan["source_path"]))
-                target = Path(str(plan["target_path"]))
-                if source.resolve() == target.resolve():
-                    raise ValueError("Atomic revision transaction requires distinct source and target paths.")
-                if not source.exists():
-                    raise FileNotFoundError(source)
-                payload_bytes = self._transaction_payload_bytes(plan["payload"])
-                expected_sha = hashlib.sha256(payload_bytes).hexdigest()
-                if target.exists():
-                    if self._transaction_file_sha256(target) != expected_sha:
-                        raise OSError(f"Conflicting transaction target exists: {target}")
-                    stage = target.with_name(f".{target.name}.{migration_id}.stage")
-                else:
-                    stage = target.with_name(f".{target.name}.{migration_id}.stage")
-                    stage.parent.mkdir(parents=True, exist_ok=True)
-                    stage.write_bytes(payload_bytes)
-                self._transaction_failpoint(failpoint, f"after_stage_{index}")
-                entries.append(
+    def migrate_lineage_state_transaction(
+        self,
+        *,
+        progress_source_path: Path,
+        progress_target_path: Path,
+        session_pairs: Sequence[tuple[Path, Path]],
+        revisions: Sequence[Any],
+        questions_by_bank: Mapping[str, Sequence[Mapping[str, Any]]],
+        migrated_at: str,
+        failpoint: str | None = None,
+    ) -> tuple[dict[str, Any] | None, Exception | None]:
+        transaction_identity = self._lineage_transaction_identity(revisions)
+        root = Path(progress_target_path).parent
+        root.mkdir(parents=True, exist_ok=True)
+        expected_fingerprint = str(revisions[0].source_node.runtime_bank_fingerprint)
+
+        def _preflight() -> Exception | None:
+            source_progress, read_error = self._read_json_nonmutating(Path(progress_source_path))
+            if read_error is not None or source_progress is None:
+                return read_error or ValueError("Lineage progress source is unavailable.")
+            actual_fingerprint = str(source_progress.get("bank_fingerprint") or "").strip()
+            if actual_fingerprint != expected_fingerprint:
+                return ValueError("Unknown or mismatched current lineage bank identity.")
+            return None
+
+        resumed, error, lock_path = self._resume_or_lock_revision_transaction(
+            root,
+            transaction_identity,
+            failpoint,
+            preflight=_preflight,
+        )
+        if lock_path is None:
+            return resumed, error
+        try:
+            source_progress, error = self._read_json_nonmutating(Path(progress_source_path))
+            if error is not None or source_progress is None:
+                return None, error
+            progress_payload: Mapping[str, Any] = source_progress
+            for revision in revisions:
+                progress_payload = _migrate_progress_for_revision(
+                    progress_payload,
+                    questions_by_bank[str(revision.target_bank_filename)],
+                    revision,
+                    migrated_at,
+                ).payload
+            plans: list[dict[str, Any]] = [
+                {
+                    "label": "progress",
+                    "source_path": str(Path(progress_source_path)),
+                    "target_path": str(Path(progress_target_path)),
+                    "payload": progress_payload,
+                }
+            ]
+            for source, target in session_pairs:
+                saved, error = self._read_json_nonmutating(Path(source))
+                if error is not None or saved is None:
+                    return None, error
+                session_payload: Mapping[str, Any] = saved
+                for revision in revisions:
+                    session_payload = _migrate_session_for_revision(
+                        session_payload,
+                        questions_by_bank[str(revision.target_bank_filename)],
+                        revision,
+                        str(revision.target_bank_filename),
+                        source_questions=questions_by_bank[str(revision.source_bank_filename)],
+                    ).payload
+                plans.append(
                     {
-                        "label": str(plan["label"]),
-                        "source_path": str(source),
-                        "source_sha256": self._transaction_file_sha256(source),
-                        "target_path": str(target),
-                        "target_sha256": expected_sha,
-                        "stage_path": str(stage),
+                        "label": "session",
+                        "source_path": str(Path(source)),
+                        "target_path": str(Path(target)),
+                        "payload": session_payload,
                     }
                 )
-            self._transaction_failpoint(failpoint, "after_staging")
-            journal = {
-                "transaction_version": 1,
-                **transaction_identity,
-                "receipt_path": str(receipt_path),
-                "entries": entries,
-            }
-            self._transaction_failpoint(failpoint, "before_journal")
-            safe_write_json(journal_path, journal, indent=2)
-            self._transaction_failpoint(failpoint, "after_journal")
-            receipt = self.recover_revision_state_transaction(
-                journal_path,
-                expected_identity=transaction_identity,
+            receipt = self._stage_and_commit_revision_plans(
+                plans=plans,
+                transaction_identity=transaction_identity,
+                root=root,
                 failpoint=failpoint,
             )
             return receipt, None

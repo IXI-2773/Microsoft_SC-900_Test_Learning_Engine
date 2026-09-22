@@ -758,8 +758,8 @@ def _lineage_revision(*edges: RevisionEdge) -> AdmittedRevision:
 
 
 class ContentRevisionRegistryAndLineageTests(unittest.TestCase):
-    def test_production_registry_is_empty(self) -> None:
-        self.assertEqual({}, AUTHORIZED_CONTENT_REVISION_MANIFESTS)
+    def test_production_registry_is_the_activated_lineage(self) -> None:
+        self.assertEqual(8, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
 
     def test_empty_registry_resolves_to_none(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

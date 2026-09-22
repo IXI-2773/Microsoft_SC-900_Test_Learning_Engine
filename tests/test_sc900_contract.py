@@ -1,4 +1,3 @@
-
 import hashlib
 import json
 import os
@@ -21,7 +20,7 @@ from tools import build_release
 
 HISTORICAL_BASELINE_BANK = ROOT / "sc900_bank_v8_baseline.json"
 EXPECTED_BASELINE_SHA256 = "60842eb28810d328fe56a427b7d72baedd6b31179ca4f1c98744392aa318a426"
-EXPECTED_ACTIVE_SHA256 = "177a4fb5f8a874ffe4dda6b69e3d1c03dbdad1f5db5a174a990eb8b5a0e5927c"
+EXPECTED_ACTIVE_SHA256 = "f18b2ad5174518f1c992c59663b93ad48d69483cefc1b72675af6d1486b1976d"
 EXPECTED_ACTIVE_COUNT = 454
 
 
@@ -70,7 +69,7 @@ class SC900ActiveProductionRuntimeContractTests(unittest.TestCase):
         self.assertIn("not a conversion", profile["scoring_disclaimer"].lower())
         self.assertEqual([10, 20, 40, 50], profile["practice_question_count_options"])
         self.assertEqual(50, profile["practice_question_count_default"])
-        self.assertEqual("sc900_bank_v8_final.json", profile["runtime_bank"])
+        self.assertEqual("sc900_bank_v8_explanation_q118_repair.json", profile["runtime_bank"])
         self.assertEqual(EXPECTED_ACTIVE_COUNT, profile["runtime_bank_question_count"])
         self.assertEqual(8, profile["placeholder_bank_question_count"])
 
@@ -78,13 +77,13 @@ class SC900ActiveProductionRuntimeContractTests(unittest.TestCase):
         self.assertEqual("SC-900", cert_config.EXAM_CODE)
         self.assertEqual("Microsoft SC-900 Test Learning Engine", APP_NAME)
         self.assertEqual("8.0.0", APP_VERSION)
-        self.assertEqual("sc900_bank_v8_final.json", cert_config.QUESTION_BANK_FILENAME)
+        self.assertEqual("sc900_bank_v8_explanation_q118_repair.json", cert_config.QUESTION_BANK_FILENAME)
         self.assertEqual(EXPECTED_ACTIVE_COUNT, cert_config.RUNTIME_BANK_QUESTION_COUNT)
         self.assertEqual("SC900TestLearningEngine", cert_config.USER_DATA_DIRNAME)
 
     def test_active_runtime_bank_has_calibrated_count_and_digest(self):
         active_path = ROOT / cert_config.QUESTION_BANK_FILENAME
-        self.assertEqual("sc900_bank_v8_final.json", active_path.name)
+        self.assertEqual("sc900_bank_v8_explanation_q118_repair.json", active_path.name)
         self.assertEqual(EXPECTED_ACTIVE_SHA256, sha256_file(active_path))
         data = load_bank(active_path)
         questions = data["questions"]

@@ -1221,18 +1221,18 @@ class PackageBTranche4RealCandidateClosureTests(unittest.TestCase):
 
     def test_58_package_c_inactive(self) -> None:
         profile = _read_json(REPOSITORY_ROOT / "cert_profile_sc900.json")
-        self.assertEqual(PRODUCTION_BANK_FILENAME, profile["runtime_bank"])
-        self.assertEqual({}, AUTHORIZED_CONTENT_REVISION_MANIFESTS)
+        self.assertEqual("sc900_bank_v8_explanation_q118_repair.json", profile["runtime_bank"])
+        self.assertEqual(8, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
 
     def test_59_production_registry_inactive(self) -> None:
-        self.assertEqual({}, AUTHORIZED_CONTENT_REVISION_MANIFESTS)
+        self.assertEqual(8, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
         self.assertEqual(self.registry_before, AUTHORIZED_CONTENT_REVISION_MANIFESTS)
 
     def test_60_t5_candidate_not_production_activated(self) -> None:
         profile = _read_json(REPOSITORY_ROOT / "cert_profile_sc900.json")
-        self.assertEqual(PRODUCTION_BANK_FILENAME, profile["runtime_bank"])
+        self.assertEqual("sc900_bank_v8_explanation_q118_repair.json", profile["runtime_bank"])
         self.assertNotEqual("sc900_bank_v8_length_rebalanced_t5.json", profile["runtime_bank"])
-        self.assertEqual({}, AUTHORIZED_CONTENT_REVISION_MANIFESTS)
+        self.assertEqual(8, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
 
 
 class PackageBTranche4RegressionAndQualityTests(unittest.TestCase):

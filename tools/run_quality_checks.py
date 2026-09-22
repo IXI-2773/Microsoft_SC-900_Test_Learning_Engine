@@ -58,6 +58,7 @@ QUALITY_TARGETS = [
     "tests/test_content_revision_explanation_migration.py",
     "tests/test_sc900_explanation_tranche_1.py",
     "tests/test_sc900_explanation_q118_repair.py",
+    "tests/test_governed_production_content_activation.py",
     "tests/test_explanation_rendering.py",
 ]
 
