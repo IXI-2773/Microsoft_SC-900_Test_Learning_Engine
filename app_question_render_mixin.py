@@ -2,7 +2,12 @@ import time
 import tkinter as tk
 
 from app_constants import MODE_EXAM
-from cand01r3_runtime import get_context, is_cand01r3_active, revalidate_training_question
+from cand01r3_runtime import (
+    get_context,
+    is_cand01r3_active,
+    is_measurement_answer_mode,
+    revalidate_training_question,
+)
 from progress_store import is_super_confident_active, recovery_ladder_stage, study_status_name
 from render_cache import ChoiceRenderSnapshot, QuestionRenderSnapshot
 from source_trust import derive_source_trust_warning
@@ -119,6 +124,8 @@ class QuestionRenderMixin:
         return str(feedback.get(letter, "") or "").strip()
 
     def _inline_explanation_for_question(self, q, show_exam_feedback):
+        if is_measurement_answer_mode():
+            return None, ""
         for letter in q.get("selected", []):
             text = self._selected_wrong_feedback_for_letter(q, letter, show_exam_feedback)
             if text:
@@ -192,6 +199,8 @@ class QuestionRenderMixin:
         return self.render_cache.get(cache_key) or self.render_cache.put(cache_key, snapshot)
 
     def _question_answer_meta(self, q, ladder_stage):
+        if is_measurement_answer_mode():
+            return ["Response recorded."] if q.get("answered") else []
         answer_meta = []
         if q.get("session_tag"):
             answer_meta.append(f"Assist: {q.get('session_tag')}")
@@ -275,9 +284,13 @@ class QuestionRenderMixin:
         )
         self.redo_btn.configure(
             state=(
-                "normal"
-                if q.get("answered") and (self.active_session_mode != MODE_EXAM or self.exam_reveal)
-                else "disabled"
+                "disabled"
+                if is_measurement_answer_mode()
+                else (
+                    "normal"
+                    if q.get("answered") and (self.active_session_mode != MODE_EXAM or self.exam_reveal)
+                    else "disabled"
+                )
             )
         )
         self.submit_btn_visible = bool(q.get("question_type") == "multi" and not q.get("answered"))
@@ -293,8 +306,9 @@ class QuestionRenderMixin:
         if q.get("answered"):
             self.review_panel.pack(fill="x", pady=(10, 0))
             self.answer_meta_label.pack_forget()
-            if not show_exam_feedback:
-                self.status_label.configure(text="Answer recorded", bg="#eef4fb", fg=BLUE)
+            if is_measurement_answer_mode() or not show_exam_feedback:
+                recorded = "Response recorded." if is_measurement_answer_mode() else "Answer recorded"
+                self.status_label.configure(text=recorded, bg="#eef4fb", fg=BLUE)
             elif self._question_correct(q):
                 combo = self._current_combo_stats() if self.gamification_enabled() else {"correct": 0}
                 streak = int(combo.get("correct") or 0)
@@ -366,7 +380,11 @@ class QuestionRenderMixin:
                 self.active_question_started_at = time.time()
         rec = self._progress_record(q, create=False)
         ladder_stage = recovery_ladder_stage(rec)
-        show_exam_feedback = not (self.active_session_mode == MODE_EXAM and not self.exam_reveal)
+        show_exam_feedback = (
+            False
+            if is_measurement_answer_mode()
+            else not (self.active_session_mode == MODE_EXAM and not self.exam_reveal)
+        )
         trust_warning = self._source_trust_warning_for_question(q)
         snapshot = self._build_question_render_snapshot(q, show_exam_feedback, ladder_stage, trust_warning)
         if snapshot != self.last_render_snapshot:

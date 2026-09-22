@@ -39,6 +39,9 @@ class MeasurementObservation:
     question_id: str = ""
     correct: bool | None = None
     evaluation_identity: tuple[str, str, str, str] | None = None
+    clean: bool = False
+    counts_toward_primary: bool = False
+    payload: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -103,6 +106,14 @@ class MeasurementLedger:
                 correct=None,
                 evaluation_identity=identity,
             )
+        if question_id in self._unobserved:
+            return MeasurementObservation(
+                status=STATUS_DUPLICATE,
+                reason="LATE_NOT_PRIMARY",
+                question_id=question_id,
+                correct=None,
+                evaluation_identity=identity,
+            )
         existing = self._observations.get(question_id)
         if existing is not None or kind in DUPLICATE_KINDS:
             observation = MeasurementObservation(
@@ -113,11 +124,19 @@ class MeasurementLedger:
                 evaluation_identity=identity,
             )
             return observation
+        if type(correct) is not bool:
+            return MeasurementObservation(
+                status=STATUS_NOT_ELIGIBLE,
+                reason="INVALID_MEASUREMENT_SCORE",
+                question_id=question_id,
+                correct=None,
+                evaluation_identity=identity,
+            )
         payload = {
             "status": STATUS_PRIMARY,
             "reason": "OK",
             "question_id": question_id,
-            "correct": bool(correct),
+            "correct": correct,
             "selected_option_ids": list(selected or []),
             "evaluation_identity": identity,
         }
@@ -127,7 +146,7 @@ class MeasurementLedger:
                 {
                     "question_id": question_id,
                     "selected_option_ids": list(selected or []),
-                    "correct": bool(correct),
+                    "correct": correct,
                     "evaluation_identity": list(identity),
                     "status": STATUS_PRIMARY,
                 }
@@ -136,13 +155,37 @@ class MeasurementLedger:
             status=STATUS_PRIMARY,
             reason="OK",
             question_id=question_id,
-            correct=bool(correct),
+            correct=correct,
             evaluation_identity=identity,
         )
 
     def record_unobserved(self, question_id: str, *, reason: str) -> MeasurementObservation:
         qid = canonical_question_id(question_id)
         identity = self._identity(qid)
+        if self.is_contaminated(qid):
+            return MeasurementObservation(
+                status=STATUS_CONTAMINATED,
+                reason=self._contaminated[qid][0],
+                question_id=qid,
+                correct=None,
+                evaluation_identity=identity,
+            )
+        if qid in self._observations:
+            return MeasurementObservation(
+                status=STATUS_DUPLICATE,
+                reason="PRIMARY_ALREADY_TERMINAL",
+                question_id=qid,
+                correct=None,
+                evaluation_identity=identity,
+            )
+        if qid in self._unobserved:
+            return MeasurementObservation(
+                status=STATUS_DUPLICATE,
+                reason="UNOBSERVED_ALREADY_TERMINAL",
+                question_id=qid,
+                correct=None,
+                evaluation_identity=identity,
+            )
         payload = {
             "status": STATUS_UNOBSERVED,
             "reason": reason,

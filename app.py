@@ -8,7 +8,7 @@ import sys
 import time
 import tkinter as tk
 from pathlib import Path
-from tkinter import filedialog, messagebox, ttk
+from tkinter import filedialog, messagebox, simpledialog, ttk
 from typing import cast
 
 from app_analytics_mixin import AnalyticsMixin
@@ -483,6 +483,29 @@ class TestingEngineApp(
         settings_menu.add_separator()
         settings_menu.add_command(label="Reset All Progress...", command=self.reset_all_progress)
         menu.add_cascade(label="Settings", menu=settings_menu)
+        research_menu = tk.Menu(menu, tearoff=0)
+        research_menu.add_command(
+            label="Begin CAND-01R3 Measurement Epoch...",
+            command=self.begin_cand01r3_measurement_epoch,
+        )
+        research_menu.add_command(label="Set Measurement Day...", command=self.set_cand01r3_measurement_day)
+        research_menu.add_command(
+            label="Begin Today's PROBE Measurement...",
+            command=self.begin_cand01r3_todays_probe_measurement,
+        )
+        research_menu.add_command(
+            label="Show Today's Measurement Card...",
+            command=self.show_cand01r3_measurement_card,
+        )
+        research_menu.add_command(
+            label="Record Outside-Study Declaration...",
+            command=self.record_cand01r3_outside_study,
+        )
+        research_menu.add_command(
+            label="Record Unobserved PROBE...",
+            command=self.record_cand01r3_unobserved,
+        )
+        menu.add_cascade(label="Research", menu=research_menu)
         help_menu = tk.Menu(menu, tearoff=0)
         help_menu.add_command(label="Keyboard Shortcuts", command=self.show_shortcuts)
         help_menu.add_command(label="About", command=self.show_about)
@@ -1542,6 +1565,183 @@ class TestingEngineApp(
     def reload_bank(self):
         if self.bank_path:
             self.load_from_path(self.bank_path)
+
+    def begin_cand01r3_measurement_epoch(self):
+        from cand01r3_partition import (
+            COMPILED_PATH,
+            EXPECTED_COMPILED_SHA256,
+            EXPECTED_MANIFEST_SHA256,
+            EXPECTED_SEMANTIC_AUDIT_SHA256,
+            EXPECTED_STORE_SHA256,
+        )
+        from cand01r3_protocol import (
+            MEASUREMENT_EPOCH,
+            POLICY_SEQUENCE_VERSION,
+            SCHEDULE_VERSION,
+            begin_cand01r3_measurement,
+            build_protocol,
+            default_production_ledger_path,
+        )
+        from cand01r3_runtime import DEFAULT_LEARNER_ID
+
+        protocol = build_protocol()
+        confirmed = messagebox.askokcancel(
+            "Begin CAND-01R3 measurement",
+            "Start measurement epoch cand01r3-measurement-001?\n\n"
+            "This does not change the default launch bank.\n"
+            "Do not invent answers. Real observations start after you confirm.\n\n"
+            f"Protocol: {protocol['protocol_version']}\n"
+            f"SHA-256: {protocol['protocol_sha256']}",
+        )
+        if not confirmed:
+            return
+        try:
+            begin_cand01r3_measurement(
+                learner_id=DEFAULT_LEARNER_ID,
+                measurement_epoch=MEASUREMENT_EPOCH,
+                schedule_version=SCHEDULE_VERSION,
+                policy_sequence_version=POLICY_SEQUENCE_VERSION,
+                manifest_sha256=EXPECTED_MANIFEST_SHA256,
+                store_sha256=EXPECTED_STORE_SHA256,
+                semantic_audit_sha256=EXPECTED_SEMANTIC_AUDIT_SHA256,
+                compiled_sha256=EXPECTED_COMPILED_SHA256,
+                candidate_bank_identity=EXPECTED_COMPILED_SHA256,
+                ledger_path=default_production_ledger_path(),
+            )
+        except Exception as exc:
+            messagebox.showerror("Measurement activation failed", str(exc))
+            return
+        if COMPILED_PATH.exists() and messagebox.askyesno(
+            "Load candidate bank for this epoch?",
+            "Load the compiled CAND-01R3 bank for this experiment only?\n"
+            "This does not replace the default launch bank.",
+        ):
+            self.load_from_path(COMPILED_PATH)
+        messagebox.showinfo(
+            "Measurement epoch active",
+            "Use Research > Set Measurement Day, train on TRAIN items under that day's "
+            "policy, then answer only that day's scheduled PROBE items once.",
+        )
+
+    def set_cand01r3_measurement_day(self):
+        from cand01r3_protocol import is_measurement_active, set_measurement_day, today_measurement_card
+
+        if not is_measurement_active():
+            messagebox.showwarning("Measurement inactive", "Begin the CAND-01R3 measurement epoch first.")
+            return
+        day = simpledialog.askinteger("Measurement day", "Enter scheduled day (1-7):", minvalue=1, maxvalue=7)
+        if not day:
+            return
+        try:
+            policy_id = set_measurement_day(day)
+        except Exception as exc:
+            messagebox.showerror("Cannot set measurement day", str(exc))
+            return
+        card = today_measurement_card(day)
+        ids = ", ".join(row["question_id"] for row in card["questions"])
+        remaining = int(card.get("train_exposures_remaining") or 0)
+        self.session_question_limit = remaining
+        if int(day) >= 7:
+            blocks = card.get("day7_blocks") or []
+            block_text = "\n".join(
+                f"{block['policy_id']}: {block['train_budget']} TRAIN "
+                f"({block['train_exposures_remaining']} remaining)"
+                for block in blocks
+            )
+            messagebox.showinfo(
+                f"Day {day}",
+                f"Policy: {policy_id}\n{block_text}\nthen 5 scheduled PROBE\n\n{ids}",
+            )
+            return
+        status = card.get("training_block_status")
+        next_action = card.get("next_action")
+        messagebox.showinfo(
+            f"Day {day}",
+            f"Policy: {policy_id}\nTRAIN BUDGET = {card.get('train_budget')}\n"
+            f"TRAIN EXPOSURES COMPLETED = {card.get('train_exposures_completed')}\n"
+            f"TRAIN EXPOSURES REMAINING = {remaining}\n{status}\n{next_action}\n\n"
+            f"Scheduled PROBE IDs:\n{ids}",
+        )
+
+    def begin_cand01r3_todays_probe_measurement(self):
+        from cand01r3_protocol import begin_todays_probe_measurement, is_measurement_active, today_measurement_card
+
+        if not is_measurement_active():
+            messagebox.showwarning("Measurement inactive", "Begin the CAND-01R3 measurement epoch first.")
+            return
+        try:
+            result = begin_todays_probe_measurement()
+        except Exception as exc:
+            messagebox.showerror("Cannot begin today's PROBE measurement", str(exc))
+            return
+        day = int(result["scheduled_day"])
+        card = today_measurement_card(day)
+        ids = ", ".join(row["question_id"] for row in card["questions"])
+        self.session_question_limit = len(card["questions"])
+        messagebox.showinfo(
+            f"Day {day} PROBE measurement",
+            "Intended use is now MEASUREMENT.\nAnswer only today's scheduled PROBE items once.\n\n" f"{ids}",
+        )
+
+    def show_cand01r3_measurement_card(self):
+        from cand01r3_protocol import today_measurement_card
+
+        day = simpledialog.askinteger("Measurement day", "Enter scheduled day (1-7):", minvalue=1, maxvalue=7)
+        if not day:
+            return
+        card = today_measurement_card(day)
+        if int(day) >= 7:
+            lines = [f"Policy: {card['policy_id']}", "Day 7 balanced training then 5 PROBE", ""]
+            for block in card.get("day7_blocks") or []:
+                lines.append(
+                    f"{block['policy_id']} TRAIN BUDGET = {block['train_budget']} | "
+                    f"completed {block['train_exposures_completed']} | remaining {block['train_exposures_remaining']}"
+                )
+            lines.append("then 5 scheduled PROBE")
+        else:
+            lines = [
+                f"Policy: {card['policy_id']}",
+                f"TRAIN BUDGET = {card.get('train_budget')}",
+                f"TRAIN EXPOSURES COMPLETED = {card.get('train_exposures_completed')}",
+                f"TRAIN EXPOSURES REMAINING = {card.get('train_exposures_remaining')}",
+                str(card.get("training_block_status") or ""),
+                str(card.get("next_action") or ""),
+                "",
+            ]
+        for row in card["questions"]:
+            lines.append(f"{row['sequence_position']}. {row['question_id']} / {row['semantic_family_id']}")
+        messagebox.showinfo(f"Day {day} measurement card", "\n".join(lines))
+
+    def record_cand01r3_outside_study(self):
+        from cand01r3_protocol import OUTSIDE_STUDY_CODES, is_measurement_active, record_outside_study
+
+        if not is_measurement_active():
+            messagebox.showwarning("Measurement inactive", "Begin the CAND-01R3 measurement epoch first.")
+            return
+        code = simpledialog.askstring(
+            "Outside-study declaration",
+            "Enter one of: " + ", ".join(OUTSIDE_STUDY_CODES),
+        )
+        if not code:
+            return
+        note = simpledialog.askstring("Outside-study note", "Optional note:") or ""
+        day = simpledialog.askinteger("Calendar day", "Scheduled day (1-7), or cancel:", minvalue=1, maxvalue=7)
+        result = record_outside_study(code.strip().upper(), note=note, scheduled_day=day)
+        messagebox.showinfo(
+            "Outside-study recorded", f"{result.status}: {result.payload.get('outside_study', result.reason)}"
+        )
+
+    def record_cand01r3_unobserved(self):
+        from cand01r3_protocol import is_measurement_active, record_unobserved
+
+        if not is_measurement_active():
+            messagebox.showwarning("Measurement inactive", "Begin the CAND-01R3 measurement epoch first.")
+            return
+        question_id = simpledialog.askstring("Unobserved PROBE", "Enter scheduled question_id:")
+        if not question_id:
+            return
+        result = record_unobserved(question_id.strip(), reason="MISSED_SCHEDULED_PROBE")
+        messagebox.showinfo("Unobserved recorded", f"{result.status}: {result.question_id}")
 
     def _question_key(self, q):
         return question_key(q)

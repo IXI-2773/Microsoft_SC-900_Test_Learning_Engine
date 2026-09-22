@@ -94,6 +94,7 @@ files = [
   "cand01r3_rrc1.py",
   "cand01r3_measurement.py",
   "cand01r3_paths.py",
+  "cand01r3_protocol.py",
   "source_trust.py",
   "tools/run_quality_checks.py",
   "extraction/pages.py",
