@@ -17,19 +17,26 @@ def run(args: list[str]) -> None:
 
 
 def main() -> None:
-    run(
+    # Invoke PyInstaller in-process. The governed closure is explicit per file, and
+    # that many --add-data arguments exceed the Windows process command-line limit.
+    from PyInstaller.__main__ import run as pyinstaller_run
+
+    pyinstaller_run(
         [
-            sys.executable,
-            "-m",
-            "PyInstaller",
             "--noconfirm",
             "--clean",
             "--onefile",
             "--windowed",
             "--name",
             "SC900TestLearningEngine",
+            "--distpath",
+            str(ROOT / "dist"),
+            "--workpath",
+            str(ROOT / "build"),
+            "--specpath",
+            str(ROOT / "build"),
             *pyinstaller_resource_args(os.pathsep),
-            "app.py",
+            str(ROOT / "app.py"),
         ]
     )
     run([sys.executable, "tools/verify_packaged_resources.py"])
