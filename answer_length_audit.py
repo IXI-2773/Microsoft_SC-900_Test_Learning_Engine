@@ -5,7 +5,6 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from typing import Any
 
-
 LETTERS = ("A", "B", "C", "D")
 
 
@@ -161,9 +160,7 @@ def audit_questions(questions: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     for question in questions:
         domain = _domain(question) if isinstance(question, Mapping) else ""
         domain_questions.setdefault(domain, []).append(question)
-    result["domains"] = {
-        domain: _audit_core(domain_questions[domain]) for domain in sorted(domain_questions)
-    }
+    result["domains"] = {domain: _audit_core(domain_questions[domain]) for domain in sorted(domain_questions)}
     return result
 
 
