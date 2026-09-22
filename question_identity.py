@@ -6,9 +6,16 @@ import json
 from collections.abc import Iterable, Mapping
 from typing import Any
 
+from fingerprint_identity import (
+    FINGERPRINT_ALGORITHM,
+    FINGERPRINT_SCHEMA_VERSION,
+    RUNTIME_FINGERPRINT_DOMAIN,
+    RUNTIME_LOADER_CONTRACT_VERSION,
+)
+
 PROGRESS_IDENTITY_VERSION = 1
 PROGRESS_IDENTITY_KIND = "canonical_question_id"
-PROGRESS_CONTENT_EPOCH_VERSION = 1
+PROGRESS_CONTENT_EPOCH_VERSION = 2
 
 MISSING_CANONICAL_QUESTION_ID = "MISSING_CANONICAL_QUESTION_ID"
 DUPLICATE_CANONICAL_QUESTION_ID = "DUPLICATE_CANONICAL_QUESTION_ID"
@@ -386,14 +393,37 @@ def migrate_legacy_history_events(
     return migrated, quarantined
 
 
+def _runtime_bank_node_id(current_bank_fingerprint: str) -> str:
+    try:
+        from content_fingerprint_bridge import runtime_bank_node_id_for_fingerprint
+
+        return runtime_bank_node_id_for_fingerprint(current_bank_fingerprint)
+    except Exception:
+        return ""
+
+
 def _epoch_payload_matches_bank(
     payload: Mapping[str, Any],
     current_fingerprints: Mapping[str, str],
     current_bank_fingerprint: str,
+    current_bank_node_id: str,
 ) -> bool:
     if payload.get("progress_content_epoch_version") != PROGRESS_CONTENT_EPOCH_VERSION:
         return False
+    if int(payload.get("fingerprint_schema_version") or 0) != FINGERPRINT_SCHEMA_VERSION:
+        return False
+    if str(payload.get("fingerprint_domain") or "").strip() != RUNTIME_FINGERPRINT_DOMAIN:
+        return False
+    if str(payload.get("fingerprint_algorithm") or "").strip() != FINGERPRINT_ALGORITHM:
+        return False
+    if int(payload.get("loader_contract_version") or 0) != RUNTIME_LOADER_CONTRACT_VERSION:
+        return False
     if str(payload.get("bank_fingerprint") or "").strip() != current_bank_fingerprint:
+        return False
+    stored_node = str(payload.get("bank_node_id") or "").strip()
+    if current_bank_node_id and stored_node != current_bank_node_id:
+        return False
+    if stored_node and not current_bank_node_id:
         return False
     stored = payload.get("question_content_fingerprints")
     records = payload.get("questions")
@@ -436,8 +466,14 @@ def migrate_progress_content_epoch(
         canonical_question_id(question): question_content_fingerprint(question) for question in materialized
     }
     current_bank_fingerprint = bank_content_fingerprint(materialized)
+    current_bank_node_id = _runtime_bank_node_id(current_bank_fingerprint)
     migrated = copy.deepcopy(dict(payload))
-    if _epoch_payload_matches_bank(migrated, current_fingerprints, current_bank_fingerprint):
+    if _epoch_payload_matches_bank(
+        migrated,
+        current_fingerprints,
+        current_bank_fingerprint,
+        current_bank_node_id,
+    ):
         return migrated, False
 
     records = migrated.get("questions")
@@ -480,11 +516,27 @@ def migrate_progress_content_epoch(
             first_bind or question_id in bound_fingerprints
         ):
             row["question_content_fingerprint"] = current_fingerprints[question_id]
+            event_fp = current_fingerprints[question_id]
+        if question_id and question_id in current_fingerprints and event_fp == current_fingerprints[question_id]:
+            row["fingerprint_schema_version"] = FINGERPRINT_SCHEMA_VERSION
+            row["fingerprint_domain"] = RUNTIME_FINGERPRINT_DOMAIN
+            row["fingerprint_algorithm"] = FINGERPRINT_ALGORITHM
+            row["loader_contract_version"] = RUNTIME_LOADER_CONTRACT_VERSION
+            if current_bank_node_id:
+                row["bank_node_id"] = current_bank_node_id
         stamped_history.append(row)
 
     migrated["questions"] = bound_records
     migrated["history"] = stamped_history
     migrated["progress_content_epoch_version"] = PROGRESS_CONTENT_EPOCH_VERSION
+    migrated["fingerprint_schema_version"] = FINGERPRINT_SCHEMA_VERSION
+    migrated["fingerprint_domain"] = RUNTIME_FINGERPRINT_DOMAIN
+    migrated["fingerprint_algorithm"] = FINGERPRINT_ALGORITHM
+    migrated["loader_contract_version"] = RUNTIME_LOADER_CONTRACT_VERSION
+    if current_bank_node_id:
+        migrated["bank_node_id"] = current_bank_node_id
+    else:
+        migrated.pop("bank_node_id", None)
     migrated["bank_fingerprint"] = current_bank_fingerprint
     migrated["question_content_fingerprints"] = bound_fingerprints
     if quarantined:

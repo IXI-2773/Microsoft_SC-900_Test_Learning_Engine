@@ -7,11 +7,11 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
+from content_fingerprint_bridge import RuntimeBoundRevision, bound_migration_id, unwrap_revision
 from content_revision_authority import AdmittedRevision
 from content_revision_correction_authority import (
     MANIFEST_KIND,
     AdmittedCorrectionRevision,
-    CorrectionEdge,
     CorrectionFailureReason,
 )
 from content_revision_migration import (
@@ -43,19 +43,22 @@ class ContentCorrectionMigrationError(ValueError):
         super().__init__(message)
 
 
-def derive_correction_migration_id(revision: AdmittedCorrectionRevision) -> str:
+def derive_correction_migration_id(revision: AdmittedCorrectionRevision | RuntimeBoundRevision) -> str:
+    raw = unwrap_revision(revision)
     payload = {
         "kind": CORRECTION_MIGRATION_KIND,
-        "manifest_sha256": revision.manifest_sha256,
-        "source_bank_content_fingerprint": revision.source_bank_content_fingerprint,
-        "target_bank_content_fingerprint": revision.target_bank_content_fingerprint,
+        "manifest_sha256": raw.manifest_sha256,
+        "source_bank_content_fingerprint": raw.source_bank_content_fingerprint,
+        "target_bank_content_fingerprint": raw.target_bank_content_fingerprint,
     }
     serialized = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-    return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
+    base = hashlib.sha256(serialized.encode("utf-8")).hexdigest()
+    return bound_migration_id(base, revision)
 
 
-def _require_correction_revision(revision: Any) -> AdmittedCorrectionRevision:
-    if not isinstance(revision, AdmittedCorrectionRevision) or revision.manifest_kind != MANIFEST_KIND:
+def _require_correction_revision(revision: Any) -> AdmittedCorrectionRevision | RuntimeBoundRevision:
+    raw = unwrap_revision(revision)
+    if not isinstance(raw, AdmittedCorrectionRevision) or raw.manifest_kind != MANIFEST_KIND:
         raise ContentCorrectionMigrationError(CorrectionFailureReason.AUTHORITY_KIND_MISMATCH)
     return revision
 
@@ -104,11 +107,16 @@ def _event_is_target(event: Mapping[str, Any], target_ids: set[str], target_numb
 
 def _lineage_row(
     question_id: str,
-    edge: CorrectionEdge,
-    revision: AdmittedCorrectionRevision,
+    edge: Any,
+    revision: Any,
     migrated_at: str,
     migration_id: str,
 ) -> dict[str, str]:
+    if isinstance(revision, RuntimeBoundRevision):
+        raw_edge = revision.artifact_edge(question_id)
+        if raw_edge is None:
+            raise ContentCorrectionMigrationError(MigrationFailureReason.UNAUTHORIZED_TRANSITION, question_id)
+        edge = raw_edge
     return {
         "question_id": question_id,
         "from_fingerprint": edge.from_content_fingerprint,
@@ -312,7 +320,7 @@ def _require_progress_shape(payload: Mapping[str, Any]) -> None:
 def _verify_target_progress(
     payload: Mapping[str, Any],
     target_questions: Sequence[Mapping[str, Any]],
-    revision: AdmittedCorrectionRevision,
+    revision: AdmittedCorrectionRevision | RuntimeBoundRevision,
     migrated_at: str,
     migration_id: str,
 ) -> PayloadMigrationResult:
@@ -372,7 +380,7 @@ def _verify_target_progress(
 def migrate_correction_progress_payload(
     payload: Mapping[str, Any],
     target_questions: Sequence[Mapping[str, Any]],
-    revision: AdmittedCorrectionRevision | AdmittedRevision,
+    revision: AdmittedCorrectionRevision | AdmittedRevision | RuntimeBoundRevision,
     migrated_at: str,
 ) -> PayloadMigrationResult:
     if isinstance(revision, AdmittedRevision) and not isinstance(revision, AdmittedCorrectionRevision):
@@ -440,6 +448,21 @@ def migrate_correction_progress_payload(
     migrated["questions"] = new_records
     migrated["question_content_fingerprints"] = new_fps
     migrated["bank_fingerprint"] = revision.target_bank_content_fingerprint
+    if isinstance(revision, RuntimeBoundRevision):
+        from fingerprint_identity import (
+            FINGERPRINT_ALGORITHM,
+            FINGERPRINT_SCHEMA_VERSION,
+            RUNTIME_FINGERPRINT_DOMAIN,
+            RUNTIME_LOADER_CONTRACT_VERSION,
+        )
+        from question_identity import PROGRESS_CONTENT_EPOCH_VERSION
+
+        migrated["progress_content_epoch_version"] = PROGRESS_CONTENT_EPOCH_VERSION
+        migrated["fingerprint_schema_version"] = FINGERPRINT_SCHEMA_VERSION
+        migrated["fingerprint_domain"] = RUNTIME_FINGERPRINT_DOMAIN
+        migrated["fingerprint_algorithm"] = FINGERPRINT_ALGORITHM
+        migrated["loader_contract_version"] = RUNTIME_LOADER_CONTRACT_VERSION
+        migrated["bank_node_id"] = revision.target_node.bank_node_id
     migrated["history"] = [dict(event) for event in remaining_history]
     migrated["quarantined_history"] = quarantined
     if "quarantined_questions" in payload:
@@ -459,7 +482,7 @@ def migrate_correction_progress_payload(
 def migrate_correction_session_payload(
     saved: Mapping[str, Any],
     target_questions: Sequence[Mapping[str, Any]],
-    revision: AdmittedCorrectionRevision | AdmittedRevision,
+    revision: AdmittedCorrectionRevision | AdmittedRevision | RuntimeBoundRevision,
     target_bank_file: str | Path,
     *,
     source_questions: Sequence[Mapping[str, Any]] | None = None,

@@ -6,6 +6,7 @@ from pathlib import Path
 
 import progress_store
 from question_identity import (
+    PROGRESS_CONTENT_EPOCH_VERSION,
     ProgressIdentityError,
     canonical_question_history_map,
     canonical_question_id,
@@ -370,7 +371,7 @@ class Backlog1Segment3AdversarialClosureTests(unittest.TestCase):
             self.assertIsNotNone(backup)
             assert backup is not None
             self.assertEqual(json.loads(backup.read_text(encoding="utf-8")), original)
-            self.assertEqual(1, loaded["progress_content_epoch_version"])
+            self.assertEqual(PROGRESS_CONTENT_EPOCH_VERSION, loaded["progress_content_epoch_version"])
             self.assertEqual(loaded["questions"]["sc900-a"]["attempts"], 1)
 
     def test_s3_025_progress_bank_revision_migration_is_idempotent(self):

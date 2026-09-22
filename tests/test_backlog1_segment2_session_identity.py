@@ -141,7 +141,7 @@ class Segment2SessionIdentityTests(unittest.TestCase):
 
     def test_new_snapshot_contains_fingerprint_and_canonical_ids(self):
         snapshot = self._snapshot()
-        self.assertEqual(4, snapshot["schema_version"])
+        self.assertEqual(session_store.SESSION_SCHEMA_VERSION, snapshot["schema_version"])
         self.assertEqual(self.fingerprint, snapshot["bank_fingerprint"])
         self.assertEqual(["Q-A", "Q-B"], snapshot["question_ids"])
         self.assertEqual(["Q-A", "Q-B"], snapshot["restore_question_ids"])

@@ -7,6 +7,7 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
+from content_fingerprint_bridge import RuntimeBoundRevision, bound_migration_id, unwrap_revision
 from content_revision_explanation_authority import (
     MANIFEST_KIND,
     AdmittedExplanationRevision,
@@ -36,29 +37,40 @@ class ContentExplanationMigrationError(ValueError):
         super().__init__(reason.value if not detail else f"{reason.value}: {detail}")
 
 
-def _require_revision(revision: Any) -> AdmittedExplanationRevision:
-    if not isinstance(revision, AdmittedExplanationRevision) or revision.manifest_kind != MANIFEST_KIND:
+def _require_revision(revision: Any) -> AdmittedExplanationRevision | RuntimeBoundRevision:
+    raw = unwrap_revision(revision)
+    if not isinstance(raw, AdmittedExplanationRevision) or raw.manifest_kind != MANIFEST_KIND:
         raise ContentExplanationMigrationError(ExplanationFailureReason.AUTHORITY_KIND_MISMATCH)
     return revision
 
 
-def derive_explanation_migration_id(revision: AdmittedExplanationRevision) -> str:
+def derive_explanation_migration_id(
+    revision: AdmittedExplanationRevision | RuntimeBoundRevision,
+) -> str:
     revision = _require_revision(revision)
+    raw = unwrap_revision(revision)
     payload = {
         "kind": EXPLANATION_MIGRATION_KIND,
-        "manifest_sha256": revision.manifest_sha256,
-        "source_bank_content_fingerprint": revision.source_bank_content_fingerprint,
-        "target_bank_content_fingerprint": revision.target_bank_content_fingerprint,
+        "manifest_sha256": raw.manifest_sha256,
+        "source_bank_content_fingerprint": raw.source_bank_content_fingerprint,
+        "target_bank_content_fingerprint": raw.target_bank_content_fingerprint,
     }
     serialized = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-    return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
+    base = hashlib.sha256(serialized.encode("utf-8")).hexdigest()
+    return bound_migration_id(base, revision)
 
 
 def accepted_explanation_migration_lineage_identities(
-    revision: AdmittedExplanationRevision,
+    revision: AdmittedExplanationRevision | RuntimeBoundRevision,
 ) -> frozenset[tuple[str, str]]:
     revision = _require_revision(revision)
-    return frozenset({(revision.manifest_sha256, derive_explanation_migration_id(revision))})
+    raw = unwrap_revision(revision)
+    return frozenset(
+        {
+            (raw.manifest_sha256, derive_explanation_migration_id(revision)),
+            (raw.manifest_sha256, derive_explanation_migration_id(raw)),
+        }
+    )
 
 
 def _target_index(
@@ -75,6 +87,12 @@ def _lineage_row(
     migrated_at: str,
     migration_id: str,
 ) -> dict[str, str]:
+    if isinstance(revision, RuntimeBoundRevision):
+        raw_edge = revision.artifact_edge(question_id)
+        if raw_edge is None:
+            raise ContentExplanationMigrationError(MigrationFailureReason.UNAUTHORIZED_TRANSITION, question_id)
+        from_fp = str(raw_edge.from_content_fingerprint)
+        to_fp = str(raw_edge.to_content_fingerprint)
     return {
         "question_id": question_id,
         "from_fingerprint": from_fp,
@@ -217,6 +235,21 @@ def migrate_explanation_progress_payload(
     migrated["questions"] = copy.deepcopy(dict(records))
     migrated["question_content_fingerprints"] = new_fps
     migrated["bank_fingerprint"] = revision.target_bank_content_fingerprint
+    if isinstance(revision, RuntimeBoundRevision):
+        from fingerprint_identity import (
+            FINGERPRINT_ALGORITHM,
+            FINGERPRINT_SCHEMA_VERSION,
+            RUNTIME_FINGERPRINT_DOMAIN,
+            RUNTIME_LOADER_CONTRACT_VERSION,
+        )
+        from question_identity import PROGRESS_CONTENT_EPOCH_VERSION
+
+        migrated["progress_content_epoch_version"] = PROGRESS_CONTENT_EPOCH_VERSION
+        migrated["fingerprint_schema_version"] = FINGERPRINT_SCHEMA_VERSION
+        migrated["fingerprint_domain"] = RUNTIME_FINGERPRINT_DOMAIN
+        migrated["fingerprint_algorithm"] = FINGERPRINT_ALGORITHM
+        migrated["loader_contract_version"] = RUNTIME_LOADER_CONTRACT_VERSION
+        migrated["bank_node_id"] = revision.target_node.bank_node_id
     migrated["history"] = copy.deepcopy(list(payload["history"]))
     existing_lineage = payload.get("content_revision_lineage") or []
     if not isinstance(existing_lineage, list):
@@ -265,8 +298,12 @@ def migrate_explanation_session_payload(
         edge = edges.get(qid)
         if edge is not None and target_fp != edge.to_content_fingerprint:
             raise ContentExplanationMigrationError(MigrationFailureReason.UNAUTHORIZED_TRANSITION, qid)
-        if qid in source_index:
+        source_fp = ""
+        if isinstance(revision, RuntimeBoundRevision):
+            source_fp = revision.runtime_source_question_fingerprint(qid)
+        elif qid in source_index:
             source_fp = question_content_fingerprint(source_index[qid])
+        if source_fp:
             if edge is None and source_fp != target_fp:
                 raise ContentExplanationMigrationError(MigrationFailureReason.CHANGED_QUESTION_MISSING_EDGE, qid)
             if edge is not None and source_fp != edge.from_content_fingerprint:

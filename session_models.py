@@ -49,6 +49,11 @@ class QuestionHistoryEvent(TypedDict):
     question_id: str
     question_number: int
     question_content_fingerprint: NotRequired[str]
+    fingerprint_schema_version: NotRequired[int]
+    fingerprint_domain: NotRequired[str]
+    fingerprint_algorithm: NotRequired[str]
+    loader_contract_version: NotRequired[int]
+    bank_node_id: NotRequired[str]
     answer_event_id: NotRequired[str]
     correct: bool
     confidence: str
@@ -88,6 +93,11 @@ class SessionAnswerEvent(TypedDict):
     question_id: str
     question_number: int
     question_content_fingerprint: NotRequired[str]
+    fingerprint_schema_version: NotRequired[int]
+    fingerprint_domain: NotRequired[str]
+    fingerprint_algorithm: NotRequired[str]
+    loader_contract_version: NotRequired[int]
+    bank_node_id: NotRequired[str]
     answer_event_id: NotRequired[str]
     domain: str
     correct: bool
@@ -137,6 +147,11 @@ class SessionSnapshot(TypedDict):
     session_identity_version: NotRequired[int]
     session_identity: NotRequired[str]
     bank_fingerprint: NotRequired[str]
+    fingerprint_schema_version: NotRequired[int]
+    fingerprint_domain: NotRequired[str]
+    fingerprint_algorithm: NotRequired[str]
+    loader_contract_version: NotRequired[int]
+    bank_node_id: NotRequired[str]
     question_ids: NotRequired[list[str]]
     restore_question_ids: NotRequired[list[str]]
     mode: str
