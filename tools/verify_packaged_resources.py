@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import subprocess
 import sys
 from pathlib import Path
@@ -20,20 +21,22 @@ def archive_listing_members(listing: str) -> set[str]:
     if not marker:
         return set()
     _header, _separator, paths = member_listing.partition(":\n")
-    return {
-        canonical_archive_member(line.strip())
-        for line in paths.splitlines()
-        if line.startswith(" ")
-    }
+    return {canonical_archive_member(line.strip()) for line in paths.splitlines() if line.startswith(" ")}
 
 
 def missing_runtime_resources(members: set[str]) -> list[str]:
     canonical_members = {canonical_archive_member(member) for member in members}
     return [
-        resource.as_posix()
-        for resource in REQUIRED_RUNTIME_RESOURCES
-        if resource.as_posix() not in canonical_members
+        resource.as_posix() for resource in REQUIRED_RUNTIME_RESOURCES if resource.as_posix() not in canonical_members
     ]
+
+
+def packaged_resource_target_sha256(executable: Path) -> str:
+    digest = hashlib.sha256()
+    with Path(executable).open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def verify_packaged_resources(executable: Path) -> list[str]:
@@ -56,13 +59,34 @@ def verify_packaged_resources(executable: Path) -> list[str]:
     return missing_runtime_resources(archive_listing_members(result.stdout))
 
 
-def main() -> int:
-    executable = ROOT / "dist" / "SC900TestLearningEngine.exe"
+def resolve_verification_target(argv: list[str]) -> Path:
+    if len(argv) > 1:
+        raise SystemExit("Usage: python -m tools.verify_packaged_resources [executable]")
+    if argv:
+        return Path(argv[0]).resolve()
+    return (ROOT / "dist" / "SC900TestLearningEngine.exe").resolve()
+
+
+def main(argv: list[str] | None = None) -> int:
+    try:
+        executable = resolve_verification_target([] if argv is None else argv)
+    except SystemExit as error:
+        print(error, file=sys.stderr)
+        return 2
     try:
         missing = verify_packaged_resources(executable)
     except RuntimeError as error:
         print(f"Packaged resource verification failed: {error}", file=sys.stderr)
+        print(f"target={executable}")
         return 1
+    try:
+        digest = packaged_resource_target_sha256(executable)
+    except OSError as error:
+        print(f"Packaged resource verification failed: {error}", file=sys.stderr)
+        print(f"target={executable}")
+        return 1
+    print(f"target={executable}")
+    print(f"sha256={digest}")
     if missing:
         print(f"Packaged resource verification failed: missing {', '.join(missing)}", file=sys.stderr)
         return 1
@@ -71,4 +95,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(main(sys.argv[1:]))
