@@ -56,7 +56,11 @@ from content_revision_migration import (
     history_events_for_question_revision_aware,
 )
 from content_revision_registry import (
+    RegisteredContentLineage,
     RuntimeBoundAdmissionResult,
+    history_event_matches_registered_lineage,
+    history_events_for_registered_lineage,
+    reconstruct_registered_lineage,
     resolve_registered_revision_for_target,
     runtime_bound_revision_for_admission,
 )
@@ -329,6 +333,7 @@ class TestingEngineApp(
         self.progress_data = blank_progress(app_version=APP_VERSION)
         self.progress_write_blocked = False
         self.content_revision_authority: RegisteredContentRevision | None = None
+        self.content_revision_lineage: tuple[RuntimeBoundRevision, ...] | None = None
         self.data: QuestionBankData | None = None
         self.master_questions: list[QuestionRuntimeState] = []
         self.questions: list[QuestionRuntimeState] = []
@@ -2675,6 +2680,9 @@ class TestingEngineApp(
         return questions
 
     def _history_event_matches_current_revision(self, event, question):
+        lineage = getattr(self, "content_revision_lineage", None)
+        if lineage:
+            return history_event_matches_registered_lineage(event, question, lineage)
         runtime_revision = getattr(self, "content_revision_runtime_binding", None)
         if isinstance(runtime_revision, RuntimeBoundRevision):
             return history_event_matches_runtime_bound_revision(event, question, runtime_revision)
@@ -2686,6 +2694,9 @@ class TestingEngineApp(
         return history_event_matches_approved_revision(event, question, revision)
 
     def revision_aware_history_events(self, history_map, question):
+        lineage = getattr(self, "content_revision_lineage", None)
+        if lineage:
+            return history_events_for_registered_lineage(history_map, question, lineage)
         runtime_revision = getattr(self, "content_revision_runtime_binding", None)
         if isinstance(runtime_revision, RuntimeBoundRevision):
             return history_events_for_runtime_bound_revision(history_map, question, runtime_revision)
@@ -2712,6 +2723,7 @@ class TestingEngineApp(
     ) -> RegisteredContentRevision | None:
         self.content_revision_authority = None
         self.content_revision_runtime_binding = None
+        self.content_revision_lineage = None
         if result is None:
             return None
         if result.status != AdmissionStatus.PASS or result.admitted is None:
@@ -2728,11 +2740,16 @@ class TestingEngineApp(
         return True
 
     def _revision_session_pairs(
-        self, revision: RegisteredContentRevision
+        self,
+        revision: RegisteredContentRevision,
+        *,
+        source_filename: str | None = None,
+        target_fingerprint: str | None = None,
     ) -> tuple[list[tuple[Path, Path]], Exception | None]:
         if not self.bank_path:
             return [], None
-        source_bank_path = Path(self.bank_path).parent / revision.source_bank_filename
+        source_bank_path = Path(self.bank_path).parent / (source_filename or revision.source_bank_filename)
+        fingerprint = target_fingerprint or revision.target_bank_content_fingerprint
         source_stem = self.runtime_bank_stem(source_bank_path)
         pairs: list[tuple[Path, Path]] = []
         for source_path in sorted(self.user_data_dir.glob(f"{source_stem}_*_session_*.json")):
@@ -2756,7 +2773,7 @@ class TestingEngineApp(
                     Path(self.bank_path),
                     mode,
                     question_numbers,
-                    bank_fingerprint=revision.target_bank_content_fingerprint,
+                    bank_fingerprint=fingerprint,
                     question_ids=question_ids,
                     builder_context_fingerprint=builder_fingerprint,
                 )
@@ -2807,7 +2824,82 @@ class TestingEngineApp(
             return self._fail_closed_content_revision_progress(error)
         return False
 
+    def _bind_registered_lineage(self, lineage: RegisteredContentLineage) -> None:
+        terminal = lineage.revisions[-1]
+        self.content_revision_authority = terminal.admitted
+        self.content_revision_runtime_binding = terminal
+        self.content_revision_lineage = lineage.revisions
+
+    def _lineage_questions(self, revisions: tuple[RuntimeBoundRevision, ...]) -> dict[str, list]:
+        parent = Path(self.bank_path).parent if self.bank_path else Path()
+        names = [revisions[0].source_bank_filename]
+        names.extend(revision.target_bank_filename for revision in revisions)
+        return {name: list(load_bank(parent / name)["questions"]) for name in dict.fromkeys(names)}
+
+    def _migrate_registered_lineage(self, lineage: RegisteredContentLineage) -> bool:
+        if not self.bank_path or not self.progress_path:
+            return False
+        parent = Path(self.bank_path).parent
+        located: list[tuple[str, Path]] = []
+        for name in lineage.bank_filenames:
+            bank_path = parent / name
+            progress_path = self.progress_file_for_bank(bank_path)
+            legacy_path = self.legacy_progress_file_for_bank(bank_path)
+            if progress_path.exists():
+                located.append((name, progress_path))
+            elif legacy_path.exists():
+                located.append((name, legacy_path))
+        if len(located) > 1:
+            return self._fail_closed_content_revision_progress(
+                ValueError("Multiple governed lineage progress files exist.")
+            )
+        if not located:
+            return False
+        source_name, source_path = located[0]
+        if source_name == lineage.bank_filenames[-1]:
+            return False
+        start = lineage.bank_filenames.index(source_name)
+        hops = lineage.revisions[start:]
+        payload, error = self.persistence._read_json_nonmutating(source_path)
+        if error is not None or payload is None:
+            return self._fail_closed_content_revision_progress(error or ValueError("Unreadable lineage progress."))
+        actual_fingerprint = str(payload.get("bank_fingerprint") or "").strip()
+        if actual_fingerprint != hops[0].source_node.runtime_bank_fingerprint:
+            return self._fail_closed_content_revision_progress(
+                ValueError("Unknown or mismatched current lineage bank identity.")
+            )
+        session_pairs, session_error = self._revision_session_pairs(
+            hops[-1],
+            source_filename=hops[0].source_bank_filename,
+            target_fingerprint=hops[-1].target_bank_content_fingerprint,
+        )
+        if session_error is not None:
+            return self._fail_closed_content_revision_progress(session_error)
+        try:
+            questions_by_bank = self._lineage_questions(hops)
+        except Exception as exc:
+            return self._fail_closed_content_revision_progress(exc)
+        _receipt, migration_error = self.persistence.migrate_lineage_state_transaction(
+            progress_source_path=source_path,
+            progress_target_path=Path(self.progress_path),
+            session_pairs=session_pairs,
+            revisions=hops,
+            questions_by_bank=questions_by_bank,
+            migrated_at=now_iso(),
+        )
+        if migration_error is not None:
+            return self._fail_closed_content_revision_progress(migration_error)
+        return False
+
     def _apply_registered_content_revision(self, target_bank_path: Path) -> bool:
+        lineage = reconstruct_registered_lineage()
+        if isinstance(lineage, RegisteredContentLineage) and Path(target_bank_path).name == lineage.bank_filenames[-1]:
+            self._bind_registered_lineage(lineage)
+            return self._migrate_registered_lineage(lineage)
+        if isinstance(lineage, AdmissionResult) and lineage.status != AdmissionStatus.PASS:
+            self.progress_write_blocked = True
+            logging.warning("Registered content lineage was not admitted: %s", lineage.reasons)
+            return True
         result = resolve_registered_revision_for_target(Path(target_bank_path))
         revision = self._bind_content_revision_authority(result)
         if result is None:

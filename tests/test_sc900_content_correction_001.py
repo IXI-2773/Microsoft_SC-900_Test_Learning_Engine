@@ -595,9 +595,9 @@ class ContentCorrectionIsolatedBuildTests(unittest.TestCase):
         self.assertGreater(analyzable, 0)
 
     def test_cc_r01_production_inactivity(self) -> None:
-        self.assertEqual({}, AUTHORIZED_CONTENT_REVISION_MANIFESTS)
+        self.assertEqual(8, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
         profile = _read_json(REPOSITORY_ROOT / "cert_profile_sc900.json")
-        self.assertEqual(PRODUCTION_BANK_FILENAME, profile["runtime_bank"])
+        self.assertEqual("sc900_bank_v8_explanation_q118_repair.json", profile["runtime_bank"])
 
 
 class ContentCorrectionRepositoryGateTests(unittest.TestCase):
@@ -674,7 +674,7 @@ class ContentCorrectionCommittedArtifactTests(unittest.TestCase):
         self.assertEqual(EXPECTED_CURRENTNESS_RECORD_PAYLOAD_SHA256, currentness["payload_sha256"])
         self.assertEqual(PERMITTED_CHANGE_CLASS, manifest["permitted_change_class"])
         self.assertEqual(9, len(list((review_root / REVIEW_DIRECTORY).glob("*.json"))))
-        self.assertEqual({}, AUTHORIZED_CONTENT_REVISION_MANIFESTS)
+        self.assertEqual(8, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
 
 
 if __name__ == "__main__":

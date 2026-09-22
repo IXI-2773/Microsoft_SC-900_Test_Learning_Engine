@@ -35,10 +35,10 @@ def sha256_file(path: Path) -> str:
 
 
 class FinalBankActivationContractTests(unittest.TestCase):
-    def test_a1_runtime_config_resolves_to_final_bank_not_baseline(self):
+    def test_a1_runtime_config_resolves_to_governed_target_not_baseline(self):
         profile = json.loads((ROOT / "cert_profile_sc900.json").read_text(encoding="utf-8"))
-        self.assertEqual(ACTIVE_RUNTIME_BANK_FILENAME, profile["runtime_bank"])
-        self.assertEqual(ACTIVE_RUNTIME_BANK_FILENAME, cert_config.QUESTION_BANK_FILENAME)
+        self.assertEqual("sc900_bank_v8_explanation_q118_repair.json", profile["runtime_bank"])
+        self.assertEqual("sc900_bank_v8_explanation_q118_repair.json", cert_config.QUESTION_BANK_FILENAME)
         self.assertNotEqual("sc900_bank_v8_baseline.json", cert_config.QUESTION_BANK_FILENAME)
         self.assertEqual(cert_config.QUESTION_BANK_FILENAME, app.DEFAULT_BANK.name)
 
@@ -59,7 +59,7 @@ class FinalBankActivationContractTests(unittest.TestCase):
 
     def test_a4_active_runtime_bank_count_is_454(self):
         active_path = ROOT / cert_config.QUESTION_BANK_FILENAME
-        self.assertEqual(ACTIVE_RUNTIME_BANK_FILENAME, active_path.name)
+        self.assertEqual("sc900_bank_v8_explanation_q118_repair.json", active_path.name)
         self.assertTrue(active_path.is_file())
         questions = load_bank(active_path)["questions"]
         self.assertEqual(EXPECTED_ACTIVE_COUNT, len(questions))
@@ -99,12 +99,12 @@ class FinalBankActivationContractTests(unittest.TestCase):
         self.assertTrue(all(row.get("exam_simulation_eligible") is False for row in stretch))
         self.assertEqual(EXPECTED_ACTIVE_COUNT, len(questions))
 
-    def test_active_runtime_bank_is_byte_identical_to_canonical_calibrated_bank(self):
-        active_path = ROOT / ACTIVE_RUNTIME_BANK_FILENAME
-        self.assertTrue(active_path.is_file())
-        self.assertEqual(CANONICAL_CALIBRATED_BANK.read_bytes(), active_path.read_bytes())
-        self.assertEqual(EXPECTED_ACTIVE_SHA256, sha256_file(active_path))
-        self.assertEqual(sha256_file(CANONICAL_CALIBRATED_BANK), sha256_file(active_path))
+    def test_historical_final_bank_remains_byte_identical_to_canonical_calibrated_bank(self):
+        final_path = ROOT / ACTIVE_RUNTIME_BANK_FILENAME
+        self.assertTrue(final_path.is_file())
+        self.assertEqual(CANONICAL_CALIBRATED_BANK.read_bytes(), final_path.read_bytes())
+        self.assertEqual(EXPECTED_ACTIVE_SHA256, sha256_file(final_path))
+        self.assertEqual(sha256_file(CANONICAL_CALIBRATED_BANK), sha256_file(final_path))
 
     def test_historical_baseline_bank_remains_byte_identical(self):
         self.assertTrue(HISTORICAL_BASELINE_BANK.is_file())
@@ -128,7 +128,7 @@ class FinalBankActivationContractTests(unittest.TestCase):
 
     def test_packaging_includes_active_runtime_bank(self):
         names = [path.as_posix() for path in REQUIRED_RUNTIME_RESOURCES]
-        self.assertIn(ACTIVE_RUNTIME_BANK_FILENAME, names)
+        self.assertIn(cert_config.QUESTION_BANK_FILENAME, names)
         self.assertIn("cert_profile_sc900.json", names)
         self.assertIn("config/certifications/sc900-2026.json", names)
         self.assertIn("sc900_bank_v8_baseline.json", names)

@@ -340,7 +340,7 @@ class PackageBTranche1BuilderTests(unittest.TestCase):
         self.assertEqual(AdmissionStatus.PASS.value, summary["admission_status"])
         self.assertNotEqual(source_before, self.candidate_path.read_bytes())
         self.assertEqual(source_before, self.source_path.read_bytes())
-        self.assertEqual({}, AUTHORIZED_CONTENT_REVISION_MANIFESTS)
+        self.assertEqual(8, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
         self.assertEqual(registry_before, AUTHORIZED_CONTENT_REVISION_MANIFESTS)
         json.dumps(summary, sort_keys=True)
 
@@ -800,7 +800,7 @@ class PackageBTranche1RealCandidateClosureTests(unittest.TestCase):
         self.assertEqual(SOURCE_BANK_FILENAME, admission.admitted.source_bank_filename)
         self.assertEqual(CANDIDATE_BANK_FILENAME, admission.admitted.target_bank_filename)
         self.assertEqual(self.changed_ids, [edge.question_id for edge in admission.admitted.edges])
-        self.assertEqual({}, AUTHORIZED_CONTENT_REVISION_MANIFESTS)
+        self.assertEqual(8, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
         self.assertEqual(self.registry_before, AUTHORIZED_CONTENT_REVISION_MANIFESTS)
 
     def test_real_progress_continuity_and_idempotence(self) -> None:
@@ -853,7 +853,7 @@ class PackageBTranche1RealCandidateClosureTests(unittest.TestCase):
             first.payload["questions"][self.changed_id]["attempts"],
             second.payload["questions"][self.changed_id]["attempts"],
         )
-        self.assertEqual({}, AUTHORIZED_CONTENT_REVISION_MANIFESTS)
+        self.assertEqual(8, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
 
     def test_real_session_continuity(self) -> None:
         admission = self._admit()
@@ -946,7 +946,7 @@ class PackageBTranche1RealCandidateClosureTests(unittest.TestCase):
             canonical_session_signature(MODE_PRACTICE, revision.target_bank_content_fingerprint, question_ids),
             result.payload["restore_signature"],
         )
-        self.assertEqual({}, AUTHORIZED_CONTENT_REVISION_MANIFESTS)
+        self.assertEqual(8, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
 
     def test_tampered_review_receipt_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -1026,7 +1026,7 @@ class PackageBTranche1RealCandidateClosureTests(unittest.TestCase):
         self.assertEqual("PASS", computed["closure_result"])
         self.assertEqual(serialized, self.CANDIDATE_METRICS_PATH.read_text(encoding="utf-8"))
         self.assertEqual(computed, _read_json(self.CANDIDATE_METRICS_PATH))
-        self.assertEqual({}, AUTHORIZED_CONTENT_REVISION_MANIFESTS)
+        self.assertEqual(8, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
 
 
 if __name__ == "__main__":

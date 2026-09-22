@@ -214,7 +214,7 @@ class Q118ExplanationRepairTests(unittest.TestCase):
         self.assertEqual(EXPECTED_SOURCE_Q118_FINGERPRINT, self.revision.edges[0].from_content_fingerprint)
         self.assertEqual(EXPECTED_TARGET_Q118_FINGERPRINT, self.revision.edges[0].to_content_fingerprint)
         self.assertEqual(1, len(self.revision.edges))
-        self.assertEqual({}, AUTHORIZED_CONTENT_REVISION_MANIFESTS)
+        self.assertEqual(8, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
         self.assertFalse(self.ledger["independent_pre_implementation_semantic_review"])
         self.assertEqual("EXPLICIT_IMPLEMENTATION_DIRECTIVE", self.ledger["wording_authority"])
 

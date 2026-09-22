@@ -106,7 +106,7 @@ class FinalBankActivationMigrationTests(unittest.TestCase):
         cls.active_ids = [canonical_question_id(row) for row in cls.active_questions]
 
     def test_runtime_stems_isolate_baseline_progress_and_sessions(self):
-        self.assertEqual(ACTIVE_RUNTIME_BANK_FILENAME, self.active_path.name)
+        self.assertEqual(cert_config.QUESTION_BANK_FILENAME, self.active_path.name)
         self.assertNotEqual(runtime_bank_stem(HISTORICAL_BASELINE_BANK), runtime_bank_stem(self.active_path))
         user_data = Path("C:/tmp-activation-isolation")
         self.assertNotEqual(
@@ -131,7 +131,7 @@ class FinalBankActivationMigrationTests(unittest.TestCase):
         )
         self.assertNotEqual(baseline_session.name, active_session.name)
         self.assertIn("sc900_bank_v8_baseline", baseline_session.name)
-        self.assertIn("sc900_bank_v8_final", active_session.name)
+        self.assertIn("sc900_bank_v8_explanation_q118_repair", active_session.name)
 
     def test_bank_fingerprint_mismatch_fails_closed(self):
         snapshot = build_session_snapshot(
@@ -250,7 +250,7 @@ class FinalBankActivationMigrationTests(unittest.TestCase):
 
     def test_application_starts_with_final_bank_and_leaves_baseline_progress_untouched(self):
         active_path = ROOT / cert_config.QUESTION_BANK_FILENAME
-        self.assertEqual(ACTIVE_RUNTIME_BANK_FILENAME, active_path.name)
+        self.assertEqual("sc900_bank_v8_explanation_q118_repair.json", active_path.name)
         tmpdir_ctx = tempfile.TemporaryDirectory()
         self.addCleanup(tmpdir_ctx.cleanup)
         tmpdir = Path(tmpdir_ctx.name)

@@ -4,8 +4,8 @@ from dataclasses import dataclass
 from hashlib import sha256
 from pathlib import Path
 
-GOVERNED_ACTIVE_BANK_FILENAME = "sc900_bank_v8_final.json"
-GOVERNED_ACTIVE_BANK_SHA256 = "177a4fb5f8a874ffe4dda6b69e3d1c03dbdad1f5db5a174a990eb8b5a0e5927c"
+GOVERNED_ACTIVE_BANK_FILENAME = "sc900_bank_v8_explanation_q118_repair.json"
+GOVERNED_ACTIVE_BANK_SHA256 = "f18b2ad5174518f1c992c59663b93ad48d69483cefc1b72675af6d1486b1976d"
 GOVERNED_ACTIVE_BANK_WARNINGS: tuple[tuple[str, str], ...] = (
     (
         "Repeated answer-pattern bias",
@@ -62,10 +62,7 @@ def evaluate_production_warnings(
     if sha != GOVERNED_ACTIVE_BANK_SHA256:
         return WarningPolicyDecision(
             passed=False,
-            failures=(
-                "active-bank SHA mismatch: expected "
-                f"{GOVERNED_ACTIVE_BANK_SHA256}, got {sha}",
-            ),
+            failures=("active-bank SHA mismatch: expected " f"{GOVERNED_ACTIVE_BANK_SHA256}, got {sha}",),
             known_frozen_warning_count=0,
             unexpected_warning_count=len(actual),
             governed=True,
@@ -78,14 +75,10 @@ def evaluate_production_warnings(
     failures: list[str] = []
     if missing:
         failures.append(
-            "missing expected frozen warning(s): "
-            + "; ".join(f"{title}: {body}" for title, body in missing)
+            "missing expected frozen warning(s): " + "; ".join(f"{title}: {body}" for title, body in missing)
         )
     if extra:
-        failures.append(
-            "unexpected warning(s): "
-            + "; ".join(f"{title}: {body}" for title, body in extra)
-        )
+        failures.append("unexpected warning(s): " + "; ".join(f"{title}: {body}" for title, body in extra))
     known = len([item for item in actual if item in expected])
     return WarningPolicyDecision(
         passed=not failures,
