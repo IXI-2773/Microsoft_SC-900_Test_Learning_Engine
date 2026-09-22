@@ -1,9 +1,16 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from content_fingerprint_bridge import (
+    FingerprintBridgeError,
+    RuntimeBoundRevision,
+    bind_admitted_revision,
+    verify_bridge_artifact,
+)
 from content_revision_authority import (
     MANIFEST_KIND as EQUIVALENCE_MANIFEST_KIND,
 )
@@ -34,6 +41,43 @@ from question_identity import register_progress_identity_bank, registered_progre
 
 AUTHORIZED_CONTENT_REVISION_MANIFESTS: dict[str, str] = {}
 CONTENT_REVISION_EVIDENCE_ROOT = Path(__file__).resolve().parent / "content_revision_evidence"
+FROZEN_BRIDGE_BANKS = frozenset(
+    {
+        "sc900_bank_v8_final.json",
+        "sc900_bank_v8_length_rebalanced_t1.json",
+        "sc900_bank_v8_length_rebalanced_t2.json",
+        "sc900_bank_v8_length_rebalanced_t3.json",
+        "sc900_bank_v8_length_rebalanced_t4.json",
+        "sc900_bank_v8_length_rebalanced_t5.json",
+        "sc900_bank_v8_content_correction_001.json",
+        "sc900_bank_v8_explanation_tranche_1.json",
+        "sc900_bank_v8_explanation_q118_repair.json",
+    }
+)
+
+
+@dataclass(frozen=True, slots=True)
+class RuntimeBoundAdmissionResult:
+    status: Any
+    reasons: tuple[Any, ...]
+    admitted: Any
+    runtime_bound: RuntimeBoundRevision | None
+
+
+def runtime_bound_revision_for_admission(result: Any) -> RuntimeBoundRevision | None:
+    return result.runtime_bound if isinstance(result, RuntimeBoundAdmissionResult) else None
+
+
+def _bind_runtime_identity(result: Any) -> Any:
+    admitted = getattr(result, "admitted", None)
+    if getattr(result, "status", None) != AdmissionStatus.PASS or admitted is None:
+        return result
+    try:
+        bridge = verify_bridge_artifact()
+        bound = bind_admitted_revision(admitted, bridge)
+    except (FingerprintBridgeError, OSError, ValueError, KeyError):
+        return _fail(RevisionFailureReason.LINEAGE_CONFLICT)
+    return RuntimeBoundAdmissionResult(result.status, tuple(result.reasons), admitted, bound)
 
 
 def _fail(reason: RevisionFailureReason) -> AdmissionResult:
@@ -135,8 +179,9 @@ def resolve_registered_revision_for_target(
             return _fail(RevisionFailureReason.SOURCE_BANK_FILE_HASH_MISMATCH)
 
         manifest_kind = str(manifest.get("manifest_kind") or "")
+        result: Any
         if manifest_kind == EQUIVALENCE_MANIFEST_KIND:
-            return admit_content_revision(
+            result = admit_content_revision(
                 manifest,
                 source_questions=source_data["questions"],
                 target_questions=target_data["questions"],
@@ -144,6 +189,9 @@ def resolve_registered_revision_for_target(
                 target_bank_path=Path(target_bank_path),
                 review_root=reviews,
             )
+            if source_name in FROZEN_BRIDGE_BANKS and target_name in FROZEN_BRIDGE_BANKS:
+                return _bind_runtime_identity(result)
+            return result
 
         if manifest_kind == CORRECTION_MANIFEST_KIND:
             spec_path = _artifact_path(root, manifest.get("correction_spec"), "specs")
@@ -154,7 +202,7 @@ def resolve_registered_revision_for_target(
             currentness = _read_json_object(currentness_path)
             if spec is None or currentness is None:
                 return _fail(RevisionFailureReason.SCHEMA_UNSUPPORTED)
-            return admit_content_correction(
+            result = admit_content_correction(
                 manifest,
                 spec=spec,
                 currentness_record=currentness,
@@ -164,19 +212,25 @@ def resolve_registered_revision_for_target(
                 currentness_path=currentness_path,
                 review_root=reviews,
             )
+            if source_name in FROZEN_BRIDGE_BANKS and target_name in FROZEN_BRIDGE_BANKS:
+                return _bind_runtime_identity(result)
+            return result
 
         if manifest_kind == EXPLANATION_MANIFEST_KIND:
             spec_path = _artifact_path(root, manifest.get("revision_spec"), "specs")
             ledger_path = _artifact_path(root, manifest.get("semantic_review_ledger"), "reviews")
             if spec_path is None or ledger_path is None:
                 return _fail(RevisionFailureReason.SCHEMA_UNSUPPORTED)
-            return admit_explanation_revision(
+            result = admit_explanation_revision(
                 manifest,
                 source_bank_path=source_bank_path,
                 target_bank_path=Path(target_bank_path),
                 spec_path=spec_path,
                 ledger_path=ledger_path,
             )
+            if source_name in FROZEN_BRIDGE_BANKS and target_name in FROZEN_BRIDGE_BANKS:
+                return _bind_runtime_identity(result)
+            return result
 
         return _fail(RevisionFailureReason.SCHEMA_UNSUPPORTED)
     finally:

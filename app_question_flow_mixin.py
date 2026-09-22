@@ -34,6 +34,12 @@ from confidence_epistemics import (
 from confidence_epistemics import (
     classify_recall_failure as classify_recall_failure_from_evidence,
 )
+from fingerprint_identity import (
+    FINGERPRINT_ALGORITHM,
+    FINGERPRINT_SCHEMA_VERSION,
+    RUNTIME_FINGERPRINT_DOMAIN,
+    RUNTIME_LOADER_CONTRACT_VERSION,
+)
 from progress_store import (
     is_active_weak,
     is_review_due,
@@ -1233,11 +1239,21 @@ class QuestionFlowMixin:
         feedback["deciding_clue"] = deciding_clue
         q["last_recall_failure"] = recall_failure
         self.update_progress_for_answer(q, feedback=feedback)
+        session_history_identity = {
+            "fingerprint_schema_version": FINGERPRINT_SCHEMA_VERSION,
+            "fingerprint_domain": RUNTIME_FINGERPRINT_DOMAIN,
+            "fingerprint_algorithm": FINGERPRINT_ALGORITHM,
+            "loader_contract_version": RUNTIME_LOADER_CONTRACT_VERSION,
+        }
+        bank_node_id = str((self.progress_data or {}).get("bank_node_id") or "").strip()
+        if bank_node_id:
+            session_history_identity["bank_node_id"] = bank_node_id
         event: SessionAnswerEvent = {
             "answer_event_id": answer_event_id,
             "question_id": canonical_question_id(q),
             "question_number": int(q.get("question_number") or 0),
             "question_content_fingerprint": question_content_fingerprint(q),
+            **session_history_identity,
             "domain": q.get("domain") or "",
             "correct": bool(is_correct),
             "confidence": q.get("last_confidence", ""),

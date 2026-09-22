@@ -39,6 +39,11 @@ from bank_models import QuestionBankData
 from cand01r3_runtime import sanitize_history_event
 from cert_config import QUESTION_BANK_FILENAME, USER_DATA_DIRNAME
 from config_store import DEFAULT_CONFIG, load_config, save_config
+from content_fingerprint_bridge import (
+    RuntimeBoundRevision,
+    history_event_matches_runtime_bound_revision,
+    history_events_for_runtime_bound_revision,
+)
 from content_revision_authority import AdmissionResult, AdmissionStatus, AdmittedRevision
 from content_revision_correction_authority import AdmittedCorrectionRevision, CorrectionAdmissionResult
 from content_revision_explanation_authority import AdmittedExplanationRevision, ExplanationAdmissionResult
@@ -50,7 +55,17 @@ from content_revision_migration import (
     history_event_matches_approved_revision,
     history_events_for_question_revision_aware,
 )
-from content_revision_registry import resolve_registered_revision_for_target
+from content_revision_registry import (
+    RuntimeBoundAdmissionResult,
+    resolve_registered_revision_for_target,
+    runtime_bound_revision_for_admission,
+)
+from fingerprint_identity import (
+    FINGERPRINT_ALGORITHM,
+    FINGERPRINT_SCHEMA_VERSION,
+    RUNTIME_FINGERPRINT_DOMAIN,
+    RUNTIME_LOADER_CONTRACT_VERSION,
+)
 from legacy_source_layout import BASE_DIR
 from progress_models import (
     IssueReport,
@@ -98,6 +113,7 @@ from session_models import (
     SessionAnswerEvent,
     clear_runtime_answer_state,
 )
+from session_store import session_file_path
 from smart_practice_cache import SmartPracticePrewarmService
 from smart_practice_measurement import event_prediction_fields
 from storage_utils import safe_write_json, setup_logging
@@ -134,8 +150,12 @@ from widget_models import (
     ScreenshotReviewWidgetRegistry,
 )
 
-RegisteredContentRevision = AdmittedRevision | AdmittedCorrectionRevision | AdmittedExplanationRevision
-RegisteredContentRevisionAdmission = AdmissionResult | CorrectionAdmissionResult | ExplanationAdmissionResult
+RegisteredContentRevision = (
+    AdmittedRevision | AdmittedCorrectionRevision | AdmittedExplanationRevision | RuntimeBoundRevision
+)
+RegisteredContentRevisionAdmission = (
+    AdmissionResult | CorrectionAdmissionResult | ExplanationAdmissionResult | RuntimeBoundAdmissionResult
+)
 
 RESOURCE_DIR = Path(getattr(sys, "_MEIPASS", BASE_DIR))
 APP_DIR = Path(sys.executable).resolve().parent if getattr(sys, "frozen", False) else BASE_DIR
@@ -2348,12 +2368,22 @@ class TestingEngineApp(
         selected_letters = list(q.get("selected", []))
         correct_letters = list(q.get("correct", []))
         prediction_fields = event_prediction_fields(q)
+        history_identity = {
+            "fingerprint_schema_version": FINGERPRINT_SCHEMA_VERSION,
+            "fingerprint_domain": RUNTIME_FINGERPRINT_DOMAIN,
+            "fingerprint_algorithm": FINGERPRINT_ALGORITHM,
+            "loader_contract_version": RUNTIME_LOADER_CONTRACT_VERSION,
+        }
+        bank_node_id = str((self.progress_data or {}).get("bank_node_id") or "").strip()
+        if bank_node_id:
+            history_identity["bank_node_id"] = bank_node_id
         event: QuestionHistoryEvent = {
             "at": now_iso(),
             "day": str(rec.get("last_seen") or ""),
             "question_id": self._question_key(q),
             "question_number": int(q.get("question_number") or 0),
             "question_content_fingerprint": question_content_fingerprint(q),
+            **history_identity,
             "answer_event_id": str((feedback or {}).get("answer_event_id") or q.get("answer_event_id") or ""),
             "correct": bool(is_correct),
             "confidence": str((feedback or {}).get("confidence") or ""),
@@ -2645,6 +2675,9 @@ class TestingEngineApp(
         return questions
 
     def _history_event_matches_current_revision(self, event, question):
+        runtime_revision = getattr(self, "content_revision_runtime_binding", None)
+        if isinstance(runtime_revision, RuntimeBoundRevision):
+            return history_event_matches_runtime_bound_revision(event, question, runtime_revision)
         revision = getattr(self, "content_revision_authority", None)
         if isinstance(revision, AdmittedExplanationRevision):
             return history_event_matches_explanation_revision(event, question, revision)
@@ -2653,6 +2686,9 @@ class TestingEngineApp(
         return history_event_matches_approved_revision(event, question, revision)
 
     def revision_aware_history_events(self, history_map, question):
+        runtime_revision = getattr(self, "content_revision_runtime_binding", None)
+        if isinstance(runtime_revision, RuntimeBoundRevision):
+            return history_events_for_runtime_bound_revision(history_map, question, runtime_revision)
         revision = getattr(self, "content_revision_authority", None)
         if isinstance(revision, AdmittedExplanationRevision):
             return history_events_for_question_explanation_revision_aware(
@@ -2675,6 +2711,7 @@ class TestingEngineApp(
         self, result: RegisteredContentRevisionAdmission | None
     ) -> RegisteredContentRevision | None:
         self.content_revision_authority = None
+        self.content_revision_runtime_binding = None
         if result is None:
             return None
         if result.status != AdmissionStatus.PASS or result.admitted is None:
@@ -2682,12 +2719,51 @@ class TestingEngineApp(
             logging.warning("Registered content revision was not admitted: %s", result.reasons)
             return None
         self.content_revision_authority = result.admitted
-        return result.admitted
+        self.content_revision_runtime_binding = runtime_bound_revision_for_admission(result)
+        return self.content_revision_runtime_binding or result.admitted
 
     def _fail_closed_content_revision_progress(self, error: Exception) -> bool:
         self.progress_write_blocked = True
         logging.warning("Approved content revision progress migration failed: %s", error)
         return True
+
+    def _revision_session_pairs(
+        self, revision: RegisteredContentRevision
+    ) -> tuple[list[tuple[Path, Path]], Exception | None]:
+        if not self.bank_path:
+            return [], None
+        source_bank_path = Path(self.bank_path).parent / revision.source_bank_filename
+        source_stem = self.runtime_bank_stem(source_bank_path)
+        pairs: list[tuple[Path, Path]] = []
+        for source_path in sorted(self.user_data_dir.glob(f"{source_stem}_*_session_*.json")):
+            saved, error = self.persistence._read_json_nonmutating(source_path)
+            if error is not None or saved is None:
+                return [], error or ValueError(f"Unreadable revision session: {source_path}")
+            if bool(saved.get("cand01r3")):
+                continue
+            mode = str(saved.get("mode") or "").strip()
+            question_ids = [str(value or "").strip() for value in saved.get("question_ids") or []]
+            if not mode or not question_ids or any(not value for value in question_ids):
+                return [], ValueError(f"Revision session lacks canonical identity: {source_path}")
+            question_numbers = list(saved.get("question_numbers") or [])
+            builder_fingerprint = self._builder_fingerprint_for_path(
+                saved.get("builder_context"),
+                saved.get("builder_context_fingerprint"),
+            )
+            try:
+                target_path = session_file_path(
+                    self.user_data_dir,
+                    Path(self.bank_path),
+                    mode,
+                    question_numbers,
+                    bank_fingerprint=revision.target_bank_content_fingerprint,
+                    question_ids=question_ids,
+                    builder_context_fingerprint=builder_fingerprint,
+                )
+            except (TypeError, ValueError) as exc:
+                return [], exc
+            pairs.append((source_path, target_path))
+        return pairs, None
 
     def _migrate_progress_for_admitted_revision(self, revision: RegisteredContentRevision) -> bool:
         if not self.bank_path or not self.progress_path:
@@ -2701,6 +2777,24 @@ class TestingEngineApp(
             return False
         questions = list((self.data or {}).get("questions") or [])
         migrated_at = now_iso()
+
+        if source_exists and isinstance(revision, RuntimeBoundRevision):
+            session_pairs, session_error = self._revision_session_pairs(revision)
+            if session_error is not None:
+                return self._fail_closed_content_revision_progress(session_error)
+            _receipt, error = self.persistence.migrate_revision_state_transaction(
+                progress_source_path=source_progress,
+                progress_target_path=target_progress,
+                session_pairs=session_pairs,
+                target_questions=questions,
+                revision=revision,
+                target_bank_file=Path(self.bank_path).name,
+                migrated_at=migrated_at,
+            )
+            if error is not None:
+                return self._fail_closed_content_revision_progress(error)
+            return False
+
         migrate_from = source_progress if source_exists else target_progress
         _payload, _archive, error = self.persistence.migrate_progress_across_approved_revision(
             migrate_from,

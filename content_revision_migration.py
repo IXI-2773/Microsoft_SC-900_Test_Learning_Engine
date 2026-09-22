@@ -9,6 +9,7 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
+from content_fingerprint_bridge import RuntimeBoundRevision, bound_migration_id, unwrap_revision
 from content_revision_authority import MANIFEST_KIND, AdmittedRevision, RevisionFailureReason, approved_lineage
 from question_identity import (
     canonical_question_id,
@@ -60,15 +61,17 @@ def _ensure_v1_equivalence_revision(revision: AdmittedRevision) -> None:
         raise ContentRevisionMigrationError(MigrationFailureReason.AUTHORITY_KIND_MISMATCH, str(kind))
 
 
-def derive_migration_id(revision: AdmittedRevision) -> str:
+def derive_migration_id(revision: AdmittedRevision | RuntimeBoundRevision) -> str:
+    raw = unwrap_revision(revision)
     payload = {
         "kind": "sc900_content_revision_migration_v1",
-        "manifest_sha256": revision.manifest_sha256,
-        "source_bank_content_fingerprint": revision.source_bank_content_fingerprint,
-        "target_bank_content_fingerprint": revision.target_bank_content_fingerprint,
+        "manifest_sha256": raw.manifest_sha256,
+        "source_bank_content_fingerprint": raw.source_bank_content_fingerprint,
+        "target_bank_content_fingerprint": raw.target_bank_content_fingerprint,
     }
     serialized = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-    return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
+    base = hashlib.sha256(serialized.encode("utf-8")).hexdigest()
+    return bound_migration_id(base, revision)
 
 
 # These aliases are intentionally closed over the exact post-canonicalization
@@ -124,12 +127,14 @@ def _revision_lineage_identity(revision: AdmittedRevision) -> tuple[str, str, st
     )
 
 
-def accepted_migration_lineage_identities(revision: AdmittedRevision) -> frozenset[tuple[str, str]]:
-    canonical = (revision.manifest_sha256, derive_migration_id(revision))
-    historical = _KNOWN_PROVENANCE_EQUIVALENT_MIGRATION_IDENTITIES.get(
-        _revision_lineage_identity(revision), frozenset()
-    )
-    return frozenset({canonical, *historical})
+def accepted_migration_lineage_identities(
+    revision: AdmittedRevision | RuntimeBoundRevision,
+) -> frozenset[tuple[str, str]]:
+    raw = unwrap_revision(revision)
+    canonical = (raw.manifest_sha256, derive_migration_id(revision))
+    raw_canonical = (raw.manifest_sha256, derive_migration_id(raw))
+    historical = _KNOWN_PROVENANCE_EQUIVALENT_MIGRATION_IDENTITIES.get(_revision_lineage_identity(raw), frozenset())
+    return frozenset({canonical, raw_canonical, *historical})
 
 
 def _as_revisions(
@@ -202,8 +207,14 @@ def _require_progress_payload_shape(payload: Mapping[str, Any]) -> None:
 
 
 def _lineage_row(
-    question_id: str, from_fp: str, to_fp: str, revision: AdmittedRevision, migrated_at: str, migration_id: str
+    question_id: str, from_fp: str, to_fp: str, revision: Any, migrated_at: str, migration_id: str
 ) -> dict[str, str]:
+    if isinstance(revision, RuntimeBoundRevision):
+        raw_edge = revision.artifact_edge(question_id)
+        if raw_edge is None:
+            raise ContentRevisionMigrationError(MigrationFailureReason.UNAUTHORIZED_TRANSITION, question_id)
+        from_fp = str(raw_edge.from_content_fingerprint)
+        to_fp = str(raw_edge.to_content_fingerprint)
     return {
         "question_id": question_id,
         "from_fingerprint": from_fp,
@@ -363,6 +374,21 @@ def migrate_progress_payload(
     migrated["questions"] = copy.deepcopy(dict(records))
     migrated["question_content_fingerprints"] = new_fps
     migrated["bank_fingerprint"] = revision.target_bank_content_fingerprint
+    if isinstance(revision, RuntimeBoundRevision):
+        from fingerprint_identity import (
+            FINGERPRINT_ALGORITHM,
+            FINGERPRINT_SCHEMA_VERSION,
+            RUNTIME_FINGERPRINT_DOMAIN,
+            RUNTIME_LOADER_CONTRACT_VERSION,
+        )
+        from question_identity import PROGRESS_CONTENT_EPOCH_VERSION
+
+        migrated["progress_content_epoch_version"] = PROGRESS_CONTENT_EPOCH_VERSION
+        migrated["fingerprint_schema_version"] = FINGERPRINT_SCHEMA_VERSION
+        migrated["fingerprint_domain"] = RUNTIME_FINGERPRINT_DOMAIN
+        migrated["fingerprint_algorithm"] = FINGERPRINT_ALGORITHM
+        migrated["loader_contract_version"] = RUNTIME_LOADER_CONTRACT_VERSION
+        migrated["bank_node_id"] = revision.target_node.bank_node_id
     migrated["history"] = copy.deepcopy(payload["history"])
     if "quarantined_questions" in payload:
         migrated["quarantined_questions"] = copy.deepcopy(payload.get("quarantined_questions"))
@@ -415,10 +441,17 @@ def migrate_session_payload(
         target_fp = target_fps[question_id]
         edge = edges.get(question_id)
         source_fp = ""
-        if question_id in source_index:
+        if isinstance(revision, RuntimeBoundRevision):
+            source_fp = revision.runtime_source_question_fingerprint(question_id)
+        elif question_id in source_index:
             source_fp = question_content_fingerprint(source_index[question_id])
         if source_fp and source_fp != target_fp and edge is None:
             raise ContentRevisionMigrationError(MigrationFailureReason.CHANGED_QUESTION_MISSING_EDGE, question_id)
+        if edge is not None and source_fp and source_fp != edge.from_content_fingerprint:
+            raise ContentRevisionMigrationError(
+                MigrationFailureReason.SOURCE_PROGRESS_FINGERPRINT_MISMATCH,
+                question_id,
+            )
         if edge is not None and target_fp != edge.to_content_fingerprint:
             raise ContentRevisionMigrationError(MigrationFailureReason.UNAUTHORIZED_TRANSITION, question_id)
     migrated: dict[str, Any] = copy.deepcopy(dict(validated))

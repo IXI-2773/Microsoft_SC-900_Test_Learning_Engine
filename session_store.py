@@ -7,6 +7,13 @@ from app_constants import MODE_EXAM, MODE_PRACTICE, MODE_SMART_PRACTICE
 from builder_identity import canonical_builder_identity as canonical_builder_identity
 from builder_identity import normalize_builder_context as normalize_builder_context
 from builder_identity import resolve_builder_identity_from_snapshot as resolve_builder_identity_from_snapshot
+from fingerprint_identity import (
+    FINGERPRINT_ALGORITHM,
+    FINGERPRINT_SCHEMA_VERSION,
+    RUNTIME_FINGERPRINT_DOMAIN,
+    RUNTIME_LOADER_CONTRACT_VERSION,
+    progress_runtime_identity_metadata,
+)
 from session_identity import (
     SESSION_IDENTITY_KIND,
     SESSION_IDENTITY_VERSION,
@@ -22,9 +29,32 @@ from session_models import (
     answer_state_from_question,
 )
 
-SESSION_SCHEMA_VERSION = 4
+SESSION_SCHEMA_VERSION = 5
+PREVIOUS_CANONICAL_SESSION_SCHEMA_VERSION = 4
 LEGACY_SESSION_SCHEMA_VERSION = 3
 SUPPORTED_SESSION_MODES = {MODE_PRACTICE, MODE_SMART_PRACTICE, MODE_EXAM}
+
+
+def _runtime_identity_metadata(bank_fingerprint: str) -> dict[str, Any]:
+    bank_node_id = ""
+    try:
+        from content_fingerprint_bridge import runtime_bank_node_id_for_fingerprint
+
+        bank_node_id = runtime_bank_node_id_for_fingerprint(bank_fingerprint)
+    except Exception:
+        pass
+    return progress_runtime_identity_metadata(bank_fingerprint, bank_node_id=bank_node_id)
+
+
+def _validate_session_fingerprint_metadata(payload: Mapping[str, Any]) -> None:
+    if int(payload.get("fingerprint_schema_version") or 0) != FINGERPRINT_SCHEMA_VERSION:
+        raise ValueError("Unsupported fingerprint schema version.")
+    if str(payload.get("fingerprint_domain") or "").strip() != RUNTIME_FINGERPRINT_DOMAIN:
+        raise ValueError("Unsupported fingerprint domain.")
+    if str(payload.get("fingerprint_algorithm") or "").strip() != FINGERPRINT_ALGORITHM:
+        raise ValueError("Unsupported fingerprint algorithm.")
+    if int(payload.get("loader_contract_version") or 0) != RUNTIME_LOADER_CONTRACT_VERSION:
+        raise ValueError("Unsupported runtime loader contract version.")
 
 
 def calculate_session_question_limit(base_count: int) -> int:
@@ -213,7 +243,7 @@ def migrate_session_snapshot(
     )
     if schema_version > SESSION_SCHEMA_VERSION:
         raise ValueError(f"Unsupported future session schema: {schema_version}")
-    canonical_snapshot = schema_version >= SESSION_SCHEMA_VERSION or any(
+    canonical_snapshot = schema_version >= PREVIOUS_CANONICAL_SESSION_SCHEMA_VERSION or any(
         key in payload
         for key in (
             "bank_fingerprint",
@@ -248,8 +278,12 @@ def migrate_session_snapshot(
     saved_restore_ids: list[str] = []
     saved_fingerprint = ""
     if canonical_snapshot:
-        if schema_version != SESSION_SCHEMA_VERSION:
-            raise ValueError(f"Canonical session must use schema {SESSION_SCHEMA_VERSION}.")
+        if schema_version not in {PREVIOUS_CANONICAL_SESSION_SCHEMA_VERSION, SESSION_SCHEMA_VERSION}:
+            raise ValueError(
+                f"Canonical session must use schema {PREVIOUS_CANONICAL_SESSION_SCHEMA_VERSION} or {SESSION_SCHEMA_VERSION}."
+            )
+        if schema_version == SESSION_SCHEMA_VERSION:
+            _validate_session_fingerprint_metadata(payload)
         if (
             _coerce_int(
                 payload.get("session_identity_version") or 0,
@@ -447,11 +481,19 @@ def migrate_session_snapshot(
         "answers": answers,
     }
     if canonical_snapshot:
+        result["schema_version"] = SESSION_SCHEMA_VERSION
         result["session_identity_version"] = SESSION_IDENTITY_VERSION
         result["session_identity"] = SESSION_IDENTITY_KIND
         result["bank_fingerprint"] = saved_fingerprint
         result["question_ids"] = saved_ids
         result["restore_question_ids"] = saved_restore_ids
+        identity_metadata = _runtime_identity_metadata(saved_fingerprint)
+        result["fingerprint_schema_version"] = int(identity_metadata["fingerprint_schema_version"])
+        result["fingerprint_domain"] = str(identity_metadata["fingerprint_domain"])
+        result["fingerprint_algorithm"] = str(identity_metadata["fingerprint_algorithm"])
+        result["loader_contract_version"] = int(identity_metadata["loader_contract_version"])
+        if identity_metadata.get("bank_node_id"):
+            result["bank_node_id"] = str(identity_metadata["bank_node_id"])
     return result
 
 
@@ -513,6 +555,7 @@ def build_session_snapshot(
             row = cast(SessionAnswerState, dict(answer))
             row["question_id"] = question_id
             bound_answers.append(row)
+        fingerprint_metadata = _runtime_identity_metadata(str(bank_fingerprint))
         snapshot: SessionSnapshot = {
             "schema_version": SESSION_SCHEMA_VERSION,
             "app_version": app_version,
@@ -520,6 +563,10 @@ def build_session_snapshot(
             "session_identity_version": SESSION_IDENTITY_VERSION,
             "session_identity": SESSION_IDENTITY_KIND,
             "bank_fingerprint": str(bank_fingerprint),
+            "fingerprint_schema_version": fingerprint_metadata["fingerprint_schema_version"],
+            "fingerprint_domain": fingerprint_metadata["fingerprint_domain"],
+            "fingerprint_algorithm": fingerprint_metadata["fingerprint_algorithm"],
+            "loader_contract_version": fingerprint_metadata["loader_contract_version"],
             "question_ids": canonical_ids,
             "restore_question_ids": canonical_restore_ids,
             "mode": mode,
@@ -550,6 +597,8 @@ def build_session_snapshot(
             "session_xp_gained": int(session_xp_gained),
             "answers": bound_answers,
         }
+        if fingerprint_metadata.get("bank_node_id"):
+            snapshot["bank_node_id"] = str(fingerprint_metadata["bank_node_id"])
         return snapshot
 
     legacy_answers = [cast(SessionAnswerState, dict(answer)) for answer in answers]
@@ -604,7 +653,7 @@ def saved_session_matches_current(
         schema_version = _coerce_int(saved.get("schema_version") or 1, field="schema_version", default=1, minimum=1)
     except ValueError:
         return False
-    canonical_snapshot = schema_version >= SESSION_SCHEMA_VERSION or any(
+    canonical_snapshot = schema_version >= PREVIOUS_CANONICAL_SESSION_SCHEMA_VERSION or any(
         key in saved
         for key in (
             "bank_fingerprint",
@@ -614,8 +663,13 @@ def saved_session_matches_current(
         )
     )
     if canonical_snapshot:
-        if schema_version != SESSION_SCHEMA_VERSION:
+        if schema_version not in {PREVIOUS_CANONICAL_SESSION_SCHEMA_VERSION, SESSION_SCHEMA_VERSION}:
             return False
+        if schema_version == SESSION_SCHEMA_VERSION:
+            try:
+                _validate_session_fingerprint_metadata(saved)
+            except ValueError:
+                return False
         expected_fingerprint = str(bank_fingerprint or "").strip()
         if not expected_fingerprint or str(saved.get("bank_fingerprint") or "").strip() != expected_fingerprint:
             return False
