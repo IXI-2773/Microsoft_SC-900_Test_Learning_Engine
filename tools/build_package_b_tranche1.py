@@ -9,7 +9,6 @@ from pathlib import Path
 from typing import Any
 
 from content_revision_authority import (
-    AdmissionStatus,
     CHOICE_LABELS,
     CONTINUITY_POLICY,
     MANIFEST_KIND,
@@ -19,6 +18,7 @@ from content_revision_authority import (
     REVIEW_DISPOSITION_APPROVED,
     REVIEW_STATUS_APPROVED,
     SEMANTIC_EQUIVALENT,
+    AdmissionStatus,
     admit_content_revision,
     canonical_manifest_sha256,
     sha256_file,
@@ -29,7 +29,6 @@ from question_identity import (
     canonical_question_id,
     question_content_fingerprint,
 )
-
 
 REVIEW_DIRECTORY = "SC900-ANSWER-LENGTH-LEAKAGE-REPAIR-001-T1"
 _SEMANTIC_REVIEW_FIELDS = {"work_id", "source_bank", "candidate_bank", "review_queue"}
@@ -93,9 +92,7 @@ def _correct_key_list(question: Mapping[str, Any]) -> list[str]:
         return [correct]
     if isinstance(correct, list) and all(isinstance(item, str) for item in correct):
         return sorted(correct)
-    raise PackageBTranche1BuildError(
-        f"edited question {canonical_question_id(question)!r} has an invalid correct key"
-    )
+    raise PackageBTranche1BuildError(f"edited question {canonical_question_id(question)!r} has an invalid correct key")
 
 
 def _normalized_authority_refs(value: Any, question_id: str) -> list[str]:
@@ -107,26 +104,20 @@ def _normalized_authority_refs(value: Any, question_id: str) -> list[str]:
             raise PackageBTranche1BuildError(f"EDIT {question_id!r} has an invalid authority ref")
         refs.append(ref.strip())
     if not any(ref.startswith(MS_LEARN_PREFIX) for ref in refs):
-        raise PackageBTranche1BuildError(
-            f"EDIT {question_id!r} requires Microsoft Learn authority evidence"
-        )
+        raise PackageBTranche1BuildError(f"EDIT {question_id!r} requires Microsoft Learn authority evidence")
     return refs
 
 
 def _validate_review_artifact_question_id(question_id: str) -> None:
     if question_id in {".", ".."} or "/" in question_id or "\\" in question_id:
-        raise PackageBTranche1BuildError(
-            f"question ID {question_id!r} cannot be used as a contained review filename"
-        )
+        raise PackageBTranche1BuildError(f"question ID {question_id!r} cannot be used as a contained review filename")
 
 
 def _index_source_questions(questions: Any) -> dict[str, Mapping[str, Any]]:
     if not isinstance(questions, list):
         raise PackageBTranche1BuildError("source bank questions must be a list")
     if len(questions) != REQUIRED_QUESTION_COUNT:
-        raise PackageBTranche1BuildError(
-            f"source bank must contain exactly {REQUIRED_QUESTION_COUNT} questions"
-        )
+        raise PackageBTranche1BuildError(f"source bank must contain exactly {REQUIRED_QUESTION_COUNT} questions")
     indexed: dict[str, Mapping[str, Any]] = {}
     for question in questions:
         if not isinstance(question, Mapping):
@@ -183,9 +174,7 @@ def _validated_review_rows(
         if not _exact_ad_string_mapping(semantics) or any(
             semantics[letter] != SEMANTIC_EQUIVALENT for letter in CHOICE_LABELS
         ):
-            raise PackageBTranche1BuildError(
-                f"EDIT {question_id!r} must mark every A-D choice EQUIVALENT"
-            )
+            raise PackageBTranche1BuildError(f"EDIT {question_id!r} must mark every A-D choice EQUIVALENT")
         source_choices = _keyed_choices(source_index[question_id])
         normalized_after = {letter: after[letter] for letter in CHOICE_LABELS}
         if normalized_after == source_choices:
@@ -231,9 +220,7 @@ def _verify_candidate(
         if _keyed_choices(source_question) == _keyed_choices(target_question):
             raise PackageBTranche1BuildError(f"edited question did not transition: {question_id}")
         if question_content_fingerprint(source_question) == question_content_fingerprint(target_question):
-            raise PackageBTranche1BuildError(
-                f"edited question has no content-fingerprint transition: {question_id}"
-            )
+            raise PackageBTranche1BuildError(f"edited question has no content-fingerprint transition: {question_id}")
     for question_id in skipped_ids:
         if source_index[question_id] != target_index[question_id]:
             raise PackageBTranche1BuildError(f"SKIP question changed: {question_id}")
@@ -372,11 +359,7 @@ def build_package_b_tranche1(
         target_bank_path=candidate_bank_path,
         review_root=review_root,
     )
-    if (
-        admission.status != AdmissionStatus.PASS
-        or admission.reasons != ()
-        or admission.admitted is None
-    ):
+    if admission.status != AdmissionStatus.PASS or admission.reasons != () or admission.admitted is None:
         reasons = ", ".join(reason.value for reason in admission.reasons) or "unknown rejection"
         raise PackageBTranche1BuildError(f"Package-A admission failed: {reasons}")
     if source_bank_path.read_bytes() != source_bytes_before:
