@@ -662,13 +662,45 @@ class Cand01R3MeasurementRuntimeResumeTests(unittest.TestCase):
         self.assertEqual(EXPECTED_PROTOCOL_SHA256, load_committed_protocol()["protocol_sha256"])
 
     def test_r1_029_real_observations_remain_zero_in_repository_pre_run_artifact(self):
-        from cand01r3_protocol import default_production_ledger_path, load_committed_protocol
+        from cand01r3_protocol import (
+            _ledger_real_observation_count,
+            build_protocol,
+            load_committed_protocol,
+            measurement_runtime_state,
+            protocol_sha256,
+            set_measurement_day,
+        )
 
         committed = load_committed_protocol()
         self.assertEqual(0, committed["real_observations"])
-        production = default_production_ledger_path()
-        self.assertFalse(production.exists() and production.stat().st_size > 0)
+        self.assertEqual(EXPECTED_PROTOCOL_SHA256, protocol_sha256(build_protocol()))
+        self.assertEqual(EXPECTED_PROTOCOL_SHA256, committed["protocol_sha256"])
         self.assertEqual(EXPECTED_DEFAULT_BANK_SHA256, sha256_file(DEFAULT_BANK))
+        self._begin()
+        set_measurement_day(1)
+        self.assertEqual("TRAINING", measurement_runtime_state())
+        self.assertGreater(self.ledger_path.stat().st_size, 0)
+        rows = self._ledger_rows()
+        self.assertIn("EPOCH_BEGIN", {row.get("event_type") for row in rows})
+        day_state = next(row for row in rows if row.get("event_type") == "DAY_STATE")
+        self.assertEqual("TRAINING", day_state.get("day_state"))
+        self.assertEqual(1, day_state.get("scheduled_day"))
+        self.assertEqual(0, _ledger_real_observation_count(self.ledger_path))
+
+    def test_r1_031_one_valid_primary_probe_counts_as_one_real_observation(self):
+        from cand01r3_protocol import _ledger_real_observation_count, record_measurement_event
+
+        self._begin()
+        self._enter_measurement(1)
+        self.assertEqual(0, _ledger_real_observation_count(self.ledger_path))
+        result = record_measurement_event(
+            question(DAY1_PROBES[0], role_hint="PROBE", family="entra_roles_rbac"),
+            selected=["A"],
+            correct=True,
+            ledger_path=self.ledger_path,
+        )
+        self.assertEqual("PRIMARY", result.status)
+        self.assertEqual(1, _ledger_real_observation_count(self.ledger_path))
 
     def test_r1_030_resume_reconstruction_is_deterministic_from_the_same_ledger(self):
         from cand01r3_protocol import record_measurement_event, set_measurement_day
