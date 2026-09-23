@@ -1,0 +1,76 @@
+{
+  "continuity_policy": "PRESERVE_HISTORICAL_EVIDENCE_RESET_ACTIVE_AFFECTED_STATE",
+  "correction_spec": {
+    "file_sha256": "4903e3398235a55673813b8de2e6237e0ffc51b3ebd72328e9b1848bd9c3c679",
+    "filename": "sc900_final_two_question_content_correction.json",
+    "payload_sha256": "c77c0fdd514841c25fb08e192b4af485f442d79bad44ffc4dbfd332ec1100b43"
+  },
+  "currentness_record": {
+    "file_sha256": "ae1e624485c3488b4eac743795ef335857e0e1d28d0a75c45abda3b9145143d2",
+    "filename": "sc900_final_two_question_content_correction.json",
+    "payload_sha256": "5a9cdff3042bf732142814f74dbb655dc92ff0f3a79124b29cf5ce03c5508128"
+  },
+  "edges": [
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/5-describe-encryption-hashing",
+        "https://learn.microsoft.com/en-us/windows/apps/develop/security/cryptography"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "choices"
+      ],
+      "correct_key_unchanged": true,
+      "domain_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "5abddcfecc1d45a8b9883b9e718fde9facf6cd3f5eb27d9af5e849c8ef0e86c7",
+      "objective_unchanged": true,
+      "question_id": "sc900_p2_q001",
+      "question_type_unchanged": true,
+      "review_artifact": "SC900-FINAL-TWO-QUESTION-CONTENT-CORRECTION-001/sc900_p2_q001.json",
+      "review_artifact_sha256": "e61d6ee48fd344ba9966a570a81920689af036df19988278ac58f2216b27a596",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "cb9ec689e2559974a019f912284d5e160a56e98a0d7cd084daa260589307c341"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/5-describe-encryption-hashing",
+        "https://learn.microsoft.com/en-us/windows/apps/develop/security/cryptography"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "choices"
+      ],
+      "correct_key_unchanged": true,
+      "domain_unchanged": true,
+      "exam_eligibility_unchanged": true,
+      "from_content_fingerprint": "91485dd2821335e5845ee1b927b052be379af3897cbd735c292c16c3f3ee28e5",
+      "objective_unchanged": true,
+      "question_id": "sc900_p3_q071",
+      "question_type_unchanged": true,
+      "review_artifact": "SC900-FINAL-TWO-QUESTION-CONTENT-CORRECTION-001/sc900_p3_q071.json",
+      "review_artifact_sha256": "6205633cb90d860bd6db7bda24241ed0f1c8219cc758a6fadea798cc88b30c6d",
+      "review_status": "APPROVED",
+      "tier_unchanged": true,
+      "to_content_fingerprint": "444a41b2e50c194522884e63f369a867ee560c7b905b047efb7dd951bb6bfc16"
+    }
+  ],
+  "manifest_kind": "sc900_content_revision_correction",
+  "payload_sha256": "3e62c4a195d2fe8961b29d98694a184a6f4c2a2265da20602f4cd09819f51345",
+  "permitted_change_class": "KEY_PRESERVING_CONTENT_CORRECTION",
+  "schema_version": 2,
+  "source_bank": {
+    "content_fingerprint": "bad80fb502fd5d5c8a50de011c21b9df7da6a9117074ad70140f85fcca0e5e5a",
+    "file_sha256": "a3a8b811b3ce14e76f871333fd3a1ba262afda1b2da39fde98ccf6fde6dd522f",
+    "filename": "sc900_bank_v8_explanation_final_454_repair.json",
+    "question_count": 454
+  },
+  "target_bank": {
+    "content_fingerprint": "76a2ca2d8779e6e0b422f9192868e19ac1f7e0e0543e555a80a8dde9be14f407",
+    "file_sha256": "f97f76591ebb41dd1b92ca5623c6f040b2d9a75ca6f7f1d5b0ebd9adf371581f",
+    "filename": "sc900_bank_v8_final_content_correction_002.json",
+    "question_count": 454
+  },
+  "work_id": "SC900-FINAL-TWO-QUESTION-CONTENT-CORRECTION-IMPLEMENTATION-001"
+}

@@ -1,0 +1,115 @@
+{
+  "corrections": [
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/5-describe-encryption-hashing",
+        "https://learn.microsoft.com/en-us/windows/apps/develop/security/cryptography"
+      ],
+      "authorized_changed_fields": [
+        "choice_explanations",
+        "choices"
+      ],
+      "correct_key": [
+        "B"
+      ],
+      "currentness_class": "LOW",
+      "final_validation_status": "APPROVED",
+      "objective_code": "security_compliance_concepts",
+      "question_id": "sc900_p2_q001",
+      "semantic_validation_work_id": "SC900-FINAL-TWO-QUESTION-CONTENT-CORRECTION-IMPLEMENTATION-001",
+      "source_values": {
+        "choice_explanations": {
+          "A": "Encryption transforms readable data so it can be recovered with the appropriate decryption key. Hashing is designed as a one-way operation rather than a reversible confidentiality mechanism.",
+          "B": "Encryption transforms readable data so it can be recovered with the appropriate decryption key. Hashing is designed as a one-way operation rather than a reversible confidentiality mechanism.",
+          "C": "Encryption transforms readable data so it can be recovered with the appropriate decryption key. Hashing is designed as a one-way operation rather than a reversible confidentiality mechanism.",
+          "D": "Encryption transforms readable data so it can be recovered with the appropriate decryption key. Hashing is designed as a one-way operation rather than a reversible confidentiality mechanism."
+        },
+        "choices": {
+          "A": "Hashing",
+          "B": "Encryption",
+          "C": "Hashing for integrity",
+          "D": "Encryption for confidentiality"
+        }
+      },
+      "target_values": {
+        "choice_explanations": {
+          "A": "Encryption transforms readable data so it can be recovered with the appropriate decryption key. Hashing is designed as a one-way operation rather than a reversible confidentiality mechanism.",
+          "B": "Encryption transforms readable data so it can be recovered with the appropriate decryption key. Hashing is designed as a one-way operation rather than a reversible confidentiality mechanism.",
+          "C": "Encryption transforms readable data so it can be recovered with the appropriate decryption key. Hashing is designed as a one-way operation rather than a reversible confidentiality mechanism.",
+          "D": "Encoding changes how information is represented for storage or transmission, but it does not provide confidentiality. Encryption is the reversible protection mechanism used when an authorized recipient must later recover plaintext."
+        },
+        "choices": {
+          "A": "Hashing",
+          "B": "Encryption",
+          "C": "Hashing for integrity",
+          "D": "Encoding"
+        }
+      }
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/5-describe-encryption-hashing",
+        "https://learn.microsoft.com/en-us/windows/apps/develop/security/cryptography"
+      ],
+      "authorized_changed_fields": [
+        "choice_explanations",
+        "choices"
+      ],
+      "correct_key": [
+        "C"
+      ],
+      "currentness_class": "LOW",
+      "final_validation_status": "APPROVED",
+      "objective_code": "security_compliance_concepts",
+      "question_id": "sc900_p3_q071",
+      "semantic_validation_work_id": "SC900-FINAL-TWO-QUESTION-CONTENT-CORRECTION-IMPLEMENTATION-001",
+      "source_values": {
+        "choice_explanations": {
+          "A": "Hashing produces a one-way value that can be used to check integrity. It is not intended as a reversible way to recover the original content, which is the job of encryption and decryption.",
+          "B": "Hashing produces a one-way value that can be used to check integrity. It is not intended as a reversible way to recover the original content, which is the job of encryption and decryption.",
+          "C": "Hashing produces a one-way value that can be used to check integrity. It is not intended as a reversible way to recover the original content, which is the job of encryption and decryption.",
+          "D": "Hashing produces a one-way value that can be used to check integrity. It is not intended as a reversible way to recover the original content, which is the job of encryption and decryption."
+        },
+        "choices": {
+          "A": "Hashing for integrity",
+          "B": "Encryption for confidentiality",
+          "C": "Hashing",
+          "D": "Role assignment"
+        }
+      },
+      "target_values": {
+        "choice_explanations": {
+          "A": "Encoding changes the representation of data, but it is not designed to produce an integrity check value. Hashing produces a one-way digest that can be compared to detect changes.",
+          "B": "Hashing produces a one-way value that can be used to check integrity. It is not intended as a reversible way to recover the original content, which is the job of encryption and decryption.",
+          "C": "Hashing produces a one-way value that can be used to check integrity. It is not intended as a reversible way to recover the original content, which is the job of encryption and decryption.",
+          "D": "Hashing produces a one-way value that can be used to check integrity. It is not intended as a reversible way to recover the original content, which is the job of encryption and decryption."
+        },
+        "choices": {
+          "A": "Encoding",
+          "B": "Encryption for confidentiality",
+          "C": "Hashing",
+          "D": "Role assignment"
+        }
+      }
+    }
+  ],
+  "currentness_requirements": {
+    "currentness_record_required": true,
+    "question_ids": [
+      "sc900_p2_q001",
+      "sc900_p3_q071"
+    ],
+    "required_result": "PASS_FOR_ALL_TARGETS"
+  },
+  "payload_sha256": "c77c0fdd514841c25fb08e192b4af485f442d79bad44ffc4dbfd332ec1100b43",
+  "question_count": 454,
+  "schema_version": 2,
+  "source_bank": "sc900_bank_v8_explanation_final_454_repair.json",
+  "source_bank_content_fingerprint": "bad80fb502fd5d5c8a50de011c21b9df7da6a9117074ad70140f85fcca0e5e5a",
+  "source_bank_raw_sha256": "a3a8b811b3ce14e76f871333fd3a1ba262afda1b2da39fde98ccf6fde6dd522f",
+  "target_ids": [
+    "sc900_p2_q001",
+    "sc900_p3_q071"
+  ],
+  "work_id": "SC900-FINAL-TWO-QUESTION-CONTENT-CORRECTION-IMPLEMENTATION-001"
+}
