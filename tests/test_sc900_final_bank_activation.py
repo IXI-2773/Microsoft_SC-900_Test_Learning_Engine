@@ -37,8 +37,8 @@ def sha256_file(path: Path) -> str:
 class FinalBankActivationContractTests(unittest.TestCase):
     def test_a1_runtime_config_resolves_to_governed_target_not_baseline(self):
         profile = json.loads((ROOT / "cert_profile_sc900.json").read_text(encoding="utf-8"))
-        self.assertEqual("sc900_bank_v8_explanation_q118_repair.json", profile["runtime_bank"])
-        self.assertEqual("sc900_bank_v8_explanation_q118_repair.json", cert_config.QUESTION_BANK_FILENAME)
+        self.assertEqual("sc900_bank_v8_final_content_correction_002.json", profile["runtime_bank"])
+        self.assertEqual("sc900_bank_v8_final_content_correction_002.json", cert_config.QUESTION_BANK_FILENAME)
         self.assertNotEqual("sc900_bank_v8_baseline.json", cert_config.QUESTION_BANK_FILENAME)
         self.assertEqual(cert_config.QUESTION_BANK_FILENAME, app.DEFAULT_BANK.name)
 
@@ -59,7 +59,7 @@ class FinalBankActivationContractTests(unittest.TestCase):
 
     def test_a4_active_runtime_bank_count_is_454(self):
         active_path = ROOT / cert_config.QUESTION_BANK_FILENAME
-        self.assertEqual("sc900_bank_v8_explanation_q118_repair.json", active_path.name)
+        self.assertEqual("sc900_bank_v8_final_content_correction_002.json", active_path.name)
         self.assertTrue(active_path.is_file())
         questions = load_bank(active_path)["questions"]
         self.assertEqual(EXPECTED_ACTIVE_COUNT, len(questions))

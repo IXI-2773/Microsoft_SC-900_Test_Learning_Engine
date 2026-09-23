@@ -43,6 +43,8 @@ FROZEN_BANK_FILENAMES = (
     "sc900_bank_v8_content_correction_001.json",
     "sc900_bank_v8_explanation_tranche_1.json",
     "sc900_bank_v8_explanation_q118_repair.json",
+    "sc900_bank_v8_explanation_final_454_repair.json",
+    "sc900_bank_v8_final_content_correction_002.json",
 )
 
 

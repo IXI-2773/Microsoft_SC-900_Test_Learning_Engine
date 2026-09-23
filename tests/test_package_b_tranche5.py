@@ -1368,12 +1368,12 @@ class PackageBTranche5RealCandidateClosureTests(unittest.TestCase):
 
     def test_62_package_c_inactive(self) -> None:
         profile = _read_json(REPOSITORY_ROOT / "cert_profile_sc900.json")
-        self.assertEqual("sc900_bank_v8_explanation_q118_repair.json", profile["runtime_bank"])
+        self.assertEqual("sc900_bank_v8_final_content_correction_002.json", profile["runtime_bank"])
         self.assertFalse((REPOSITORY_ROOT / T6_BANK_FILENAME).exists())
-        self.assertEqual(8, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
+        self.assertEqual(10, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
 
     def test_63_production_registry_inactive(self) -> None:
-        self.assertEqual(8, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
+        self.assertEqual(10, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
         self.assertEqual(self.registry_before, AUTHORIZED_CONTENT_REVISION_MANIFESTS)
 
     def test_65_t6_not_started(self) -> None:

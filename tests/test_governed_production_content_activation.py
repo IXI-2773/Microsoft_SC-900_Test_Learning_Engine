@@ -46,7 +46,7 @@ from session_store import SESSION_SCHEMA_VERSION, build_session_snapshot, sessio
 
 ROOT = Path(__file__).resolve().parents[1]
 EVIDENCE = ROOT / "content_revision_evidence"
-TARGET_BANK = "sc900_bank_v8_explanation_q118_repair.json"
+TARGET_BANK = "sc900_bank_v8_final_content_correction_002.json"
 SOURCE_BANK = "sc900_bank_v8_final.json"
 CORRECTION_IDS = (
     "sc900_mlc_q064",
@@ -126,7 +126,7 @@ class GovernedProductionContentActivationTests(unittest.TestCase):
         }
 
     def test_registry_pins_exact_manifest_hashes(self):
-        self.assertEqual(8, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
+        self.assertEqual(10, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
         for relative, expected in AUTHORIZED_CONTENT_REVISION_MANIFESTS.items():
             payload = json.loads((EVIDENCE / relative).read_text(encoding="utf-8"))
             self.assertEqual(expected, canonical_manifest_sha256(payload))
@@ -210,11 +210,11 @@ class GovernedProductionContentActivationTests(unittest.TestCase):
 
         self.assertIsNone(reconstruct_registered_lineage(registry={}))
 
-    def test_complete_lineage_is_eight_hops_and_291_transitions(self):
-        self.assertEqual(9, len(self.lineage.bank_filenames))
+    def test_complete_lineage_is_ten_hops_and_299_transitions(self):
+        self.assertEqual(11, len(self.lineage.bank_filenames))
         self.assertEqual(SOURCE_BANK, self.lineage.bank_filenames[0])
         self.assertEqual(TARGET_BANK, self.lineage.bank_filenames[-1])
-        self.assertEqual(8, len(self.lineage.revisions))
+        self.assertEqual(10, len(self.lineage.revisions))
         edge_count = 0
         for index, revision in enumerate(self.lineage.revisions):
             self.assertEqual(self.lineage.bank_filenames[index], revision.source_bank_filename)
@@ -225,7 +225,7 @@ class GovernedProductionContentActivationTests(unittest.TestCase):
                     self.lineage.revisions[index - 1].target_node.bank_node_id,
                     revision.source_node.bank_node_id,
                 )
-        self.assertEqual(291, edge_count)
+        self.assertEqual(299, edge_count)
         self.assertEqual(
             [node.bank_filename for node in self.bridge.nodes],
             list(self.lineage.bank_filenames),
@@ -233,8 +233,8 @@ class GovernedProductionContentActivationTests(unittest.TestCase):
 
     def test_dual_domain_bridge_authority(self):
         bridge_bytes = hashlib_file(DEFAULT_BRIDGE_PATH)
-        self.assertEqual("6384eeeaceacd2572b02fb87709a13c0baf14b85497c310586a15952e373a509", bridge_bytes)
-        self.assertEqual("fe360efff1d5c0ff4bc887582630dc0daf17a5cc0ae806df2b4b8ee196fd7c96", self.bridge.payload_sha256)
+        self.assertEqual("144a8268ad17d5eefe2ca78d16502512833e14f1951143d35799efb59ae1e847", bridge_bytes)
+        self.assertEqual("fb9bb7f339f360e52aacb51372c5cda01545f3e19fb3914ba7cc15b503f7a379", self.bridge.payload_sha256)
         node = self.lineage.revisions[0].source_node
         qid = next(iter(node.artifact_by_question))
         self.assertEqual(

@@ -51,7 +51,7 @@ class ReleaseWorkflowTests(unittest.TestCase):
         self.assertEqual(
             (
                 Path("cert_profile_sc900.json"),
-                Path("sc900_bank_v8_explanation_q118_repair.json"),
+                Path("sc900_bank_v8_final_content_correction_002.json"),
                 Path("sc900_bank_v8_baseline.json"),
                 Path("config/certifications/sc900-2026.json"),
             ),

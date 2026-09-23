@@ -131,7 +131,7 @@ class FinalBankActivationMigrationTests(unittest.TestCase):
         )
         self.assertNotEqual(baseline_session.name, active_session.name)
         self.assertIn("sc900_bank_v8_baseline", baseline_session.name)
-        self.assertIn("sc900_bank_v8_explanation_q118_repair", active_session.name)
+        self.assertIn("sc900_bank_v8_final_content_correction_002", active_session.name)
 
     def test_bank_fingerprint_mismatch_fails_closed(self):
         snapshot = build_session_snapshot(
@@ -250,7 +250,7 @@ class FinalBankActivationMigrationTests(unittest.TestCase):
 
     def test_application_starts_with_final_bank_and_leaves_baseline_progress_untouched(self):
         active_path = ROOT / cert_config.QUESTION_BANK_FILENAME
-        self.assertEqual("sc900_bank_v8_explanation_q118_repair.json", active_path.name)
+        self.assertEqual("sc900_bank_v8_final_content_correction_002.json", active_path.name)
         tmpdir_ctx = tempfile.TemporaryDirectory()
         self.addCleanup(tmpdir_ctx.cleanup)
         tmpdir = Path(tmpdir_ctx.name)

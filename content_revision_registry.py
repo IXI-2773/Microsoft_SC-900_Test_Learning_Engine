@@ -66,6 +66,12 @@ AUTHORIZED_CONTENT_REVISION_MANIFESTS: dict[str, str] = {
     "manifests/sc900_explanation_q118_repair_001.json": (
         "c938805a9c73e3d73047fa7518fa9adfc7ff23c7baa9769387a30a7b0a8e9730"
     ),
+    "manifests/sc900_explanation_final_454_repair.json": (
+        "f0414c09455bd280358b984d3f8487690d6c9d77f1a6795dfd234cb83bcd4ae2"
+    ),
+    "manifests/sc900_final_two_question_content_correction.json": (
+        "3e62c4a195d2fe8961b29d98694a184a6f4c2a2265da20602f4cd09819f51345"
+    ),
 }
 CONTENT_REVISION_EVIDENCE_ROOT = Path(__file__).resolve().parent / "content_revision_evidence"
 FROZEN_BRIDGE_BANKS = frozenset(
@@ -79,6 +85,8 @@ FROZEN_BRIDGE_BANKS = frozenset(
         "sc900_bank_v8_content_correction_001.json",
         "sc900_bank_v8_explanation_tranche_1.json",
         "sc900_bank_v8_explanation_q118_repair.json",
+        "sc900_bank_v8_explanation_final_454_repair.json",
+        "sc900_bank_v8_final_content_correction_002.json",
     }
 )
 

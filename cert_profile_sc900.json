@@ -3,7 +3,7 @@
   "exam_code": "SC-900",
   "exam_name": "Microsoft Security, Compliance, and Identity Fundamentals",
   "engine_version": "8.0.0",
-  "runtime_bank": "sc900_bank_v8_explanation_q118_repair.json",
+  "runtime_bank": "sc900_bank_v8_final_content_correction_002.json",
   "runtime_bank_question_count": 454,
   "placeholder_bank_question_count": 8,
   "practice_question_count_options": [

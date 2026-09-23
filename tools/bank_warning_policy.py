@@ -4,8 +4,8 @@ from dataclasses import dataclass
 from hashlib import sha256
 from pathlib import Path
 
-GOVERNED_ACTIVE_BANK_FILENAME = "sc900_bank_v8_explanation_q118_repair.json"
-GOVERNED_ACTIVE_BANK_SHA256 = "f18b2ad5174518f1c992c59663b93ad48d69483cefc1b72675af6d1486b1976d"
+GOVERNED_ACTIVE_BANK_FILENAME = "sc900_bank_v8_final_content_correction_002.json"
+GOVERNED_ACTIVE_BANK_SHA256 = "f97f76591ebb41dd1b92ca5623c6f040b2d9a75ca6f7f1d5b0ebd9adf371581f"
 GOVERNED_ACTIVE_BANK_WARNINGS: tuple[tuple[str, str], ...] = (
     (
         "Repeated answer-pattern bias",
