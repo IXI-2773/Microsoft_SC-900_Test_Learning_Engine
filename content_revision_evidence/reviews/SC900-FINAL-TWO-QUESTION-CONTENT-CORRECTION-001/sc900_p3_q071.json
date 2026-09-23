@@ -1,0 +1,51 @@
+{
+  "after": {
+    "choice_explanations": {
+      "A": "Encoding changes the representation of data, but it is not designed to produce an integrity check value. Hashing produces a one-way digest that can be compared to detect changes.",
+      "B": "Hashing produces a one-way value that can be used to check integrity. It is not intended as a reversible way to recover the original content, which is the job of encryption and decryption.",
+      "C": "Hashing produces a one-way value that can be used to check integrity. It is not intended as a reversible way to recover the original content, which is the job of encryption and decryption.",
+      "D": "Hashing produces a one-way value that can be used to check integrity. It is not intended as a reversible way to recover the original content, which is the job of encryption and decryption."
+    },
+    "choices": {
+      "A": "Encoding",
+      "B": "Encryption for confidentiality",
+      "C": "Hashing",
+      "D": "Role assignment"
+    }
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/5-describe-encryption-hashing",
+    "https://learn.microsoft.com/en-us/windows/apps/develop/security/cryptography"
+  ],
+  "authorized_changed_fields": [
+    "choice_explanations",
+    "choices"
+  ],
+  "before": {
+    "choice_explanations": {
+      "A": "Hashing produces a one-way value that can be used to check integrity. It is not intended as a reversible way to recover the original content, which is the job of encryption and decryption.",
+      "B": "Hashing produces a one-way value that can be used to check integrity. It is not intended as a reversible way to recover the original content, which is the job of encryption and decryption.",
+      "C": "Hashing produces a one-way value that can be used to check integrity. It is not intended as a reversible way to recover the original content, which is the job of encryption and decryption.",
+      "D": "Hashing produces a one-way value that can be used to check integrity. It is not intended as a reversible way to recover the original content, which is the job of encryption and decryption."
+    },
+    "choices": {
+      "A": "Hashing for integrity",
+      "B": "Encryption for confidentiality",
+      "C": "Hashing",
+      "D": "Role assignment"
+    }
+  },
+  "correct_key_after": [
+    "C"
+  ],
+  "correct_key_before": [
+    "C"
+  ],
+  "correction_spec_payload_sha256": "c77c0fdd514841c25fb08e192b4af485f442d79bad44ffc4dbfd332ec1100b43",
+  "disposition": "APPROVED_FOR_KEY_PRESERVING_CONTENT_CORRECTION",
+  "from_content_fingerprint": "91485dd2821335e5845ee1b927b052be379af3897cbd735c292c16c3f3ee28e5",
+  "objective_after": "security_compliance_concepts",
+  "objective_before": "security_compliance_concepts",
+  "question_id": "sc900_p3_q071",
+  "to_content_fingerprint": "444a41b2e50c194522884e63f369a867ee560c7b905b047efb7dd951bb6bfc16"
+}

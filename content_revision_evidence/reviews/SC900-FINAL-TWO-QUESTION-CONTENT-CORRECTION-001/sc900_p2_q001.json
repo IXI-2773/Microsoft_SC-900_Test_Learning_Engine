@@ -1,0 +1,51 @@
+{
+  "after": {
+    "choice_explanations": {
+      "A": "Encryption transforms readable data so it can be recovered with the appropriate decryption key. Hashing is designed as a one-way operation rather than a reversible confidentiality mechanism.",
+      "B": "Encryption transforms readable data so it can be recovered with the appropriate decryption key. Hashing is designed as a one-way operation rather than a reversible confidentiality mechanism.",
+      "C": "Encryption transforms readable data so it can be recovered with the appropriate decryption key. Hashing is designed as a one-way operation rather than a reversible confidentiality mechanism.",
+      "D": "Encoding changes how information is represented for storage or transmission, but it does not provide confidentiality. Encryption is the reversible protection mechanism used when an authorized recipient must later recover plaintext."
+    },
+    "choices": {
+      "A": "Hashing",
+      "B": "Encryption",
+      "C": "Hashing for integrity",
+      "D": "Encoding"
+    }
+  },
+  "authority_refs": [
+    "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/5-describe-encryption-hashing",
+    "https://learn.microsoft.com/en-us/windows/apps/develop/security/cryptography"
+  ],
+  "authorized_changed_fields": [
+    "choice_explanations",
+    "choices"
+  ],
+  "before": {
+    "choice_explanations": {
+      "A": "Encryption transforms readable data so it can be recovered with the appropriate decryption key. Hashing is designed as a one-way operation rather than a reversible confidentiality mechanism.",
+      "B": "Encryption transforms readable data so it can be recovered with the appropriate decryption key. Hashing is designed as a one-way operation rather than a reversible confidentiality mechanism.",
+      "C": "Encryption transforms readable data so it can be recovered with the appropriate decryption key. Hashing is designed as a one-way operation rather than a reversible confidentiality mechanism.",
+      "D": "Encryption transforms readable data so it can be recovered with the appropriate decryption key. Hashing is designed as a one-way operation rather than a reversible confidentiality mechanism."
+    },
+    "choices": {
+      "A": "Hashing",
+      "B": "Encryption",
+      "C": "Hashing for integrity",
+      "D": "Encryption for confidentiality"
+    }
+  },
+  "correct_key_after": [
+    "B"
+  ],
+  "correct_key_before": [
+    "B"
+  ],
+  "correction_spec_payload_sha256": "c77c0fdd514841c25fb08e192b4af485f442d79bad44ffc4dbfd332ec1100b43",
+  "disposition": "APPROVED_FOR_KEY_PRESERVING_CONTENT_CORRECTION",
+  "from_content_fingerprint": "5abddcfecc1d45a8b9883b9e718fde9facf6cd3f5eb27d9af5e849c8ef0e86c7",
+  "objective_after": "security_compliance_concepts",
+  "objective_before": "security_compliance_concepts",
+  "question_id": "sc900_p2_q001",
+  "to_content_fingerprint": "cb9ec689e2559974a019f912284d5e160a56e98a0d7cd084daa260589307c341"
+}

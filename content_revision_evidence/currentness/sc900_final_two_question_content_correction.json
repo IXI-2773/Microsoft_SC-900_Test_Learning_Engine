@@ -1,0 +1,32 @@
+{
+  "checked_at": "2026-09-23T00:45:00Z",
+  "overall_status": "PASS",
+  "payload_sha256": "5a9cdff3042bf732142814f74dbb655dc92ff0f3a79124b29cf5ce03c5508128",
+  "schema_version": 1,
+  "source_bank": "sc900_bank_v8_explanation_final_454_repair.json",
+  "source_bank_content_fingerprint": "bad80fb502fd5d5c8a50de011c21b9df7da6a9117074ad70140f85fcca0e5e5a",
+  "source_bank_raw_sha256": "a3a8b811b3ce14e76f871333fd3a1ba262afda1b2da39fde98ccf6fde6dd522f",
+  "targets": [
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/5-describe-encryption-hashing",
+        "https://learn.microsoft.com/en-us/windows/apps/develop/security/cryptography"
+      ],
+      "material_change_detected": false,
+      "notes": "Microsoft Learn continues to distinguish reversible encryption from one-way hashing and describes encoding as representation/transport rather than the confidentiality or integrity operation asked by this item.",
+      "question_id": "sc900_p2_q001",
+      "status": "PASS"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/training/modules/describe-security-concepts-methodologies/5-describe-encryption-hashing",
+        "https://learn.microsoft.com/en-us/windows/apps/develop/security/cryptography"
+      ],
+      "material_change_detected": false,
+      "notes": "Microsoft Learn continues to distinguish reversible encryption from one-way hashing and describes encoding as representation/transport rather than the confidentiality or integrity operation asked by this item.",
+      "question_id": "sc900_p3_q071",
+      "status": "PASS"
+    }
+  ],
+  "work_id": "SC900-FINAL-TWO-QUESTION-CONTENT-CORRECTION-IMPLEMENTATION-001"
+}
