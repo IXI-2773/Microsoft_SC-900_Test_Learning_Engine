@@ -33,9 +33,9 @@ ALTERED_SHA = "0" * 64
 
 class WarningPolicyBindingTests(unittest.TestCase):
     def test_wg003_policy_is_bound_to_filename_sha_and_exact_warning_set(self):
-        self.assertEqual("sc900_bank_v8_explanation_q118_repair.json", GOVERNED_ACTIVE_BANK_FILENAME)
+        self.assertEqual("sc900_bank_v8_final_content_correction_002.json", GOVERNED_ACTIVE_BANK_FILENAME)
         self.assertEqual(
-            "f18b2ad5174518f1c992c59663b93ad48d69483cefc1b72675af6d1486b1976d",
+            "f97f76591ebb41dd1b92ca5623c6f040b2d9a75ca6f7f1d5b0ebd9adf371581f",
             GOVERNED_ACTIVE_BANK_SHA256,
         )
         self.assertEqual((FROZEN_WARNING,), GOVERNED_ACTIVE_BANK_WARNINGS)

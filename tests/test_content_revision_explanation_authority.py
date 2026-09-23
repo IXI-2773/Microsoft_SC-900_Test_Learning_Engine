@@ -140,7 +140,7 @@ class ExplanationAuthorityTests(unittest.TestCase):
         self.assertIsInstance(result.admitted, AdmittedCorrectionRevision)
 
     def test_production_registry_is_activated(self):
-        self.assertEqual(8, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
+        self.assertEqual(10, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
 
     def test_manifest_target_binding_matches_actual_candidate(self):
         target = _load(TARGET_PATH)

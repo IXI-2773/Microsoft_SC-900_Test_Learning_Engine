@@ -64,6 +64,7 @@ QUALITY_TARGETS = [
     "tests/test_sc900_explanation_final_454_repair.py",
     "tests/test_sc900_final_two_question_content_correction.py",
     "tests/test_governed_production_content_activation.py",
+    "tests/test_sc900_terminal_two_hop_activation.py",
     "tests/test_explanation_rendering.py",
 ]
 

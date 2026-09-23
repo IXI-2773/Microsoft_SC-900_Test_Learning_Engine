@@ -323,8 +323,8 @@ class FinalTwoQuestionContentCorrectionTests(unittest.TestCase):
             resolve_registered_revision_for_target,
         )
 
-        self.assertEqual(8, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
-        self.assertNotIn(
+        self.assertEqual(10, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
+        self.assertIn(
             "manifests/sc900_final_two_question_content_correction.json", AUTHORIZED_CONTENT_REVISION_MANIFESTS
         )
         result = resolve_registered_revision_for_target(

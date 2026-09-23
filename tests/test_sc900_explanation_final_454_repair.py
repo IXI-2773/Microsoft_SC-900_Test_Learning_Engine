@@ -48,11 +48,11 @@ class Final454ExplanationRepairTests(unittest.TestCase):
         self.assertEqual(sorted(REPAIRS), sorted(changed))
         self.assertTrue(set(CONTENT_CORRECTIONS).isdisjoint(changed))
 
-    def test_production_bank_is_not_activated(self) -> None:
-        self.assertEqual("sc900_bank_v8_explanation_q118_repair.json", QUESTION_BANK_FILENAME)
-        self.assertEqual("sc900_bank_v8_explanation_q118_repair.json", GOVERNED_ACTIVE_BANK_FILENAME)
-        self.assertEqual(8, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
-        self.assertNotIn(
+    def test_final_454_hop_is_authorized_beneath_the_terminal_runtime_bank(self) -> None:
+        self.assertEqual("sc900_bank_v8_final_content_correction_002.json", QUESTION_BANK_FILENAME)
+        self.assertEqual("sc900_bank_v8_final_content_correction_002.json", GOVERNED_ACTIVE_BANK_FILENAME)
+        self.assertEqual(10, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
+        self.assertIn(
             "manifests/sc900_explanation_final_454_repair.json",
             AUTHORIZED_CONTENT_REVISION_MANIFESTS,
         )

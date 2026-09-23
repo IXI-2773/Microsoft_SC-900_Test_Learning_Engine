@@ -65,6 +65,8 @@ MANIFEST_NAMES = (
     "sc900_content_correction_001.json",
     "sc900_explanation_tranche_1.json",
     "sc900_explanation_q118_repair_001.json",
+    "sc900_explanation_final_454_repair.json",
+    "sc900_final_two_question_content_correction.json",
 )
 TARGET_NAMES = FROZEN_BANK_FILENAMES[1:]
 
@@ -120,16 +122,16 @@ class FingerprintBridgeTests(unittest.TestCase):
         cls.registry = _registry()
 
     def test_fp001_frozen_nine_bank_bridge_reproduces(self):
-        self.assertEqual(9, len(self.bridge.nodes))
+        self.assertEqual(11, len(self.bridge.nodes))
         self.assertEqual(list(FROZEN_BANK_FILENAMES), [node.bank_filename for node in self.bridge.nodes])
         regenerated = build_bridge_payload(ROOT)
         self.assertEqual(self.bridge.payload_sha256, canonical_bridge_sha256(regenerated))
         self.assertEqual(
-            "875ba756392033279c8ab86abbbed287ca290ba780acd7852fe359b80752c8a6",
+            "76a2ca2d8779e6e0b422f9192868e19ac1f7e0e0543e555a80a8dde9be14f407",
             self.bridge.nodes[-1].artifact_bank_fingerprint,
         )
         self.assertEqual(
-            "10996a876d717d2bb60e44dd94688b022806a9a154cb23e3e88025ddf318c65f",
+            "e85fff270eb4b27944f0b76b06031d96b61fee17e117c5c92c6a13c136fcc255",
             self.bridge.nodes[-1].runtime_bank_fingerprint,
         )
 
@@ -140,8 +142,8 @@ class FingerprintBridgeTests(unittest.TestCase):
             for node in self.bridge.nodes
             for qid in node.artifact_by_question
         }
-        self.assertEqual(4086, mapping_count)
-        self.assertEqual(745, len(pairs))
+        self.assertEqual(4994, mapping_count)
+        self.assertEqual(753, len(pairs))
         self.assertTrue(
             all(
                 node.artifact_by_question[qid] != node.runtime_by_question[qid]
@@ -218,7 +220,7 @@ class FingerprintBridgeTests(unittest.TestCase):
                 bound.target_bank_content_fingerprint,
             )
             edge_count += len(bound.edges)
-        self.assertEqual(291, edge_count)
+        self.assertEqual(299, edge_count)
 
     def test_fp008_fp009_runtime_progress_crosses_all_eight_governed_edges(self):
         for target in TARGET_NAMES:
@@ -385,8 +387,8 @@ class FingerprintBridgeTests(unittest.TestCase):
             "manifests/sc900_explanation_q118_repair_001.json",
             AUTHORIZED_CONTENT_REVISION_MANIFESTS,
         )
-        self.assertEqual(8, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
-        self.assertEqual("sc900_bank_v8_explanation_q118_repair.json", cert_config.QUESTION_BANK_FILENAME)
+        self.assertEqual(10, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
+        self.assertEqual("sc900_bank_v8_final_content_correction_002.json", cert_config.QUESTION_BANK_FILENAME)
         self.assertEqual(5, SESSION_SCHEMA_VERSION)
         self.assertEqual(2, PROGRESS_CONTENT_EPOCH_VERSION)
 
@@ -657,7 +659,7 @@ class FingerprintBridgeTests(unittest.TestCase):
                     self.assertEqual("", runtime_by_id[qid]["subtitle"])
                     self.assertEqual("", runtime_by_id[qid]["study_focus"])
                     checked += 1
-            self.assertEqual(4086, checked)
+            self.assertEqual(4994, checked)
         finally:
             register_progress_identity_bank(prior)
 
