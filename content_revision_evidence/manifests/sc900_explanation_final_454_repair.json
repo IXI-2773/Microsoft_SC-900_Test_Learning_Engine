@@ -1,0 +1,113 @@
+{
+  "continuity_policy": "FULL_CONTINUITY_EXPLANATION_ONLY",
+  "edges": [
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/fundamentals/what-is-entra"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "4924659ea638108dcdc483d44fd481b6d8dbbcc74063ff099bb2c510b5bedeb3",
+      "question_id": "sc900_mlc_q045",
+      "review_entry_identity": "fc595973dbf4f6191b7131513b97bae39ad99247a861da3d2850c6833cf3d230",
+      "to_content_fingerprint": "c40f3a74e42e9959e8d739a68658619574105abc4be837947ada0be144276a08"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/what-is-lifecycle-workflows",
+        "https://learn.microsoft.com/en-us/entra/id-governance/access-reviews-overview"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "6bfdff0acb352815a5a3461009a8d66afa3c8c5773462b478076e7addf88491c",
+      "question_id": "sc900_mlc_q068",
+      "review_entry_identity": "94ae5eec3a8c05b47f599b0009f34e6e1c266f89b187b2b9cd983038e12ef826",
+      "to_content_fingerprint": "e83f314398d260d1168f7adf7622649f5c8626686fcd838494c627c02b64d70a"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/sentinel/overview"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "f83ef974ff9df4cb3c02385df2bdbdbec6e166936dfc62f53b8a0a25c3d4b969",
+      "question_id": "sc900_mlc_q111",
+      "review_entry_identity": "97768b92b57f7a16f3d9f225455cf02b913d66101786fdbd2b529f4b33e9c7c9",
+      "to_content_fingerprint": "3b3bad020bb8fa46950934ed638a9056b86559ce069aff015dc6d767f823bdc7"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-endpoint",
+        "https://learn.microsoft.com/en-us/defender-for-identity/what-is"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "78b1fc740264bf0856204147e3681feb9ebbf0d8a6e2fba7316e1b1ccd00c355",
+      "question_id": "sc900_mlc_q261",
+      "review_entry_identity": "b28409864670562390611010dfae77e9a61be86462a13cb9108e0ac4cfa56023",
+      "to_content_fingerprint": "21c85cf72e0b9da4a86db8eda0a403d17c00a630fe2c50bcf41bc63ee2abb477"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/purview/compliance-manager",
+        "https://learn.microsoft.com/en-us/purview/compliance-manager-scoring"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "486015a1e42a7e062eb06b9d1bca43a6b3a18efee9933a6ff38c6503fb71ef91",
+      "question_id": "sc900_p1_q048",
+      "review_entry_identity": "cdef9f6e8eda60d78cdbca2f2c981f5f2a2b21f94e6c9da6b93fbfaacc6e31d2",
+      "to_content_fingerprint": "dabc8a137984d47e382a446eef5d37edc0fc39f029a92b4acc27e616d1366fbd"
+    },
+    {
+      "authority_refs": [
+        "https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction"
+      ],
+      "changed_fields": [
+        "choice_explanations",
+        "general_explanation"
+      ],
+      "from_content_fingerprint": "59357bc1a0a0eebd057b07f0dc6211278e42c4f507e269c95c2f38c54ab43817",
+      "question_id": "sc900_p3_q007",
+      "review_entry_identity": "0ea82a13053eba8f5cf5db78b18bcd9772159fda1c5d971230b55238315b370a",
+      "to_content_fingerprint": "10421af6bfd30f296351647cd5d519a19891885950762ba94cc5fab227565210"
+    }
+  ],
+  "manifest_kind": "sc900_content_revision_explanation",
+  "payload_sha256": "f0414c09455bd280358b984d3f8487690d6c9d77f1a6795dfd234cb83bcd4ae2",
+  "permitted_change_class": "EXPLANATION_ONLY_INSTRUCTIONAL_REVISION",
+  "revision_spec": {
+    "file_sha256": "e75c5431d0ac3555c0337559b8d08bd3a149390e62789f381c3ef3d976e59ffd",
+    "filename": "content_revision_evidence/specs/sc900_explanation_final_454_repair.json",
+    "payload_sha256": "83bbcc4e4aed13fedef7694e84dcb9ca71b6011d50067fbcf5f313fbb0895b80"
+  },
+  "schema_version": 2,
+  "semantic_review_ledger": {
+    "file_sha256": "c7d5b3daae8ee2f6af4f4d76d9bee05f6e7a1c4b92a88dabdbe5fbc23b67b172",
+    "filename": "content_revision_evidence/reviews/SC900-FINAL-454-EXPLANATION-AUDIT-001/semantic_review_ledger.json",
+    "payload_sha256": "1bca48b2aaa28873539cb20c6a886b67b9108c81cd2ecebe7a4fc5ad189be6ce"
+  },
+  "source_bank": {
+    "content_fingerprint": "875ba756392033279c8ab86abbbed287ca290ba780acd7852fe359b80752c8a6",
+    "file_sha256": "f18b2ad5174518f1c992c59663b93ad48d69483cefc1b72675af6d1486b1976d",
+    "filename": "sc900_bank_v8_explanation_q118_repair.json",
+    "question_count": 454
+  },
+  "target_bank": {
+    "content_fingerprint": "bad80fb502fd5d5c8a50de011c21b9df7da6a9117074ad70140f85fcca0e5e5a",
+    "file_sha256": "a3a8b811b3ce14e76f871333fd3a1ba262afda1b2da39fde98ccf6fde6dd522f",
+    "filename": "sc900_bank_v8_explanation_final_454_repair.json",
+    "question_count": 454
+  },
+  "work_id": "SC900-FINAL-454-QUESTION-EXPLANATION-AUDIT-AND-REPAIR-001"
+}
