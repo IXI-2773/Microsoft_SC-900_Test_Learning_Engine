@@ -7,20 +7,24 @@ from pathlib import Path
 from typing import Any
 
 from content_revision_authority import AdmissionStatus, canonical_manifest_sha256, sha256_file
-from content_revision_correction_authority import CONTINUITY_POLICY, MANIFEST_KIND, PERMITTED_CHANGE_CLASS
-from content_revision_final_correction_authority import (
-    AUTHORITY_REFS,
-    AUTHORIZED_CHANGED_FIELDS,
-    EXPECTED_SOURCE_BANK_SHA256,
-    EXPECTED_SOURCE_CONTENT_FINGERPRINT,
+from content_revision_correction_authority import (
+    CONTINUITY_POLICY,
+    MANIFEST_KIND,
+    PERMITTED_CHANGE_CLASS,
     REQUIRED_QUESTION_COUNT,
-    REVIEW_DISPOSITION,
-    SOURCE_BANK_FILENAME,
-    TARGET_BANK_FILENAME,
-    TARGET_IDS,
-    WORK_ID,
-    admit_final_content_correction,
+    REVIEW_DISPOSITION_APPROVED,
+    admit_content_correction,
 )
+from content_revision_correction_authority import FINAL_TWO_QUESTION_AUTHORITY_REFS as AUTHORITY_REFS
+from content_revision_correction_authority import FINAL_TWO_QUESTION_AUTHORIZED_FIELDS as AUTHORIZED_CHANGED_FIELDS
+from content_revision_correction_authority import FINAL_TWO_QUESTION_IDS as TARGET_IDS
+from content_revision_correction_authority import FINAL_TWO_QUESTION_SOURCE_BANK_FILENAME as SOURCE_BANK_FILENAME
+from content_revision_correction_authority import (
+    FINAL_TWO_QUESTION_SOURCE_FINGERPRINT as EXPECTED_SOURCE_CONTENT_FINGERPRINT,
+)
+from content_revision_correction_authority import FINAL_TWO_QUESTION_SOURCE_SHA256 as EXPECTED_SOURCE_BANK_SHA256
+from content_revision_correction_authority import FINAL_TWO_QUESTION_TARGET_BANK_FILENAME as TARGET_BANK_FILENAME
+from content_revision_correction_authority import FINAL_TWO_QUESTION_WORK_ID as WORK_ID
 from package_b_canonical_json import write_canonical_package_b_json
 from question_identity import bank_content_fingerprint, canonical_question_id, question_content_fingerprint
 
@@ -206,7 +210,7 @@ def build_final_two_question_content_correction(root: Path) -> dict[str, Any]:
             "objective_after": after["objective_code"],
             "authority_refs": list(AUTHORITY_REFS),
             "correction_spec_payload_sha256": spec["payload_sha256"],
-            "disposition": REVIEW_DISPOSITION,
+            "disposition": REVIEW_DISPOSITION_APPROVED,
         }
         write_canonical_package_b_json(review_path, receipt)
         edges.append(
@@ -263,7 +267,7 @@ def build_final_two_question_content_correction(root: Path) -> dict[str, Any]:
     )
     write_canonical_package_b_json(manifest_path, manifest)
 
-    admission = admit_final_content_correction(
+    admission = admit_content_correction(
         manifest,
         spec=spec,
         currentness_record=currentness,

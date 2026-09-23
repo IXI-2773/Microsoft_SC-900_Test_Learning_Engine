@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import json
 import shutil
 import tempfile
@@ -7,18 +8,29 @@ import unittest
 from pathlib import Path
 
 from app_constants import MODE_PRACTICE
-from content_revision_authority import AdmissionStatus, sha256_file
+from content_revision_authority import AdmissionStatus, canonical_manifest_sha256, sha256_file
+from content_revision_correction_authority import (
+    FINAL_TWO_QUESTION_IDS as TARGET_IDS,
+)
+from content_revision_correction_authority import (
+    FINAL_TWO_QUESTION_SOURCE_BANK_FILENAME as SOURCE_BANK_FILENAME,
+)
+from content_revision_correction_authority import (
+    FINAL_TWO_QUESTION_SOURCE_FINGERPRINT as EXPECTED_SOURCE_CONTENT_FINGERPRINT,
+)
+from content_revision_correction_authority import (
+    FINAL_TWO_QUESTION_SOURCE_SHA256 as EXPECTED_SOURCE_BANK_SHA256,
+)
+from content_revision_correction_authority import (
+    FINAL_TWO_QUESTION_TARGET_BANK_FILENAME as TARGET_BANK_FILENAME,
+)
+from content_revision_correction_authority import (
+    CorrectionFailureReason,
+    admit_content_correction,
+)
 from content_revision_correction_migration import (
     migrate_correction_progress_payload,
     migrate_correction_session_payload,
-)
-from content_revision_final_correction_authority import (
-    EXPECTED_SOURCE_BANK_SHA256,
-    EXPECTED_SOURCE_CONTENT_FINGERPRINT,
-    SOURCE_BANK_FILENAME,
-    TARGET_BANK_FILENAME,
-    TARGET_IDS,
-    admit_final_content_correction,
 )
 from progress_store import default_progress_record
 from question_identity import bank_content_fingerprint, question_content_fingerprint
@@ -102,7 +114,7 @@ class FinalTwoQuestionContentCorrectionTests(unittest.TestCase):
         cls.source_by_id = {q["id"]: q for q in cls.source["questions"]}
         cls.target_by_id = {q["id"]: q for q in cls.target["questions"]}
         cls.unchanged_id = next(qid for qid in cls.source_by_id if qid not in TARGET_IDS)
-        cls.admission = admit_final_content_correction(
+        cls.admission = admit_content_correction(
             cls.manifest,
             spec=cls.spec,
             currentness_record=cls.currentness,
@@ -276,6 +288,178 @@ class FinalTwoQuestionContentCorrectionTests(unittest.TestCase):
             review = self.review_root / edge["review_artifact"]
             self.assertTrue(review.exists())
             self.assertEqual(edge["review_artifact_sha256"], sha256_file(review))
+
+    def _admit(self, **overrides):
+        arguments = {
+            "manifest": self.manifest,
+            "spec": self.spec,
+            "currentness_record": self.currentness,
+            "source_bank_path": self.source_path,
+            "target_bank_path": self.target_path,
+            "spec_path": self.spec_path,
+            "currentness_path": self.currentness_path,
+            "review_root": self.review_root,
+        }
+        arguments.update(overrides)
+        return admit_content_correction(**arguments)
+
+    def _reseal(self, manifest):
+        sealed = copy.deepcopy(manifest)
+        sealed["payload_sha256"] = canonical_manifest_sha256(sealed)
+        return sealed
+
+    def _target_copy(self, path: Path, mutate):
+        payload = copy.deepcopy(self.target)
+        mutate(payload)
+        path.write_text(json.dumps(payload), encoding="utf-8")
+        return path
+
+    def _question(self, payload, question_id: str):
+        return next(row for row in payload["questions"] if row["id"] == question_id)
+
+    def test_registry_resolves_final_correction_through_manifest_discovery(self):
+        from content_revision_registry import (
+            AUTHORIZED_CONTENT_REVISION_MANIFESTS,
+            resolve_registered_revision_for_target,
+        )
+
+        self.assertEqual(8, len(AUTHORIZED_CONTENT_REVISION_MANIFESTS))
+        self.assertNotIn(
+            "manifests/sc900_final_two_question_content_correction.json", AUTHORIZED_CONTENT_REVISION_MANIFESTS
+        )
+        result = resolve_registered_revision_for_target(
+            self.target_path,
+            registry={"manifests/sc900_final_two_question_content_correction.json": EXPECTED_MANIFEST_SHA256},
+        )
+        self.assertEqual(AdmissionStatus.PASS, result.status)
+        self.assertEqual((), tuple(result.reasons))
+        self.assertIsNotNone(result.admitted)
+        self.assertEqual(SOURCE_BANK_FILENAME, result.admitted.source_bank_filename)
+        self.assertEqual(TARGET_BANK_FILENAME, result.admitted.target_bank_filename)
+        self.assertEqual(list(TARGET_IDS), [edge.question_id for edge in result.admitted.edges])
+
+    def test_unknown_profile_and_unsupported_work_id_rejected(self):
+        for work_id in ("SC900-UNKNOWN-CORRECTION-PROFILE", "SC900-UNSUPPORTED-WORK-ID"):
+            manifest = self._reseal({**copy.deepcopy(self.manifest), "work_id": work_id})
+            result = self._admit(manifest=manifest)
+            self.assertEqual(AdmissionStatus.FAIL, result.status)
+            self.assertIn(CorrectionFailureReason.SCHEMA_UNSUPPORTED, result.reasons)
+
+    def test_wrong_source_bank_and_hash_rejected(self):
+        wrong_bank = self._admit(source_bank_path=self.target_path)
+        self.assertEqual(AdmissionStatus.FAIL, wrong_bank.status)
+        self.assertIn(CorrectionFailureReason.SOURCE_BANK_FILE_HASH_MISMATCH, wrong_bank.reasons)
+        manifest = copy.deepcopy(self.manifest)
+        manifest["source_bank"]["filename"] = "sc900_bank_v8_content_correction_001.json"
+        result = self._admit(manifest=self._reseal(manifest))
+        self.assertEqual(AdmissionStatus.FAIL, result.status)
+        self.assertIn(CorrectionFailureReason.SOURCE_IDENTITY_INVALID, result.reasons)
+        with tempfile.TemporaryDirectory() as temp:
+            tampered = Path(temp) / SOURCE_BANK_FILENAME
+            tampered.write_bytes(self.source_path.read_bytes() + b"\n")
+            hashed = self._admit(source_bank_path=tampered)
+        self.assertEqual(AdmissionStatus.FAIL, hashed.status)
+        self.assertIn(CorrectionFailureReason.SOURCE_BANK_FILE_HASH_MISMATCH, hashed.reasons)
+
+    def test_wrong_target_bank_hash_and_fingerprint_rejected(self):
+        wrong_bank = self._admit(target_bank_path=self.source_path)
+        self.assertEqual(AdmissionStatus.FAIL, wrong_bank.status)
+        self.assertTrue(wrong_bank.reasons)
+        manifest = copy.deepcopy(self.manifest)
+        manifest["target_bank"]["filename"] = SOURCE_BANK_FILENAME
+        renamed = self._admit(manifest=self._reseal(manifest))
+        self.assertIn(CorrectionFailureReason.SOURCE_IDENTITY_INVALID, renamed.reasons)
+        manifest = copy.deepcopy(self.manifest)
+        manifest["target_bank"]["file_sha256"] = "0" * 64
+        hashed = self._admit(manifest=self._reseal(manifest))
+        self.assertIn(CorrectionFailureReason.TARGET_BANK_FILE_HASH_MISMATCH, hashed.reasons)
+        manifest = copy.deepcopy(self.manifest)
+        manifest["target_bank"]["content_fingerprint"] = "0" * 64
+        fingerprinted = self._admit(manifest=self._reseal(manifest))
+        self.assertIn(CorrectionFailureReason.TARGET_BANK_FINGERPRINT_MISMATCH, fingerprinted.reasons)
+        with tempfile.TemporaryDirectory() as temp:
+            tampered = Path(temp) / TARGET_BANK_FILENAME
+            tampered.write_bytes(self.target_path.read_bytes() + b"\n")
+            result = self._admit(target_bank_path=tampered)
+        self.assertIn(CorrectionFailureReason.TARGET_BANK_FILE_HASH_MISMATCH, result.reasons)
+
+    def test_undeclared_extra_and_unauthorized_question_changes_rejected(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            extra = self._target_copy(
+                root / "extra.json",
+                lambda payload: self._question(payload, self.unchanged_id).__setitem__(
+                    "prompt", self._question(payload, self.unchanged_id)["prompt"] + " extra"
+                ),
+            )
+            extra_result = self._admit(target_bank_path=extra)
+            self.assertIn(CorrectionFailureReason.UNDECLARED_CONTENT_CHANGE, extra_result.reasons)
+            missing = self._target_copy(
+                root / "missing.json",
+                lambda payload: self._question(payload, TARGET_IDS[0]).update(self.source_by_id[TARGET_IDS[0]]),
+            )
+            missing_result = self._admit(target_bank_path=missing)
+            self.assertIn(CorrectionFailureReason.UNDECLARED_CONTENT_CHANGE, missing_result.reasons)
+            prompt = self._target_copy(
+                root / "prompt.json",
+                lambda payload: self._question(payload, TARGET_IDS[0]).__setitem__("prompt", "rewritten prompt"),
+            )
+            prompt_result = self._admit(target_bank_path=prompt)
+            self.assertIn(CorrectionFailureReason.NONPERMITTED_FIELD_CHANGED, prompt_result.reasons)
+
+    def test_protected_semantics_rejected(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            key = self._target_copy(
+                root / "key.json",
+                lambda payload: self._question(payload, TARGET_IDS[0]).__setitem__("correct", ["A"]),
+            )
+            objective = self._target_copy(
+                root / "objective.json",
+                lambda payload: self._question(payload, TARGET_IDS[0]).__setitem__("objective_code", "other"),
+            )
+            decision = self._target_copy(
+                root / "decision.json",
+                lambda payload: self._question(payload, TARGET_IDS[0]).__setitem__("tested_decision", "other"),
+            )
+            self.assertIn(CorrectionFailureReason.CORRECT_KEY_CHANGED, self._admit(target_bank_path=key).reasons)
+            self.assertIn(CorrectionFailureReason.OBJECTIVE_CHANGED, self._admit(target_bank_path=objective).reasons)
+            self.assertIn(
+                CorrectionFailureReason.TESTED_DECISION_CHANGED, self._admit(target_bank_path=decision).reasons
+            )
+
+    def test_malformed_spec_review_and_manifest_hash_rejected(self):
+        spec = copy.deepcopy(self.spec)
+        del spec["corrections"]
+        malformed_spec = self._admit(spec=spec)
+        self.assertEqual(AdmissionStatus.FAIL, malformed_spec.status)
+        self.assertIn(CorrectionFailureReason.MISSING_FIELD, malformed_spec.reasons)
+        manifest = copy.deepcopy(self.manifest)
+        manifest["payload_sha256"] = "0" * 64
+        bad_manifest = self._admit(manifest=manifest)
+        self.assertIn(CorrectionFailureReason.MANIFEST_HASH_MISMATCH, bad_manifest.reasons)
+        with tempfile.TemporaryDirectory() as temp:
+            review_root = Path(temp)
+            manifest = copy.deepcopy(self.manifest)
+            for edge in manifest["edges"]:
+                source = self.review_root / edge["review_artifact"]
+                dest = review_root / edge["review_artifact"]
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(source, dest)
+            review = json.loads((review_root / manifest["edges"][0]["review_artifact"]).read_text(encoding="utf-8"))
+            del review["question_id"]
+            review_path = review_root / manifest["edges"][0]["review_artifact"]
+            review_path.write_text(json.dumps(review), encoding="utf-8")
+            manifest["edges"][0]["review_artifact_sha256"] = sha256_file(review_path)
+            malformed_review = self._admit(manifest=self._reseal(manifest), review_root=review_root)
+            self.assertEqual(AdmissionStatus.FAIL, malformed_review.status)
+            edge = copy.deepcopy(self.manifest["edges"][0])
+            edge["review_artifact_sha256"] = "0" * 64
+            bad_hash_manifest = copy.deepcopy(self.manifest)
+            bad_hash_manifest["edges"][0] = edge
+            bad_review_hash = self._admit(manifest=self._reseal(bad_hash_manifest))
+        self.assertIn(CorrectionFailureReason.MISSING_FIELD, malformed_review.reasons)
+        self.assertIn(CorrectionFailureReason.SEMANTIC_REVIEW_HASH_MISMATCH, bad_review_hash.reasons)
 
 
 if __name__ == "__main__":

@@ -16,7 +16,6 @@ QUALITY_TARGETS = [
     "content_revision_authority.py",
     "content_revision_correction_authority.py",
     "content_revision_correction_migration.py",
-    "content_revision_final_correction_authority.py",
     "content_revision_explanation_authority.py",
     "content_revision_explanation_migration.py",
     "content_revision_migration.py",
