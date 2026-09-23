@@ -1,0 +1,479 @@
+{
+  "analysis_version": "cand01r3-analysis-plan-v1",
+  "candidate": "CAND-01R3",
+  "contamination_rule": "Improper PROBE exposure is recorded as contaminated, excluded from the clean primary endpoint, and not silently replaced. Contamination is monotonic. No post-hoc replacement rule exists.",
+  "default_bank_unchanged": "YES",
+  "deployment_authorized": "NO",
+  "empirical_result": "NOT_YET_AVAILABLE",
+  "exam": "SC-900",
+  "first_attempt_rule": "Only the earliest valid clean scored PROBE attempt for (learner_id, SC-900, partition_epoch, question_id) is primary. Retry, redo, restored duplicates, and imported duplicates are excluded.",
+  "frozen_artifact_hashes": {
+    "compiled_sha256": "72051418687f76d67087ff8d3a37ee626b23c8d58ee98d33dfab132f19057f2b",
+    "default_launch_bank_sha256": "60842eb28810d328fe56a427b7d72baedd6b31179ca4f1c98744392aa318a426",
+    "semantic_audit_sha256": "e23fec15f148e50640d6851d192f4d17dca5d4f1b8c85b32f0e81eeb00059701",
+    "store_sha256": "2cc71208fe16b057b88cd06f841b94cb10b57176668af9adf838917795fe7f3c",
+    "train_probe_manifest_sha256": "67c8f0e83d7c7c52af323fde6a30ef35e2642045b0fbc04d5ba510a2c912ca90"
+  },
+  "independent_probe_families": [
+    "azure_key_vault",
+    "entra_roles_rbac",
+    "multifactor_authentication",
+    "privileged_identity_management",
+    "purview_portal",
+    "shared_responsibility_model",
+    "zero_trust_and_identity_perimeter"
+  ],
+  "measurement_epoch": "cand01r3-measurement-001",
+  "missingness_rule": "A missed scheduled PROBE is UNOBSERVED. It is not coerced to incorrect, correct, or zero, and it is not dropped.",
+  "partition_epoch": "phase3-task6-train-probe-partition",
+  "policy_sequence": [
+    {
+      "measurement": true,
+      "policy_id": "SMART_PRACTICE",
+      "primary_policy_contrast": true,
+      "scheduled_day": 1,
+      "train_item_budget": 20,
+      "training": true,
+      "training_blocks": [
+        {
+          "policy_id": "SMART_PRACTICE",
+          "train_item_budget": 20
+        }
+      ]
+    },
+    {
+      "measurement": true,
+      "policy_id": "RRC_1",
+      "primary_policy_contrast": true,
+      "scheduled_day": 2,
+      "train_item_budget": 20,
+      "training": true,
+      "training_blocks": [
+        {
+          "policy_id": "RRC_1",
+          "train_item_budget": 20
+        }
+      ]
+    },
+    {
+      "measurement": true,
+      "policy_id": "SMART_PRACTICE",
+      "primary_policy_contrast": true,
+      "scheduled_day": 3,
+      "train_item_budget": 20,
+      "training": true,
+      "training_blocks": [
+        {
+          "policy_id": "SMART_PRACTICE",
+          "train_item_budget": 20
+        }
+      ]
+    },
+    {
+      "measurement": true,
+      "policy_id": "RRC_1",
+      "primary_policy_contrast": true,
+      "scheduled_day": 4,
+      "train_item_budget": 20,
+      "training": true,
+      "training_blocks": [
+        {
+          "policy_id": "RRC_1",
+          "train_item_budget": 20
+        }
+      ]
+    },
+    {
+      "measurement": true,
+      "policy_id": "SMART_PRACTICE",
+      "primary_policy_contrast": true,
+      "scheduled_day": 5,
+      "train_item_budget": 20,
+      "training": true,
+      "training_blocks": [
+        {
+          "policy_id": "SMART_PRACTICE",
+          "train_item_budget": 20
+        }
+      ]
+    },
+    {
+      "measurement": true,
+      "policy_id": "RRC_1",
+      "primary_policy_contrast": true,
+      "scheduled_day": 6,
+      "train_item_budget": 20,
+      "training": true,
+      "training_blocks": [
+        {
+          "policy_id": "RRC_1",
+          "train_item_budget": 20
+        }
+      ]
+    },
+    {
+      "measurement": true,
+      "policy_id": "DAY7_BALANCED_MEASUREMENT",
+      "primary_policy_contrast": false,
+      "scheduled_day": 7,
+      "train_item_budget": null,
+      "training": true,
+      "training_blocks": [
+        {
+          "policy_id": "SMART_PRACTICE",
+          "train_item_budget": 10
+        },
+        {
+          "policy_id": "RRC_1",
+          "train_item_budget": 10
+        }
+      ]
+    }
+  ],
+  "policy_sequence_version": "cand01r3-alt-crossover-v1",
+  "primary_daily_train_budget": 20,
+  "primary_endpoint": "7-day first-attempt correctness on CLEAN HELD-OUT SC-900 PROBE items",
+  "primary_train_exposure_totals": {
+    "PRIMARY_TRAIN_EXPOSURE_DIFFERENCE": 0,
+    "RRC_1": 60,
+    "SMART_PRACTICE": 60
+  },
+  "probe_family_count": 7,
+  "probe_question_count": 29,
+  "protocol_sha256": "51dbee61e2a7d0c23ad48e7f37799812bd67918e37aacd1b60e3600787365c72",
+  "protocol_version": "cand01r3-measurement-001-v2",
+  "question_count": 200,
+  "real_observations": 0,
+  "schedule": [
+    {
+      "day_position": 1,
+      "domain": "microsoft_entra",
+      "objective": "entra_access_management",
+      "policy_id": "SMART_PRACTICE",
+      "primary_policy_contrast": true,
+      "question_id": "sc900_p1_q023",
+      "scheduled_day": 1,
+      "semantic_family_id": "entra_roles_rbac",
+      "sequence_position": 1
+    },
+    {
+      "day_position": 2,
+      "domain": "microsoft_entra",
+      "objective": "entra_authentication",
+      "policy_id": "SMART_PRACTICE",
+      "primary_policy_contrast": true,
+      "question_id": "sc900_p1_q004",
+      "scheduled_day": 1,
+      "semantic_family_id": "multifactor_authentication",
+      "sequence_position": 2
+    },
+    {
+      "day_position": 3,
+      "domain": "microsoft_entra",
+      "objective": "entra_identity_protection_governance",
+      "policy_id": "SMART_PRACTICE",
+      "primary_policy_contrast": true,
+      "question_id": "sc900_p1_q024",
+      "scheduled_day": 1,
+      "semantic_family_id": "privileged_identity_management",
+      "sequence_position": 3
+    },
+    {
+      "day_position": 4,
+      "domain": "security_compliance_identity",
+      "objective": "security_compliance_concepts",
+      "policy_id": "SMART_PRACTICE",
+      "primary_policy_contrast": true,
+      "question_id": "sc900_p1_q001",
+      "scheduled_day": 1,
+      "semantic_family_id": "shared_responsibility_model",
+      "sequence_position": 4
+    },
+    {
+      "day_position": 1,
+      "domain": "microsoft_security_solutions",
+      "objective": "azure_infrastructure_security",
+      "policy_id": "RRC_1",
+      "primary_policy_contrast": true,
+      "question_id": "sc900_p1_q006",
+      "scheduled_day": 2,
+      "semantic_family_id": "azure_key_vault",
+      "sequence_position": 5
+    },
+    {
+      "day_position": 2,
+      "domain": "microsoft_entra",
+      "objective": "entra_authentication",
+      "policy_id": "RRC_1",
+      "primary_policy_contrast": true,
+      "question_id": "sc900_p1_q042",
+      "scheduled_day": 2,
+      "semantic_family_id": "multifactor_authentication",
+      "sequence_position": 6
+    },
+    {
+      "day_position": 3,
+      "domain": "microsoft_compliance_solutions",
+      "objective": "purview_compliance_management",
+      "policy_id": "RRC_1",
+      "primary_policy_contrast": true,
+      "question_id": "sc900_p2_q042",
+      "scheduled_day": 2,
+      "semantic_family_id": "purview_portal",
+      "sequence_position": 7
+    },
+    {
+      "day_position": 4,
+      "domain": "security_compliance_identity",
+      "objective": "security_compliance_concepts",
+      "policy_id": "RRC_1",
+      "primary_policy_contrast": true,
+      "question_id": "sc900_p1_q011",
+      "scheduled_day": 2,
+      "semantic_family_id": "zero_trust_and_identity_perimeter",
+      "sequence_position": 8
+    },
+    {
+      "day_position": 1,
+      "domain": "microsoft_entra",
+      "objective": "entra_access_management",
+      "policy_id": "SMART_PRACTICE",
+      "primary_policy_contrast": true,
+      "question_id": "sc900_p2_q015",
+      "scheduled_day": 3,
+      "semantic_family_id": "entra_roles_rbac",
+      "sequence_position": 9
+    },
+    {
+      "day_position": 2,
+      "domain": "microsoft_entra",
+      "objective": "entra_identity_protection_governance",
+      "policy_id": "SMART_PRACTICE",
+      "primary_policy_contrast": true,
+      "question_id": "sc900_p2_q018",
+      "scheduled_day": 3,
+      "semantic_family_id": "privileged_identity_management",
+      "sequence_position": 10
+    },
+    {
+      "day_position": 3,
+      "domain": "security_compliance_identity",
+      "objective": "security_compliance_concepts",
+      "policy_id": "SMART_PRACTICE",
+      "primary_policy_contrast": true,
+      "question_id": "sc900_p2_q003",
+      "scheduled_day": 3,
+      "semantic_family_id": "shared_responsibility_model",
+      "sequence_position": 11
+    },
+    {
+      "day_position": 4,
+      "domain": "security_compliance_identity",
+      "objective": "identity_concepts",
+      "policy_id": "SMART_PRACTICE",
+      "primary_policy_contrast": true,
+      "question_id": "sc900_p2_q004",
+      "scheduled_day": 3,
+      "semantic_family_id": "zero_trust_and_identity_perimeter",
+      "sequence_position": 12
+    },
+    {
+      "day_position": 1,
+      "domain": "microsoft_security_solutions",
+      "objective": "azure_infrastructure_security",
+      "policy_id": "RRC_1",
+      "primary_policy_contrast": true,
+      "question_id": "sc900_p2_q026",
+      "scheduled_day": 4,
+      "semantic_family_id": "azure_key_vault",
+      "sequence_position": 13
+    },
+    {
+      "day_position": 2,
+      "domain": "microsoft_entra",
+      "objective": "entra_access_management",
+      "policy_id": "RRC_1",
+      "primary_policy_contrast": true,
+      "question_id": "sc900_p3_q062",
+      "scheduled_day": 4,
+      "semantic_family_id": "entra_roles_rbac",
+      "sequence_position": 14
+    },
+    {
+      "day_position": 3,
+      "domain": "microsoft_entra",
+      "objective": "entra_authentication",
+      "policy_id": "RRC_1",
+      "primary_policy_contrast": true,
+      "question_id": "sc900_p2_q011",
+      "scheduled_day": 4,
+      "semantic_family_id": "multifactor_authentication",
+      "sequence_position": 15
+    },
+    {
+      "day_position": 4,
+      "domain": "microsoft_compliance_solutions",
+      "objective": "purview_compliance_management",
+      "policy_id": "RRC_1",
+      "primary_policy_contrast": true,
+      "question_id": "sc900_p3_q029",
+      "scheduled_day": 4,
+      "semantic_family_id": "purview_portal",
+      "sequence_position": 16
+    },
+    {
+      "day_position": 1,
+      "domain": "microsoft_entra",
+      "objective": "entra_authentication",
+      "policy_id": "SMART_PRACTICE",
+      "primary_policy_contrast": true,
+      "question_id": "sc900_p3_q034",
+      "scheduled_day": 5,
+      "semantic_family_id": "multifactor_authentication",
+      "sequence_position": 17
+    },
+    {
+      "day_position": 2,
+      "domain": "microsoft_entra",
+      "objective": "entra_identity_protection_governance",
+      "policy_id": "SMART_PRACTICE",
+      "primary_policy_contrast": true,
+      "question_id": "sc900_p3_q053",
+      "scheduled_day": 5,
+      "semantic_family_id": "privileged_identity_management",
+      "sequence_position": 18
+    },
+    {
+      "day_position": 3,
+      "domain": "security_compliance_identity",
+      "objective": "security_compliance_concepts",
+      "policy_id": "SMART_PRACTICE",
+      "primary_policy_contrast": true,
+      "question_id": "sc900_p3_q002",
+      "scheduled_day": 5,
+      "semantic_family_id": "shared_responsibility_model",
+      "sequence_position": 19
+    },
+    {
+      "day_position": 4,
+      "domain": "security_compliance_identity",
+      "objective": "identity_concepts",
+      "policy_id": "SMART_PRACTICE",
+      "primary_policy_contrast": true,
+      "question_id": "sc900_p3_q001",
+      "scheduled_day": 5,
+      "semantic_family_id": "zero_trust_and_identity_perimeter",
+      "sequence_position": 20
+    },
+    {
+      "day_position": 1,
+      "domain": "microsoft_security_solutions",
+      "objective": "azure_infrastructure_security",
+      "policy_id": "RRC_1",
+      "primary_policy_contrast": true,
+      "question_id": "sc900_p3_q097",
+      "scheduled_day": 6,
+      "semantic_family_id": "azure_key_vault",
+      "sequence_position": 21
+    },
+    {
+      "day_position": 2,
+      "domain": "microsoft_entra",
+      "objective": "entra_access_management",
+      "policy_id": "RRC_1",
+      "primary_policy_contrast": true,
+      "question_id": "sc900_p3_q073",
+      "scheduled_day": 6,
+      "semantic_family_id": "entra_roles_rbac",
+      "sequence_position": 22
+    },
+    {
+      "day_position": 3,
+      "domain": "microsoft_entra",
+      "objective": "entra_authentication",
+      "policy_id": "RRC_1",
+      "primary_policy_contrast": true,
+      "question_id": "sc900_p3_q052",
+      "scheduled_day": 6,
+      "semantic_family_id": "multifactor_authentication",
+      "sequence_position": 23
+    },
+    {
+      "day_position": 4,
+      "domain": "microsoft_compliance_solutions",
+      "objective": "purview_compliance_management",
+      "policy_id": "RRC_1",
+      "primary_policy_contrast": true,
+      "question_id": "sc900_p3_q040",
+      "scheduled_day": 6,
+      "semantic_family_id": "purview_portal",
+      "sequence_position": 24
+    },
+    {
+      "day_position": 1,
+      "domain": "microsoft_entra",
+      "objective": "entra_access_management",
+      "policy_id": "DAY7_BALANCED_MEASUREMENT",
+      "primary_policy_contrast": false,
+      "question_id": "sc900_p3_q084",
+      "scheduled_day": 7,
+      "semantic_family_id": "entra_roles_rbac",
+      "sequence_position": 25
+    },
+    {
+      "day_position": 2,
+      "domain": "microsoft_entra",
+      "objective": "entra_authentication",
+      "policy_id": "DAY7_BALANCED_MEASUREMENT",
+      "primary_policy_contrast": false,
+      "question_id": "sc900_p3_q063",
+      "scheduled_day": 7,
+      "semantic_family_id": "multifactor_authentication",
+      "sequence_position": 26
+    },
+    {
+      "day_position": 3,
+      "domain": "microsoft_entra",
+      "objective": "entra_identity_protection_governance",
+      "policy_id": "DAY7_BALANCED_MEASUREMENT",
+      "primary_policy_contrast": false,
+      "question_id": "sc900_p3_q064",
+      "scheduled_day": 7,
+      "semantic_family_id": "privileged_identity_management",
+      "sequence_position": 27
+    },
+    {
+      "day_position": 4,
+      "domain": "security_compliance_identity",
+      "objective": "security_compliance_concepts",
+      "policy_id": "DAY7_BALANCED_MEASUREMENT",
+      "primary_policy_contrast": false,
+      "question_id": "sc900_p3_q012",
+      "scheduled_day": 7,
+      "semantic_family_id": "shared_responsibility_model",
+      "sequence_position": 28
+    },
+    {
+      "day_position": 5,
+      "domain": "security_compliance_identity",
+      "objective": "security_compliance_concepts",
+      "policy_id": "DAY7_BALANCED_MEASUREMENT",
+      "primary_policy_contrast": false,
+      "question_id": "sc900_p3_q051",
+      "scheduled_day": 7,
+      "semantic_family_id": "zero_trust_and_identity_perimeter",
+      "sequence_position": 29
+    }
+  ],
+  "schedule_version": "cand01r3-probe-schedule-v1",
+  "stopping_rule": "Complete the scheduled 7-day protocol, or terminate the epoch on a protocol-invalidating event. Do not stop early because one policy looks ahead. Do not extend because a desired result has not appeared.",
+  "supersession": {
+    "EMPIRICAL_DATA_INVALIDATED": "NO",
+    "REAL_OBSERVATIONS_AT_SUPERSESSION": 0,
+    "SUPERSESSION_REASON": "PRIMARY_DAYS_TRAINING_DOSE_WAS_UNBOUNDED",
+    "V1_SUPERSEDED_BEFORE_EMPIRICAL_RUN": "YES",
+    "superseded_protocol_sha256": "493b371d6200c88fe51428953947fac864fae8535667374e38050198b018e081",
+    "superseded_protocol_version": "cand01r3-measurement-001-v1"
+  },
+  "train_question_count": 171
+}

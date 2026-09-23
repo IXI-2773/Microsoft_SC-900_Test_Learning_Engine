@@ -15,8 +15,10 @@ from builder_identity import (
 from cand01r3_runtime import (
     filter_training_questions,
     is_cand01r3_active,
+    is_measurement_answer_mode,
     persistable_authority_metadata,
     restore_experimental_session,
+    sanitize_measurement_answer_state,
 )
 from confidence_epistemics import bind_legacy_answer_event_ids, normalize_confidence
 from exam_runtime_eligibility import filter_new_exam_pool
@@ -679,7 +681,9 @@ class SessionPersistenceMixin:
         self.active_source_label = str(migrated.get("source_label") or self.active_source_label)
         self.session_rewards = list(migrated.get("session_rewards", []))
         self.unlocked_rewards = set(migrated.get("unlocked_rewards", []))
-        self.session_answer_history = list(migrated.get("session_answer_history", []))
+        self.session_answer_history = (
+            [] if is_measurement_answer_mode() else list(migrated.get("session_answer_history", []))
+        )
         self.current_quests = list(migrated.get("current_quests", self.current_quests))
         self.quest_completion_keys = set(migrated.get("quest_completion_keys", []))
         self.session_boss_markers = set(migrated.get("session_boss_markers", []))
@@ -881,13 +885,20 @@ class SessionPersistenceMixin:
             "checkpoints_saved": sorted(list(self.checkpoints_saved), key=lambda x: int(x)),
             "session_rewards": list(self.session_rewards),
             "unlocked_rewards": sorted(list(self.unlocked_rewards)),
-            "session_answer_history": list(self.session_answer_history),
+            "session_answer_history": [] if is_measurement_answer_mode() else list(self.session_answer_history),
             "current_quests": list(self.current_quests),
             "quest_completion_keys": sorted(list(self.quest_completion_keys)),
             "session_boss_markers": sorted(list(self.session_boss_markers)),
             "session_stealth_markers": sorted(list(self.session_stealth_markers)),
             "session_xp_gained": int(self.session_xp_gained),
-            "answers": [serialize_answer_state(q) for q in self.questions],
+            "answers": [
+                (
+                    sanitize_measurement_answer_state(q, serialize_answer_state(q))
+                    if is_measurement_answer_mode()
+                    else serialize_answer_state(q)
+                )
+                for q in self.questions
+            ],
         }
         if is_cand01r3_active():
             snapshot = build_session_snapshot(**snapshot_kwargs)
@@ -944,7 +955,14 @@ class SessionPersistenceMixin:
                     "current_index": self.index,
                     "elapsed_seconds": self.current_elapsed_seconds(),
                     "question_numbers": [q.get("question_number") for q in self.questions],
-                    "answers": [serialize_answer_state(q) for q in self.questions],
+                    "answers": [
+                        (
+                            sanitize_measurement_answer_state(q, serialize_answer_state(q))
+                            if is_measurement_answer_mode()
+                            else serialize_answer_state(q)
+                        )
+                        for q in self.questions
+                    ],
                 }
                 self.persistence.write_checkpoint(p, payload)
                 self.checkpoints_saved.add(marker)
